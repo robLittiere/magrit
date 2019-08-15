@@ -24,7 +24,7 @@ Il est également possible (et conseillé lors de l'utilisation des projections 
 
 > #### Note:
 > - La modification de la projection à utiliser est possible à tout moment.
-> - Lors de la réalisation d'une carte d'une faible emprise spatiale, l'utilisation de certaines projections n'est pas pertinent.
+> - Lors de la réalisation d'une carte d'une faible emprise spatiale, l'utilisation de certaines projections n'est pas pertinente.
 
 #### Exemple d'utilisation des graticules et du fond de l'emprise du globe avec des représentations originales :
 <p style="text-align: center;">
@@ -64,4 +64,4 @@ Différents moyens permettent de trouver le système de coordonnées de référe
 - Utilisation d'une des projections d'emprise nationale suggérée à partir d'une [liste](./projection_list_fr.html) maintenue en parallèle de *Magrit*.
 - Recherche sur le site http://epsg.io (les deux options précédentes reposent sur ces données)
 
-De plus l'application propose automatiquement l'utilisation de la projection fournit avec le jeux de données de l'utilisateur lorsque celui-ci contient des informations sur le projection à utiliser (Shapefile, GML).
+De plus l'application propose automatiquement l'utilisation de la projection fournie avec le jeu de données de l'utilisateur lorsque celui-ci contient des informations sur la projection à utiliser (Shapefile, GML).
