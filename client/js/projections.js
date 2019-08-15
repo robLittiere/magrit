@@ -92,7 +92,7 @@ export const available_projections = new Map([
 function storePrefProjection(type_proj, name_proj) {
   const props = getTargetLayerProps();
   if (!props) return;
-  props.last_projection = [type_proj, name_proj]
+  props.last_projection = [type_proj, name_proj];
 }
 
 /**

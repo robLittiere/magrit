@@ -512,16 +512,20 @@ export function save_map_project() {
 }
 
 export function load_map_project() {
-  const input_button = d3.select(document.createElement('input'))
-    .attrs({ type: 'file', name: 'file', accept: '.json' })
-    .on('change', () => {
-      const file = d3.event.target.files[0];
-      const reader = new FileReader();
-      reader.onloadend = () => { apply_user_preferences(reader.result); };
-      reader.readAsText(file);
-    });
-
-  input_button.node().dispatchEvent(new MouseEvent('click'));
+  const input_button = document.createElement('input');
+  input_button.style.display = 'none';
+  input_button.setAttribute('type', 'file');
+  input_button.setAttribute('name', 'file');
+  input_button.setAttribute('accept', '.json');
+  input_button.onchange = (event) => {
+    const file = event.target.files[0];
+    const reader = new FileReader();
+    reader.onloadend = () => { apply_user_preferences(reader.result); };
+    reader.readAsText(file);
+    input_button.remove();
+  };
+  document.body.appendChild(input_button);
+  input_button.click();
 }
 
 function display_error_loading_project(error) {

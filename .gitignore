@@ -85,4 +85,4 @@ jspm_packages/
 
 # Exception for the builded js file of Magrit:
 !magrit_app/static/dist
-/.pytest_cache/v/cache/lastfailed
+/.pytest_cache/

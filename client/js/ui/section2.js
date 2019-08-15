@@ -1,7 +1,7 @@
 import { clean_menu_function, get_menu_option } from './../function';
 import { switch_accordion_section } from './../interface';
 
-export function makeSection2() {
+export default function makeSection2() {
   const list_fun_ico = [
     'prop.png',
     'choro.png',

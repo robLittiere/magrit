@@ -11,13 +11,11 @@ import { add_sample_layer } from './../layers';
 function click_button_add_layer() {
   const self = this;
   const input = document.createElement('input');
-
+  input.style.display = 'none';
   if (self.id === 'img_data_ext' || self.id === 'data_ext') {
     input.setAttribute('accept', '.xls,.xlsx,.csv,.tsv,.ods,.txt');
-    // target_layer_on_add = true;
   } else if (self.id === 'input_geom' || self.id === 'img_in_geom') {
     input.setAttribute('accept', '.gml,.kml,.geojson,.topojson,.shp,.dbf,.shx,.prj,.cpg,.json');
-    // target_layer_on_add = true;
   }
   input.setAttribute('type', 'file');
   input.setAttribute('multiple', '');
@@ -28,6 +26,7 @@ function click_button_add_layer() {
     handle_upload_files(files, self);
     input.remove();
   };
+  document.body.appendChild(input);
   input.click();
 }
 
