@@ -266,6 +266,7 @@ class ProjectRoundTrip(TestBase):
 #        chromeOptions.add_argument('window-size=1800x800')
         chromeOptions.add_experimental_option(
             "prefs", {"download.default_directory": self.tmp_folder})
+        chromeOptions.add_experimental_option('w3c', False)
         self.driver = webdriver.Chrome(options=chromeOptions)
 
         self.driver.set_window_size(1600, 900)
@@ -542,6 +543,7 @@ class MainFunctionnalitiesTest(TestBase):
 #        chromeOptions.add_argument('window-size=1800x800')
         chromeOptions.add_experimental_option(
             "prefs", {"download.default_directory": self.tmp_folder})
+        chromeOptions.add_experimental_option('w3c', False)
         self.driver = webdriver.Chrome(options=chromeOptions)
 
         # profile = webdriver.FirefoxProfile()

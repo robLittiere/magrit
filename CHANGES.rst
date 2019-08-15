@@ -1,10 +1,15 @@
 Changes
 =======
 
+
 0.8.12 (2019-xx-xx)
 -------------------
 
-- Allow more flexibility to customize the set of sample layers to use when deploying Magrit.
+- Allow more flexibility to customize the set of sample layers to use when deploying Magrit (#45).
+
+- Fixe some typos in documentation (#49).
+
+- ...
 
 
 0.8.11 (2019-03-20)
