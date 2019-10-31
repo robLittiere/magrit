@@ -1,5 +1,5 @@
-aiohttp == 3.5.4
-aiohttp-session == 2.5.1
+aiohttp == 3.6.2
+aiohttp-session == 2.8.0
 cchardet == 2.1.4
 cryptography == 2.3.1
 Cython >= 0.28
@@ -10,7 +10,7 @@ geopandas == 0.4.0
 jenkspy >= 0.1.4
 matplotlib == 2.2.3
 mmh3 == 2.5.1
-numpy == 1.15.1
+numpy == 1.17.3
 pandas == 0.23.4
 pyproj == 1.9.6
 Rtree == 0.8.3
