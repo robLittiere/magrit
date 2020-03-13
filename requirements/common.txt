@@ -5,7 +5,7 @@ cryptography == 2.8
 Cython >= 0.28
 docopt >= 0.6.2
 Fiona >= 1.8.12
-gdal
+gdal == 2.4.2
 geopandas == 0.7.0
 jenkspy >= 0.1.5
 matplotlib == 3.2.0
