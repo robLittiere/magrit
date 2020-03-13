@@ -25,7 +25,15 @@ install:
   - python setup.py install
   - python setup.py build_ext --inplace
 before_script:
-  - pushd /tmp && wget -O chromedriver.zip http://chromedriver.storage.googleapis.com/$CHROMEDRIVER/chromedriver_linux64.zip && unzip chromedriver.zip -d ~/bin/ && popd
+  - mkdir -p ~/bin
+  - |
+    if [ ! -e ~/bin/chromedriver ]; then
+      export CHROMEDRIVER_VERSION=$(curl -q http://chromedriver.storage.googleapis.com/LATEST_RELEASE)
+      wget -N http://chromedriver.storage.googleapis.com/$CHROMEDRIVER_VERSION/chromedriver_linux64.zip -P ~/
+      unzip ~/chromedriver_linux64.zip -d ~/bin
+      rm ~/chromedriver_linux64.zip
+      chmod +x ~/bin/chromedriver
+    fi
 script:
   - magrit --help
   - py.test tests/test.py -p no:flaky
