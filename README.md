@@ -15,7 +15,7 @@
 - We also provide many sample datasets to try out the various representations and become familiar with the application.
 - It allows to **render and combine a wide variety of maps**: choropleth, proportional symbols, cartogram, discontinuity, etc.
 - It supports the most popular modern desktop browsers: Chrome, Firefox and Opera (+ Edge and Safari with limitations).
-- Server-side, Magrit is backed by a python 3.5+ application (particularly for some geoprocessing tasks relying on GDAL, GEOS and PROJ.4 libraries).
+- Server-side, Magrit is backed by a python 3.6+ application (particularly for some geoprocessing tasks relying on GDAL, GEOS and PROJ.4 libraries).
 - Client-side, Magrit is written in modern JS (ES6) and uses notably the d3.js library.
 
 
