@@ -14,12 +14,16 @@ function fetch_categorical_colors() {
   return color_map;
 }
 
+// eslint-disable-next-line import/prefer-default-export
 export function display_categorical_box(data_layer, layer_name, field, cats) {
   const is_hex_color = new RegExp(/^#([0-9a-f]{6}|[0-9a-f]{3})$/i);
   const nb_features = data_manager.current_layers[layer_name].n_features;
   const nb_class = cats.length;
   const existing_typo_layer = Object.keys(data_manager.current_layers)
-    .filter(lyr => data_manager.current_layers[lyr].renderer === 'Categorical' || data_manager.current_layers[lyr].renderer === 'PropSymbolsTypo');
+    .filter((lyr) => lyr !== layer_name && (
+      data_manager.current_layers[lyr].renderer === 'Categorical'
+      || data_manager.current_layers[lyr].renderer === 'PropSymbolsTypo'
+    ));
   const modal_box = make_dialog_container(
     'categorical_box',
     _tr('app_page.categorical_box.title', { layer: layer_name, nb_features: nb_features }),
@@ -84,17 +88,17 @@ export function display_categorical_box(data_layer, layer_name, field, cats) {
       input_col.dispatchEvent(new MouseEvent('click'));
     });
 
-    newbox.selectAll('.typo_class')
-      .append('input')
-      .attr('class', 'color_hex')
-      .styles({ height: '22px', 'vertical-align': 'middle' })
-      .property('value', d => d.color)
-      .style('width', '60px')
-      .on('keyup', function () {
-        if (is_hex_color.test(this.value)) {
-          this.previousSibling.style.backgroundColor = this.value;
-        }
-      });
+  newbox.selectAll('.typo_class')
+    .append('input')
+    .attr('class', 'color_hex')
+    .styles({ height: '22px', 'vertical-align': 'middle' })
+    .property('value', d => d.color)
+    .style('width', '60px')
+    .on('keyup', function () {
+      if (is_hex_color.test(this.value)) {
+        this.previousSibling.style.backgroundColor = this.value;
+      }
+    });
 
   newbox.selectAll('.typo_class')
     .insert('span')
