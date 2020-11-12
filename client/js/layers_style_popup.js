@@ -2860,7 +2860,6 @@ function change_layer_name(old_name, new_name) {
 *
 */
 export function handleEdgeShapeRendering(selection, value) {
-  console.log(selection.attr('shape-rendering'));
   if (value === 0) {
     if (selection.attr('shape-rendering') !== 'crispEdges') {
       selection.attr('shape-rendering', 'crispEdges');
