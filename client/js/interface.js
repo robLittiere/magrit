@@ -437,12 +437,20 @@ export function prepare_drop_section() {
         elem.addEventListener('dragenter', (e) => {
           e.preventDefault(); e.stopPropagation();
           if (document.body.classList.contains('no-drop')) return;
+          if (
+            e.relatedTarget
+            && e.relatedTarget.nodeType
+          ) return;
           document.getElementById('overlay_drop').style.display = '';
         });
 
         elem.addEventListener('dragover', (e) => {
           e.preventDefault(); e.stopPropagation();
           if (document.body.classList.contains('no-drop')) return;
+          if (
+            e.relatedTarget
+            && e.relatedTarget.nodeType
+          ) return;
           if (timeout) {
             clearTimeout(timeout);
             timeout = setTimeout(() => {
