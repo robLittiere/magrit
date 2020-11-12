@@ -30,7 +30,7 @@
 
 /*! exports provided: get_menu_option, clean_menu_function, reset_user_values, check_layer_name, make_min_max_tableau, fetch_min_max_table_value, render_twostocks_waffle, make_prop_line, make_prop_symbols, render_categorical, prepare_categories_array, render_label, render_label_graticule */
 
-/*! exports provided: handle_click_layer, make_style_box_indiv_label, createDropShadow */
+/*! exports provided: handle_click_layer, make_style_box_indiv_label, createDropShadow, handleEdgeShapeRendering */
 
 /*! exports provided: handle_legend, up_legends, up_legend, down_legend, drag_legend_func, createLegend_waffle, createLegend_discont_links, createLegend_symbol, createLegend_line_symbol, createLegend_layout, createLegend_choro, createLegend_choro_horizontal, move_legends */
 
