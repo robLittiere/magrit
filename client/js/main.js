@@ -152,6 +152,7 @@ function loadI18next(lang) {
   }
   let lang = docCookies.getItem('user_lang') || window.navigator.language.split('-')[0];
   lang = _app.existing_lang.indexOf(lang) > -1 ? lang : 'en';
+  document.querySelector('html').setAttribute('lang', lang);
 
   Promise.all([
     loadI18next(lang),
