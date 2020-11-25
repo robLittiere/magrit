@@ -27,7 +27,7 @@ Most users should go on :
 
 
 ## Examples
-<p><img src="https://github.com/mthh/example-magrit-projects/raw/master/nuts3_cagr2.png" height="220"/><img src="https://github.com/mthh/example-magrit-projects/raw/master/cinema_pot2.png" height="220"/><img src="https://magrit.hypotheses.org/files/2017/02/worldpop.png" height="220"/></p>
+<p><img src="https://github.com/mthh/example-magrit-projects/raw/master/nuts3_cagr2.png" height="210"/><img src="https://github.com/mthh/example-magrit-projects/raw/master/cinema_pot2.png" height="210"/><img src="https://magrit.hypotheses.org/files/2017/02/worldpop.png" height="210"/></p>
 
 More maps are available in the [gallery](http://magrit.hypotheses.org/galerie).
 
