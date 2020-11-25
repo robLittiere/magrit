@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 
 <head>
     <meta charset="utf-8">
@@ -377,6 +377,7 @@ function change_lang(new_lang){
   docCookies.setItem("user_lang", new_lang, 31536e3, "/");
   i18next.changeLanguage(new_lang, () => { localize(".i18n"); });
   var other_langs = new_lang == "en" ? ["es", "fr"] : new_lang == "fr" ? ["en", "es"] : ["en", "fr"];
+  document.querySelector('html').setAttribute('lang', new_lang);
   document.getElementById("lang_current").innerHTML = new_lang;
   document.getElementById("lang3").innerHTML = other_langs[0];
   document.getElementById("lang2").innerHTML = other_langs[1];
@@ -433,6 +434,7 @@ function prepare_lang_buttons(){
   var existing_lang = ["en", "es", "fr"];
   var lang = docCookies.getItem("user_lang") || window.navigator.language.split('-')[0];
   lang = existing_lang.indexOf(lang) > -1 ? lang : 'en';
+  document.querySelector('html').setAttribute('lang', lang);
   docCookies.setItem("user_lang", lang, 31536e3, "/");
   i18next.use(i18nextXHRBackend)
     .init({
