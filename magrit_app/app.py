@@ -213,7 +213,7 @@ async def get_sample_layer(request):
     if result:
         result = result.decode()
         asyncio.ensure_future(
-            request.app['redis_conn'].pexpire(f_name, 43200000))
+            request.app['redis_conn'].pexpire(f_name, 12000000))
         return web.Response(text=''.join([
             '{"key":', hash_val,
             ',"file":', result.replace(''.join([user_id, '_']), ''), '}'
@@ -223,7 +223,7 @@ async def get_sample_layer(request):
             data = f.read()
         asyncio.ensure_future(
             request.app['redis_conn'].set(
-                f_name, data, pexpire=43200000))
+                f_name, data, pexpire=12000000))
         return web.Response(text=''.join(
             ['{"key":', hash_val, ',"file":', data, '}']
         ))
@@ -286,14 +286,14 @@ async def convert_topo(request):
     if result:
         result = result.decode()
         asyncio.ensure_future(
-            request.app['redis_conn'].pexpire(f_name, 43200000))
+            request.app['redis_conn'].pexpire(f_name, 12000000))
         return web.Response(text=''.join([
             '{"key":', hash_val,
             ',"file":', result.replace(hash_val, name), '}'
         ]))
 
     asyncio.ensure_future(
-        request.app['redis_conn'].set(f_name, data, pexpire=43200000))
+        request.app['redis_conn'].set(f_name, data, pexpire=12000000))
     return web.Response(text=''.join(
         ['{"key":', hash_val, ',"file":null}']
     ))
@@ -361,7 +361,7 @@ async def _convert_from_multiple_files(app, posted_data, user_id, tmp_dir):
         # We know this user and his layer has already been loaded into Redis,
         # so let's use it instead of doing a new conversion again:
         asyncio.ensure_future(
-            app['redis_conn'].pexpire(f_name, 43200000))
+            app['redis_conn'].pexpire(f_name, 12000000))
         # Read the orignal projection to propose it later:
         proj_info_str = read_shp_crs(
             path_join(tmp_dir, name.replace('.shp', '.prj')))
@@ -383,7 +383,7 @@ async def _convert_from_multiple_files(app, posted_data, user_id, tmp_dir):
             return convert_error()
 
         asyncio.ensure_future(
-            app['redis_conn'].set(f_name, result, pexpire=43200000))
+            app['redis_conn'].set(f_name, result, pexpire=12000000))
 
         # Read the orignal projection to propose it later (client side):
         proj_info_str = read_shp_crs(
@@ -424,7 +424,7 @@ async def _convert_from_single_file(app, posted_data, user_id, tmp_dir):
         # We know this user and his layer has already been loaded into Redis,
         # so let's use it instead of doing a new conversion again:
         asyncio.ensure_future(
-            app['redis_conn'].pexpire(f_name, 43200000))
+            app['redis_conn'].pexpire(f_name, 12000000))
 
         return web.Response(text=''.join(
             ['{"key":', str(hashed_input),
@@ -484,7 +484,7 @@ async def _convert_from_single_file(app, posted_data, user_id, tmp_dir):
 
                 asyncio.ensure_future(
                     app['redis_conn'].set(
-                        f_name, result, pexpire=43200000))
+                        f_name, result, pexpire=12000000))
             except (asyncio.CancelledError, CancelledError):
                 return
             except Exception as err:
@@ -533,7 +533,7 @@ async def _convert_from_single_file(app, posted_data, user_id, tmp_dir):
         # Store it in redis for possible later use:
         asyncio.ensure_future(
             app['redis_conn'].set(
-                f_name, result, pexpire=43200000))
+                f_name, result, pexpire=12000000))
 
     else:
         # Datatype was not detected; so nothing was done
@@ -571,7 +571,7 @@ async def convert_extrabasemap(request):
             result = await request.app['redis_conn'].get(f_name)
             if result:
                 asyncio.ensure_future(
-                    request.app['redis_conn'].pexpire(f_name, 43200000))
+                    request.app['redis_conn'].pexpire(f_name, 12000000))
                 return web.Response(text=''.join(
                     ['{"key":', str(hashed_input),
                      ',"file":', result.decode(), '}']))
@@ -583,7 +583,7 @@ async def convert_extrabasemap(request):
             else:
                 asyncio.ensure_future(
                     request.app['redis_conn'].set(
-                        f_name, result, pexpire=43200000))
+                        f_name, result, pexpire=12000000))
 
             return web.Response(text=''.join(
                 ['{"key":', str(hashed_input), ',"file":', result, '}']))
@@ -613,7 +613,7 @@ async def carto_doug(posted_data, user_id, app):
         hash_val = mmh3_hash(res)
         asyncio.ensure_future(
             app['redis_conn'].set('_'.join([
-                user_id, str(hash_val)]), res, pexpire=43200000))
+                user_id, str(hash_val)]), res, pexpire=12000000))
 
         return ''.join(['{"key":', str(hash_val), ',"file":', res, '}'])
 
@@ -683,7 +683,7 @@ async def links_map(posted_data, user_id, app):
     hash_val = mmh3_hash(res)
     asyncio.ensure_future(
         app['redis_conn'].set('_'.join([
-            user_id, str(hash_val)]), res, pexpire=43200000))
+            user_id, str(hash_val)]), res, pexpire=12000000))
 
     return ''.join(['{"key":', str(hash_val), ',"file":', res, '}'])
 
@@ -760,7 +760,7 @@ async def carto_gridded_point(posted_data, user_id, app):
         hash_val = str(mmh3_hash(res))
         asyncio.ensure_future(
             app['redis_conn'].set('_'.join([
-                user_id, hash_val]), res, pexpire=43200000))
+                user_id, hash_val]), res, pexpire=12000000))
 
         # Return it to the user:
         return ''.join(['{"key":', hash_val, ',"file":', res, '}'])
@@ -802,7 +802,7 @@ async def carto_gridded(posted_data, user_id, app):
         hash_val = str(mmh3_hash(res))
         asyncio.ensure_future(
             app['redis_conn'].set('_'.join([
-                user_id, hash_val]), res, pexpire=43200000))
+                user_id, hash_val]), res, pexpire=12000000))
         return ''.join(['{"key":', hash_val, ',"file":', res, '}'])
 
 
@@ -828,7 +828,7 @@ async def compute_olson(posted_data, user_id, app):
     hash_val = str(mmh3_hash(res))
     asyncio.ensure_future(
         app['redis_conn'].set('_'.join([
-            user_id, hash_val]), res, pexpire=43200000))
+            user_id, hash_val]), res, pexpire=12000000))
     return ''.join(['{"key":', hash_val, ',"file":', res, '}'])
 
 
@@ -896,7 +896,7 @@ async def compute_stewart(posted_data, user_id, app):
 
         asyncio.ensure_future(
             app['redis_conn'].set('_'.join([
-                user_id, hash_val]), res, pexpire=43200000))
+                user_id, hash_val]), res, pexpire=12000000))
 
         return "|||".join([
             ''.join(['{"key":', hash_val, ',"file":', res, '}']),
@@ -969,7 +969,7 @@ async def receiv_layer(request):
     f_name = '_'.join([user_id, str(h_val)])
     res = await geojson_to_topojson(data.encode(), layer_name)
     asyncio.ensure_future(
-        request.app['redis_conn'].set(f_name, res, pexpire=43200000))
+        request.app['redis_conn'].set(f_name, res, pexpire=12000000))
     return web.Response(text=''.join(['{"key":', str(h_val), '}']))
 
 
@@ -1254,7 +1254,7 @@ async def convert_csv_geo(request):
 
     asyncio.ensure_future(
         request.app['redis_conn'].set(
-            f_name, result, pexpire=43200000))
+            f_name, result, pexpire=12000000))
 
     request.app['logger'].info(
         'timing : csv -> geojson -> topojson : {:.4f}s'
