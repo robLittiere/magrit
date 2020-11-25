@@ -2,7 +2,7 @@ Changes
 =======
 
 
-0.8.12 (2020-xx-xx)
+0.8.12 (2020-11-26)
 -------------------
 
 - Allow more flexibility to customize the set of sample layers to use when deploying Magrit (#45).
