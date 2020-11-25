@@ -220,11 +220,10 @@ export function path_to_geojson2(layerName) {
 }
 
 export function display_error_during_computation(msg) {
-  // FIXME :
-  const message = message ? `<br><i>${_tr('app_page.common.details')}:</i> ${msg}` : '';
+  const message = msg ? `<br><i>${_tr('app_page.common.details')}:</i> ${msg}` : '';
   swal({
     title: `${_tr('app_page.common.error')}!`,
-    text: `${_tr('app_page.common.error_message')}${msg}`,
+    text: `${_tr('app_page.common.error_message')}${message}`,
     customClass: 'swal2_custom',
     type: 'error',
     allowOutsideClick: false,
