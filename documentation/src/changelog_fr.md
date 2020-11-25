@@ -1,8 +1,23 @@
 # Historique des versions et des changements effectués
 
-#### 0.8.11 (2019-xx-xx)
+
+#### 0.8.12 (2022-11-26)
 
 - Permet une personnalisation plus simple des jeux de couches d'exemple lors du déploiement de Magrit.
+
+- Correction de quelques fautes dans la documentation.
+
+- Désactivation de l'antialiasing lorsque que la bordure d'une couche a une épaisseur de 0 ou une opacité de 0 (permet de vraiment afficher la couche sans bordures, au détriment de la qualité de l'affichage).
+
+- Évite l'apparition de l'overlay gris (dédié au dépot de fichier) lorsque que certains éléments de l'interface sont déplacés (réorganisation des couches ou réorganisation des modalités d'une couche par exemple).
+
+- Définition correcte de l'attribut "lang" des pages HTML pour éviter d'avoir la traduction automatique de Chrome proposée lorsque ce n'est pas utile.
+
+- Améliore le retour d'un message d'erreur vers l'utilisateur lorsque la conversion d'un fichier tabulaire échoue.
+
+- Évite de proposer la réutilisation d'un style existant pour les cartes qualitatives lorsque que seul le style de la couche actuelle existe.
+
+- Change la manière dont est signalée qu'il est possible de réorganiser les modalités des cartes qualitatives et de cartes de symboles.
 
 
 #### 0.8.11 (2019-03-20)
