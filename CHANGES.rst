@@ -17,6 +17,9 @@ Changes
 
 - Improves the retrieval of a useful error message in case of failed conversion of tabular file.
 
+- Avoid to propose to reuse the style of an existing categorical layer when there is only one.
+
+- Improves the experience of reordering modalities for categorical layer / harmonize style between the modal window doing this for categorical layer and for picto layer (related to #62).
 
 
 0.8.11 (2019-03-20)
