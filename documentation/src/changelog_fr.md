@@ -1,5 +1,11 @@
 # Historique des versions et des changements effectués
 
+#### 0.8.13 (2022-11-27)
+
+- Remplace `cascaded_union` par `unary_union` dans le code Python et tentative de mieux gérer les géométries en entrée qui comportent des erreurs.
+
+- Attribut shape-rendering lors de la création des cartes lissées.
+
 
 #### 0.8.12 (2022-11-26)
 
