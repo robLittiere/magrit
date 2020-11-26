@@ -12,6 +12,7 @@ function change_lang() {
       bindTooltips();
     });
     document.getElementById('current_app_lang').innerHTML = new_lang;
+    document.querySelector('html').setAttribute('lang', new_lang);
     const menu = document.getElementById('menu_lang');
     if (menu) menu.remove();
   }

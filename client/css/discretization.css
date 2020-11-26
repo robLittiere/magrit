@@ -142,3 +142,29 @@ label_it_inline {
   background-image: linear-gradient(to bottom, #edfa3c, #d6d934);
   text-decoration: none;
 }
+
+/* Styles for list of elements in categorical / picto panel */
+li.typo_class:first-child {
+  border-top-left-radius: 4px;
+  border-top-right-radius: 4px;
+}
+
+li.typo_class:last-child {
+  border-bottom-left-radius: 4px;
+  border-bottom-right-radius: 4px;
+}
+
+li.typo_class {
+  border: 1px solid #ddd;
+  padding: 4px;
+  cursor: grab;
+}
+
+li.typo_class > p.color_square {
+  cursor: pointer;
+}
+
+li.typo_class > p.symbol_section {
+  cursor: pointer;
+}
+/* End of styles for list of elements in categorical / picto panel */

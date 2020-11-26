@@ -497,6 +497,7 @@ Les différents modes de discrétisation proposés dans cette boite sont détail
 <li>Choix des couleurs correspondantes aux catégories à représenter</li>
 </ul>
 </blockquote>
+<p>Note : il est possible de réordonner l'ordre d'apparition des modalités dans la légende lors du choix des couleurs et des noms de catégories, en déplaçant chaque ligne à la position souhaitée.</p>
 <a class="header" href="print.html#exemple--2" id="exemple--2"><h4>Exemple :</h4></a>
 <p style="text-align: center;">
 <img src="img/typo_EPT_Paris.png" alt="img_typo_map" style="width: 480px;"/>
@@ -598,7 +599,8 @@ Deux méthodes de création de cartogrammes sont disponibles dans Magrit :</p>
 <p>(1) - Dougenik, James A.; Chrisman, Nicholas R.; Niemeyer, Duane R. (1985), &quot;An Algorithm to Construct Continuous Area Cartograms&quot;, The Professional Geographer, n°37.<br />
 (2) - Olson, Judy M. (1976). Noncontiguous Area Cartograms. Professional Geographer, n°28.</p>
 <a class="header" href="print.html#carte-lissée" id="carte-lissée"><h1>Carte lissée</h1></a>
-<p>Méthode d'analyse spatiale et de représentation basée sur le calcul de potentiels (dit &quot;de Stewart&quot;) et qui n’a pas vocation à annuler ou atténuer le bruit (information parasite qui tend à brouiller la lecture) mais s’affranchit complètement du maillage administratif de départ. Elle permet d’observer ainsi la répartition spatiale du phénomène étudié, quelque soit l’hétérogénéité du maillage affecté en tout point de la carte, la valeur de la densité du phénomène dans le voisinage de ce point. En fonction des paramètres utilisés, cette méthode permet <em>&quot;de voir aussi bien les spécificités locales d'un phénomène que ses tendances générales&quot;</em> (Lambert &amp; Zanin, 2016).</p>
+<p>Méthode d'analyse spatiale et de représentation basée sur le calcul de potentiels (dit &quot;de Stewart&quot;) et qui n’a pas vocation à annuler ou atténuer le bruit (information parasite qui tend à brouiller la lecture) mais s’affranchit complètement du maillage administratif de départ. Elle permet d’observer ainsi la répartition spatiale du phénomène étudié, quelque soit l’hétérogénéité du maillage affecté en tout point de la carte, la valeur de la densité du phénomène dans le voisinage de ce point. En fonction des paramètres utilisés, cette méthode permet <em>&quot;de voir aussi bien les spécificités locales d'un phénomène que ses tendances générales&quot;</em> (Lambert &amp; Zanin, 2016).
+La <a href="https://cran.r-project.org/web/packages/potential/vignettes/potential.html">vignette du <em>package</em> R <code>potential</code></a> explique la méthodologie utilisée dans le détail.</p>
 <blockquote>
 <a class="header" href="print.html#paramètres-6" id="paramètres-6"><h3>Paramètres</h3></a>
 <ul>
@@ -680,6 +682,7 @@ Ainsi, les premières lignes d'une table décrivant des liens entre pays europé
 <li>Le choix de pictogrammes correspondants aux différentes catégories à représenter</li>
 </ul>
 </blockquote>
+<p>Note : il est possible de réordonner l'ordre d'apparition des modalités dans la légende lors du choix des symboles et des noms de catégories, en déplaçant chaque ligne à la position souhaitée.</p>
 <a class="header" href="print.html#exemple--9" id="exemple--9"><h4>Exemple :</h4></a>
 <p style="text-align: center;">
 <img src="img/typo_picto.png" alt="picto_map" style="width: 480px;"/>
@@ -1041,9 +1044,32 @@ Ce type de limite permet également de s'interroger sur l’intérêt d'une cart
 <a class="header" href="print.html#pourquoi-magrit-émet-un-message-davertissement-lorsque-la-géométrie-de-certaines-entités-dune-couche-est-nulle-" id="pourquoi-magrit-émet-un-message-davertissement-lorsque-la-géométrie-de-certaines-entités-dune-couche-est-nulle-"><h3>Pourquoi Magrit émet un message d'avertissement lorsque la géométrie de certaines entités d'une couche est nulle ?</h3></a>
 <a class="header" href="print.html#pourquoi-nest-il-pas-possible-dafficher-un-fond-type-openstreetmap-lors-de-la-réalisation-dune-carte-avec-magrit-" id="pourquoi-nest-il-pas-possible-dafficher-un-fond-type-openstreetmap-lors-de-la-réalisation-dune-carte-avec-magrit-"><h3>Pourquoi n'est-il pas possible d'afficher un fond type &quot;OpenStreetMap&quot; lors de la réalisation d'une carte avec Magrit ?</h3></a>
 <a class="header" href="print.html#historique-des-versions-et-des-changements-effectués" id="historique-des-versions-et-des-changements-effectués"><h1>Historique des versions et des changements effectués</h1></a>
-<a class="header" href="print.html#0811-2019-xx-xx" id="0811-2019-xx-xx"><h4>0.8.11 (2019-xx-xx)</h4></a>
+<a class="header" href="print.html#0812-2022-11-26" id="0812-2022-11-26"><h4>0.8.12 (2022-11-26)</h4></a>
 <ul>
-<li>Permet une personnalisation plus simple des jeux de couches d'exemple lors du déploiement de Magrit.</li>
+<li>
+<p>Permet une personnalisation plus simple des jeux de couches d'exemple lors du déploiement de Magrit.</p>
+</li>
+<li>
+<p>Correction de quelques fautes dans la documentation.</p>
+</li>
+<li>
+<p>Désactivation de l'antialiasing lorsque que la bordure d'une couche a une épaisseur de 0 ou une opacité de 0 (permet de vraiment afficher la couche sans bordures, au détriment de la qualité de l'affichage).</p>
+</li>
+<li>
+<p>Évite l'apparition de l'overlay gris (dédié au dépot de fichier) lorsque que certains éléments de l'interface sont déplacés (réorganisation des couches ou réorganisation des modalités d'une couche par exemple).</p>
+</li>
+<li>
+<p>Définition correcte de l'attribut &quot;lang&quot; des pages HTML pour éviter d'avoir la traduction automatique de Chrome proposée lorsque ce n'est pas utile.</p>
+</li>
+<li>
+<p>Améliore le retour d'un message d'erreur vers l'utilisateur lorsque la conversion d'un fichier tabulaire échoue.</p>
+</li>
+<li>
+<p>Évite de proposer la réutilisation d'un style existant pour les cartes qualitatives lorsque que seul le style de la couche actuelle existe.</p>
+</li>
+<li>
+<p>Change la manière dont est signalée qu'il est possible de réorganiser les modalités des cartes qualitatives et de cartes de symboles.</p>
+</li>
 </ul>
 <a class="header" href="print.html#0811-2019-03-20" id="0811-2019-03-20"><h4>0.8.11 (2019-03-20)</h4></a>
 <ul>

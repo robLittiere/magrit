@@ -2,6 +2,7 @@
 
 
 Méthode d'analyse spatiale et de représentation basée sur le calcul de potentiels (dit \"de Stewart\") et qui n’a pas vocation à annuler ou atténuer le bruit (information parasite qui tend à brouiller la lecture) mais s’affranchit complètement du maillage administratif de départ. Elle permet d’observer ainsi la répartition spatiale du phénomène étudié, quelque soit l’hétérogénéité du maillage affecté en tout point de la carte, la valeur de la densité du phénomène dans le voisinage de ce point. En fonction des paramètres utilisés, cette méthode permet *"de voir aussi bien les spécificités locales d'un phénomène que ses tendances générales"* (Lambert & Zanin, 2016).
+La [vignette du *package* R `potential`](https://cran.r-project.org/web/packages/potential/vignettes/potential.html) explique la méthodologie utilisée dans le détail.  
 
 > ### Paramètres
 > * Le nom du champ contenant les valeurs à utiliser.

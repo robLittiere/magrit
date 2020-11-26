@@ -1210,6 +1210,9 @@ function createStyleBox(layer_name) {
         const zoom_scale = +d3.zoomTransform(map.node()).k;
         map.select(g_lyr_name).style('stroke-width', `${stroke_width / zoom_scale}px`);
         data_manager.current_layers[layer_name]['stroke-width-const'] = stroke_width;
+        // We want to deactivate the antialiasing
+        // if any of the stroke-width or the stroke-opacity is 0
+        handleEdgeShapeRendering(selection, Math.min(stroke_width, border_opacity));
         const fill_meth = Object.getOwnPropertyNames(fill_prev)[0];
         if (type === 'Point' && data_manager.current_layers[layer_name].pointRadius) {
           data_manager.current_layers[layer_name].pointRadius = previous_point_radius;
@@ -1490,6 +1493,7 @@ function createStyleBox(layer_name) {
     .on('change', function () {
       opacity_section.select('#opacity_val_txt').html(` ${this.value}`);
       selection.style('stroke-opacity', this.value);
+      handleEdgeShapeRendering(selection, +this.value);
     });
 
   opacity_section.append('span')
@@ -1509,6 +1513,7 @@ function createStyleBox(layer_name) {
       const zoom_scale = +d3.zoomTransform(map.node()).k;
       map.select(g_lyr_name).style('stroke-width', `${val / zoom_scale}px`);
       data_manager.current_layers[layer_name]['stroke-width-const'] = val;
+      handleEdgeShapeRendering(selection, val);
     });
 
   const shadow_section = popup.append('p');
@@ -1623,6 +1628,9 @@ function createStyleBoxStewart(layer_name) {
         const zoom_scale = +d3.zoomTransform(map.node()).k;
         map.select(g_lyr_name).style('stroke-width', `${stroke_width / zoom_scale}px`);
         data_manager.current_layers[layer_name]['stroke-width-const'] = stroke_width;
+        // We want to deactivate the antialiasing
+        // if any of the stroke-width or the stroke-opacity is 0
+        handleEdgeShapeRendering(selection, Math.min(stroke_width, border_opacity));
         // const fill_meth = Object.getOwnPropertyNames(fill_prev)[0];
         recolor_stewart(prev_palette.name, prev_palette.reversed);
         if (document.querySelector(`.legend.legend_feature.lgdf_${_app.layer_to_id.get(layer_name)}`).id === 'legend_root') {
@@ -1739,6 +1747,7 @@ function createStyleBoxStewart(layer_name) {
     .on('change', function () {
       opacity_section.select('#opacity_val_txt').html(` ${this.value}`);
       selection.style('stroke-opacity', this.value);
+      handleEdgeShapeRendering(selection, +this.value);
     });
 
   opacity_section.append('span')
@@ -1758,6 +1767,7 @@ function createStyleBoxStewart(layer_name) {
       const zoom_scale = +d3.zoomTransform(map.node()).k;
       map.select(g_lyr_name).style('stroke-width', `${val / zoom_scale}px`);
       data_manager.current_layers[layer_name]['stroke-width-const'] = val;
+      handleEdgeShapeRendering(selection, val);
     });
 
   const shadow_section = popup.append('p');
@@ -1810,7 +1820,7 @@ function make_generate_labels_graticule_section(parent_node) {
 * Create the section allowing to generate labels on a parent style box.
 * (Used by all the createStyleBox_xxx functions)
 *
-* @param {Object} parent_node - The d3 selection corresponding the parent style box.
+* @param {Object} parent_node - The d3 selection corresponding to the parent style box.
 * @param {String} layer_name - The name of the layer currently edited in the style box.
 * @return {void}
 *
@@ -2837,5 +2847,24 @@ function change_layer_name(old_name, new_name) {
 
   if (restart_info) {
     displayInfoOnMove();
+  }
+}
+
+/**
+* Changes the `shape-rendering` property of the paths according to
+*
+*
+* @param {Object} selection - The d3 selection corresponding to the layers paths.
+* @param {String} value - The stroke width or the stoke opacity value.
+* @return {void}
+*
+*/
+export function handleEdgeShapeRendering(selection, value) {
+  if (value === 0) {
+    if (selection.attr('shape-rendering') !== 'crispEdges') {
+      selection.attr('shape-rendering', 'crispEdges');
+    }
+  } else if (selection.attr('shape-rendering') !== 'auto') {
+    selection.attr('shape-rendering', 'auto');
   }
 }

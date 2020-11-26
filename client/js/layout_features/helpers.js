@@ -8,7 +8,7 @@ import Textbox from './text_annotation';
 import ContextMenu from './../context-menu';
 import { check_layer_name } from './../function';
 import { create_li_layer_elem, drag_elem_geo } from './../helpers';
-import { Mround } from './../helpers_calc';
+import { Mround } from './../helpers_math';
 import { prepare_available_symbols, setSphereBottom } from './../interface';
 import { up_legends, up_legend, down_legend } from './../legend';
 import { zoom_without_redraw } from './../map_ctrl';

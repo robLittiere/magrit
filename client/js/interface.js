@@ -437,12 +437,20 @@ export function prepare_drop_section() {
         elem.addEventListener('dragenter', (e) => {
           e.preventDefault(); e.stopPropagation();
           if (document.body.classList.contains('no-drop')) return;
+          if (
+            e.relatedTarget
+            && e.relatedTarget.nodeType
+          ) return;
           document.getElementById('overlay_drop').style.display = '';
         });
 
         elem.addEventListener('dragover', (e) => {
           e.preventDefault(); e.stopPropagation();
           if (document.body.classList.contains('no-drop')) return;
+          if (
+            e.relatedTarget
+            && e.relatedTarget.nodeType
+          ) return;
           if (timeout) {
             clearTimeout(timeout);
             timeout = setTimeout(() => {
@@ -515,25 +523,34 @@ function convert_dataset(file) {
     xhrequest('POST', 'convert_tabular', ajaxData, true)
       .then((raw_data) => {
         const data = JSON.parse(raw_data);
-        swal({
-          title: '',
-          text: _tr('app_page.common.warn_xls_sheet') + (data.message ? '\n' + _tr(data.message[0], { sheet_name: data.message[1][0] }) : ''),
-          type: 'info',
-          allowOutsideClick: false,
-          allowEscapeKey: false,
-        }).then(() => {
-          const tmp_dataset = d3.csvParse(data.file);
-          const field_names = Object.getOwnPropertyNames(tmp_dataset[0]).map(el => (el.toLowerCase ? el.toLowerCase() : el));
-          if (!_app.targeted_layer_added && (field_names.indexOf('x') > -1 || field_names.indexOf('lat') > -1 || field_names.indexOf('latitude') > -1)) {
-            if (field_names.indexOf('y') > -1 || field_names.indexOf('lon') > -1 || field_names.indexOf('longitude') > -1 || field_names.indexOf('long') > -1 || field_names.indexOf('lng') > -1) {
-              add_csv_geom(data.file, data.name);
-              return;
+        if (data.file === null) {
+          // Something wrong happened during the conversion
+          // but the server sent an error message
+          display_error_during_computation(data.message || '');
+        } else {
+          // File conversion success
+          swal({
+            title: '',
+            text: _tr('app_page.common.warn_xls_sheet') + (data.message ? '\n' + _tr(data.message[0], { sheet_name: data.message[1][0] }) : ''),
+            type: 'info',
+            allowOutsideClick: false,
+            allowEscapeKey: false,
+          }).then(() => {
+            const tmp_dataset = d3.csvParse(data.file);
+            const field_names = Object.getOwnPropertyNames(tmp_dataset[0]).map(el => (el.toLowerCase ? el.toLowerCase() : el));
+            if (!_app.targeted_layer_added && (field_names.indexOf('x') > -1 || field_names.indexOf('lat') > -1 || field_names.indexOf('latitude') > -1)) {
+              if (field_names.indexOf('y') > -1 || field_names.indexOf('lon') > -1 || field_names.indexOf('longitude') > -1 || field_names.indexOf('long') > -1 || field_names.indexOf('lng') > -1) {
+                add_csv_geom(data.file, data.name);
+                return;
+              }
             }
-          }
-          data_manager.dataset_name = data.name;
-          add_dataset(tmp_dataset);
-        }, () => null);
+            data_manager.dataset_name = data.name;
+            add_dataset(tmp_dataset);
+          }, () => null);
+        }
       }, () => {
+        // Something wrong happened during the conversion
+        // and we dont have more informations to give to the user...
         display_error_during_computation();
       });
   };

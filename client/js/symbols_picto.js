@@ -73,23 +73,14 @@ export const display_box_symbol_typo = function (layer, field, categories) {
     .data(cats)
     .enter()
     .append('li')
-    .styles({
-      margin: '1px',
-      display: 'inline-flex',
-    })
     .attr('class', 'typo_class')
     .attr('id', (_, i) => ['line', i].join('_'));
-
-  newbox.selectAll('.typo_class')
-    .append('span')
-    .attr('class', 'three_dots')
-    .style('cursor', 'grab');
 
   newbox.selectAll('.typo_class')
     .append('input')
     .styles({
       width: '200px',
-      height: 'auto',
+      height: '30px',
       'vertical-align': 'middle',
     })
     .attrs(d => ({ class: 'typo_name', id: d.name }))
@@ -123,7 +114,7 @@ export const display_box_symbol_typo = function (layer, field, categories) {
   newbox.selectAll('.typo_class')
     .insert('input')
     .attrs({ type: 'number', id: 'symbol_size' })
-    .styles({ width: '50px', 'margin-left': '25px' })
+    .styles({ width: '50px', 'margin-left': '25px', height: '30px' })
     .property('value', 50);
 
   newbox.selectAll('.typo_class')

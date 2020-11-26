@@ -16,8 +16,8 @@ env:
     - GDALBUILD=$HOME/gdalbuild
 before_install:
   - travis_wait 30 ./misc/install_gdal.sh
-  - export PATH=$GDALINST/gdal-2.2.3/bin:$PATH
-  - export LD_LIBRARY_PATH=$GDALINST/gdal-2.2.3/lib:$LD_LIBRARY_PATH
+  - export PATH=$GDALINST/gdal-2.4.2/bin:$PATH
+  - export LD_LIBRARY_PATH=$GDALINST/gdal-2.4.2/lib:$LD_LIBRARY_PATH
 install:
   - npm -g install topojson
   - pip install --upgrade "setuptools>=25.1" pip
@@ -25,7 +25,15 @@ install:
   - python setup.py install
   - python setup.py build_ext --inplace
 before_script:
-  - pushd /tmp && wget https://chromedriver.storage.googleapis.com/77.0.3865.40/chromedriver_linux64.zip && unzip chromedriver_linux64.zip -d ~/bin/ && popd
+  - mkdir -p ~/bin
+  - |
+    if [ ! -e ~/bin/chromedriver ]; then
+      export CHROMEDRIVER_VERSION=$(curl -q http://chromedriver.storage.googleapis.com/LATEST_RELEASE)
+      wget -N http://chromedriver.storage.googleapis.com/$CHROMEDRIVER_VERSION/chromedriver_linux64.zip -P ~/
+      unzip ~/chromedriver_linux64.zip -d ~/bin
+      rm ~/chromedriver_linux64.zip
+      chmod +x ~/bin/chromedriver
+    fi
 script:
   - magrit --help
   - py.test tests/test.py -p no:flaky

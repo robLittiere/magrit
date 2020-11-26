@@ -1,7 +1,7 @@
 const webpack = require('webpack');
 const exec = require('child_process').exec;
 const CleanWebpackPlugin = require('clean-webpack-plugin');
-const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+const TerserPlugin = require('terser-webpack-plugin');
 const ReplaceHashWebpackPlugin = require('replace-hash-webpack-plugin');
 const version = require('./package.json').version;
 
@@ -52,16 +52,17 @@ module.exports = [
           },
         },
       },
+      minimize: true,
       minimizer: [
-        new UglifyJsPlugin({
+        new TerserPlugin({
           cache: true,
           parallel: true,
-          uglifyOptions: {
-            compress: false,
+          sourceMap: true,
+          terserOptions: {
             ecma: 6,
+            compress: false,
             mangle: false,
           },
-          sourceMap: true,
         }),
       ],
     },
@@ -114,13 +115,14 @@ module.exports = [
       ],
     },
     optimization: {
+      minimize: true,
       minimizer: [
-        new UglifyJsPlugin({
+        new TerserPlugin({
           cache: true,
           parallel: true,
-          uglifyOptions: {
-            compress: false,
+          terserOptions: {
             ecma: 6,
+            compress: false,
             mangle: false,
           },
         }),

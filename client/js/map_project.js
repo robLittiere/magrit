@@ -16,7 +16,7 @@ import {
   clickLinkFromDataUrl, create_li_layer_elem, drag_elem_geo,
   getAvailablesFunctionnalities, isValidJSON,
 } from './helpers';
-import { createDropShadow } from './layers_style_popup';
+import { createDropShadow, handleEdgeShapeRendering } from './layers_style_popup';
 import {
   createLegend_choro,
   createLegend_choro_horizontal,
@@ -1026,6 +1026,7 @@ export function apply_user_preferences(json_pref) {
       }
       layer_id = _app.layer_to_id.get(layer_name);
       const layer_selec = map.select(`#${layer_id}`);
+      const layer_selec_all = layer_selec.selectAll('path');
 
       current_layer_prop.rendered_field = _layer.rendered_field;
       if (_layer.layout_legend_displayed) current_layer_prop.layout_legend_displayed = _layer.layout_legend_displayed;
@@ -1037,13 +1038,13 @@ export function apply_user_preferences(json_pref) {
       if (_layer.color_palette) current_layer_prop.color_palette = _layer.color_palette;
       if (_layer.renderer) {
         if (['Choropleth', 'Stewart', 'Gridded'].indexOf(_layer.renderer) > -1) {
-          layer_selec.selectAll('path')
+          layer_selec_all
             .style(current_layer_prop.type === 'Line' ? 'stroke' : 'fill', (d, j) => _layer.color_by_id[j]);
         } else if (_layer.renderer === 'LinksGraduated') {
           current_layer_prop.linksbyId = _layer.linksbyId;
           current_layer_prop.min_display = _layer.min_display;
           current_layer_prop.breaks = _layer.breaks;
-          layer_selec.selectAll('path')
+          layer_selec_all
             .styles((d, j) => ({
               display: (+d.properties.fij > _layer.min_display) ? null : 'none',
               stroke: _layer.fill_color.single,
@@ -1055,7 +1056,7 @@ export function apply_user_preferences(json_pref) {
           const lim = current_layer_prop.min_display !== 0
             ? current_layer_prop.min_display * data_manager.current_layers[layer_name].n_features
             : -1;
-          layer_selec.selectAll('path')
+          layer_selec_all
             .styles((d, j) => ({
               fill: 'none',
               stroke: _layer.fill_color.single,
@@ -1072,7 +1073,7 @@ export function apply_user_preferences(json_pref) {
         }
       }
       if (_layer.stroke_color) {
-        layer_selec.selectAll('path').style('stroke', _layer.stroke_color);
+        layer_selec_all.style('stroke', _layer.stroke_color);
       }
       if (_layer['stroke-width-const']) {
         current_layer_prop['stroke-width-const'] = _layer['stroke-width-const'];
@@ -1085,16 +1086,21 @@ export function apply_user_preferences(json_pref) {
         rehandle_legend(layer_name, _layer.legend);
       }
       if (_layer.fill_color && _layer.fill_color.single && _layer.renderer !== 'DiscLayer') {
-        layer_selec
-          .selectAll('path')
+        layer_selec_all
           .style(current_layer_prop.type !== 'Line' ? 'fill' : 'stroke', _layer.fill_color.single);
       } else if (_layer.fill_color && _layer.fill_color.random) {
-        layer_selec
-          .selectAll('path')
+        layer_selec_all
           .style(current_layer_prop.type !== 'Line' ? 'fill' : 'stroke', () => Colors.names[Colors.random()]);
       }
+      // If one of the value is missing we replace it by 1
+      // so we only render crispEdges if we are sure
+      // the stroke-width or the stroke-opacity is 0
+      handleEdgeShapeRendering(
+        layer_selec_all,
+        Math.min(_layer['stroke-width-const'] || 1, stroke_opacity || 1),
+      );
 
-      layer_selec.selectAll('path')
+      layer_selec_all
         .styles({ 'fill-opacity': fill_opacity, 'stroke-opacity': stroke_opacity });
       if (_layer.visible === 'hidden') {
         handle_active_layer(layer_name);

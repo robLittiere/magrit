@@ -55,6 +55,7 @@ from mmh3 import hash as mmh3_hash
 from concurrent.futures import ThreadPoolExecutor, ProcessPoolExecutor
 from concurrent.futures._base import CancelledError
 from pyexcel import get_book
+from xlrd.biffh import XLRDError
 from ipaddress import ip_address
 # Web related stuff :
 from aiohttp import web, ClientSession
@@ -213,7 +214,7 @@ async def get_sample_layer(request):
     if result:
         result = result.decode()
         asyncio.ensure_future(
-            request.app['redis_conn'].pexpire(f_name, 43200000))
+            request.app['redis_conn'].pexpire(f_name, 14400000))
         return web.Response(text=''.join([
             '{"key":', hash_val,
             ',"file":', result.replace(''.join([user_id, '_']), ''), '}'
@@ -223,7 +224,7 @@ async def get_sample_layer(request):
             data = f.read()
         asyncio.ensure_future(
             request.app['redis_conn'].set(
-                f_name, data, pexpire=43200000))
+                f_name, data, pexpire=14400000))
         return web.Response(text=''.join(
             ['{"key":', hash_val, ',"file":', data, '}']
         ))
@@ -286,14 +287,14 @@ async def convert_topo(request):
     if result:
         result = result.decode()
         asyncio.ensure_future(
-            request.app['redis_conn'].pexpire(f_name, 43200000))
+            request.app['redis_conn'].pexpire(f_name, 14400000))
         return web.Response(text=''.join([
             '{"key":', hash_val,
             ',"file":', result.replace(hash_val, name), '}'
         ]))
 
     asyncio.ensure_future(
-        request.app['redis_conn'].set(f_name, data, pexpire=43200000))
+        request.app['redis_conn'].set(f_name, data, pexpire=14400000))
     return web.Response(text=''.join(
         ['{"key":', hash_val, ',"file":null}']
     ))
@@ -361,7 +362,7 @@ async def _convert_from_multiple_files(app, posted_data, user_id, tmp_dir):
         # We know this user and his layer has already been loaded into Redis,
         # so let's use it instead of doing a new conversion again:
         asyncio.ensure_future(
-            app['redis_conn'].pexpire(f_name, 43200000))
+            app['redis_conn'].pexpire(f_name, 14400000))
         # Read the orignal projection to propose it later:
         proj_info_str = read_shp_crs(
             path_join(tmp_dir, name.replace('.shp', '.prj')))
@@ -383,7 +384,7 @@ async def _convert_from_multiple_files(app, posted_data, user_id, tmp_dir):
             return convert_error()
 
         asyncio.ensure_future(
-            app['redis_conn'].set(f_name, result, pexpire=43200000))
+            app['redis_conn'].set(f_name, result, pexpire=14400000))
 
         # Read the orignal projection to propose it later (client side):
         proj_info_str = read_shp_crs(
@@ -424,7 +425,7 @@ async def _convert_from_single_file(app, posted_data, user_id, tmp_dir):
         # We know this user and his layer has already been loaded into Redis,
         # so let's use it instead of doing a new conversion again:
         asyncio.ensure_future(
-            app['redis_conn'].pexpire(f_name, 43200000))
+            app['redis_conn'].pexpire(f_name, 14400000))
 
         return web.Response(text=''.join(
             ['{"key":', str(hashed_input),
@@ -484,7 +485,7 @@ async def _convert_from_single_file(app, posted_data, user_id, tmp_dir):
 
                 asyncio.ensure_future(
                     app['redis_conn'].set(
-                        f_name, result, pexpire=43200000))
+                        f_name, result, pexpire=14400000))
             except (asyncio.CancelledError, CancelledError):
                 return
             except Exception as err:
@@ -533,7 +534,7 @@ async def _convert_from_single_file(app, posted_data, user_id, tmp_dir):
         # Store it in redis for possible later use:
         asyncio.ensure_future(
             app['redis_conn'].set(
-                f_name, result, pexpire=43200000))
+                f_name, result, pexpire=14400000))
 
     else:
         # Datatype was not detected; so nothing was done
@@ -571,7 +572,7 @@ async def convert_extrabasemap(request):
             result = await request.app['redis_conn'].get(f_name)
             if result:
                 asyncio.ensure_future(
-                    request.app['redis_conn'].pexpire(f_name, 43200000))
+                    request.app['redis_conn'].pexpire(f_name, 14400000))
                 return web.Response(text=''.join(
                     ['{"key":', str(hashed_input),
                      ',"file":', result.decode(), '}']))
@@ -583,7 +584,7 @@ async def convert_extrabasemap(request):
             else:
                 asyncio.ensure_future(
                     request.app['redis_conn'].set(
-                        f_name, result, pexpire=43200000))
+                        f_name, result, pexpire=14400000))
 
             return web.Response(text=''.join(
                 ['{"key":', str(hashed_input), ',"file":', result, '}']))
@@ -613,46 +614,9 @@ async def carto_doug(posted_data, user_id, app):
         hash_val = mmh3_hash(res)
         asyncio.ensure_future(
             app['redis_conn'].set('_'.join([
-                user_id, str(hash_val)]), res, pexpire=43200000))
+                user_id, str(hash_val)]), res, pexpire=14400000))
 
         return ''.join(['{"key":', str(hash_val), ',"file":', res, '}'])
-
-# async def compute_discont(posted_data, user_id, app):
-#     st = time.time()
-#     posted_data = json.loads(posted_data.get("json"))
-#     f_name = '_'.join([user_id, str(posted_data['topojson']), "NQ"])
-#     ref_layer = await app['redis_conn'].get(f_name)
-#     ref_layer = json.loads(ref_layer.decode())
-#     new_field = posted_data['join_field']
-#
-#     n_field_name = list(new_field.keys())[0]
-#     if len(new_field[n_field_name]) > 0:
-#         join_field_topojson(ref_layer, new_field[n_field_name], n_field_name)
-#     ref_layer_geojson = convert_from_topo(ref_layer)
-#     tmp_part = get_name()
-#     tmp_path = ''.join(['/tmp/', tmp_part, '.geojson'])
-#     with open(tmp_path, 'wb') as f:
-#         f.write(json.dumps(ref_layer_geojson).encode())
-#     new_topojson = await geojson_to_topojson(tmp_path, "-q 1e3")
-#     new_topojson = json.loads(new_topojson)
-#     res_geojson = app.loop.run_in_executor(
-#         app["ProcessPool"],
-#         get_borders_to_geojson,
-#         new_topojson
-#         )
-#     savefile(tmp_path, res_geojson)
-#     res = await geojson_to_topojson(tmp_path)
-#     new_name = ''.join(["Discont_", n_field_name])
-#     res = res.replace(tmp_part, new_name)
-#     hash_val = mmh3_hash(res)
-#     asyncio.ensure_future(
-#         app['redis_conn'].set('_'.join([
-#             user_id, str(hash_val), "NQ"]), res, pexpire=86400000))
-#     app['logger'].info(
-#         '{} - timing : dicont_on_py : {:.4f}s'
-#         .format(user_id, time.time()-st))
-#
-#     return ''.join(['{"key":', str(hash_val), ',"file":', res, '}'])
 
 
 async def links_map(posted_data, user_id, app):
@@ -683,7 +647,7 @@ async def links_map(posted_data, user_id, app):
     hash_val = mmh3_hash(res)
     asyncio.ensure_future(
         app['redis_conn'].set('_'.join([
-            user_id, str(hash_val)]), res, pexpire=43200000))
+            user_id, str(hash_val)]), res, pexpire=14400000))
 
     return ''.join(['{"key":', str(hash_val), ',"file":', res, '}'])
 
@@ -760,7 +724,7 @@ async def carto_gridded_point(posted_data, user_id, app):
         hash_val = str(mmh3_hash(res))
         asyncio.ensure_future(
             app['redis_conn'].set('_'.join([
-                user_id, hash_val]), res, pexpire=43200000))
+                user_id, hash_val]), res, pexpire=14400000))
 
         # Return it to the user:
         return ''.join(['{"key":', hash_val, ',"file":', res, '}'])
@@ -802,7 +766,7 @@ async def carto_gridded(posted_data, user_id, app):
         hash_val = str(mmh3_hash(res))
         asyncio.ensure_future(
             app['redis_conn'].set('_'.join([
-                user_id, hash_val]), res, pexpire=43200000))
+                user_id, hash_val]), res, pexpire=14400000))
         return ''.join(['{"key":', hash_val, ',"file":', res, '}'])
 
 
@@ -828,7 +792,7 @@ async def compute_olson(posted_data, user_id, app):
     hash_val = str(mmh3_hash(res))
     asyncio.ensure_future(
         app['redis_conn'].set('_'.join([
-            user_id, hash_val]), res, pexpire=43200000))
+            user_id, hash_val]), res, pexpire=14400000))
     return ''.join(['{"key":', hash_val, ',"file":', res, '}'])
 
 
@@ -896,7 +860,7 @@ async def compute_stewart(posted_data, user_id, app):
 
         asyncio.ensure_future(
             app['redis_conn'].set('_'.join([
-                user_id, hash_val]), res, pexpire=43200000))
+                user_id, hash_val]), res, pexpire=14400000))
 
         return "|||".join([
             ''.join(['{"key":', hash_val, ',"file":', res, '}']),
@@ -969,7 +933,7 @@ async def receiv_layer(request):
     f_name = '_'.join([user_id, str(h_val)])
     res = await geojson_to_topojson(data.encode(), layer_name)
     asyncio.ensure_future(
-        request.app['redis_conn'].set(f_name, res, pexpire=43200000))
+        request.app['redis_conn'].set(f_name, res, pexpire=14400000))
     return web.Response(text=''.join(['{"key":', str(h_val), '}']))
 
 
@@ -1254,7 +1218,7 @@ async def convert_csv_geo(request):
 
     asyncio.ensure_future(
         request.app['redis_conn'].set(
-            f_name, result, pexpire=43200000))
+            f_name, result, pexpire=14400000))
 
     request.app['logger'].info(
         'timing : csv -> geojson -> topojson : {:.4f}s'
@@ -1324,20 +1288,36 @@ async def convert_tabular(request):
     name, data, datatype = _file.filename, _file.file, _file.content_type
     if datatype in allowed_datatypes:
         name, extension = name.rsplit('.', 1)
-        book = get_book(file_content=data.read(), file_type=extension)
-        sheet_names = book.sheet_names()
-        csv = book[sheet_names[0]].csv
-        # replace spaces in variable names
-        firstrowlength = csv.find('\n')
-        result = csv[0:firstrowlength].replace(' ', '_') + csv[firstrowlength:]
-        message = ["app_page.common.warn_multiple_sheets", sheet_names] \
-            if len(sheet_names) > 1 else None
+        try:
+            book = get_book(file_content=data.read(), file_type=extension)
+            sheet_names = book.sheet_names()
+            csv = book[sheet_names[0]].csv
+            # replace spaces in variable names
+            firstrowlength = csv.find('\n')
+            result = csv[0:firstrowlength].replace(' ', '_') + csv[firstrowlength:]
+            message = ["app_page.common.warn_multiple_sheets", sheet_names] \
+                if len(sheet_names) > 1 else None
+
+        except Exception as err:
+            result = None
+            _tb = traceback.format_exc()
+            request.app['logger'].info(
+                'Error on \"convert_tabular\" (extension was \"{}\"):\n{}'
+                .format(extension, _tb))
+
+            message = str(err) if isinstance(err, XLRDError) \
+                else ('Unable to convert the provided file. '
+                    'Please check that it is a tabular file supported '
+                    'by the application (in xls, xlsx, ods or csv format).')
+
     else:
-        result = "Unknown tabular file format"
         request.app['logger'].info(
             'Unknown tabular file format : {} / {}'
             .format(name, datatype))
-        message = None
+        result = None
+        message = ('Unknown tabular file format. '
+            'Please use a tabular file supported '
+            'by the application (in xls, xlsx, ods or csv format).')
 
     request.app['logger'].info(
         'timing : spreadsheet -> csv : {:.4f}s'

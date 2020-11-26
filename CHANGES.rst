@@ -2,14 +2,24 @@ Changes
 =======
 
 
-0.8.12 (2019-xx-xx)
+0.8.12 (2020-11-26)
 -------------------
 
 - Allow more flexibility to customize the set of sample layers to use when deploying Magrit (#45).
 
 - Fixe some typos in documentation (#49).
 
-- ...
+- Render crisp-edges (ie. disable SVG antialiasing) if the stroke-width or the stroke-opacity of a layer is set to 0 (#61). Note that this has an impact on the quality of the rendering, which is now slightly crenellated.
+
+- Avoid opening the overlay (dedicated to file upload and triggered by a drag event) when draging html elements (#64).
+
+- Correctly set the "lang" HTML attribute to avoid having chrome translation poping up when it is not necessary (#65).
+
+- Improves the retrieval of a useful error message in case of failed conversion of tabular file.
+
+- Avoid to propose to reuse the style of an existing categorical layer when there is only one.
+
+- Improves the experience of reordering modalities for categorical layer / harmonize style between the modal window doing this for categorical layer and for picto layer (related to #62).
 
 
 0.8.11 (2019-03-20)
