@@ -4,7 +4,7 @@
 """
 from geopandas import GeoDataFrame, GeoSeries
 from shapely.geometry import Polygon
-from shapely.ops import cascaded_union
+from shapely.ops import unary_union
 from shapely import speedups
 import ujson as json
 from .geo import (
@@ -30,9 +30,9 @@ def get_grid_layer(input_file, height, field_name, grid_shape="square"):
     gdf = gdf[gdf[field_name].notnull()]
     gdf = gdf[gdf.geometry.notnull()]
     gdf.index = range(len(gdf))
-
+    gdf.geometry = gdf.geometry.buffer(0)
     mask = GeoSeries(
-        cascaded_union(gdf.geometry.buffer(0)),
+        unary_union(gdf.geometry),
         #        cascaded_union(gdf.geometry),
         crs=gdf.crs
     ).to_crs(crs=proj_robinson).values[0]
