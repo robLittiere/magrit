@@ -1,0 +1,263 @@
+/*! exports provided: Mmax, Mmin, Mabs, Mpow, Msqrt, Mround, Mceil */
+
+/*! exports provided: add_layout_feature, add_single_symbol */
+
+/*! exports provided: add_sample_layer, add_layer_topojson */
+
+/*! exports provided: available_fonts, custom_fonts */
+
+/*! exports provided: bindTooltips */
+
+/*! exports provided: button_replace, button_trash, button_legend, button_zoom_fit, button_table, button_type, button_result_type, eye_open0, sys_run_button, sys_run_button_t2 */
+
+/*! exports provided: check_remove_existing_box, make_dialog_container, overlay_under_modal, make_confirm_dialog2, reOpenParent */
+
+/*! exports provided: default */
+
+/*! exports provided: discretiz_geostats_switch, getOptNbClass, getBreaksQ6, getBreaksStdDev, discretize_to_size, discretize_to_colors, getBreaks_userDefined, prepare_ref_histo */
+
+/*! exports provided: display_box_symbol_typo, box_choice_symbol, make_style_box_indiv_symbol */
+
+/*! exports provided: display_categorical_box */
+
+/*! exports provided: display_discretization */
+
+/*! exports provided: display_discretization_links_discont */
+
+/*! exports provided: export_compo_svg, export_compo_png, export_layer_geo */
+
+/*! exports provided: get_map_project, save_map_project, load_map_project, apply_user_preferences, beforeUnloadWindow */
+
+/*! exports provided: get_menu_option, clean_menu_function, reset_user_values, check_layer_name, make_min_max_tableau, fetch_min_max_table_value, render_twostocks_waffle, make_prop_line, make_prop_symbols, render_categorical, prepare_categories_array, render_label, render_label_graticule */
+
+/*! exports provided: handle_click_layer, make_style_box_indiv_label, createDropShadow, handleEdgeShapeRendering */
+
+/*! exports provided: handle_legend, up_legends, up_legend, down_legend, drag_legend_func, createLegend_waffle, createLegend_discont_links, createLegend_symbol, createLegend_line_symbol, createLegend_layout, createLegend_choro, createLegend_choro_horizontal, move_legends */
+
+/*! exports provided: hatanoRaw, winkel1Raw */
+
+/*! exports provided: isNumber, createWaitingOverlay, drag_elem_geo, drag_elem_geo2, drag_waffle, setSelected, path_to_geojson2, display_error_during_computation, request_data, xhrequest, getImgDataUrl, make_content_summary, copy_layer, send_layer_server, get_other_layer_names, get_display_name_on_layer_list, create_li_layer_elem, type_col, type_col2, getFieldsType, make_box_type_fields, getAvailablesFunctionnalities, clickLinkFromDataUrl, cloneObj, prepareFileExt, isValidJSON, accordionize2, getTargetLayerProps */
+
+/*! exports provided: makeSection5, fill_export_png_options */
+
+/*! exports provided: make_table, boxExplore2 */
+
+/*! exports provided: min_fast, max_fast, has_negative, contains_empty_val, has_duplicate, round_value, get_nb_decimals, get_nb_left_separator, getDecimalSeparator, get_precision_axis, PropSizer, prop_sizer3_e, getBinsCount, haversine_dist, coslaw_dist, getTranslateNewLegend, scale_to_bbox */
+
+/*! exports provided: northArrow */
+
+/*! exports provided: pos_lgds_elem, get_coords_snap_lines, make_red_line_snap */
+
+/*! exports provided: rgb2hex, hexToRgb, getColorBrewerArray, interp_n, interpolateColor, Colors, ColorsSelected, randomColor, addNewCustomPalette */
+
+/*! exports provided: scaleBar */
+
+/*! exports provided: setUpInterface, askTypeLayer, handle_upload_files, prepare_drop_section, handle_reload_TopoJSON, update_menu_dataset, update_section1_layout, update_section1, ask_join_now, updateLayer, handle_click_hand, scale_to_lyr, center_map, fitLayer, setSphereBottom, add_simplified_land_layer, prepare_available_symbols, accordionize, switch_accordion_section, handle_title, handle_title_properties, displayInfoOnMove, handle_active_layer, remove_layer_cleanup, binds_layers_buttons */
+
+/*! exports provided: shortListContent, available_projections, handle_projection_select, addLastProjectionSelect, getD3ProjFromProj4, tryFindNameProj, isInterrupted, handleClipPath, change_projection, change_projection_4 */
+
+/*! exports provided: valid_join_check_display, createJoinBox */
+
+/*! exports provided: world_topology */
+
+/*! exports provided: zoom, canvas_rotation_value, makeSvgMap, zoom_without_redraw, reproj_symbol_layer, rotate_global, redraw_legends_symbols, zoomClick, handle_bg_color, canvas_mod_size */
+
+/*! no exports provided */
+
+/*! no static exports found */
+
+/*!********************!*\
+  !*** ./js/main.js ***!
+  \********************/
+
+/*!*********************!*\
+  !*** ./js/fonts.js ***!
+  \*********************/
+
+/*!**********************!*\
+  !*** ./js/layers.js ***!
+  \**********************/
+
+/*!**********************!*\
+  !*** ./js/legend.js ***!
+  \**********************/
+
+/*!**********************!*\
+  !*** ./js/tables.js ***!
+  \**********************/
+
+/*!***********************!*\
+  !*** ./css/style.css ***!
+  \***********************/
+
+/*!***********************!*\
+  !*** ./js/dialogs.js ***!
+  \***********************/
+
+/*!***********************!*\
+  !*** ./js/helpers.js ***!
+  \***********************/
+
+/*!************************!*\
+  !*** ./js/function.js ***!
+  \************************/
+
+/*!************************!*\
+  !*** ./js/map_ctrl.js ***!
+  \************************/
+
+/*!************************!*\
+  !*** ./js/tooltips.js ***!
+  \************************/
+
+/*!*************************!*\
+  !*** ./js/interface.js ***!
+  \*************************/
+
+/*!*************************!*\
+  !*** ./js/ui/header.js ***!
+  \*************************/
+
+/*!*************************!*\
+  !*** ./js/zoom_rect.js ***!
+  \*************************/
+
+/*!**************************!*\
+  !*** ./js/join_popup.js ***!
+  \**************************/
+
+/*!**************************!*\
+  !*** ./js/map_export.js ***!
+  \**************************/
+
+/*!**************************!*\
+  !*** ./js/ui/buttons.js ***!
+  \**************************/
+
+/*!***************************!*\
+  !*** ./js/map_project.js ***!
+  \***************************/
+
+/*!***************************!*\
+  !*** ./js/projections.js ***!
+  \***************************/
+
+/*!***************************!*\
+  !*** ./js/sample_topo.js ***!
+  \***************************/
+
+/*!***************************!*\
+  !*** ./js/ui/section1.js ***!
+  \***************************/
+
+/*!***************************!*\
+  !*** ./js/ui/section2.js ***!
+  \***************************/
+
+/*!***************************!*\
+  !*** ./js/ui/section3.js ***!
+  \***************************/
+
+/*!***************************!*\
+  !*** ./js/ui/section4.js ***!
+  \***************************/
+
+/*!***************************!*\
+  !*** ./js/ui/section5.js ***!
+  \***************************/
+
+/*!****************************!*\
+  !*** ./js/context-menu.js ***!
+  \****************************/
+
+/*!****************************!*\
+  !*** ./js/helpers_calc.js ***!
+  \****************************/
+
+/*!****************************!*\
+  !*** ./js/helpers_math.js ***!
+  \****************************/
+
+/*!*****************************!*\
+  !*** ./js/symbols_picto.js ***!
+  \*****************************/
+
+/*!******************************!*\
+  !*** ./css/context-menu.css ***!
+  \******************************/
+
+/*!******************************!*\
+  !*** ./js/colors_helpers.js ***!
+  \******************************/
+
+/*!********************************!*\
+  !*** ./css/discretization.css ***!
+  \********************************/
+
+/*!*********************************!*\
+  !*** ./js/projection_others.js ***!
+  \*********************************/
+
+/*!**********************************!*\
+  !*** ./js/layers_style_popup.js ***!
+  \**********************************/
+
+/*!*************************************!*\
+  !*** ./js/classification/common.js ***!
+  \*************************************/
+
+/*!*************************************!*\
+  !*** ./js/layout_features/arrow.js ***!
+  \*************************************/
+
+/*!***************************************!*\
+  !*** ./js/layout_features/ellipse.js ***!
+  \***************************************/
+
+/*!***************************************!*\
+  !*** ./js/layout_features/helpers.js ***!
+  \***************************************/
+
+/*!****************************************!*\
+  !*** ./js/layout_features/scalebar.js ***!
+  \****************************************/
+
+/*!*****************************************!*\
+  !*** ./js/layout_features/rectangle.js ***!
+  \*****************************************/
+
+/*!******************************************!*\
+  !*** ./js/layout_features/snap_lines.js ***!
+  \******************************************/
+
+/*!*******************************************!*\
+  !*** ./js/layout_features/north_arrow.js ***!
+  \*******************************************/
+
+/*!***********************************************!*\
+  !*** ./js/layout_features/text_annotation.js ***!
+  \***********************************************/
+
+/*!************************************************!*\
+  !*** ./js/classification/categorical_panel.js ***!
+  \************************************************/
+
+/*!***************************************************!*\
+  !*** ./js/classification/discretization_panel.js ***!
+  \***************************************************/
+
+/*!*****************************************************!*\
+  !*** ./js/classification/discrtiz_links_discont.js ***!
+  \*****************************************************/
+
+/*!*************************************************************!*\
+  !*** ./node_modules/css-loader/dist/cjs.js!./css/style.css ***!
+  \*************************************************************/
+
+/*!********************************************************************!*\
+  !*** ./node_modules/css-loader/dist/cjs.js!./css/context-menu.css ***!
+  \********************************************************************/
+
+/*!**********************************************************************!*\
+  !*** ./node_modules/css-loader/dist/cjs.js!./css/discretization.css ***!
+  \**********************************************************************/

@@ -1859,6 +1859,7 @@ function render_stewart() {
       };
       map.select(`#${_app.layer_to_id.get(n_layer_name)}`)
         .selectAll('path')
+        .attr('shape-rendering', 'crispEdges') // Because we are using stroke-opacity=0 just below
         .styles((d, i) => ({ fill: col_pal[n_class - 1 - i], 'fill-opacity': 1, 'stroke-opacity': 0 }));
       handle_legend(n_layer_name);
       switch_accordion_section();
