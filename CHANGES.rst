@@ -1,6 +1,13 @@
 Changes
 =======
 
+0.8.13 (2020-11-27)
+-------------------
+
+- Replace `cascaded_union` with `unary_union` in Python code and attempt to handle input geometries with errors.
+
+- Shape-rendering attributes when creating smoothed maps.
+
 
 0.8.12 (2020-11-26)
 -------------------

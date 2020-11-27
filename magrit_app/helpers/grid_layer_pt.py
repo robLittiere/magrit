@@ -4,7 +4,7 @@
 """
 from geopandas import GeoDataFrame, GeoSeries
 from shapely.geometry import Polygon
-from shapely.ops import cascaded_union
+from shapely.ops import unary_union
 from shapely import speedups
 import numpy as np
 import ujson as json
@@ -71,7 +71,7 @@ def get_grid_layer_pt(input_file, height, field_name,
             _mask = GeoDataFrame.from_file(mask_layer)
 
             mask = GeoSeries(
-                cascaded_union(_mask.geometry.buffer(0)),
+                unary_union(_mask.geometry.buffer(0)),
                 crs=_mask.crs,
                 ).to_crs(crs=proj_robinson).values[0]
 

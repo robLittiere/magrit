@@ -4,7 +4,7 @@
     "minify": "NODE_ENV=production ./node_modules/webpack/bin/webpack.js",
     "watch": "./node_modules/webpack/bin/webpack.js --watch"
   },
-  "version": "0.8.12",
+  "version": "0.8.13",
   "dependencies": {
     "alertifyjs": "^1.13.1",
     "bluebird": "^3.7.2",
