@@ -1,6 +1,12 @@
 Changes
 =======
 
+Current master (not tagged yet)
+-------------------------------
+
+- Fix wrong usage of `concurrent.futures.ProcessPoolExecutor` + kill possibly long running computation after 5min (such as computing smoothed map and gridded map).
+
+
 0.8.13 (2020-11-27)
 -------------------
 
