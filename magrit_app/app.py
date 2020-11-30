@@ -54,6 +54,7 @@ from socket import socket, AF_INET, SOCK_STREAM
 from mmh3 import hash as mmh3_hash
 from concurrent.futures import ThreadPoolExecutor, ProcessPoolExecutor
 from concurrent.futures._base import CancelledError
+from concurrent.futures.process import BrokenProcessPool
 from pyexcel import get_book
 from xlrd.biffh import XLRDError
 from ipaddress import ip_address
@@ -97,7 +98,14 @@ except:
 GEO2TOPO_PATH = None
 IS_WINDOWS = sys.platform.startswith('win')
 IS_FROZEN = True if getattr(sys, 'frozen', False) else False
+_ProcessPoolExecutor = ProcessPoolExecutor if not IS_WINDOWS else ThreadPoolExecutor
 
+async def kill_after_timeout(delay, pid):
+    await asyncio.sleep(delay)
+    try:
+        os.kill(pid, 9)
+    except:
+        pass
 
 async def index_handler(request):
     """
@@ -373,10 +381,9 @@ async def _convert_from_multiple_files(app, posted_data, user_id, tmp_dir):
              ',"proj":', json.dumps(get_proj4_string(proj_info_str)),
              '}']))
     else:
-        res = await app.loop.run_in_executor(
-            app["ProcessPool"],
-            ogr_to_geojson,
-            shp_path)
+        with _ProcessPoolExecutor(max_workers=1) as executor:
+            res = await app.loop.run_in_executor(
+                executor, ogr_to_geojson, shp_path)
         if not res:
             return convert_error()
         result = await geojson_to_topojson(res, layer_name)
@@ -470,10 +477,9 @@ async def _convert_from_single_file(app, posted_data, user_id, tmp_dir):
             # extension by its lowercase version :
             slots = extractShpZip(myzip, slots, tmp_dir)
             try:
-                res = await app.loop.run_in_executor(
-                    app["ProcessPool"],
-                    ogr_to_geojson,
-                    slots['shp'])
+                with _ProcessPoolExecutor(max_workers=1) as executor:
+                    res = await app.loop.run_in_executor(
+                        executor, ogr_to_geojson, slots['shp'])
                 if not res:
                     return convert_error()
                 result = await geojson_to_topojson(res, layer_name)
@@ -517,10 +523,10 @@ async def _convert_from_single_file(app, posted_data, user_id, tmp_dir):
         # Convert the file to a GeoJSON file with sanitized column names:
         with open(tmp_path, 'wb') as f:
             f.write(data)
-        res = await app.loop.run_in_executor(
-            app["ThreadPool"],
-            ogr_to_geojson,
-            tmp_path)
+
+        with ThreadPoolExecutor(max_workers=1) as executor:
+            res = await app.loop.run_in_executor(
+                executor, ogr_to_geojson, tmp_path)
 
         if not res:
             return convert_error(
@@ -604,10 +610,18 @@ async def carto_doug(posted_data, user_id, app):
         tmp_path = path_join(tmp_dir, '{}.geojson'.format(get_name()))
         savefile(tmp_path, topojson_to_geojson(ref_layer).encode())
 
-        result = await app.loop.run_in_executor(
-            app["ThreadPool"],
-            make_carto_doug,
-            tmp_path, n_field_name, iterations)
+        with _ProcessPoolExecutor(max_workers=1) as executor:
+            fut = app.loop.run_in_executor(
+                executor,
+                make_carto_doug,
+                tmp_path,
+                n_field_name,
+                iterations)
+
+            asyncio.ensure_future(
+                kill_after_timeout(300, list(executor._processes.values())[0].pid))
+
+            result = await fut
 
         new_name = '_'.join(["Carto_doug", str(iterations), n_field_name])
         res = await geojson_to_topojson(result, new_name)
@@ -632,15 +646,16 @@ async def links_map(posted_data, user_id, app):
         join_field_topojson(ref_layer, new_field[n_field_name], n_field_name)
     ref_layer = convert_from_topo(ref_layer)
 
-    result_geojson = await app.loop.run_in_executor(
-        app["ThreadPool"],
-        make_geojson_links,
-        ref_layer,
-        posted_data["csv_table"],
-        posted_data["field_i"],
-        posted_data["field_j"],
-        posted_data["field_fij"],
-        n_field_name)
+    with ThreadPoolExecutor(max_workers=1) as executor:
+        result_geojson = await app.loop.run_in_executor(
+            executor,
+            make_geojson_links,
+            ref_layer,
+            posted_data["csv_table"],
+            posted_data["field_i"],
+            posted_data["field_j"],
+            posted_data["field_fij"],
+            n_field_name)
 
     new_name = 'LinksLayer'
     res = await geojson_to_topojson(result_geojson, new_name)
@@ -701,17 +716,23 @@ async def carto_gridded_point(posted_data, user_id, app):
                 topojson_to_geojson(json.loads(polygon_layer.decode())).encode())
 
         # Compute the result:
-        result_geojson = await app.loop.run_in_executor(
-            app["ProcessPool"],
-            get_grid_layer_pt,
-            filenames['src_layer'],
-            posted_data["cellsize"],
-            n_field_name,
-            posted_data["grid_shape"].lower(),
-            filenames['mask_layer'],
-            filenames['polygon_layer'],
-            posted_data['func_type'],
-        )
+        with _ProcessPoolExecutor(max_workers=1) as executor:
+            fut = app.loop.run_in_executor(
+                executor,
+                get_grid_layer_pt,
+                filenames['src_layer'],
+                posted_data["cellsize"],
+                n_field_name,
+                posted_data["grid_shape"].lower(),
+                filenames['mask_layer'],
+                filenames['polygon_layer'],
+                posted_data['func_type'],
+            )
+
+            asyncio.ensure_future(
+                kill_after_timeout(300, list(executor._processes.values())[0].pid))
+
+            result_geojson = await fut
 
         # Rename the result layer:
         new_name = '_'.join(['Gridded',
@@ -750,13 +771,14 @@ async def carto_gridded(posted_data, user_id, app):
         savefile(filenames['src_layer'],
                  topojson_to_geojson(ref_layer).encode())
 
-        result_geojson = await app.loop.run_in_executor(
-            app["ProcessPool"],
-            get_grid_layer,
-            filenames['src_layer'],
-            posted_data["cellsize"],
-            n_field_name,
-            posted_data["grid_shape"].lower())
+        with _ProcessPoolExecutor(max_workers=1) as executor:
+            result_geojson = await app.loop.run_in_executor(
+                executor,
+                get_grid_layer,
+                filenames['src_layer'],
+                posted_data["cellsize"],
+                n_field_name,
+                posted_data["grid_shape"].lower())
 
         new_name = '_'.join(['Gridded',
                              str(posted_data["cellsize"]),
@@ -780,11 +802,12 @@ async def compute_olson(posted_data, user_id, app):
     scale_values = posted_data['scale_values']
     ref_layer_geojson = convert_from_topo(ref_layer)
 
-    await app.loop.run_in_executor(
-        app["ThreadPool"],
-        olson_transform,
-        ref_layer_geojson,
-        scale_values)
+    with ThreadPoolExecutor(max_workers=1) as executor:
+        await app.loop.run_in_executor(
+            executor,
+            olson_transform,
+            ref_layer_geojson,
+            scale_values)
 
     new_name = "_".join(["Olson_carto", str(posted_data["field_name"])])
     res = await geojson_to_topojson(
@@ -839,33 +862,38 @@ async def compute_stewart(posted_data, user_id, app):
                 filenames['mask_layer'],
                 topojson_to_geojson(json.loads(mask_layer.decode())).encode())
 
-        res, breaks = await app.loop.run_in_executor(
-            app["ProcessPool"],
-            quick_stewart_mod,
-            filenames['point_layer'],
-            n_field_name1,
-            int(posted_data['span']),
-            float(posted_data['beta']),
-            posted_data['typefct'].lower(),
-            int(posted_data['nb_class']),
-            discretization,
-            posted_data['resolution'],
-            filenames["mask_layer"],
-            n_field_name2,
-            posted_data['user_breaks'])
+        with _ProcessPoolExecutor(max_workers=1) as executor:
+            fut = app.loop.run_in_executor(
+                executor,
+                quick_stewart_mod,
+                filenames['point_layer'],
+                n_field_name1,
+                int(posted_data['span']),
+                float(posted_data['beta']),
+                posted_data['typefct'].lower(),
+                int(posted_data['nb_class']),
+                discretization,
+                posted_data['resolution'],
+                filenames["mask_layer"],
+                n_field_name2,
+                posted_data['user_breaks'])
 
+            asyncio.ensure_future(
+                kill_after_timeout(300, list(executor._processes.values())[0].pid))
+
+            res, breaks = await fut
         new_name = '_'.join(['Smoothed', n_field_name1])
         res = await geojson_to_topojson(res, new_name)
         hash_val = str(mmh3_hash(res))
 
-        asyncio.ensure_future(
-            app['redis_conn'].set('_'.join([
-                user_id, hash_val]), res, pexpire=14400000))
+    asyncio.ensure_future(
+        app['redis_conn'].set('_'.join([
+            user_id, hash_val]), res, pexpire=14400000))
 
-        return "|||".join([
-            ''.join(['{"key":', hash_val, ',"file":', res, '}']),
-            json.dumps(breaks)
-        ])
+    return "|||".join([
+        ''.join(['{"key":', hash_val, ',"file":', res, '}']),
+        json.dumps(breaks)
+    ])
 
 
 async def geo_compute(request):
@@ -914,7 +942,12 @@ async def geo_compute(request):
             request.app['logger'].info(
                 'Error on \"{}\" after {:.4f}s\n{}'
                 .format(function, time.time()-s_t, _tb))
-            data_response = json.dumps({"Error": "{}".format(err)})
+            msg = (
+                'The calculation was cancelled after '
+                'reaching the maximum duration allowed.') \
+                if isinstance(err, BrokenProcessPool) \
+                else str(err)
+            data_response = json.dumps({"Error": "{}".format(msg)})
 
         return web.Response(text=data_response)
 
@@ -1175,9 +1208,14 @@ async def calc_helper(request):
             val2 = val2.astype(float, copy=False)
         except:
             return web.Response(text='{"Error":"Invalid datatype"}')
-    result = await request.app.loop.run_in_executor(
-        request.app['ThreadPool'],
-        run_calc, val1, val2, posted_data['operator'])
+    with ThreadPoolExecutor(max_workers=1) as executor:
+        result = await request.app.loop.run_in_executor(
+            executor,
+            run_calc,
+            val1,
+            val2,
+            posted_data['operator'],
+        )
     return web.Response(text=result)
 
 
@@ -1438,9 +1476,7 @@ async def on_shutdown(app):
     Function triggered when the application exits normally.
     """
     await app["redis_conn"].quit()
-    app["ProcessPool"].shutdown()
-    app["ThreadPool"].shutdown()
-    for task in asyncio.Task.all_tasks():
+    for task in asyncio.all_tasks():
         await asyncio.sleep(0)
         info = task._repr_info()
         if "RedisPool" in info[1] and "pending" in info[0]:
@@ -1523,9 +1559,6 @@ async def init(loop, addr='0.0.0.0', port=None, watch_change=False, use_redis=Tr
     app['version'] = get_version()
     with open('static/json/sample_layers.json', 'r') as f:
         app['db_layers'] = {n['name']: n['path'] for n in json.loads(f.read())}
-    app['ThreadPool'] = ThreadPoolExecutor(6)
-    app['ProcessPool'] = \
-        ProcessPoolExecutor(6) if not IS_WINDOWS else ThreadPoolExecutor(6)
     app['app_name'] = "Magrit"
     app['geo_function'] = {
         "stewart": compute_stewart,
