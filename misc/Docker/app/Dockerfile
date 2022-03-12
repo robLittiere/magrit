@@ -65,7 +65,7 @@ RUN mkdir $GDALBUILD && mkdir $GDALINST && cd $GDALBUILD && wget http://download
 ENV PATH="${GDALINST}/gdal-2.4.2/bin:${PATH}"
 ENV LD_LIBRARY_PATH="${GDALINST}/gdal-2.4.2/lib:${LD_LIBRARY_PATH}"
 
-RUN cd /tmp && wget https://bootstrap.pypa.io/get-pip.py && python3.6 get-pip.py
+RUN cd /tmp && wget https://bootstrap.pypa.io/pip/3.6/get-pip.py && python3.6 get-pip.py
 
 ARG CACHEBUST=1
 
@@ -74,8 +74,7 @@ COPY magrit /home/app/magrit
 COPY redis.conf /etc/redis/redis.conf
 
 RUN cd /home/app/magrit/ \
-    && pip3.6 install -U setuptools numpy \
-    && pip3.6 install https://github.com/mthh/smoomapy-magrit/archive/master.zip \
+    && pip3.6 install -U setuptools numpy==1.17.3 \
     && pip3.6 install -U -r requirements/prod.txt \
     && python3.6 setup.py build_ext --inplace
 

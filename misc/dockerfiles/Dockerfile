@@ -47,11 +47,10 @@ ARG CACHEBUST=1
 
 RUN rm -rf $GDALBUILD && mkdir /home/app && cd /home/app && wget https://github.com/riatelab/magrit/archive/master.zip && unzip master.zip && mv magrit-master magrit
 
-RUN wget https://bootstrap.pypa.io/get-pip.py && python3.6 get-pip.py
+RUN wget https://bootstrap.pypa.io/pip/3.6/get-pip.py && python3.6 get-pip.py
 
 RUN cd /home/app/magrit/ \
-    && pip3.6 install -U setuptools numpy \
-    && pip3.6 install https://github.com/mthh/smoomapy-magrit/archive/master.zip \
+    && pip3.6 install -U setuptools numpy==1.17.3 \
     && pip3.6 install -U -r requirements/prod.txt \
     && python3.6 setup.py build_ext --inplace
 

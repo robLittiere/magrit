@@ -4,7 +4,7 @@ if [ "$1" == "install" ]
 then
 	cd /tmp/
 	mkdir magritapp
-	git clone http://github.com/mthh/magrit
+	git clone http://github.com/riatelab/magrit
 	cp -r magrit/misc/Docker/ magritapp/
 	cp -r magrit/magrit_app/static/ magritapp/Docker/nginx/
 	mv magrit/ magritapp/Docker/app/
@@ -22,7 +22,7 @@ then
 	cd /tmp
 	rm -rf magrit
 	rm -rf magritapp/Docker/
-	git clone http://github.com/mthh/magrit
+	git clone http://github.com/riatelab/magrit
 	cp -r magrit/misc/Docker/ magritapp/
 	cp -r magrit/magrit_app/static/ magritapp/Docker/nginx/
 	mv magrit/ magritapp/Docker/app/
