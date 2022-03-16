@@ -496,7 +496,7 @@
             "carnet_hypotheses": "Carnet <i>Hypothèses</i>",
             "contact": "Contacto",
             "gh_link": "Página GitHub del proyecto",
-            "credits": "Elaborado por Matthieu Viry, Timothée Giraud y Nicolas Lambert (<span id=\"credit_link\">UMS RIATE</span>)"
+            "credits": "Elaborado por Matthieu Viry, Timothée Giraud y Nicolas Lambert (<span id=\"credit_link\">UAR RIATE</span>)"
         },
         "north_arrow_edit_box": {
             "title": "Opciones de la flecha de orientación",
@@ -807,8 +807,8 @@
             "interop2": "La aplicación acepta diversos formatos de entrada. Permite exportar el mapa en varios formatos así como guardar un \"archivo-proyecto\".",
             "customizable1": "Personalizable",
             "customizable2": "En los mapas se puede personalizar la proyección, las rampas de colores, las fuentes de texto y permite integrar elementos como: cuadros de texto, escala gráfica, etc.",
-            "realized_by1": "Elaborado por la UMS RIATE",
-            "realized_by2": "El proyecto es desarrollado y mantenido por los miembros de la <a href=\"http://riate.cnrs.fr\">UMS RIATE</a>.",
+            "realized_by1": "Elaborado por la UAR RIATE",
+            "realized_by2": "El proyecto es desarrollado y mantenido por los miembros de la <a href=\"http://riate.cnrs.fr\">UAR RIATE</a>.",
             "user_manual1": "Documentado",
             "user_manual2": "Una descripción completa de cada método está disponible en el <a href=\"/docs/index.html\">manual de usuario</a> (en francés).",
             "box1_title": "Libre y gratuito",
@@ -816,7 +816,7 @@
             "box3_title": "Multilingüe",
             "box4_title": "En desarrollo continuo",
             "box1_text": "El proyecto es completamente libre (código bajo la licencia de CeCILL, compatible con la GNU GPL).<br>Está basado en una serie moderna de tecnologías libres, de código abierto y es posible desplegar la aplicación en entornos locales.",
-            "box2_text": "El señalamiento de errores y la contribuciones son más que bienvenidas. Pueden hacerse vía el <a href=\"/contact\">formulario de contacto</a> y vía la plataforma <a href=\"https://github.com/riatelab/magrit\">GitHub</a>.",
+            "box2_text": "El señalamiento de errores y la contribuciones son más que bienvenidas. Pueden hacerse vía la plataforma <a href=\"https://github.com/riatelab/magrit\">GitHub</a>.",
             "box3_text": "El código fue construido para permitir su fácil traducción y ya está disponible en tres idiomas.",
             "box4_text": "El proyecto sigue en construcción. ¡Hay nuevas funciones que actualmente se están desarrollando!",
             "hypotheses1": "Vivo",
@@ -840,7 +840,7 @@
     "contact_form": {
         "contact": "Contacto",
         "index": "Inicio",
-        "intro_text": "¿Algún comentario? ¿Sugerencia? ¿Error (bug)?<br>No dude en contactarnos y enviarnos sus comentarios utilizando <a target=\"_blank\" href=\"http://riate.cnrs.fr/?page_id=363\">el formulario de contacto de nuestro laboratorio</a>, o nuestro <a target=\"_blank\" href=\"https://github.com/riatelab/magrit/issues\">repositorio de código en GitHub </a> o nuestra dirección de correo electrónico : <br> <span class=\"link_email\">riate [at] cnrs [dot] fr</span>"
+        "intro_text": "¿Algún comentario? ¿Sugerencia? ¿Error (bug)?<br>No dude en contactarnos y enviarnos sus comentarios utilizando <a target=\"_blank\" href=\"https://github.com/riatelab/magrit/issues\">los issues del repositorio de código en GitHub </a>."
     },
     "page404": {
         "message1": "Error 404 - Página inválida",
