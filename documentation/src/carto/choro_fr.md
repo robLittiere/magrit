@@ -13,7 +13,7 @@ Un clic sur le bouton <img src="img/discr_new.png" alt="choro_map" style="width:
 <p style="text-align: center;">
 <img src="img/discr3.png" alt="choro_map" style="width: 480px;"/>
 </p>
-Les différents modes de discrétisation proposés dans cette boite sont détaillés dans la partie [Discrétisation des données](./discretisation_fr.html).
+Les différents modes de discrétisation proposés dans cette boite sont détaillés dans la partie <a href="./discretisation_fr.html"> Discrétisation des données</a>.
 
 #### Exemple :
 

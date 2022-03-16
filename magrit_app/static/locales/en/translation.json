@@ -503,7 +503,7 @@
             "carnet_hypotheses": "<i>Hypothèses</i> blog",
             "contact": "Contact",
             "gh_link": "GitHub project page",
-            "credits": "Created by Matthieu Viry, Timothée Giraud and Nicolas Lambert (<span id=\"credit_link\">UMS RIATE</span>)"
+            "credits": "Created by Matthieu Viry, Timothée Giraud and Nicolas Lambert (<span id=\"credit_link\">UAR RIATE</span>)"
         },
         "north_arrow_edit_box": {
             "title": "North arrow options",
@@ -813,8 +813,8 @@
             "interop2": "The application accepts many input formats. It allows you to export the final map in several formats as well as to save it in a \"project-file\".",
             "customizable1": "Customizable",
             "customizable2": "Produced maps are customizable thanks to a large choice of projections, color palettes, fonts and more...!",
-            "realized_by1": "Made by UMS RIATE",
-            "realized_by2": "Magrit is developed and maintained by members of <a href=\"http://riate.cnrs.fr\">UMS RIATE</a>.",
+            "realized_by1": "Made by UAR RIATE",
+            "realized_by2": "Magrit is developed and maintained by members of <a href=\"http://riate.cnrs.fr\">UAR RIATE</a>.",
             "user_manual1": "Documented",
             "user_manual2": "A full description of each method is available in the <a href=\"/docs/index.html\">user manual</a>.",
             "box1_title": "Free and Open-Source",
@@ -822,7 +822,7 @@
             "box3_title": "Multilingual",
             "box4_title": "Under active development",
             "box1_text": "The project is fully free and open-sourced (licensed under CeCILL, compatible with GNU GPL).<br> It's backed against a solid and modern suite of Free and Open-Source libraries and you can deploy your own instance of the application.",
-            "box2_text": "Bug reports and contributions are welcome. Please use the <a href=\"/contact\">contact page</a> or the project page on <a href=\"https://github.com/riatelab/magrit\">GitHub</a>.",
+            "box2_text": "Bug reports and contributions are welcome. Please use the project page on <a href=\"https://github.com/riatelab/magrit\">GitHub</a>.",
             "box3_text": "Code is instrumented for localization and 3 languages are currently available.",
             "box4_text": "Project is still under development. More features will be available soon, hang tight!",
             "hypotheses1": "Alive",
@@ -846,7 +846,7 @@
     "contact_form": {
         "contact": "Contact",
         "index": "Index page",
-        "intro_text": "An observation ? A suggestion ? A bug to report?<br>Don't hesitate to contact us and give your feedback by using <a target=\"_blank\" href=\"http://riate.cnrs.fr/?page_id=363\">the contact form of our lab</a>, our <a target=\"_blank\" href=\"https://github.com/riatelab/magrit/issues\">code repository on GitHub</a> or our e-mail address : <br><span class=\"link_email\">riate [at] cnrs [dot] fr</span>"
+        "intro_text": "An observation ? A suggestion ? A bug to report?<br>Don't hesitate to contact us and give your feedback by using <a target=\"_blank\" href=\"https://github.com/riatelab/magrit/issues\">issues in the GitHub repository issues</a>."
     },
     "page404": {
         "message1": "Error 404 - Page not found",

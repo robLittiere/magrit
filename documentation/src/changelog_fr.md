@@ -1,13 +1,19 @@
 # Historique des versions et des changements effectués
 
-#### 0.8.13 (2022-11-27)
+#### 0.8.14 (2022-03-16)
+
+- Corrections dans la documentation
+- suppression de la page de contact
+
+
+#### 0.8.13 (2020-11-27)
 
 - Remplace `cascaded_union` par `unary_union` dans le code Python et tentative de mieux gérer les géométries en entrée qui comportent des erreurs.
 
 - Attribut shape-rendering lors de la création des cartes lissées.
 
 
-#### 0.8.12 (2022-11-26)
+#### 0.8.12 (2020-11-26)
 
 - Permet une personnalisation plus simple des jeux de couches d'exemple lors du déploiement de Magrit.
 
