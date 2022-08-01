@@ -4,7 +4,19 @@ Changes
 Current master (not tagged yet)
 -------------------------------
 
+- Fix legend not visible on proportionnal links map on Firefox (#74).
+
+- Update many dependencies to ease the installation with recent Python (such as 3.10) on a recent system (such as ubuntu 22.04).
+
+
+0.8.14 (2022-03-16)
+-------------------
+
 - Fix wrong usage of `concurrent.futures.ProcessPoolExecutor` + kill possibly long running computation after 5min (such as computing smoothed map and gridded map).
+
+- Update some python dependencies.
+
+- Change logo, contact email and name of UAR RIATE.
 
 
 0.8.13 (2020-11-27)
