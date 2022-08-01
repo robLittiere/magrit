@@ -949,9 +949,9 @@ export function createLegend_line_symbol(layer, field, title, subtitle, rect_fil
   const ref_symbols = document.getElementById(_app.layer_to_id.get(layer)).getElementsByTagName('path');
   const type_param = 'strokeWidth';
 
-  const non_empty = Array.prototype.filter.call(ref_symbols, d => d.style[type_param] !== '0'),
-    size_max = +non_empty[0].style[type_param],
-    size_min = +non_empty[non_empty.length - 1].style[type_param],
+  const non_empty = Array.prototype.filter.call(ref_symbols, (d) => d.style[type_param] !== '0'),
+    size_max = +non_empty[0].style[type_param].replace('px', ''),
+    size_min = +non_empty[non_empty.length - 1].style[type_param].replace('px', ''),
     val_max = Mabs(+non_empty[0].__data__.properties[field]),
     val_min = Mabs(+non_empty[non_empty.length - 1].__data__.properties[field]),
     diff_size = size_max - size_min,
