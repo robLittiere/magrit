@@ -16,7 +16,7 @@ Current master (not tagged yet)
 
 - Update some python dependencies.
 
-- Change logo, contact email and name of UAR RIATE.
+- Change logo, contact email and name of UAR RIATE + Fixes in documentation.
 
 
 0.8.13 (2020-11-27)

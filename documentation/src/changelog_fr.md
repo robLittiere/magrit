@@ -2,8 +2,11 @@
 
 #### 0.8.14 (2022-03-16)
 
-- Corrections dans la documentation
-- suppression de la page de contact
+- Corrections dans la documentation.
+
+- Suppression de la page de contact.
+
+- Correction d'un usage incorrect de `concurrent.futures.ProcessPoolExecutor` + kill les processus qui hébergent des calculs qui durent plus de 5min.
 
 
 #### 0.8.13 (2020-11-27)
