@@ -4,18 +4,18 @@
 [![Build Status](https://travis-ci.org/riatelab/magrit.svg?branch=master)](https://travis-ci.org/riatelab/magrit)
 [![Docker Build Status](https://img.shields.io/docker/build/magrit/magrit.svg)](https://hub.docker.com/r/magrit/magrit/)   
 
-[en] [Magrit](http://magrit.cnrs.fr) is an online mapping application developed by [UMS RIATE](http://www.riate.cnrs.fr).  
-[fr]  [Magrit](http://magrit.cnrs.fr) est une application de cartographie thématique développée par l'[UMS RIATE](http://www.riate.cnrs.fr).
+[en] [Magrit](http://magrit.cnrs.fr) is an online mapping application developed by [UAR RIATE](http://www.riate.cnrs.fr).  
+[fr]  [Magrit](http://magrit.cnrs.fr) est une application de cartographie thématique développée par l'[UAR RIATE](http://www.riate.cnrs.fr).
 
 ## Basics
 - Magrit is an online application for thematic mapping (*cartography*).
 - It's intentionally simple (the UI follows the basic steps of map creation).
 - It's **designed for teaching and learning cartography**.
-- It lets you import **your own geometry dataset** (**Shapefile**, **GeoJSON**, **GML**, etc.) and optionnaly your **tabular file**.
+- It lets you import **your own geometry dataset** (**Shapefile**, **GeoJSON**, **GML**, etc.) and optionally your **tabular file**.
 - We also provide many sample datasets to try out the various representations and become familiar with the application.
 - It allows to **render and combine a wide variety of maps**: choropleth, proportional symbols, cartogram, discontinuity, etc.
 - It supports the most popular modern desktop browsers: Chrome, Firefox and Opera (+ Edge and Safari with limitations).
-- Server-side, Magrit is backed by a python 3.6+ application (particularly for some geoprocessing tasks relying on GDAL, GEOS and PROJ.4 libraries).
+- Server-side, Magrit is backed by a python 3 application (particularly for some geoprocessing tasks relying on GDAL, GEOS and PROJ.4 libraries).
 - Client-side, Magrit is written in modern JS (ES6) and uses notably the d3.js library.
 
 
@@ -46,7 +46,7 @@ These steps are detailed in the Wiki and in the `CONTRIBUTING.md` file:
 
 
 ## Contributing to Magrit
-Contributions are welcome! There are various way to contribute to the project which are detailed in [CONTRIBUTING](https://github.com/riatelab/magrit/blob/master/CONTRIBUTING.md) file! You can notably:
+Contributions are welcome! There are various ways to contribute to the project which are detailed in [CONTRIBUTING](https://github.com/riatelab/magrit/blob/master/CONTRIBUTING.md) file! You can notably:
 - Report bugs or send us feedback.
 - Add new translations or fix existing ones.
 - Contribute code (you're in the right place! Clone the repo, fix what you want to be fixed and submit a pull request).
