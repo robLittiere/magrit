@@ -139,8 +139,8 @@ def extractShpZip(myzip, slots, directory):
     """
     Extract in "directory" the members of "myzip" which are listed in "slots".
 
-    Replace any extension in uppercase by its lowercase couterpart and updated
-    the "slots" dictionnary according to hold the real path of the extracted
+    Replace any extension in uppercase by its lowercase counterpart and updated
+    the "slots" dictionary according to hold the real path of the extracted
     files.
 
     Parameters

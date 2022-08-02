@@ -1366,7 +1366,7 @@ async def convert_tabular(request):
 
 async def fetch_list_extrabasemaps(loop):
     url = 'https://api.github.com/repos/riatelab/basemaps/contents/'
-    async with ClientSession(loop=loop) as client:
+    async with ClientSession() as client:
         async with client.get(url) as resp:
             assert resp.status == 200
             data = await resp.text()

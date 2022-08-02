@@ -5,6 +5,8 @@ async def handle_404(request, response):
     return web.FileResponse('./static/page404.html')
 
 async def error_middleware(app, handler):
+
+    @web.middleware
     async def middleware_handler(request):
         try:
             response = await handler(request)

@@ -59,7 +59,7 @@ def get_grid_layer(input_file, height, field_name, grid_shape="square"):
               'total': [i[2] for i in res_geoms]},
         geometry=[i[0] for i in res_geoms],
         crs=gdf.crs
-    ).to_crs({"init": "epsg:4326"})
+    ).to_crs("epsg:4326")
 
     total_bounds = grid.total_bounds
     if total_bounds[0] < -179.9999 or total_bounds[1] < -89.9999 \

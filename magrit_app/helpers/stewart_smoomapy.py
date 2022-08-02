@@ -18,7 +18,7 @@ def quick_stewart_mod(input_geojson_points, variable_name, span,
     Parameters
     ----------
     input_geojson_points: str
-        Path to file to use as input (Points/Polygons), must contains
+        Path to file to use as input (Points/Polygons), must contain
         a relevant numerical field.
     variable_name: str
         The name of the variable to use (numerical field only).
@@ -84,7 +84,7 @@ def save_reload(result_layer):
     ----------
     result_layer: GeoDataFrame
         The GeoDataFrame containing the contour computed
-        from smoomapy functionnality.
+        from smoomapy functionality.
 
     Returns
     -------

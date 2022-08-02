@@ -371,7 +371,7 @@ def make_carto_doug(file_path, field_name, iterations):
     gdf = gdf.iloc[gdf[field_name].to_numpy().nonzero()]
     gdf.index = range(len(gdf))
     make_cartogram(gdf, field_name, iterations)
-    result_json = json.loads(gdf.to_crs({"init": "epsg:4326"}).to_json())
+    result_json = json.loads(gdf.to_crs("epsg:4326").to_json())
     repairCoordsPole(result_json)
     return json.dumps(result_json).encode()
 
