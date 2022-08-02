@@ -94,7 +94,7 @@ def guess_separator(file, raw_data=None):
         Path to file to use.
 
     raw_data: str
-        Csv file as string (optionnal, to be used if the csv file is already in
+        Csv file as string (optional, to be used if the csv file is already in
         memory; so it won't use the 'file' parameters if raw_data isn't empty).
 
     Returns

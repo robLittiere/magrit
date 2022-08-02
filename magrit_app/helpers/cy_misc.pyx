@@ -5,8 +5,8 @@ from random import choice
 cpdef get_name(unsigned int length=25):
     """
     Find a temporary random name to share object
-    with some external soft used (ogr2ogr / topojson / etc.)
-    Aimed to be remplaced by something better
+    with some external soft used (ogr2ogr / topojson / etc.).
+    Aimed to be replaced by something better.
     """
     cdef:
         array.array arr = array.array('u', [u'0']* length)

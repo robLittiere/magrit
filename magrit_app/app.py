@@ -100,12 +100,14 @@ IS_WINDOWS = sys.platform.startswith('win')
 IS_FROZEN = True if getattr(sys, 'frozen', False) else False
 _ProcessPoolExecutor = ProcessPoolExecutor if not IS_WINDOWS else ThreadPoolExecutor
 
+
 async def kill_after_timeout(delay, pid):
     await asyncio.sleep(delay)
     try:
         os.kill(pid, 9)
     except:
         pass
+
 
 async def index_handler(request):
     """
@@ -185,7 +187,7 @@ def topojson_to_geojson(data):
 
 async def remove_layer(request):
     """
-    Removes layer(s) from the temporary storage (trigered either when
+    Removes layer(s) from the temporary storage (triggered either when
     the user removes result layer in the UI or when he leaves the application
     page).
     """
@@ -371,7 +373,7 @@ async def _convert_from_multiple_files(app, posted_data, user_id, tmp_dir):
         # so let's use it instead of doing a new conversion again:
         asyncio.ensure_future(
             app['redis_conn'].pexpire(f_name, 14400000))
-        # Read the orignal projection to propose it later:
+        # Read the original projection to propose it later:
         proj_info_str = read_shp_crs(
             path_join(tmp_dir, name.replace('.shp', '.prj')))
 
@@ -486,7 +488,7 @@ async def _convert_from_single_file(app, posted_data, user_id, tmp_dir):
                 if not result:
                     return convert_error()
 
-                # Read the orignal projection to propose it later:
+                # Read the original projection to propose it later:
                 proj_info_str = read_shp_crs(slots['prj'])
 
                 asyncio.ensure_future(
@@ -520,7 +522,7 @@ async def _convert_from_single_file(app, posted_data, user_id, tmp_dir):
             new_ext = 'kml'
         filepath = ''.join([clean_name(fname), new_ext])
         tmp_path = path_join(tmp_dir, filepath)
-        # Convert the file to a GeoJSON file with sanitized column names:
+        # Convert the file to a GeoJSON file with sanitized column names:
         with open(tmp_path, 'wb') as f:
             f.write(data)
 
@@ -532,7 +534,7 @@ async def _convert_from_single_file(app, posted_data, user_id, tmp_dir):
             return convert_error(
                 'Error reading the input file ({} format)'.format(new_ext))
 
-        # Convert the file to a TopoJSON:
+        # Convert the file to a TopoJSON:
         result = await geojson_to_topojson(res, layer_name)
         if not result:
             return convert_error('Error reading the input file')
@@ -898,7 +900,7 @@ async def compute_stewart(posted_data, user_id, app):
 
 async def geo_compute(request):
     """
-    Function dispatching between the various available fonctionalities
+    Function dispatching between the various available functionalities
     (smoothed map, links creation, dougenik or olson cartogram, etc.)
     and returning (if nothing went wrong) the result to be added on the map.
     """
@@ -1108,7 +1110,7 @@ async def rawcsv_to_geo(data, logger):
     # Drop records containing empty values for latitude and/or longitude:
     df.dropna(subset=[name_geo_col_x, name_geo_col_y], inplace=True)
     # Replace NaN values by empty string (some column type might be changed to
-    # 'Object' if thay contains empty values)
+    # 'Object' if they contain empty values)
     df.replace(np.NaN, '', inplace=True)
     # Let's try to be sure there isn't empty values
     # in the latitude/longitude columns:
@@ -1123,7 +1125,7 @@ async def rawcsv_to_geo(data, logger):
             '\n{}'.format(err))
     # Try to convert the coordinates to float by applying the operation to the
     # whole column :
-    # (can fail if some cells are containing 'bad' values)
+    # (can fail if some cells contain 'bad' values)
     try:
         if df[name_geo_col_x].dtype == object:
             df[name_geo_col_x] = df[name_geo_col_x].apply(
@@ -1138,8 +1140,8 @@ async def rawcsv_to_geo(data, logger):
         logger.info(
             'Latitude/Longitude columns conversion failed using \'astype\':'
             '\n{}\n{}'.format(err, _tb))
-        # Conversion failed so we are gonna look in each cell of the x and y
-        # columns and creating a boolean array based on wheter
+        # Conversion failed, so we are going to look in each cell of the x and y
+        # columns and creating a boolean array based on whether
         # the x and y columns contains number:
         reg = re.compile('[+-]?\d+(?:\.\d+)?')
         mat = df[[name_geo_col_x, name_geo_col_y]].applymap(
@@ -1161,7 +1163,7 @@ async def rawcsv_to_geo(data, logger):
                 'using regex:\n{}\n{}'.format(err, _tb))
             return None
 
-    # Prepare the name of the columns to keep:
+    # Prepare the name of the columns to keep:
     columns_to_keep = [
         (n + 1, i) for n, i in enumerate(df.columns)
         if i not in (name_geo_col_x, name_geo_col_y)]
@@ -1244,14 +1246,14 @@ async def convert_csv_geo(request):
     res = await rawcsv_to_geo(data, request.app['logger'])
     if not res:
         return web.Response(text=json.dumps(
-            {'Error': 'An error occured when trying to convert a tabular file'
+            {'Error': 'An error occurred when trying to convert a tabular file'
              '(containing coordinates) to a geographic layer'}))
 
     # Convert the GeoJSON file to a TopoJSON file:
     result = await geojson_to_topojson(res.encode(), file_name)
     if not result:
         return web.Response(text=json.dumps(
-            {'Error': 'An error occured when trying to convert a tabular file'
+            {'Error': 'An error occurred when trying to convert a tabular file'
              '(containing coordinates) to a geographic layer'}))
 
     asyncio.ensure_future(
@@ -1425,7 +1427,7 @@ def check_valid_ip(addr):
     Returns
     -------
     boolean
-        Wheter the string is a valid IPv4 address.
+        Whether the string is a valid IPv4 address.
     """
     try:
         addr_valid = ip_address(addr)
@@ -1449,7 +1451,7 @@ def check_port_available(addr, port_nb):
     Returns
     -------
     boolean
-        Wheter the port is available or not.
+        Whether the port is available or not.
     """
     if port_nb < 7000:
         return False

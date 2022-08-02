@@ -3,7 +3,7 @@
 #cython: wraparound = False
 #cython: cdivision = True
 """
-@author: mz
+@author: mthh
 
 To build as a python extension :
 
@@ -112,7 +112,7 @@ cdef class Cartogram(object):
 
     cdef void getinfo(self):
         """
-        Gets the information required for calcualting size reduction factor
+        Gets the information required for computing size reduction factor
         """
         cdef unsigned int fid=0, i, featCount = self.total_features
         cdef float dPolygonValue, dPolygonArea, dFraction, dDesired, dRadius
@@ -166,7 +166,7 @@ cdef class Cartogram(object):
                                LineString=LineString):
         """
         Core function computing the transformation on the Polygon (or on each
-            polygon, if multipolygon layer), using previously retieved informations
+            polygon, if multipolygon layer), using previously retrieved information
             about its geometry and about other feature geometries.
         """
         cdef unsigned int i, k, it_geom=0, it_bound=0, l_coord_bound=0
