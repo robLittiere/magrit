@@ -4,7 +4,7 @@ import { display_discretization } from './classification/discretization_panel';
 import { display_categorical_box } from './classification/categorical_panel';
 import { getOptNbClass, discretize_to_colors, discretize_to_size } from './classification/common';
 import {
-  cloneObj,
+  cloneObj, coordsPointOnFeature,
   copy_layer, create_li_layer_elem,
   display_error_during_computation,
   drag_elem_geo, drag_elem_geo2,
@@ -27,6 +27,7 @@ import { isInterrupted } from './projections';
 import { display_box_symbol_typo, make_style_box_indiv_symbol } from './symbols_picto';
 
 const section2 = d3.select('#menu').select('#section2');
+
 
 export const get_menu_option = (function () {
   const menu_option = {
@@ -2181,21 +2182,8 @@ function getCentroids(ref_layer_selection) {
     const geom = ref_layer_selection[i].__data__.geometry;
     if (!geom) {
       centroids.push(null);
-    } else if (geom.type.indexOf('Multi') < 0) {
-      centroids.push(d3.geoCentroid(geom));
     } else {
-      const areas = [];
-      for (let j = 0; j < geom.coordinates.length; j++) {
-        areas.push(path.area({
-          type: geom.type,
-          coordinates: [geom.coordinates[j]],
-        }));
-      }
-      // const ix_max = areas.indexOf(max_fast(areas));
-      centroids.push(d3.geoCentroid({
-        type: geom.type,
-        coordinates: [geom.coordinates[areas.indexOf(max_fast(areas))]],
-      }));
+      centroids.push(geom);
     }
   }
   return centroids;
@@ -2344,27 +2332,7 @@ export function make_prop_symbols(rendering_params, _pt_layer) {
         };
         if (!ft.geometry) {
           warn_empty_features.push([i, ft]);
-        } else if (ft.geometry.type.indexOf('Multi') < 0) {
-          if (f_ix_len) {
-            for (let f_ix = 0; f_ix < f_ix_len; f_ix++) {
-              new_obj.properties[fields_id[f_ix]] = ft.properties[fields_id[f_ix]];
-            }
-          }
-          new_obj.properties[field] = value;
-          new_obj.properties[t_field_name] = propSize.scale(value);
-          new_obj.geometry.coordinates = d3.geoCentroid(ft.geometry);
-          new_obj.properties.color = get_color(value, i);
-          if (color_field) new_obj.properties[color_field] = ft.properties[color_field];
-          result.push([value, new_obj]);
         } else {
-          const areas = [];
-          for (let j = 0; j < ft.geometry.coordinates.length; j++) {
-            areas.push(path.area({
-              type: ft.geometry.type,
-              coordinates: [ft.geometry.coordinates[j]],
-            }));
-          }
-          const ix_max = areas.indexOf(max_fast(areas));
           if (f_ix_len) {
             for (let f_ix = 0; f_ix < f_ix_len; f_ix++) {
               new_obj.properties[fields_id[f_ix]] = ft.properties[fields_id[f_ix]];
@@ -2372,8 +2340,7 @@ export function make_prop_symbols(rendering_params, _pt_layer) {
           }
           new_obj.properties[field] = value;
           new_obj.properties[t_field_name] = propSize.scale(value);
-          new_obj.geometry.coordinates = d3.geoCentroid({
-            type: ft.geometry.type, coordinates: [ft.geometry.coordinates[ix_max]] });
+          new_obj.geometry.coordinates = coordsPointOnFeature(ft.geometry);
           new_obj.properties.color = get_color(value, i);
           if (color_field) new_obj.properties[color_field] = ft.properties[color_field];
           result.push([value, new_obj]);
@@ -3505,26 +3472,10 @@ function render_TypoSymbols(rendering_params, new_name) {
         properties: {},
         geometry: { type: 'Point' },
       };
-      if (ft.geometry.type.indexOf('Multi') < 0) {
-        new_obj.properties.symbol_field = value;
-        new_obj.properties.id_parent = ft.id;
-        new_obj.geometry.coordinates = d3.geoCentroid(ft.geometry);
-        result.push(new_obj);
-      } else {
-        const areas = [];
-        for (let j = 0; j < ft.geometry.coordinates.length; j++) {
-          areas.push(path.area({
-            type: ft.geometry.type,
-            coordinates: [ft.geometry.coordinates[j]],
-          }));
-        }
-        const ix_max = areas.indexOf(max_fast(areas));
-        new_obj.properties.symbol_field = value;
-        new_obj.properties.id_parent = ft.id;
-        new_obj.geometry.coordinates = d3.geoCentroid({
-          type: ft.geometry.type, coordinates: [ft.geometry.coordinates[ix_max]] });
-        result.push(new_obj);
-      }
+      new_obj.properties.symbol_field = value;
+      new_obj.properties.id_parent = ft.id;
+      new_obj.geometry.coordinates = coordsPointOnFeature(ft.geometry);
+      result.push(new_obj);
     }
     return {
       type: 'FeatureCollection',
@@ -4546,19 +4497,8 @@ export const render_label = function render_label(layer, rendering_params, optio
       if (!ft.geometry) {
         warn_empty_features.push([i, ft]);
         continue;
-      } else if (ft.geometry.type.indexOf('Multi') === -1) {
-        coords = d3.geoCentroid(ft.geometry);
       } else {
-        const areas = [];
-        for (let j = 0; j < ft.geometry.coordinates.length; j++) {
-          areas.push(path.area({
-            type: ft.geometry.type,
-            coordinates: [ft.geometry.coordinates[j]],
-          }));
-        }
-        const ix_max = areas.indexOf(max_fast(areas));
-        coords = d3.geoCentroid({
-          type: ft.geometry.type, coordinates: [ft.geometry.coordinates[ix_max]] });
+        coords = coordsPointOnFeature(ft.geometry);
       }
       i_id += 1;
       new_layer_data.push({

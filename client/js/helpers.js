@@ -1,11 +1,13 @@
 import { make_dialog_container, overlay_under_modal } from './dialogs';
-import { round_value } from './helpers_calc';
+import { max_fast, round_value } from './helpers_calc';
 import { binds_layers_buttons, handle_click_hand } from './interface';
 import {
   button_legend, button_replace, button_result_type,
   button_table, button_trash, button_type,
   button_zoom_fit, eye_open0, sys_run_button_t2,
 } from './ui/buttons';
+import { area, booleanPointInPolygon, nearestPoint, pointOnFeature, } from '@turf/turf';
+import * as polylabel from 'polylabel';
 
 
 export const isNumber = (value) => {
@@ -970,3 +972,89 @@ export function getTargetLayerProps() {
   }
   return null;
 }
+
+/**
+ *
+ * @param {object} geom - A MultiPolygon GeoJSON Geometry.
+ * @returns {{coordinates: *[], type}} - A Polygon GeoJSON Geometry.
+ */
+const getLargestPolygon = (geom) => {
+  const areas = [];
+  for (let j = 0; j < geom.coordinates.length; j++) {
+    areas.push(area({
+      type: 'Feature',
+      geometry: {
+        type: 'Polygon',
+        coordinates: geom.coordinates[j],
+      },
+      properties: {},
+    }));
+  }
+  const ix = areas.indexOf(max_fast(areas));
+  return {
+    type: 'Polygon',
+    coordinates: geom.coordinates[ix],
+  };
+};
+
+
+/**
+ * Returns a point guaranteed to be on a Feature.
+ * On Polygon geometry it is done by testing (in that order)
+ * the centroid, the inaccessibility pole (polylabel algorithm)
+ * and the nearest point to the centroid on the border of the exterior ring
+ * of the polygon.
+ *
+ * @param {object} geom - The targeted Polygon.
+ * @returns {[number, number]}
+ */
+export const coordsPointOnFeature = (geom) => {
+  if (!geom) return null;
+  if (geom.type === 'Point') {
+    // Return the point itself
+    return geom.coordinates;
+  }
+  if (geom.type === 'MultiPoint') {
+    // Return the first point of the multipoint
+    return geom.coordinates[0];
+  }
+  if (geom.type.includes('Line')) {
+    // Return a point on the line or on the first line if multiline
+    return pointOnFeature({ type: 'Feature', geometry: geom }).geometry.coordinates;
+  }
+  // Implement our logic for polygon centroid, or inaccessibility pole or nearest point
+  // to centroid on polygon boundary
+  if (geom.type.includes('Polygon')) {
+    // Take the largest Polygon if MultiPolygon
+    const tGeom = geom.type.includes('Multi')
+      ? getLargestPolygon(geom)
+      : geom;
+    // Compute centroid
+    const centroid = d3.geoCentroid(tGeom);
+    // Return centroid coordinates if they are inside the target polygon ...
+    if (booleanPointInPolygon(centroid, tGeom, { ignoreBoundary: true })) {
+      return centroid;
+    }
+    // Otherwise compute the inaccessibility pole
+    const inaccessibilityPole = polylabel(tGeom.coordinates, 1.0);
+    // Return inaccessibility pole if it lies inside the target polygon
+    if (booleanPointInPolygon(inaccessibilityPole, tGeom, { ignoreBoundary: true })) {
+      return inaccessibilityPole;
+    }
+    // Otherwise compute the nearest point to the centroid on
+    // the exterior ring of the target polygon (as with turf/pointOnFeature)
+    // and return it
+    const vertices = {
+      type: 'FeatureCollection',
+      features: tGeom.coordinates[0].map((c) => ({
+        type: 'Feature',
+        properties: {},
+        geometry: {
+          type: 'Point',
+          coordinates: c,
+        },
+      })),
+    };
+    return nearestPoint(centroid, vertices).geometry.coordinates;
+  }
+};
