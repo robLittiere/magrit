@@ -14,7 +14,7 @@ RUN apt-get update \
     && sed -e '/save/ s/^#*/#/' -i /etc/redis/redis.conf \
     && locale-gen fr_FR.UTF-8
 
-ENV LANG='fr_FR.UTF-8' LANGUAGE='fr_FR' LC_ALL='fr_FR.UTF-8'
+ENV LANG='fr_FR.UTF-8' LANGUAGE='fr_FR' LC_ALL='fr_FR.UTF-8' NODE_ENV='PRODUCTION'
 
 WORKDIR /home
 
@@ -25,7 +25,12 @@ RUN mkdir /home/app && cd /home/app && wget https://github.com/riatelab/magrit/a
 RUN cd /home/app/magrit/ \
     && pip3.10 install -U setuptools numpy==1.23.1 \
     && pip3.10 install -U -r requirements/prod.txt \
-    && python3.10 setup.py build_ext --inplace
+    && python3.10 setup.py build_ext --inplace \
+    && cd client \
+    && npm install \
+    && node node_modules/webpack/bin/webpack.js \
+    && cd ../documentation \
+    && mdbook build
 
 EXPOSE 9999
 

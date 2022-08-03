@@ -1,12 +1,15 @@
 ####################################################################
-# Working config file building an "all-in one" (and heavy..)
+# Working config file building an "all-in one" (and heavy)
 # image of the app and making it accessible on port 9999
 # (but it should be splited in multiple containers).
 # Configured in order to avoid using cache when fetching the code of the
 # application.
 ####################################################################
-# Can be build like this :
+# Can be build like this (if we assume that the magrit code is in /home/$USER/code/magrit)
 #
+# $ cd /tmp && mkdir magritapp
+# $ cp -r /home/$USER/code/magrit/misc/Docker/ magritapp/ && cp -r /home/$USER/code/magrit/magrit_app/static/ magritapp/Docker/nginx/ && cp -r /home/$USER/code/magrit magritapp/Docker/app/
+# $ cd magritapp/Docker/app/
 # $ docker build -t "magrit_app:latest" --build-arg CACHEBUST=$(date +%s) .
 #
 #
@@ -34,7 +37,7 @@ RUN apt-get update \
     && rm -rf /var/lib/apt/lists/* \
     && locale-gen fr_FR.UTF-8
 
-ENV LANG='fr_FR.UTF-8' LANGUAGE='fr_FR' LC_ALL='fr_FR.UTF-8'
+ENV LANG='fr_FR.UTF-8' LANGUAGE='fr_FR' LC_ALL='fr_FR.UTF-8' NODE_ENV='PRODUCTION'
 
 WORKDIR /home
 
@@ -47,7 +50,12 @@ COPY redis.conf /etc/redis/redis.conf
 RUN cd /home/app/magrit/ \
     && pip3.10 install -U setuptools numpy==1.23.1 \
     && pip3.10 install -U -r requirements/prod.txt \
-    && python3.10 setup.py build_ext --inplace
+    && python3.10 setup.py build_ext --inplace \
+    && cd client \
+    && npm install \
+    && node node_modules/webpack/bin/webpack.js \
+    && cd ../documentation \
+    && ./mdbook build
 
 EXPOSE 9999
 
