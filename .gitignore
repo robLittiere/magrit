@@ -83,8 +83,12 @@ tmp/
 node_modules/
 jspm_packages/
 
-# Exception for the builded js file of Magrit:
-!magrit_app/static/dist
+# Dont track builded js and html files
+client/dist
+magrit_app/static/dist
+magrit_app/static/*.html
+
+# Pytest cache
 /.pytest_cache/
 
 # IDE stuff
