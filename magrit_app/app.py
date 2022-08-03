@@ -384,7 +384,8 @@ async def _convert_from_multiple_files(app, posted_data, user_id, tmp_dir):
              '}']))
     else:
         with _ProcessPoolExecutor(max_workers=1) as executor:
-            res = await app.loop.run_in_executor(
+            loop = asyncio.get_running_loop()
+            res = await loop.run_in_executor(
                 executor, ogr_to_geojson, shp_path)
         if not res:
             return convert_error()
@@ -480,7 +481,8 @@ async def _convert_from_single_file(app, posted_data, user_id, tmp_dir):
             slots = extractShpZip(myzip, slots, tmp_dir)
             try:
                 with _ProcessPoolExecutor(max_workers=1) as executor:
-                    res = await app.loop.run_in_executor(
+                    loop = asyncio.get_running_loop()
+                    res = await loop.run_in_executor(
                         executor, ogr_to_geojson, slots['shp'])
                 if not res:
                     return convert_error()
@@ -527,7 +529,8 @@ async def _convert_from_single_file(app, posted_data, user_id, tmp_dir):
             f.write(data)
 
         with ThreadPoolExecutor(max_workers=1) as executor:
-            res = await app.loop.run_in_executor(
+            loop = asyncio.get_running_loop()
+            res = await loop.run_in_executor(
                 executor, ogr_to_geojson, tmp_path)
 
         if not res:
@@ -613,7 +616,8 @@ async def carto_doug(posted_data, user_id, app):
         savefile(tmp_path, topojson_to_geojson(ref_layer).encode())
 
         with _ProcessPoolExecutor(max_workers=1) as executor:
-            fut = app.loop.run_in_executor(
+            loop = asyncio.get_running_loop()
+            fut = loop.run_in_executor(
                 executor,
                 make_carto_doug,
                 tmp_path,
@@ -649,7 +653,8 @@ async def links_map(posted_data, user_id, app):
     ref_layer = convert_from_topo(ref_layer)
 
     with ThreadPoolExecutor(max_workers=1) as executor:
-        result_geojson = await app.loop.run_in_executor(
+        loop = asyncio.get_running_loop()
+        result_geojson = await loop.run_in_executor(
             executor,
             make_geojson_links,
             ref_layer,
@@ -719,7 +724,8 @@ async def carto_gridded_point(posted_data, user_id, app):
 
         # Compute the result:
         with _ProcessPoolExecutor(max_workers=1) as executor:
-            fut = app.loop.run_in_executor(
+            loop = asyncio.get_running_loop()
+            fut = loop.run_in_executor(
                 executor,
                 get_grid_layer_pt,
                 filenames['src_layer'],
@@ -774,7 +780,8 @@ async def carto_gridded(posted_data, user_id, app):
                  topojson_to_geojson(ref_layer).encode())
 
         with _ProcessPoolExecutor(max_workers=1) as executor:
-            result_geojson = await app.loop.run_in_executor(
+            loop = asyncio.get_running_loop()
+            result_geojson = await loop.run_in_executor(
                 executor,
                 get_grid_layer,
                 filenames['src_layer'],
@@ -805,7 +812,8 @@ async def compute_olson(posted_data, user_id, app):
     ref_layer_geojson = convert_from_topo(ref_layer)
 
     with ThreadPoolExecutor(max_workers=1) as executor:
-        await app.loop.run_in_executor(
+        loop = asyncio.get_running_loop()
+        await loop.run_in_executor(
             executor,
             olson_transform,
             ref_layer_geojson,
@@ -865,7 +873,8 @@ async def compute_stewart(posted_data, user_id, app):
                 topojson_to_geojson(json.loads(mask_layer.decode())).encode())
 
         with _ProcessPoolExecutor(max_workers=1) as executor:
-            fut = app.loop.run_in_executor(
+            loop = asyncio.get_running_loop()
+            fut = loop.run_in_executor(
                 executor,
                 quick_stewart_mod,
                 filenames['point_layer'],
@@ -1211,7 +1220,8 @@ async def calc_helper(request):
         except:
             return web.Response(text='{"Error":"Invalid datatype"}')
     with ThreadPoolExecutor(max_workers=1) as executor:
-        result = await request.app.loop.run_in_executor(
+        loop = asyncio.get_running_loop()
+        result = await loop.run_in_executor(
             executor,
             run_calc,
             val1,
@@ -1511,7 +1521,6 @@ async def init(loop, addr='0.0.0.0', port=None, watch_change=False, use_redis=Tr
         redis_conn = await create_redis_pool(
             (redis_addr, 6379), db=1, loop=loop)
         app = web.Application(
-            loop=loop,
             client_max_size=17408**2,
             middlewares=[
                 error_middleware,
@@ -1584,8 +1593,10 @@ async def init(loop, addr='0.0.0.0', port=None, watch_change=False, use_redis=Tr
     # If a port is specified the application is started "directly" and
     # we need to create the server :
     else:
-        handler = app.make_handler()
-        srv = await loop.create_server(handler, addr, port)
+        # handler = app.make_handler()
+        handler = web.AppRunner(app)
+        await handler.setup()
+        srv = await loop.create_server(handler.server, addr, port)
         return srv, app, handler
 
 
