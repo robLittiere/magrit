@@ -4,9 +4,12 @@ Changes
 Current master (not tagged yet)
 -------------------------------
 
-- Fix legend not visible on proportionnal links map on Firefox (#74).
+- Fix legend not visible on proportional links map on Firefox (#74).
+
+- Fix positioning of symbols and labels when centroid doesn't fall inside the target polygon (it now tries to compute the inaccessibility pole or if it still doesn't find a point in the polygon, the closest point to the centroid on the edge of the polygon) (#63).
 
 - Update many dependencies to ease the installation with recent Python (such as 3.10) on a recent system (such as ubuntu 22.04).
+
 
 
 0.8.14 (2022-03-16)
