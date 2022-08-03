@@ -83,10 +83,13 @@ tmp/
 node_modules/
 jspm_packages/
 
-# Dont track builded js and html files
+# Dont track built js and html files
 client/dist
 magrit_app/static/dist
 magrit_app/static/*.html
+
+# Dont track built documentation files
+margrit_app/static/book
 
 # Pytest cache
 /.pytest_cache/
