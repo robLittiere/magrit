@@ -8,6 +8,7 @@
 
 - Mise à jour de nombreuses dépendances pour faciliter l'installation avec un Python récent (tel que 3.10) sur un système récent (tel que ubuntu 22.04).
 
+- Mise à jour des recettes Docker.
 
 #### 0.8.14 (2022-03-16)
 

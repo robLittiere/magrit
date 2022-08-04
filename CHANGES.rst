@@ -10,6 +10,7 @@ Current master (not tagged yet)
 
 - Update many dependencies to ease the installation with recent Python (such as 3.10) on a recent system (such as ubuntu 22.04).
 
+- Update Docker recipes.
 
 
 0.8.14 (2022-03-16)
@@ -39,9 +40,9 @@ Current master (not tagged yet)
 
 - Render crisp-edges (ie. disable SVG antialiasing) if the stroke-width or the stroke-opacity of a layer is set to 0 (#61). Note that this has an impact on the quality of the rendering, which is now slightly crenellated.
 
-- Avoid opening the overlay (dedicated to file upload and triggered by a drag event) when draging html elements (#64).
+- Avoid opening the overlay (dedicated to file upload and triggered by a drag event) when dragging html elements (#64).
 
-- Correctly set the "lang" HTML attribute to avoid having chrome translation poping up when it is not necessary (#65).
+- Correctly set the "lang" HTML attribute to avoid having chrome translation popping up when it is not necessary (#65).
 
 - Improves the retrieval of a useful error message in case of failed conversion of tabular file.
 

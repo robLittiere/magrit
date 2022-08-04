@@ -396,7 +396,7 @@ async def _convert_from_multiple_files(app, posted_data, user_id, tmp_dir):
         asyncio.ensure_future(
             app['redis_conn'].set(f_name, result, pexpire=14400000))
 
-        # Read the orignal projection to propose it later (client side):
+        # Read the original projection to propose it later (client side):
         proj_info_str = read_shp_crs(
             path_join(tmp_dir, name.replace('.shp', '.prj')))
 
@@ -1645,9 +1645,9 @@ def create_app(redis_addr=None):
     GEO2TOPO_PATH = find_geo2topo()
     if not GEO2TOPO_PATH:
         sys.exit('Unable to find required `geo2topo` binary.')
-    if redis_addr:
-        if not check_valid_ip(redis_addr):
-            sys.exit('Invalid redis server address.')
+    # if redis_addr:
+    #     if not check_valid_ip(redis_addr):
+    #         sys.exit('Invalid redis server address.')
     loop = asyncio.get_event_loop()
     app = loop.run_until_complete(init(loop, port=None, redis_addr=redis_addr))
     return app
