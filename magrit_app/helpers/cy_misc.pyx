@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+#cython: language_level=3
 from cpython cimport array
 from random import choice
 

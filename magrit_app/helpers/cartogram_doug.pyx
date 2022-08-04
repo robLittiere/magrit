@@ -2,6 +2,7 @@
 #cython: boundscheck = False
 #cython: wraparound = False
 #cython: cdivision = True
+#cython: language_level=3
 """
 @author: mthh
 
