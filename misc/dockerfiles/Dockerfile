@@ -1,3 +1,5 @@
+# All-in-one image to build and execute magrit in a single container.
+# See the other recipes (with docker compose) if you want to use magrit with nginx.
 FROM ubuntu:22.04
 MAINTAINER Matthieu Viry <matthieu.viry@univ-grenoble-alpes.fr>
 
@@ -18,9 +20,7 @@ ENV LANG='fr_FR.UTF-8' LANGUAGE='fr_FR' LC_ALL='fr_FR.UTF-8' NODE_ENV='PRODUCTIO
 
 WORKDIR /home
 
-ARG CACHEBUST=1
-
-RUN mkdir /home/app && cd /home/app && wget https://github.com/riatelab/magrit/archive/master.zip && unzip master.zip && mv magrit-master magrit
+RUN mkdir /home/app && cd /home/app && wget https://github.com/mthh/magrit/archive/master.zip && unzip master.zip && mv magrit-master magrit
 
 RUN cd /home/app/magrit/ \
     && pip3.10 install -U setuptools numpy==1.23.1 \
@@ -30,7 +30,7 @@ RUN cd /home/app/magrit/ \
     && npm install \
     && node node_modules/webpack/bin/webpack.js \
     && cd ../documentation \
-    && mdbook build
+    && ./mdbook build
 
 EXPOSE 9999
 
