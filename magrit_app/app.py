@@ -1376,7 +1376,7 @@ async def convert_tabular(request):
         {"file": result, "name": name, "message": message}))
 
 
-async def fetch_list_extrabasemaps(loop):
+async def fetch_list_extrabasemaps():
     url = 'https://api.github.com/repos/riatelab/basemaps/contents/'
     async with ClientSession() as client:
         async with client.get(url) as resp:
@@ -1387,24 +1387,24 @@ async def fetch_list_extrabasemaps(loop):
                         if d['name'] == "Countries"][0]['_links']['git']
             base_url = ('https://raw.githubusercontent.com/riatelab/basemaps'
                         '/master/Countries/')
-            async with client.get(tree_url + '?recursive=1') as resp:
-                assert resp.status == 200
-                list_elem = await resp.text()
-                list_elem = json.loads(list_elem)
-                name_url = []
-                for elem in list_elem['tree']:
-                    if '.geojson' in elem['path']:
-                        p = elem['path']
-                        url = base_url + p
-                        filename = p.split('/')[0]
-                        name_url.append((filename, url))
-                return name_url
+        async with client.get(tree_url + '?recursive=1') as resp_tree:
+            assert resp_tree.status == 200
+            list_elem = await resp_tree.text()
+            list_elem = json.loads(list_elem)
+            name_url = []
+            for elem in list_elem['tree']:
+                if '.geojson' in elem['path']:
+                    p = elem['path']
+                    url = base_url + p
+                    filename = p.split('/')[0]
+                    name_url.append((filename, url))
+            return name_url
 
 
 async def get_extrabasemaps(request):
     list_url = await request.app['redis_conn'].get('extrabasemaps')
     if not list_url:
-        list_url = await fetch_list_extrabasemaps(request.app.loop)
+        list_url = await fetch_list_extrabasemaps()
         list_url = json.dumps(list_url)
         asyncio.ensure_future(request.app['redis_conn'].set(
             'extrabasemaps', list_url.encode(), pexpire=21600000))
