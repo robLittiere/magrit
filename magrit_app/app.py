@@ -31,13 +31,15 @@ import docopt
 import logging
 
 import asyncio
+
 try:
     import uvloop
-except:
+except ModuleNotFoundError:
     uvloop = None
 import pandas as pd
 import numpy as np
 import matplotlib
+
 matplotlib.use('Agg')
 
 from tempfile import TemporaryDirectory
@@ -93,7 +95,6 @@ except:
     from .helpers.grid_layer import get_grid_layer
     from .helpers.grid_layer_pt import get_grid_layer_pt
     from .helpers.error_middleware404 import error_middleware
-
 
 GEO2TOPO_PATH = None
 IS_WINDOWS = sys.platform.startswith('win')
@@ -244,7 +245,7 @@ def get_user_id(session_redis, app_users, app=None):
     """
     Function to get (or retrieve) the user unique ID
     (ID is used amongst other things to set/get data in/from redis
-    and for retrieving the layers decribed in a "preference file" of an user)
+    and for retrieving the layers described in a "preference file" of a user)
     """
     if 'app_user' not in session_redis:
         if app:
@@ -318,7 +319,7 @@ async def convert(request):
     """
     posted_data, session_redis = \
         await asyncio.gather(*[request.post(), get_session(request)])
-    if not 'type' in posted_data:
+    if 'type' not in posted_data:
         return convert_error('Invalid request')
     type_input = posted_data.get('type')
     user_id = get_user_id(session_redis, request.app['app_users'])
@@ -452,7 +453,7 @@ async def _convert_from_single_file(app, posted_data, user_id, tmp_dir):
             slots = {"shp": None, "prj": None, "dbf": None, "shx": None}
             names = []
             try:
-                assert(4 <= len(list_files) < 8)
+                assert (4 <= len(list_files) < 8)
                 for f in list_files:
                     name, ext = f.rsplit('.', 1)
                     names.append(name)
@@ -467,9 +468,9 @@ async def _convert_from_single_file(app, posted_data, user_id, tmp_dir):
                     elif 'cpg' in ext.lower():
                         slots['cpg'] = f
                 # All slots (excepting maybe 'cpg' one) are not None:
-                assert(all(v is not None for v in slots.values()))
+                assert (all(v is not None for v in slots.values()))
                 # Each file has the same "base" name:
-                assert(all(name == names[0] for name in names))
+                assert (all(name == names[0] for name in names))
             except Exception as err:
                 _tb = traceback.format_exc(limit=2)
                 app['logger'].info(
@@ -505,11 +506,11 @@ async def _convert_from_single_file(app, posted_data, user_id, tmp_dir):
                 return convert_error('Error with zip file content')
 
     elif ('octet-stream' in datatype or 'text/json' in datatype
-            or 'application/geo+json' in datatype
-            or 'application/json' in datatype
-            or 'text/plain' in datatype
-            or 'application/vnd.google-earth.kml+xml' in datatype
-            or 'application/gml+xml' in datatype) \
+          or 'application/geo+json' in datatype
+          or 'application/json' in datatype
+          or 'text/plain' in datatype
+          or 'application/vnd.google-earth.kml+xml' in datatype
+          or 'application/gml+xml' in datatype) \
             and ("kml" in name.lower()
                  or "gml" in name.lower() or 'json' in name.lower()):
         fname, ext = filepath.rsplit('.', 1)
@@ -924,27 +925,27 @@ async def geo_compute(request):
         user_id = get_user_id(session_redis, request.app['app_users'])
         func = request.app['geo_function'][function]
         request.app['logger'].info(
-            'Dispatch between functions : {:.4f}s'.format(time.time()-s_t))
+            'Dispatch between functions : {:.4f}s'.format(time.time() - s_t))
         s_t = time.time()
         try:
             data_response = await func(posted_data, user_id, request.app)
             asyncio.ensure_future(
                 request.app['redis_conn'].lpush(
-                    '{}_time'.format(function), time.time()-s_t))
+                    '{}_time'.format(function), time.time() - s_t))
             request.app['logger'].info(
-                '{}: {:.4f}s'.format(function, time.time()-s_t))
+                '{}: {:.4f}s'.format(function, time.time() - s_t))
 
         except (asyncio.CancelledError, CancelledError):
             request.app['logger'].info(
                 'Cancelled after {:.4f}s : {}'
-                .format(time.time()-s_t, function))
+                .format(time.time() - s_t, function))
             data_response = json.dumps({})
 
         except TopologicalError as err:
             _tb = traceback.format_exc()
             request.app['logger'].info(
                 'Error on "{}" after {:.4f}s\n{}'
-                .format(function, time.time()-s_t, _tb))
+                .format(function, time.time() - s_t, _tb))
             data_response = json.dumps({
                 "Error": "Geometry error ({})".format(err)})
 
@@ -952,7 +953,7 @@ async def geo_compute(request):
             _tb = traceback.format_exc()
             request.app['logger'].info(
                 'Error on \"{}\" after {:.4f}s\n{}'
-                .format(function, time.time()-s_t, _tb))
+                .format(function, time.time() - s_t, _tb))
             msg = (
                 'The calculation was cancelled after '
                 'reaching the maximum duration allowed.') \
@@ -1102,7 +1103,7 @@ async def rawcsv_to_geo(data, logger):
     # Determine what is the separator for values (either comma, colon or tab):
     separator = guess_separator(None, data)
 
-    # Create a dataframe from our csv data:
+    # Create a dataframe from our csv data:
     df = pd.read_csv(StringIO(data), sep=separator)
     # Replace spaces in columns names:
     df.columns = [i.replace(' ', '_') for i in df.columns]
@@ -1257,14 +1258,14 @@ async def convert_csv_geo(request):
     if not res:
         return web.Response(text=json.dumps(
             {'Error': 'An error occurred when trying to convert a tabular file'
-             '(containing coordinates) to a geographic layer'}))
+                      '(containing coordinates) to a geographic layer'}))
 
     # Convert the GeoJSON file to a TopoJSON file:
     result = await geojson_to_topojson(res.encode(), file_name)
     if not result:
         return web.Response(text=json.dumps(
             {'Error': 'An error occurred when trying to convert a tabular file'
-             '(containing coordinates) to a geographic layer'}))
+                      '(containing coordinates) to a geographic layer'}))
 
     asyncio.ensure_future(
         request.app['redis_conn'].set(
@@ -1357,8 +1358,8 @@ async def convert_tabular(request):
 
             message = str(err) if isinstance(err, XLRDError) \
                 else ('Unable to convert the provided file. '
-                    'Please check that it is a tabular file supported '
-                    'by the application (in xls, xlsx, ods or csv format).')
+                      'Please check that it is a tabular file supported '
+                      'by the application (in xls, xlsx, ods or csv format).')
 
     else:
         request.app['logger'].info(
@@ -1366,8 +1367,8 @@ async def convert_tabular(request):
             .format(name, datatype))
         result = None
         message = ('Unknown tabular file format. '
-            'Please use a tabular file supported '
-            'by the application (in xls, xlsx, ods or csv format).')
+                   'Please use a tabular file supported '
+                   'by the application (in xls, xlsx, ods or csv format).')
 
     request.app['logger'].info(
         'timing : spreadsheet -> csv : {:.4f}s'
@@ -1442,7 +1443,7 @@ def check_valid_ip(addr):
     try:
         addr_valid = ip_address(addr)
         return True
-    except:
+    except ValueError:
         return False
 
 
@@ -1480,7 +1481,7 @@ def get_version():
     with open('__init__.py', 'r') as f:
         ver = f.read()
     ix = ver.find("'")
-    return ver[ix+1:ix + ver[ix+1:].find("'")+1]
+    return ver[ix + 1:ix + ver[ix + 1:].find("'") + 1]
 
 
 async def on_shutdown(app):
@@ -1521,7 +1522,7 @@ async def init(loop, addr='0.0.0.0', port=None, watch_change=False, use_redis=Tr
         redis_conn = await create_redis_pool(
             (redis_addr, 6379), db=1, loop=loop)
         app = web.Application(
-            client_max_size=17408**2,
+            client_max_size=17408 ** 2,
             middlewares=[
                 error_middleware,
                 session_middleware(redis_storage.RedisStorage(redis_cookie))])
@@ -1532,7 +1533,7 @@ async def init(loop, addr='0.0.0.0', port=None, watch_change=False, use_redis=Tr
         secret_key = urlsafe_b64decode(fernet_key)
         app = web.Application(
             loop=loop,
-            client_max_size=17408**2,
+            client_max_size=17408 ** 2,
             middlewares=[error_middleware])
         aiohttp_session_setup(
             app, cookie_storage.EncryptedCookieStorage(secret_key))

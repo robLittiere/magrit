@@ -204,19 +204,3 @@ def zip_layer_folder(dir_path, layer_name):
     myZip.close()
     zip_stream.seek(0)
     return zip_stream.read(), ''.join([layer_name, ".zip"])
-
-
-# def mmh3_file(path):
-#     with open(path, 'rb') as f:
-#         buf = f.read()
-#     return mmh3_hash(buf)
-
-# def prepare_folder():
-#     for i in range(10):
-#         try:
-#             tmp_path = "/tmp/" + get_name()
-#             os.mkdir(tmp_path)
-#             return tmp_path
-#         except:
-#             continue
-#     raise ValueError("Unable to create folder")

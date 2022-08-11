@@ -237,7 +237,7 @@ export function display_error_during_computation(msg) {
 *
 * @param {String} method - the method like "GET" or "POST"
 * @param {String} url - the targeted url
-* @param {FormData} data - Optionnal, the data to be send
+* @param {FormData} data - Optional, the data to be sent
 * @return {Promise} response
 */
 export function request_data(method, url, data) {
@@ -255,8 +255,8 @@ export function request_data(method, url, data) {
 *
 * @param {String} method - the method like "GET" or "POST"
 * @param {String} url - the targeted url
-* @param {FormData} data - Optionnal, the data to be send
-* @param {Boolean} waitingMessage - Optionnal, whether to display or not
+* @param {FormData} data - Optional, the data to be sent
+* @param {Boolean} waitingMessage - Optional, whether to display or not
 * a waiting message while the request is proceeded
 * @return {Promise} response
 */
@@ -419,7 +419,7 @@ export function get_display_name_on_layer_list(layer_name_to_add) {
 
 /**
 * Function triggered in order to add a new layer
-* in the "layer manager" (with appropriates icons regarding to its type, etc.)
+* in the "layer manager" (with appropriates icons regarding its type, etc.)
 * @param {string} layerName - The name of the new layer
 * @param {integer} nbFt - The number of feature in this layer
 * @param {string} typeGeom - The geometry type
@@ -653,10 +653,10 @@ export function make_box_type_fields(layerName) {
       }
     };
 
-    if (f.length === 0) { // If the user dont have already selected the type :
+    if (f.length === 0) { // If the user don't have already selected the type :
       fields_type = tmp.slice();
       container.querySelector('.btn_cancel').remove(); // Disabled cancel button to force the user to choose
-      const _onclose = () => { // Or use the default values if he use the X  close button
+      const _onclose = () => { // Or use the default values if user uses the X close button
         data_manager.current_layers[layerName].fields_type = tmp.slice();
         getAvailablesFunctionnalities(layerName);
         resolve(false);
@@ -669,7 +669,7 @@ export function make_box_type_fields(layerName) {
         if (f.indexOf(d.name) === -1) { fields_type.push(d); }
       });
       container.querySelector('.btn_cancel').remove(); // Disabled cancel button to force the user to choose
-      const _onclose = () => { // Or use the default values if he use the X  close button
+      const _onclose = () => { // Or use the default values if user uses the X close button
         data_manager.current_layers[layerName].fields_type = tmp.slice();
         getAvailablesFunctionnalities(layerName);
         resolve(false);
@@ -937,11 +937,11 @@ export function prepareFileExt(files_to_send) {
 
 /**
 * Try to parse a JSON string into. Returns an Array of two elements :
-* like [true, data] if parsing suceeded or like [false, error] if it failed.
+* like [true, data] if parsing succeeded or like [false, error] if it failed.
 *
 * @param {String} txt - The JSON string to be parsed.
-* @return {Array} An Array of two element, this first one is a Boolean (wheter
-* parsing the string sucedded or not) and the second is the resulting object or
+* @return {Array} An Array of two element, this first one is a Boolean (whether
+* parsing the string succeeded or not) and the second is the resulting object or
 * the error thrown.
 */
 export const isValidJSON = (txt) => {
@@ -1005,8 +1005,8 @@ const getLargestPolygon = (geom) => {
  * and the nearest point to the centroid on the border of the exterior ring
  * of the polygon.
  *
- * @param {object} geom - The targeted Polygon.
- * @returns {[number, number]}
+ * @param {object} geom - The targeted GeoJSON Geometry.
+ * @returns {[number, number]} - Coordinates
  */
 export const coordsPointOnFeature = (geom) => {
   if (!geom) return null;

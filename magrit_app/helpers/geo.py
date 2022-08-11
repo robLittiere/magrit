@@ -141,7 +141,7 @@ def ogr_to_geojson(file_path):
 
     Entry point to convert a layer (in a format supported by ogr) to a GeoJSON layer.
     This function takes care of creating a .cpg file if it is missing and if the
-    encoding doesn't seems to be ISO-8859-1 or UTF-8; it also takes care
+    encoding doesn't seem to be ISO-8859-1 or UTF-8; it also takes care
     of sanitizing field names (against whitespace for example).
     The conversion is handled by gdal.VectorTranslate function (with 'skipfailure' option),
     with a fallback on python OGR bindings (trying to handle to conversion anyway,
@@ -387,7 +387,7 @@ def olson_transform(geojson, scale_values):
     ----------
     geojson: dict
         The geojson of polygon to transform
-        (it might be useful to have choosen an appropriate projection as we
+        (it might be useful to have chosen an appropriate projection as we
         want to deal with the area)
     scale_values: list
         The pre-computed scale values for olson transformation
@@ -580,7 +580,7 @@ def multi_to_single(gdf, columns=None):
     geoms, attrs = [], []
 
     for i in range(len(gdf)):
-        if 'Multi' in geom.iloc[i].geom_type: # if hasattr(geom, '__len__'):
+        if 'Multi' in geom.iloc[i].geom_type:  # if hasattr(geom, '__len__'):
             for single_geom in geom.iloc[i].geoms:
                 geoms.append(single_geom)
                 attrs.append(values.iloc[i])

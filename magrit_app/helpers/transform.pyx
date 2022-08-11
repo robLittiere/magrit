@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
-# cython: language_level=3
-#cython: boundscheck=False
-#cython: cdivision=True
+#cython: language_level = 3
+#cython: boundscheck = False
+#cython: cdivision = True
 ctypedef public struct Point:
     double x
     double y
