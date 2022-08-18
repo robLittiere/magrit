@@ -1429,8 +1429,8 @@ export function handle_title_properties() {
     stroke_width: title.style('stroke-width'),
   };
   title_props.font_weight = (title_props.font_weight === '400' || title_props.font_weight === '') ? '' : 'bold';
-  // Font name don't seems to be formatted in the same way on Firefox and Chrome
-  // (a space is inserted after the comma in Chrome so we are removing it)
+  // Font name don't seem to be formatted in the same way on Firefox and Chrome
+  // (a space is inserted after the comma in Chrome, so we are removing it)
   title_props.font_family = title_props.font_family ? title_props.font_family.replace(', ', ',') : title_props.font_family;
 
   // Properties on the title are changed in real-time by the user
