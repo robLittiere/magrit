@@ -4,6 +4,8 @@ Changes
 Current master (not tagged yet)
 -------------------------------
 
+- Allow to export CSV table (#75).
+
 - Fix legend not visible on proportional links map on Firefox (#74).
 
 - Fix positioning of symbols and labels when centroid doesn't fall inside the target polygon (it now tries to compute the inaccessibility pole or if it still doesn't find a point in the polygon, the closest point to the centroid on the edge of the polygon) (#63).

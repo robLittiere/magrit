@@ -2,6 +2,8 @@
 
 #### 0.8.15 (xxxx-xx-xx)
 
+- Ajout d'une fonctionnalité permettant d'exporter les données de chaque couche au format CSV (<a href="https://github.com/riatelab/magrit/issues/75">issue Github #75</a>).
+
 - Correction de la légende non visible sur la carte des liens proportionnels sur Firefox (<a href="https://github.com/riatelab/magrit/issues/74">issue Github #74</a>)
 
 - Correction du positionnement des symboles et labels lorsque le centroïde ne tombe pas à l'intérieur du polygone cible : il essaie maintenant de calculer le pôle d'inaccessibilité ou s'il ne trouve toujours pas de point dans le polygone, le point le plus proche du centroïde sur le bord du polygone (<a href="https://github.com/riatelab/magrit/issues/63">issue Github #63</a>)
