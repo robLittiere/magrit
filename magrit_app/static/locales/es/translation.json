@@ -443,6 +443,7 @@
         "explore_box": {
             "title": "Tabla de atributos",
             "button_add_field": "Añadir un campo...",
+            "button_export_csv": "Exportar a CSV",
             "add_field_box": {
                 "new_name_placeholder": "NuevoCampo",
                 "new_name": "Nombre del campo<br>",

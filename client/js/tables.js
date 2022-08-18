@@ -1,5 +1,6 @@
 import { make_confirm_dialog2, make_dialog_container, overlay_under_modal } from './dialogs';
 import {
+  clickLinkFromDataUrl,
   display_error_during_computation, getAvailablesFunctionnalities,
   type_col, type_col2, xhrequest,
 } from './helpers';
@@ -387,15 +388,20 @@ export const boxExplore2 = {
       this.columns_headers.push({ data: col[i], title: col[i] });
     }
 
+    // A div to group buttons on the bottom left of the footer
+    const div_bottom_button = this.footer.append('div')
+      .styles({
+        'margin-left': '15px', position: 'absolute', display: 'inline-block', left: '0px',
+      });
+
+    // Add a button to add a new field
     if (this.tables.get(table_name) && (table_name !== data_manager.dataset_name
           || (table_name === data_manager.dataset_name
             && data_manager.field_join_map.length === 0))) {
-      this.footer
-        .insert('button')
+      div_bottom_button
+        .append('button')
         .attrs({ id: 'add_field_button', class: 'button_st4' })
-        .styles({
-          position: 'absolute', left: '15px', padding: '10px', 'font-size': '1.1em',
-        })
+        .styles({ padding: '10px', 'font-size': '1.1em', 'margin-right': '10px' })
         .html(_tr('app_page.explore_box.button_add_field'))
         .on('click', () => {
           this.modal_box.hide();
@@ -403,6 +409,22 @@ export const boxExplore2 = {
           add_field_table(the_table, table_name, this);
         });
     }
+
+    // Add a button to export as csv
+    div_bottom_button
+      .append('button')
+      .attrs({ id: 'export_table_csv_button', class: 'button_st4' })
+      .styles({ padding: '10px', 'font-size': '1.1em' })
+      .html(_tr('app_page.explore_box.button_export_csv'))
+      .on('click', () => {
+        const csvStr = d3.csvFormat(the_table);
+        clickLinkFromDataUrl(
+          `data:text/plan;charset=utf-8,${encodeURIComponent(csvStr)}`,
+          `${table_name}-table.csv`,
+        );
+      });
+
+    // Prepare the title and subtitle of the table component
     const txt_intro = [
       '<b>', table_name, '</b><br>',
       this.nb_features, ' ', _tr('app_page.common.feature', { count: this.nb_features }), ' - ',
@@ -423,6 +445,8 @@ export const boxExplore2 = {
     if (per_page_value > 1000) {
       per_page_value = 100;
     }
+
+    // Actually prepare the table
     const myTable = document.getElementById('myTable');
     this.datatable = new DataTable(myTable, {
       sortable: true,

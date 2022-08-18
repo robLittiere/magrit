@@ -450,6 +450,7 @@
         "explore_box": {
             "title": "Explore dataset",
             "button_add_field": "Add a new field...",
+            "button_export_csv": "Export to CSV",
             "add_field_box": {
                 "new_name_placeholder": "NewField",
                 "new_name": "New field name<br>",

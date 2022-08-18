@@ -449,6 +449,7 @@
         "explore_box": {
             "title": "Table de données",
             "button_add_field": "Ajout d'un champ...",
+            "button_export_csv": "Exporter en CSV",
             "add_field_box": {
                 "new_name_placeholder": "NouveauChamp",
                 "new_name": "Nom du nouveau champ<br>",
