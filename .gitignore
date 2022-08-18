@@ -15,7 +15,6 @@ develop-eggs/
 downloads/
 eggs/
 .eggs/
-src/
 
 # Virtual environnements
 venv/
