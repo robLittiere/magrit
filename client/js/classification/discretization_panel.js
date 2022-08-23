@@ -206,7 +206,7 @@ export const display_discretization = (layer_name, field_name, nb_class, options
       .style('display', 'inline')
       .html(_tr('disc_box.left_colramp'))
       .insert('select')
-      .styles({ width: '116px', 'margin-left': '4px' })
+      .styles({ width: '116px', 'margin-left': '4px', 'background-image': 'url(static/img/palettes/Blues.png)' })
       .attr('class', 'color_params_left')
       .on('change', function () {
         this.style.backgroundImage = `url(static/img/palettes/${this.value}.png)`;
@@ -217,7 +217,7 @@ export const display_discretization = (layer_name, field_name, nb_class, options
       .attr('class', 'color_txt2')
       .html(_tr('disc_box.right_colramp'))
       .insert('select')
-      .styles({ width: '116px', 'margin-left': '4px' })
+      .styles({ width: '116px', 'margin-left': '4px', 'background-image': 'url(static/img/palettes/Reds.png)' })
       .attr('class', 'color_params_right')
       .on('change', function () {
         this.style.backgroundImage = `url(static/img/palettes/${this.value}.png)`;
