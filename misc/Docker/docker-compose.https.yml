@@ -24,9 +24,11 @@ services:
       - app-network
     ports:
       - "80:80"
+      - "443:443"
     volumes:
       - staticfiles:/var/www/static
-      - ./nginx/conf-http:/etc/nginx/sites-enabled
+      - ./nginx/conf-https:/etc/nginx/sites-enabled
+      - /etc/letsencrypt:/etc/letsencrypt
     depends_on:
       - magritapp
 

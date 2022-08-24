@@ -4,8 +4,5 @@ RUN apt-get update && apt-get install --no-install-recommends -y nginx locales &
 ENV LANG='fr_FR.UTF-8' LANGUAGE='fr_FR' LC_ALL='fr_FR.UTF-8'
 RUN ln -sf /dev/stdout /var/log/nginx/access.log
 RUN ln -sf /dev/stderr /var/log/nginx/error.log
-RUN rm -rf /etc/nginx/sites-enabled/default
-COPY nginx.conf /etc/nginx/sites-enabled/magritapp
-RUN mkdir /var/www/static
-EXPOSE 80
+RUN rm -rf /etc/nginx/sites-enabled/default && mkdir /var/www/static
 CMD ["nginx", "-g", "daemon off;"]
