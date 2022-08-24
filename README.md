@@ -1,8 +1,10 @@
 [![png](magrit_app/static/img/magrit_banner.png)](http://magrit.cnrs.fr)  
 [![riate](https://github.com/riatelab/magrit/raw/master/magrit_app/static/img/riate_blue_red.png)](http://riate.cnrs.fr)   
 [![Release name](https://img.shields.io/github/release/riatelab/magrit.svg)](https://github.com/riatelab/magrit/releases)
-[![Build Status](https://travis-ci.org/riatelab/magrit.svg?branch=master)](https://travis-ci.org/riatelab/magrit)
-[![Docker Build Status](https://img.shields.io/docker/build/magrit/magrit.svg)](https://hub.docker.com/r/magrit/magrit/)   
+
+<!--
+[![Docker Build Status](https://img.shields.io/docker/cloud/build/magrit/magrit)](https://hub.docker.com/r/magrit/magrit/)   
+-->
 
 [en] [Magrit](http://magrit.cnrs.fr) is an online mapping application developed by [UAR RIATE](http://www.riate.cnrs.fr).  
 [fr]  [Magrit](http://magrit.cnrs.fr) est une application de cartographie thématique développée par l'[UAR RIATE](http://www.riate.cnrs.fr).
