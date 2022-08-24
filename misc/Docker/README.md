@@ -1,11 +1,11 @@
 ## Using Docker to build and deploy Magrit
 
-### 3 containers, Magritapp, Redis, NGINX
+### 3 containers, Magritapp, Redis, NGINX without support for HTTPS
 
 This version can be used to deploy on a (dedicated) server with only HTTP support.
 It doesn't require any particular attention, just clone Magrit repository, go in the `misc/Docker` folder and run `docker-compose -f docker-compose.yml up -d`.
 
-### 4 containers, Magritapp, Redis, NGINX and certbot
+### 3 containers, Magritapp, Redis, NGINX with support for HTTPS
 
 This version can be used to deploy on a (dedicated) server with support for HTTPS, based on certificates provided by Let's Encrypt.
 
@@ -19,10 +19,10 @@ This is the version that we publish on DockerHub. It doesn't use docker-compose 
 
 We recommend this version for users who want to have Magrit on their computer for personal use.
 
-You don't need to build manually this container, as you can use the version that we publish on DockerHub by doing `docker run magrit/magrit`.
+You don't need to build manually this container, as you can use the version that we publish on DockerHub by doing `docker run -d -p "9999:9999" --name magrit magrit/magrit`.
 
 
 ### Other configurations
 
-If you need to deploy Magrit alongside other applications on your server, you probably don't need to bring in the NGINX and certbot containers.
+If you need to deploy Magrit alongside other applications on your server, you probably don't need to bring in the NGINX container.
 You can take inspiration from our "Magritapp, Redis, NGINX" configuration to create your configuration with 2 containers, Magritapp and Redis and then manage on your side (with Apache Server or NGINX for example) to expose Magrit publicly.
