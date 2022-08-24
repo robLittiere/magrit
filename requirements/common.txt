@@ -7,7 +7,7 @@ docopt >= 0.6.2
 Fiona == 1.8.21
 gdal == 3.4.1
 geopandas == 0.11.1
-jenkspy >= 0.1.5
+jenkspy == 0.3.1
 matplotlib == 3.5.2
 mmh3 == 2.5.1
 numpy == 1.23.1
