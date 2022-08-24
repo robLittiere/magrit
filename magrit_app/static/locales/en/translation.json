@@ -618,7 +618,7 @@
             "field_symbol_color": "Field used for <strong>symbol colors</strong> : <i>{{ field }}</i><br>",
             "color_break": "Color according to a break value",
             "break_value": "<br>Break value ",
-            "field_symbol_size": "Field used for <strong>proportionals values</strong> : <i>{{ field }}</i><br><br>",
+            "field_symbol_size": "Field used for <strong>proportionals values</strong> : <i>{{ field }}</i><br>",
             "symbol_fixed_size": "Symbol fixed size ",
             "on_value": "on value ...",
             "point_radius": "Point radius<br>",

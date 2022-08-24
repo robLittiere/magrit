@@ -903,7 +903,11 @@ div.panel.show {
 }
 
 .twbs .modal-body > p.inp_bottom {
-  margin: 11px 0px 35px 0px !important;
+  margin: 10px 0px 15px 0px !important;
+}
+
+.twbs .modal-body > hr.bottom-layer-name {
+  margin: 0;
 }
 
 .fitContent {
@@ -935,6 +939,20 @@ select.m_elem_right {
 
 #export_filename.m_elem_right {
   width: auto !important;
+}
+
+#lyr_change_name {
+  width: 100%;
+  margin: 0;
+}
+
+div.line_elem {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  justify-content: space-between;
+  margin: 15px 0;
 }
 
 p.line_elem {

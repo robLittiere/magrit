@@ -617,7 +617,7 @@
             "field_symbol_color": "Champ utilisé pour les <strong>couleurs des symboles</strong> : <i>{{ field }}</i><br>",
             "color_break": "Couleur selon une valeur limite",
             "break_value": "<br>Valeur limite ",
-            "field_symbol_size": "Champ utilisé pour les <strong>valeurs proportionnelles</strong> : <i>{{ field }}</i><br><br>",
+            "field_symbol_size": "Champ utilisé pour les <strong>valeurs proportionnelles</strong> : <i>{{ field }}</i><br>",
             "symbol_fixed_size": "Taille du symbole fixée ",
             "on_value": "sur la valeur ...",
             "point_radius": "Taille du point<br>",
