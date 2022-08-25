@@ -232,27 +232,15 @@ export const scaleBar = {
         }
       });
     const box_body = d3.select('.scaleBarEditBox').select('.modal-body').style('width', '295px');
-        // box_body.node().parentElement.style.width = "auto";
-    box_body.append('h3').html(_tr('app_page.scale_bar_edit_box.title'));
-    const a = box_body.append('p').attr('class', 'line_elem2');
+
+    const a = box_body.append('div')
+      .attr('class', 'line_elem');
+
     a.append('span')
+      .style('flex-grow', '0.9')
       .html(_tr('app_page.scale_bar_edit_box.fixed_size'));
 
     a.append('input')
-      .style('float', 'right')
-      .attrs({
-        id: 'scale_fixed_field',
-        type: 'number',
-      })
-      .property('disabled', initial_params.fixed_size ? null : true)
-      .property('value', +this.dist_txt)
-      .on('change', function () {
-        const v = convert_dist(self.unit, 'km', +this.value);
-        self.resize(v);
-      });
-
-    a.append('input')
-      .style('float', 'right')
       .attrs({ type: 'checkbox', checked: self.fixed_size ? true : null })
       .on('change', () => {
         if (!self.fixed_size) {
@@ -267,9 +255,21 @@ export const scaleBar = {
         }
       });
 
-    const b = box_body.append('p').attr('class', 'line_elem2');
+    a.append('input')
+      .attrs({ id: 'scale_fixed_field', type: 'number' })
+      .property('disabled', initial_params.fixed_size ? null : true)
+      .property('value', +this.dist_txt)
+      .on('change', function () {
+        const v = convert_dist(self.unit, 'km', +this.value);
+        self.resize(v);
+      });
+
+    const b = box_body.append('div')
+      .attr('class', 'line_elem');
+
     b.insert('span')
       .html(_tr('app_page.scale_bar_edit_box.precision'));
+
     b.insert('input')
       .attrs({
         id: 'scale_precision',
@@ -278,19 +278,18 @@ export const scaleBar = {
         max: 6,
         step: 1,
       })
-      .styles({
-        float: 'right',
-        width: '60px',
-      })
       .property('value', +self.precision)
       .on('change', function () {
         self.precision = +this.value;
         self.update();
       });
 
-    const c = box_body.append('p').attr('class', 'line_elem2');
+    const c = box_body.append('div')
+      .attr('class', 'line_elem');
+
     c.insert('span')
       .html(_tr('app_page.scale_bar_edit_box.unit'));
+
     const unit_select = c.insert('select')
       .style('float', 'right')
       .attr('id', 'scale_unit')
@@ -313,11 +312,14 @@ export const scaleBar = {
     unit_select.append('option').text('mi').attr('value', 'mi');
     unit_select.node().value = self.unit;
 
-    const e = box_body.append('p').attr('class', 'line_elem2');
-    e.append('span')
+    const e = box_body.append('div')
+      .attr('class', 'line_elem');
+
+    e.append('label')
+      .attr('for', 'checkbox_start_end_bar')
       .html(_tr('app_page.scale_bar_edit_box.start_end_bar'));
+
     e.append('input')
-      .style('float', 'right')
       .attrs({ id: 'checkbox_start_end_bar', type: 'checkbox' })
       .on('change', () => {
         self.start_end_bar = self.start_end_bar !== true;

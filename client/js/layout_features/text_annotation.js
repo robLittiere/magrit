@@ -252,17 +252,16 @@ export default class Textbox {
       x_center = nx + bbox.width / 2,
       y_center = ny + bbox.height / 2;
 
-    const option_rotation = box_content.append('p')
-      .attr('class', 'line_elem2');
+    const option_rotation = box_content.append('div')
+      .attr('class', 'line_elem');
 
     option_rotation.append('span')
+      .style('flex-grow', '0.9')
       .html(_tr('app_page.text_box_edit_box.rotation'));
 
-    option_rotation.append('span')
-      .style('float', 'right')
-      .html(' °');
+    const angle_display = option_rotation.append('div');
 
-    option_rotation.append('input')
+    angle_display.append('input')
       .attrs({
         type: 'number',
         min: 0,
@@ -271,7 +270,7 @@ export default class Textbox {
         class: 'without_spinner',
         id: 'textbox_txt_rotate',
       })
-      .styles({ width: '40px', float: 'right' })
+      .styles({ width: '40px' })
       .property('value', current_rotate)
       .on('change', function () {
         const rotate_value = +this.value;
@@ -281,9 +280,11 @@ export default class Textbox {
         document.getElementById('textbox_range_rotate').value = rotate_value;
       });
 
+    angle_display.append('span')
+      .html('°');
+
     option_rotation.append('input')
       .attrs({ type: 'range', min: 0, max: 360, step: 0.1, id: 'textbox_range_rotate' })
-      .styles({ 'vertical-align': 'middle', width: '100px', float: 'right', margin: 'auto 10px' })
       .property('value', current_rotate)
       .on('change', function () {
         const rotate_value = +this.value;
@@ -294,7 +295,9 @@ export default class Textbox {
         document.getElementById('textbox_txt_rotate').value = rotate_value;
       });
 
-    const options_font = box_content.append('p');
+    const options_font = box_content.append('div')
+      .attr('class', 'line_elem');
+
     const font_select = options_font.insert('select')
       .on('change', function () {
         text_elem.style('font-family', this.value);
@@ -304,7 +307,9 @@ export default class Textbox {
     available_fonts.forEach((font) => {
       font_select.append('option').text(font[0]).attr('value', font[1]);
     });
-    font_select.node().selectedIndex = available_fonts.map(d => (d[1] === self.fontFamily ? '1' : '0')).indexOf('1');
+
+    font_select.node().selectedIndex = available_fonts
+      .map((d) => (d[1] === self.fontFamily ? '1' : '0')).indexOf('1');
 
     options_font.append('input')
       .attrs({
@@ -314,7 +319,7 @@ export default class Textbox {
         step: 0.1,
         type: 'number',
       })
-      .styles({ width: '60px', margin: '0 15px' })
+      .styles({ width: '60px' })
       .property('value', self.fontSize)
       .on('change', function () {
         self.fontSize = +this.value;
@@ -324,10 +329,7 @@ export default class Textbox {
       });
 
     options_font.append('input')
-      .attrs({
-        type: 'color',
-        id: 'font_color',
-      })
+      .attrs({ type: 'color', id: 'font_color' })
       .style('width', '60px')
       .property('value', rgb2hex(current_options.color))
       .on('change', function () {
@@ -397,7 +399,7 @@ export default class Textbox {
       .html('<br>');
     content_modif_zone.append('textarea')
       .attr('id', 'annotation_content')
-      .styles({ margin: '5px 0px 0px', width: '100%' })
+      .styles({ margin: '5px 0px 0px', 'min-width': '100%', 'max-width': '100%' })
       .on('keyup', function () {
         self.update_text(this.value);
       });

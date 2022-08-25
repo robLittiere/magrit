@@ -28,19 +28,19 @@ export default class UserArrow {
     }
     const self = this;
     this.drag_behavior = d3.drag()
-       .subject(function () {
+      .subject(function () {
         // let snap_lines = get_coords_snap_lines(this.id + this.className);
-         const t = d3.select(this.querySelector('line'));
-         return {
-           x: +t.attr('x2') - +t.attr('x1'),
-           y: +t.attr('y2') - +t.attr('y1'),
-           x1: t.attr('x1'),
-           x2: t.attr('x2'),
-           y1: t.attr('y1'),
-           y2: t.attr('y2'),
-           map_locked: !!map_div.select('#hand_button').classed('locked'),//  , snap_lines: snap_lines
-         };
-       })
+        const t = d3.select(this.querySelector('line'));
+        return {
+          x: +t.attr('x2') - +t.attr('x1'),
+          y: +t.attr('y2') - +t.attr('y1'),
+          x1: t.attr('x1'),
+          x2: t.attr('x2'),
+          y1: t.attr('y1'),
+          y2: t.attr('y2'),
+          map_locked: !!map_div.select('#hand_button').classed('locked'), //  , snap_lines: snap_lines
+        };
+      })
       .on('start', () => {
         d3.event.sourceEvent.stopPropagation();
         handle_click_hand('lock');
@@ -151,9 +151,11 @@ export default class UserArrow {
     this.arrow.call(this.drag_behavior);
 
     this.arrow.on('contextmenu', () => {
-      context_menu.showMenu(d3.event,
-                            document.querySelector('body'),
-                            getItems());
+      context_menu.showMenu(
+        d3.event,
+        document.querySelector('body'),
+        getItems(),
+      );
     });
     this.arrow.on('dblclick', () => {
       d3.event.preventDefault();
@@ -182,16 +184,17 @@ export default class UserArrow {
       map_locked = !!map_div.select('#hand_button').classed('locked'),
       msg = alertify.notify(_tr('app_page.notification.instruction_modify_feature'), 'warning', 0);
 
-      // New behavior if the user click on the lock to move on the map :
+    // New behavior if the user click on the lock to move on the map :
     const cleanup_edit_state = () => {
       edit_layer.remove();
       msg.dismiss();
       self.pt1 = [line.x1.baseVal.value, line.y1.baseVal.value];
       self.pt2 = [line.x2.baseVal.value, line.y2.baseVal.value];
 
-          // Reactive the ability to move the arrow :
+      // Reactive the ability to move the arrow :
       self.arrow.call(self.drag_behavior);
-          // Restore the ability to edit the control points on dblclick on the arrow :
+
+      // Restore the ability to edit the control points on dblclick on the arrow :
       self.arrow.on('dblclick', () => {
         d3.event.preventDefault();
         d3.event.stopPropagation();
@@ -200,21 +203,21 @@ export default class UserArrow {
       if (!map_locked) {
         handle_click_hand('unlock');
       }
-          // Restore the previous behiavor for the 'lock' button :
+      // Restore the previous behavior for the 'lock' button :
       document.getElementById('hand_button').onclick = handle_click_hand;
     };
 
-      // Change the behavior of the 'lock' button :
+    // Change the behavior of the 'lock' button :
     document.getElementById('hand_button').onclick = function () {
       cleanup_edit_state();
       handle_click_hand();
     };
-      // Desactive the ability to drag the arrow :
+    // Deactivate the ability to drag the arrow :
     self.arrow.on('.drag', null);
-      // Desactive the ability to zoom/move on the map ;
+    // Deactivate the ability to zoom/move on the map ;
     handle_click_hand('lock');
 
-      // Add a layer to intercept click on the map :
+    // Add a layer to intercept click on the map :
     let edit_layer = map.insert('g');
     edit_layer.append('rect')
       .attrs({ x: 0, y: 0, width: w, height: h, class: 'edit_rect' })
@@ -225,7 +228,7 @@ export default class UserArrow {
         cleanup_edit_state();
       });
 
-      // Append two red squares for the start point and the end point of the arrow :
+    // Append two red squares for the start point and the end point of the arrow :
     edit_layer.append('rect')
       .attrs({ x: self.pt1[0] * zoom_params.k + zoom_params.x - 3, y: self.pt1[1] * zoom_params.k + zoom_params.y - 3, height: 6, width: 6, id: 'arrow_start_pt' })
       .styles({ fill: 'red', cursor: 'grab' })
@@ -249,7 +252,7 @@ export default class UserArrow {
         line.y2.baseVal.value = (ny - zoom_params.y) / zoom_params.k;
       }));
 
-      // Exit the "edit" state by double clicking again on the arrow :
+    // Exit the "edit" state by double-clicking again on the arrow :
     self.arrow.on('dblclick', () => {
       d3.event.stopPropagation();
       d3.event.preventDefault();
@@ -312,21 +315,27 @@ export default class UserArrow {
       .insert('div')
       .attr('id', 'styleBoxArrow');
 
-    const s1 = box_content.append('p').attr('class', 'line_elem2');
+    const s1 = box_content.append('div')
+      .attr('class', 'line_elem');
+
     s1.append('span')
+      .styles({ flex: '0.9' })
       .html(_tr('app_page.arrow_edit_box.arrowWeight'));
-    s1.insert('span')
-      .styles({ float: 'right', width: '13px' })
-      .html('&nbsp;px');
-    s1.insert('input')
-    .attrs({ id: 'arrow_weight_text', class: 'without_spinner', min: 0, max: 34, step: 0.1 })
-    .styles({ width: '30px', 'margin-left': '10px', float: 'right' })
-    .property('value', self.stroke_width)
-    .on('input', function () {
-      const elem = document.getElementById('arrow_stroke_width');
-      elem.value = this.value;
-      elem.dispatchEvent(new Event('change'));
-    });
+
+    const s1_group_size = s1.append('div');
+
+    s1_group_size.append('input')
+      .attrs({ id: 'arrow_weight_text', class: 'without_spinner', min: 0, max: 34, step: 0.1 })
+      .styles({ width: '30px' })
+      .property('value', self.stroke_width)
+      .on('input', function () {
+        const elem = document.getElementById('arrow_stroke_width');
+        elem.value = this.value;
+        elem.dispatchEvent(new Event('change'));
+      });
+
+    s1_group_size.append('span')
+      .html('px');
 
     s1.append('input')
       .attrs({
@@ -336,35 +345,36 @@ export default class UserArrow {
         step: 0.1,
         type: 'range',
       })
-      .styles({
-        float: 'right',
-        'vertical-align': 'middle',
-        width: '80px',
-      })
       .property('value', self.stroke_width)
       .on('change', function () {
         line.style.strokeWidth = this.value;
         document.getElementById('arrow_weight_text').value = +this.value;
       });
 
-    const s2 = box_content.append('p').attr('class', 'line_elem2');
+    const s2 = box_content.append('div')
+      .attr('class', 'line_elem');
+
     s2.append('span')
+      .styles({ flex: '0.9' })
       .html(_tr('app_page.arrow_edit_box.arrowAngle'));
-    s2.insert('span')
-      .styles({ float: 'right', width: '13px' })
-      .html('&nbsp;°');
-    s2.insert('input')
+
+    const s2_group_angle = s2.append('div');
+
+    s2_group_angle.append('input')
       .attrs({ id: 'arrow_angle_text', class: 'without_spinner', min: 0, max: 1, step: 1 })
-      .styles({ width: '30px', 'margin-left': '10px', float: 'right' })
+      .styles({ width: '30px' })
       .property('value', angle)
       .on('input', function () {
         const elem = document.getElementById('arrow_angle');
         elem.value = this.value;
         elem.dispatchEvent(new Event('change'));
       });
-    s2.insert('input')
+
+    s2_group_angle.append('span')
+      .html('°');
+
+    s2.append('input')
       .attrs({ id: 'arrow_angle', type: 'range', min: 0, max: 360, step: 1 })
-      .styles({ width: '80px', 'vertical-align': 'middle', float: 'right' })
       .property('value', angle)
       .on('change', function () {
         const distance = Msqrt(
@@ -376,13 +386,15 @@ export default class UserArrow {
         line.y2.baseVal.value = ny;
         document.getElementById('arrow_angle_text').value = +this.value;
       });
-    const s3 = box_content.append('p').attr('class', 'line_elem2');
+
+    const s3 = box_content.append('div').attr('class', 'line_elem');
+
     s3.append('label')
       .attrs({ for: 'checkbox_head_arrow' })
       .html(_tr('app_page.arrow_edit_box.arrowHead'));
+
     s3.append('input')
       .attrs({ type: 'checkbox', id: 'checkbox_head_arrow' })
-      .styles({ 'margin-left': '45px', 'vertical-align': 'middle' })
       .property('checked', self.hide_head === true)
       .on('change', function () {
         if (this.checked) {

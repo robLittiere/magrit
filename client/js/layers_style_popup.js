@@ -27,7 +27,7 @@ import { make_table } from './tables';
 */
 export function handle_click_layer(layer_name) {
   if (data_manager.current_layers[layer_name].graticule) {
-    createStyleBoxGraticule();
+    createStyleBoxGraticule(layer_name);
   } else if (data_manager.current_layers[layer_name].type === 'Line') {
     createStyleBox_Line(layer_name);
   } else if (data_manager.current_layers[layer_name].renderer
@@ -205,15 +205,15 @@ function createStyleBoxTypoSymbols(layer_name) {
 
   const container = document.querySelector('.twbs > .styleBox');
   const popup = d3.select(container)
-    .select('.modal-content').style('width', '340px')
+    .select('.modal-content').style('width', '350px')
     .select('.modal-body');
 
-  popup.append('p')
-    .styles({ 'text-align': 'center', color: 'grey' })
-    .html([
-      _tr('app_page.layer_style_popup.rendered_field', { field: rendered_field }),
-      _tr('app_page.layer_style_popup.reference_layer', { layer: ref_layer_name }),
-    ].join(''));
+  // popup.append('p')
+  //   .styles({ 'text-align': 'center', color: 'grey' })
+  //   .html([
+  //     _tr('app_page.layer_style_popup.rendered_field', { field: rendered_field }),
+  //     _tr('app_page.layer_style_popup.reference_layer', { layer: ref_layer_name }),
+  //   ].join(''));
 
   let new_layer_name = layer_name;
   const new_name_section = make_change_layer_name_section(popup, layer_name);
@@ -241,12 +241,14 @@ function createStyleBoxTypoSymbols(layer_name) {
       selection.style('display', undefined);
     });
 
-  const size_section = popup.append('p');
+  const size_section = popup.append('div')
+    .attr('class', 'line_elem');
+
   size_section.append('span')
     .html(_tr('app_page.layer_style_popup.symbols_size'));
+
   size_section.append('input')
     .attrs({ min: 0, max: 200, step: 'any', type: 'number' })
-    .styles({ width: '60px', margin: 'auto' })
     .property('value', 32)
     .on('change', function () {
       const value = this.value;
@@ -351,15 +353,15 @@ function createStyleBoxLabel(layer_name) {
 
   const container = document.querySelector('.twbs > .styleBox');
   const popup = d3.select(container)
-    .select('.modal-content').style('width', '340px')
+    .select('.modal-content').style('width', '350px')
     .select('.modal-body');
 
-  popup.append('p')
-    .styles({ 'text-align': 'center', color: 'grey' })
-    .html([
-      _tr('app_page.layer_style_popup.rendered_field', { field: data_manager.current_layers[layer_name].rendered_field }),
-      _tr('app_page.layer_style_popup.reference_layer', { layer: ref_layer_name }),
-    ].join(''));
+  // popup.append('p')
+  //   .styles({ 'text-align': 'center', color: 'grey' })
+  //   .html([
+  //     _tr('app_page.layer_style_popup.rendered_field', { field: data_manager.current_layers[layer_name].rendered_field }),
+  //     _tr('app_page.layer_style_popup.reference_layer', { layer: ref_layer_name }),
+  //   ].join(''));
 
   let new_layer_name = layer_name;
   const new_name_section = make_change_layer_name_section(popup, layer_name);
@@ -464,7 +466,7 @@ function createStyleBoxGraticule(layer_name) {
 
   const container = document.querySelector('.twbs > .styleBox');
   const popup = d3.select(container)
-    .select('.modal-content').style('width', '340px')
+    .select('.modal-content').style('width', '350px')
     .select('.modal-body');
   // let new_layer_name = layer_name;
   // const new_name_section = make_change_layer_name_section(popup, layer_name);
@@ -504,7 +506,6 @@ function createStyleBoxGraticule(layer_name) {
       max: 1,
       step: 0.1,
     })
-    .styles({ width: '58px', margin: '0px' })
     .property('value', current_params.opacity)
     .on('change', function () {
       selection.style('stroke-opacity', this.value);
@@ -520,7 +521,6 @@ function createStyleBoxGraticule(layer_name) {
 
   stroke_width_choice.append('input')
     .attr('type', 'number')
-    .styles({ width: '60px' })
     .property('value', current_params['stroke-width-const'])
     .on('change', function () {
       selection_strokeW.style('stroke-width', this.value);
@@ -531,7 +531,25 @@ function createStyleBoxGraticule(layer_name) {
     .attr('class', 'line_elem');
 
   steps_choice.append('span')
+    .style('flex', '0.9')
     .html(_tr('app_page.layer_style_popup.graticule_steps'));
+
+  steps_choice.append('input')
+    .attrs({
+      type: 'number',
+      min: 0,
+      max: 100,
+      step: 'any',
+      class: 'without_spinner',
+      id: 'graticule_step_txt',
+    })
+    .styles({ width: '30px' })
+    .property('value', current_params.step)
+    .on('change', function () {
+      const grat_range = document.getElementById('graticule_range_steps');
+      grat_range.value = +this.value;
+      grat_range.dispatchEvent(new MouseEvent('change'));
+    });
 
   steps_choice.append('input')
     .attrs({
@@ -541,7 +559,6 @@ function createStyleBoxGraticule(layer_name) {
       max: 100,
       step: 1,
     })
-    .styles({ width: '58px', margin: '0px' })
     .property('value', current_params.step)
     .on('change', function () {
       const next_layer = selection_strokeW.node().nextSibling;
@@ -565,43 +582,14 @@ function createStyleBoxGraticule(layer_name) {
       svg_map.insertBefore(selection_strokeW.node(), next_layer);
       popup.select('#graticule_step_txt').property('value', step_val);
     });
-  steps_choice.append('input')
-    .attrs({
-      type: 'number',
-      min: 0,
-      max: 100,
-      step: 'any',
-      class: 'without_spinner',
-      id: 'graticule_step_txt',
-    })
-    .styles({ width: '30px' })
-    .property('value', current_params.step)
-    .on('change', function () {
-      const grat_range = document.getElementById('graticule_range_steps');
-      grat_range.value = +this.value;
-      grat_range.dispatchEvent(new MouseEvent('change'));
-    });
 
   const dasharray_choice = popup.append('div')
     .attr('class', 'line_elem');
 
   dasharray_choice.append('span')
+    .style('flex', '0.9')
     .html(_tr('app_page.layer_style_popup.graticule_dasharray'));
-  dasharray_choice.append('input')
-    .attrs({
-      type: 'range',
-      min: 0,
-      max: 50,
-      step: 0.1,
-      id: 'graticule_range_dasharray',
-    })
-    .styles({ width: '58px', margin: '0px' })
-    .property('value', current_params.dasharray)
-    .on('change', function () {
-      selection.style('stroke-dasharray', this.value);
-      data_manager.current_layers.Graticule.dasharray = +this.value;
-      popup.select('#graticule_dasharray_txt').property('value', this.value);
-    });
+
   dasharray_choice.append('input')
     .attrs({
       type: 'number',
@@ -617,6 +605,21 @@ function createStyleBoxGraticule(layer_name) {
       const grat_range = document.getElementById('graticule_range_dasharray');
       grat_range.value = +this.value;
       grat_range.dispatchEvent(new MouseEvent('change'));
+    });
+
+  dasharray_choice.append('input')
+    .attrs({
+      type: 'range',
+      min: 0,
+      max: 50,
+      step: 0.1,
+      id: 'graticule_range_dasharray',
+    })
+    .property('value', current_params.dasharray)
+    .on('change', function () {
+      selection.style('stroke-dasharray', this.value);
+      data_manager.current_layers.Graticule.dasharray = +this.value;
+      popup.select('#graticule_dasharray_txt').property('value', this.value);
     });
 
   // Only append this section if there is currently a target layer :
@@ -900,7 +903,7 @@ function createStyleBox_Line(layer_name) {
 
   const container = document.querySelector('.twbs > .styleBox');
   const popup = d3.select(container)
-    .select('.modal-content').style('width', '340px')
+    .select('.modal-content').style('width', '350px')
     .select('.modal-body');
 
   let new_layer_name = layer_name;
@@ -994,6 +997,30 @@ function createStyleBox_Line(layer_name) {
       });
   }
 
+  const opacity_section = popup.append('div')
+    .attr('class', 'line_elem');
+
+  opacity_section.insert('span')
+    .styles({ flex: '0.9' })
+    .html(_tr('app_page.layer_style_popup.opacity'));
+
+  opacity_section.append('span')
+    .attr('id', 'opacity_val_txt')
+    .html(` ${border_opacity}`);
+
+  opacity_section.insert('input')
+    .attrs({
+      type: 'range',
+      min: 0,
+      max: 1,
+      step: 0.1,
+    })
+    .property('value', border_opacity)
+    .on('change', function () {
+      opacity_section.select('#opacity_val_txt').html(` ${this.value}`);
+      selection.style('stroke-opacity', this.value);
+    });
+
   if (renderer === 'LinksGraduated') {
     prev_min_display = data_manager.current_layers[layer_name].min_display || 0;
     prev_breaks = data_manager.current_layers[layer_name].breaks.slice();
@@ -1021,7 +1048,6 @@ function createStyleBox_Line(layer_name) {
         max: max_val,
         step: 0.5,
       })
-      .styles({ width: '58px', margin: '0px' })
       .property('value', prev_min_display)
       .on('change', function () {
         const val = +this.value;
@@ -1080,7 +1106,6 @@ function createStyleBox_Line(layer_name) {
         max: 1,
         step: 0.1,
       })
-      .styles({ width: '58px', margin: '0px' })
       .property('value', prev_min_display)
       .on('change', function () {
         const val = +this.value;
@@ -1119,31 +1144,6 @@ function createStyleBox_Line(layer_name) {
       });
   }
 
-  const opacity_section = popup.append('div')
-    .attr('class', 'line_elem');
-
-  opacity_section.insert('span')
-    .styles({ flex: '0.9' })
-    .html(_tr('app_page.layer_style_popup.opacity'));
-
-  opacity_section.append('span')
-    .attr('id', 'opacity_val_txt')
-    .html(` ${border_opacity}`);
-
-  opacity_section.insert('input')
-    .attrs({
-      type: 'range',
-      min: 0,
-      max: 1,
-      step: 0.1,
-    })
-    .styles({ width: '58px', margin: '0px' })
-    .property('value', border_opacity)
-    .on('change', function () {
-      opacity_section.select('#opacity_val_txt').html(` ${this.value}`);
-      selection.style('stroke-opacity', this.value);
-    });
-
   if (!renderer || (!renderer.startsWith('PropSymbols') && !renderer.startsWith('Links') && renderer !== 'DiscLayer')) {
     const width_section = popup.append('div')
       .attr('class', 'line_elem');
@@ -1153,7 +1153,6 @@ function createStyleBox_Line(layer_name) {
 
     width_section.insert('input')
       .attrs({ type: 'number', min: 0, step: 0.1 })
-      .styles({ width: '60px' })
       .property('value', stroke_width)
       .on('change', function () {
         const val = +this.value;
@@ -1163,18 +1162,19 @@ function createStyleBox_Line(layer_name) {
       });
   } else if (renderer.startsWith('PropSymbols') || renderer === 'LinksProportional') {
     const field_used = data_manager.current_layers[layer_name].rendered_field;
-    const d_values = data_manager.result_data[layer_name].map(f => +f[field_used]);
+    const d_values = data_manager.result_data[layer_name].map((f) => +f[field_used]);
+
+    popup.append('span')
+      .html(_tr('app_page.layer_style_popup.field_symbol_size', { field: data_manager.current_layers[layer_name].rendered_field }));
+
     const prop_val_content = popup.append('div')
       .attr('class', 'line_elem');
 
     prop_val_content.append('span')
-      .html(_tr('app_page.layer_style_popup.field_symbol_size', { field: data_manager.current_layers[layer_name].rendered_field }));
-
-    prop_val_content.append('span')
+      .styles({ flex: '0.9' })
       .html(_tr('app_page.layer_style_popup.symbol_fixed_size'));
 
     prop_val_content.insert('input')
-      .styles({ width: '60px', float: 'right' })
       .attrs({
         type: 'number',
         id: 'max_size_range',
@@ -1212,26 +1212,26 @@ function createStyleBox_Line(layer_name) {
   }
 
   if (data_manager.current_layers[layer_name].renderer === undefined) {
-    const generate_legend_section = popup.append('p');
-    const generate_lgd_chkbox = generate_legend_section.insert('input')
-      .style('margin', 0)
-      .property('checked', data_manager.current_layers[layer_name].layout_legend_displayed === true)
-      .attrs({
-        type: 'checkbox',
-        id: 'checkbox_layout_legend',
-      });
-    generate_legend_section.insert('label')
+    const generate_legend_section = popup.append('div')
+      .attr('class', 'line_elem');
+
+    generate_legend_section.append('label')
       .attr('for', 'checkbox_layout_legend')
       .html(_tr('app_page.layer_style_popup.layout_legend'));
-    generate_lgd_chkbox.on('change', function () {
-      if (this.checked) {
-        createLegend_layout(layer_name, data_manager.current_layers[layer_name].type, layer_name, '', undefined, layer_name);
-        data_manager.current_layers[layer_name].layout_legend_displayed = true;
-      } else {
-        document.querySelector(['#legend_root_layout.lgdf_', _app.layer_to_id.get(layer_name)].join('')).remove();
-        data_manager.current_layers[layer_name].layout_legend_displayed = false;
-      }
-    });
+
+    generate_legend_section.append('input')
+      .style('margin', 0)
+      .property('checked', data_manager.current_layers[layer_name].layout_legend_displayed === true)
+      .attrs({ type: 'checkbox', id: 'checkbox_layout_legend' })
+      .on('change', function () {
+        if (this.checked) {
+          createLegend_layout(layer_name, data_manager.current_layers[layer_name].type, layer_name, '', undefined, layer_name);
+          data_manager.current_layers[layer_name].layout_legend_displayed = true;
+        } else {
+          document.querySelector(['#legend_root_layout.lgdf_', _app.layer_to_id.get(layer_name)].join('')).remove();
+          data_manager.current_layers[layer_name].layout_legend_displayed = false;
+        }
+      });
   }
 
   make_generate_labels_section(popup, layer_name);
@@ -1358,7 +1358,7 @@ function createStyleBox(layer_name) {
   const container = document.querySelector('.twbs > .styleBox');
   const popup = d3.select(container)
     .select('.modal-content')
-    .style('width', '340px')
+    .style('width', '350px')
     .select('.modal-body');
 
   let new_layer_name = layer_name;
@@ -1384,7 +1384,6 @@ function createStyleBox(layer_name) {
         max: 80,
         id: 'point_radius_size',
       })
-      .styles({ width: '58px', margin: '0px' })
       .property('value', previous_point_radius)
       .on('change', function () {
         let current_pt_size = +this.value;
@@ -1578,7 +1577,6 @@ function createStyleBox(layer_name) {
       max: 1,
       step: 0.1,
     })
-    .styles({ width: '58px', margin: '0px' })
     .property('value', opacity)
     .on('change', function () {
       selection.style('fill-opacity', this.value);
@@ -1618,7 +1616,6 @@ function createStyleBox(layer_name) {
       max: 1,
       step: 0.1,
     })
-    .styles({ width: '58px', margin: '0px' })
     .property('value', border_opacity)
     .on('change', function () {
       opacity_section.select('#opacity_val_txt').html(` ${this.value}`);
@@ -1635,7 +1632,6 @@ function createStyleBox(layer_name) {
 
   width_section.insert('input')
     .attrs({ type: 'number', min: 0, step: 0.1 })
-    .styles({ width: '60px' })
     .property('value', stroke_width)
     .on('change', function () {
       const val = +this.value;
@@ -1645,17 +1641,18 @@ function createStyleBox(layer_name) {
       handleEdgeShapeRendering(selection, val);
     });
 
-  const shadow_section = popup.append('p');
-  const chkbx = shadow_section.insert('input')
-    .style('margin', '0')
-    .property('checked', map.select(g_lyr_name).attr('filter') ? true : null)
-    .attrs({
-      type: 'checkbox',
-      id: 'checkbox_shadow_layer',
-    });
-  shadow_section.insert('label')
+  const shadow_section = popup.append('div')
+    .attr('class', 'line_elem');
+
+  shadow_section.append('label')
     .attr('for', 'checkbox_shadow_layer')
     .html(_tr('app_page.layer_style_popup.layer_shadow'));
+
+  const chkbx = shadow_section.append('input')
+    .style('margin', '0')
+    .property('checked', map.select(g_lyr_name).attr('filter') ? true : null)
+    .attrs({ type: 'checkbox', id: 'checkbox_shadow_layer' });
+
   chkbx.on('change', function () {
     if (this.checked) {
       createDropShadow(_app.layer_to_id.get(layer_name));
@@ -1669,17 +1666,21 @@ function createStyleBox(layer_name) {
   if (data_manager.current_layers[layer_name].renderer === undefined
       || data_manager.current_layers[layer_name].renderer === 'Carto_doug'
       || data_manager.current_layers[layer_name].renderer === 'OlsonCarto') {
-    const generate_legend_section = popup.append('p');
-    const generate_lgd_chkbox = generate_legend_section.insert('input')
+    const generate_legend_section = popup.append('div')
+      .attr('class', 'line_elem');
+
+    generate_legend_section.append('label')
+      .attr('for', 'checkbox_layout_legend')
+      .html(_tr('app_page.layer_style_popup.layout_legend'));
+
+    const generate_lgd_chkbox = generate_legend_section.append('input')
       .style('margin', 0)
       .property('checked', data_manager.current_layers[layer_name].layout_legend_displayed === true)
       .attrs({
         type: 'checkbox',
         id: 'checkbox_layout_legend',
       });
-    generate_legend_section.insert('label')
-      .attr('for', 'checkbox_layout_legend')
-      .html(_tr('app_page.layer_style_popup.layout_legend'));
+
     generate_lgd_chkbox.on('change', function () {
       if (this.checked) {
         createLegend_layout(layer_name, data_manager.current_layers[layer_name].type, layer_name, '', undefined, layer_name);
@@ -1776,7 +1777,7 @@ function createStyleBoxStewart(layer_name) {
   const container = document.querySelector('.twbs > .styleBox');
   const popup = d3.select(container)
     .select('.modal-content')
-    .style('width', '340px')
+    .style('width', '350px')
     .select('.modal-body');
 
   let new_layer_name = layer_name;
@@ -1808,18 +1809,19 @@ function createStyleBoxStewart(layer_name) {
   });
   seq_color_select.node().value = prev_palette.name;
   const reversed_section = popup.append('div')
-    .style('margin-bottom', '10px');
+    .attr('class', 'line_elem');
+
+  reversed_section.append('label')
+    .attr('for', 'chckbox_reverse_palette')
+    .html(_tr('app_page.layer_style_popup.reverse_palette'));
+
   reversed_section.append('input')
-    .property('checked', prev_palette.reversed ? true : false)
+    .property('checked', !!prev_palette.reversed)
     .attrs({ id: 'chckbox_reverse_palette', type: 'checkbox' })
-    .style('margin', 'auto')
     .on('change', function onchangerevpal() {
       const pal_name = document.getElementById('coloramp_params').value;
       recolor_stewart(pal_name, this.checked);
     });
-  reversed_section.append('label')
-    .attr('for', 'chckbox_reverse_palette')
-    .html(_tr('app_page.layer_style_popup.reverse_palette'));
 
   const fill_opacity_section = popup.append('div')
     .attr('class', 'line_elem');
@@ -1839,7 +1841,6 @@ function createStyleBoxStewart(layer_name) {
       max: 1,
       step: 0.1,
     })
-    .styles({ width: '58px', margin: '0px' })
     .property('value', opacity)
     .on('change', function () {
       selection.style('fill-opacity', this.value);
@@ -1879,7 +1880,6 @@ function createStyleBoxStewart(layer_name) {
       max: 1,
       step: 0.1,
     })
-    .styles({ width: '58px', margin: '0px' })
     .property('value', border_opacity)
     .on('change', function () {
       opacity_section.select('#opacity_val_txt').html(` ${this.value}`);
@@ -1896,7 +1896,6 @@ function createStyleBoxStewart(layer_name) {
 
   width_section.insert('input')
     .attrs({ type: 'number', min: 0, step: 0.1 })
-    .styles({ width: '60px' })
     .property('value', stroke_width)
     .on('change', function () {
       const val = +this.value;
@@ -1906,17 +1905,21 @@ function createStyleBoxStewart(layer_name) {
       handleEdgeShapeRendering(selection, val);
     });
 
-  const shadow_section = popup.append('p');
-  const chkbx = shadow_section.insert('input')
+  const shadow_section = popup.append('div')
+    .attr('class', 'line_elem');
+
+  shadow_section.append('label')
+    .attr('for', 'checkbox_shadow_layer')
+    .html(_tr('app_page.layer_style_popup.layer_shadow'));
+
+  const chkbx = shadow_section.append('input')
     .style('margin', '0')
     .property('checked', map.select(g_lyr_name).attr('filter') ? true : null)
     .attrs({
       type: 'checkbox',
       id: 'checkbox_shadow_layer',
     });
-  shadow_section.insert('label')
-    .attr('for', 'checkbox_shadow_layer')
-    .html(_tr('app_page.layer_style_popup.layer_shadow'));
+
   chkbx.on('change', function () {
     if (this.checked) {
       createDropShadow(_app.layer_to_id.get(layer_name));
@@ -1934,14 +1937,7 @@ function make_generate_labels_graticule_section(parent_node) {
   const labels_section = parent_node.append('p');
   labels_section.append('span')
     .attr('id', 'generate_labels')
-    .styles({ cursor: 'pointer', 'margin-top': '15px' })
     .html(_tr('app_page.layer_style_popup.generate_labels'))
-    .on('mouseover', function () {
-      this.style.fontWeight = 'bold';
-    })
-    .on('mouseout', function () {
-      this.style.fontWeight = '';
-    })
     .on('click', () => {
       render_label_graticule('Graticule', {
         color: '#000',
@@ -1965,8 +1961,8 @@ function make_generate_labels_section(parent_node, layer_name) {
   const _fields = get_fields_name(layer_name) || [];
   // const table = make_table(layer_name);
   const fields_num = type_col2(make_table(layer_name))
-    .filter(a => a.type === 'ratio' || a.type === 'stock')
-    .map(a => a.name);
+    .filter((a) => a.type === 'ratio' || a.type === 'stock')
+    .map((a) => a.name);
   if (_fields && _fields.length > 0) {
     const labels_section = parent_node.append('p');
     const input_fields = {};
@@ -1975,14 +1971,7 @@ function make_generate_labels_section(parent_node, layer_name) {
     }
     labels_section.append('span')
       .attr('id', 'generate_labels')
-      .styles({ cursor: 'pointer', 'margin-top': '15px' })
       .html(_tr('app_page.layer_style_popup.generate_labels'))
-      .on('mouseover', function () {
-        this.style.fontWeight = 'bold';
-      })
-      .on('mouseout', function () {
-        this.style.fontWeight = '';
-      })
       .on('click', () => {
         swal({
           title: '',
@@ -2125,15 +2114,21 @@ function createStyleBoxWaffle(layer_name) {
   const container = document.querySelector('.twbs > .styleBox');
   const popup = d3.select(container)
     .select('.modal-content')
-    .style('width', '340px')
+    .style('width', '350px')
     .select('.modal-body');
 
-  popup.append('p')
-    .styles({ 'text-align': 'center', color: 'grey' })
-    .html([
-      _tr('app_page.layer_style_popup.rendered_field', { field: fields.join(' ,') }),
-      _tr('app_page.layer_style_popup.reference_layer', { layer: ref_layer_name }),
-    ].join(''));
+  let new_layer_name = layer_name;
+  const new_name_section = make_change_layer_name_section(popup, layer_name);
+  new_name_section.on('change', function () {
+    new_layer_name = this.value;
+  });
+
+  // popup.append('p')
+  //   .styles({ 'text-align': 'center', color: 'grey' })
+  //   .html([
+  //     _tr('app_page.layer_style_popup.rendered_field', { field: fields.join(' ,') }),
+  //     _tr('app_page.layer_style_popup.reference_layer', { layer: ref_layer_name }),
+  //   ].join(''));
 
   const fill_opacity_section = popup.append('div')
     .attr('class', 'line_elem')
@@ -2154,7 +2149,6 @@ function createStyleBoxWaffle(layer_name) {
       max: 1,
       step: 0.1,
     })
-    .styles({ width: '58px', margin: '0px' })
     .property('value', previous_params.fill_opacity)
     .on('change', function () {
       selection.selectAll(symbol).style('fill-opacity', +this.value);
@@ -2163,15 +2157,19 @@ function createStyleBoxWaffle(layer_name) {
 
   const ref_colors_section = popup.append('div')
     .attr('id', 'ref_colors_section')
-    .style('clear', 'both');
+    .style('margin-bottom', '15px');
+
   ref_colors_section.append('p')
     .html(_tr('app_page.layer_style_popup.ref_colors'));
   for (let i = 0; i < data_manager.current_layers[layer_name].fill_color.length; i++) {
-    const p = ref_colors_section.append('p').style('margin', '15px 5px');
-    p.append('span').html(data_manager.current_layers[layer_name].rendered_field[i]);
+    const p = ref_colors_section.append('div')
+      .attr('class', 'line_elem');
+
+    p.append('span')
+      .html(data_manager.current_layers[layer_name].rendered_field[i]);
+
     p.insert('input')
       .attrs({ id: i, type: 'color' })
-      .style('float', 'right')
       .property('value', data_manager.current_layers[layer_name].fill_color[i])
       .on('change', function () { // eslint-disable-line no-loop-func
         const col = rgb2hex(this.value);
@@ -2193,6 +2191,11 @@ function createStyleBoxWaffle(layer_name) {
     .styles({ flex: '0.9' })
     .html(_tr('app_page.layer_style_popup.ref_size'));
 
+  size_section.append('span')
+    .attr('id', 'size_section_txt')
+    .style('float', 'right')
+    .html(`${previous_params.size} px`);
+
   size_section.insert('input')
     .attrs({
       type: 'range',
@@ -2200,7 +2203,6 @@ function createStyleBoxWaffle(layer_name) {
       max: 40,
       step: 1,
     })
-    .styles({ width: '58px', margin: '0px' })
     .property('value', previous_params.size)
     .on('change', function () {
       const val = +this.value;
@@ -2226,10 +2228,6 @@ function createStyleBoxWaffle(layer_name) {
         });
       size_section.select('#size_section_txt').html(`${this.value} px`);
     });
-  size_section.append('span')
-    .attr('id', 'size_section_txt')
-    .style('float', 'right')
-    .html(`${previous_params.size} px`);
 
   const width_row_section = popup.append('div')
     .attr('class', 'line_elem')
@@ -2239,6 +2237,11 @@ function createStyleBoxWaffle(layer_name) {
     .styles({ flex: '0.9' })
     .html(_tr('app_page.func_options.twostocks.waffle_width_rows'));
 
+  width_row_section.append('span')
+    .attr('id', 'width_row_text')
+    .style('float', 'right')
+    .html(previous_params.nCol);
+
   width_row_section.insert('input')
     .attrs({
       type: 'range',
@@ -2246,7 +2249,6 @@ function createStyleBoxWaffle(layer_name) {
       max: 10,
       step: 1,
     })
-    .styles({ width: '58px' , margin: '0px' })
     .property('value', previous_params.nCol)
     .on('change', function () {
       const val = +this.value;
@@ -2269,34 +2271,24 @@ function createStyleBoxWaffle(layer_name) {
         });
       width_row_section.select('#width_row_text').html(this.value);
     });
-  width_row_section.append('span')
-    .attr('id', 'width_row_text')
-    .style('float', 'right')
-    .html(previous_params.nCol);
 
-  const allow_move_section = popup.append('p');
-  const chkbx = allow_move_section.insert('input')
+  const allow_move_section = popup.append('div')
+    .attr('class', 'line_elem');
+
+  allow_move_section.append('label')
+    .attr('for', 'checkbox_move_symbol')
+    .html(_tr('app_page.layer_style_popup.let_draggable'));
+
+  const chkbx = allow_move_section.append('input')
     .style('margin', '0')
     .property('checked', data_manager.current_layers[layer_name].draggable ? true : null)
     .attrs({
       type: 'checkbox',
       id: 'checkbox_move_symbol',
     });
-  allow_move_section.insert('label')
-    .attr('for', 'checkbox_move_symbol')
-    .html(_tr('app_page.layer_style_popup.let_draggable'));
-  chkbx.on('change', function () {
-    if (this.checked) {
-      data_manager.current_layers[layer_name].draggable = true;
-    } else {
-      data_manager.current_layers[layer_name].draggable = false;
-    }
-  });
 
-  let new_layer_name = layer_name;
-  const new_name_section = make_change_layer_name_section(popup, layer_name);
-  new_name_section.on('change', function () {
-    new_layer_name = this.value;
+  chkbx.on('change', function () {
+    data_manager.current_layers[layer_name].draggable = !!this.checked;
   });
 }
 
@@ -2466,15 +2458,15 @@ function createStyleBox_ProbSymbol(layer_name) {
   const container = document.querySelector('.twbs > .styleBox');
   const popup = d3.select(container)
     .select('.modal-content')
-    .style('width', '340px')
+    .style('width', '350px')
     .select('.modal-body');
 
-  popup.append('p')
-    .styles({ 'text-align': 'center', color: 'grey' })
-    .html([
-      _tr('app_page.layer_style_popup.rendered_field', { field: data_manager.current_layers[layer_name].rendered_field }),
-      _tr('app_page.layer_style_popup.reference_layer', { layer: ref_layer_name }),
-    ].join(''));
+  // popup.append('p')
+  //   .styles({ 'text-align': 'center', color: 'grey' })
+  //   .html([
+  //     _tr('app_page.layer_style_popup.rendered_field', { field: data_manager.current_layers[layer_name].rendered_field }),
+  //     _tr('app_page.layer_style_popup.reference_layer', { layer: ref_layer_name }),
+  //   ].join(''));
 
   let new_layer_name = layer_name;
   const new_name_section = make_change_layer_name_section(popup, layer_name);
@@ -2634,7 +2626,6 @@ function createStyleBox_ProbSymbol(layer_name) {
       max: 1,
       step: 0.1,
     })
-    .styles({ width: '58px', margin: '0px' })
     .property('value', opacity)
     .on('change', function () {
       selection.style('fill-opacity', this.value);
@@ -2675,7 +2666,6 @@ function createStyleBox_ProbSymbol(layer_name) {
       max: 1,
       step: 0.1,
     })
-    .styles({ width: '58px', margin: '0px' })
     .property('value', border_opacity)
     .on('change', function () {
       selection.style('stroke-opacity', this.value);
@@ -2691,7 +2681,6 @@ function createStyleBox_ProbSymbol(layer_name) {
 
   border_width_section.insert('input')
     .attrs({ type: 'number', min: 0, step: 0.1 })
-    .styles({ width: '60px' })
     .property('value', stroke_width)
     .on('change', function () {
       selection.style('stroke-width', `${this.value}px`);
@@ -2712,7 +2701,6 @@ function createStyleBox_ProbSymbol(layer_name) {
     .html('(px)');
 
   prop_val_content.insert('input')
-    .styles({ width: '60px' })
     .attrs({
       type: 'number',
       id: 'max_size_range',
@@ -2754,23 +2742,23 @@ function createStyleBox_ProbSymbol(layer_name) {
       data_manager.current_layers[layer_name].size[0] = f_val;
     });
 
-  const allow_move_section = popup.append('p');
-  const chkbx = allow_move_section.insert('input')
+  const allow_move_section = popup.append('div')
+    .attr('class', 'line_elem');
+
+  allow_move_section.append('label')
+    .attr('for', 'checkbox_move_symbol')
+    .html(_tr('app_page.layer_style_popup.let_draggable'));
+
+  const chkbx = allow_move_section.append('input')
     .style('margin', '0')
     .property('checked', data_manager.current_layers[layer_name].draggable ? true : null)
     .attrs({
       type: 'checkbox',
       id: 'checkbox_move_symbol',
     });
-  allow_move_section.insert('label')
-    .attr('for', 'checkbox_move_symbol')
-    .html(_tr('app_page.layer_style_popup.let_draggable'));
+
   chkbx.on('change', function () {
-    if (this.checked) {
-      data_manager.current_layers[layer_name].draggable = true;
-    } else {
-      data_manager.current_layers[layer_name].draggable = false;
-    }
+    data_manager.current_layers[layer_name].draggable = !!this.checked;
   });
 
   popup.append('p').style('text-align', 'center')
@@ -2827,7 +2815,7 @@ export function make_style_box_indiv_label(label_node) {
     });
   const box_content = d3.select('.styleTextAnnotation')
     .select('.modal-content')
-    .style('width', '340px')
+    .style('width', '350px')
     .select('.modal-body')
     .insert('div');
 

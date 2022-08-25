@@ -167,13 +167,17 @@ export const northArrow = { /* eslint-disable-line import/prefer-default-export 
       });
 
     const box_body = d3.select('.arrowEditBox').select('.modal-body').style('width', '295px');
-    const a = box_body.append('p').attr('class', 'line_elem2');
-    a.append('span').html(_tr('app_page.north_arrow_edit_box.size'));
-    a.append('span')
-      .style('float', 'right')
-      .html(' px');
 
-    a.append('input')
+    const a = box_body.append('div')
+      .attr('class', 'line_elem');
+
+    a.append('span')
+      .styles({ flex: '0.9' })
+      .html(_tr('app_page.north_arrow_edit_box.size'));
+
+    const a_group_px = a.append('div');
+
+    a_group_px.append('input')
       .attrs({
         class: 'without_spinner',
         id: 'txt_size_n_arrow',
@@ -182,16 +186,16 @@ export const northArrow = { /* eslint-disable-line import/prefer-default-export 
         step: 1,
         type: 'number',
       })
-      .styles({
-        float: 'right',
-        width: '40px',
-      })
+      .styles({ width: '40px' })
       .property('value', old_dim)
       .on('change', function () {
         const elem = document.getElementById('range_size_n_arrow');
         elem.value = +this.value;
         elem.dispatchEvent(new Event('change'));
       });
+
+    a_group_px.append('span')
+      .html('px');
 
     a.append('input')
       .attrs({
@@ -200,11 +204,6 @@ export const northArrow = { /* eslint-disable-line import/prefer-default-export 
         max: 200,
         step: 1,
         id: 'range_size_n_arrow',
-      })
-      .styles({
-        'vertical-align': 'middle',
-        width: '100px',
-        float: 'right',
       })
       .property('value', old_dim)
       .on('change', function () {
@@ -225,13 +224,16 @@ export const northArrow = { /* eslint-disable-line import/prefer-default-export 
         document.getElementById('txt_size_n_arrow').value = new_size;
       });
 
-    const b = box_body.append('p').attr('class', 'line_elem2');
-    b.append('span').html(_tr('app_page.north_arrow_edit_box.rotation'));
-    b.append('span')
-      .style('float', 'right')
-      .html(' °');
+    const b = box_body.append('div')
+      .attr('class', 'line_elem');
 
-    b.append('input')
+    b.append('span')
+      .styles({ flex: '0.9' })
+      .html(_tr('app_page.north_arrow_edit_box.rotation'));
+
+    const b_group_angle = b.append('div');
+
+    b_group_angle.append('input')
       .attrs({
         class: 'without_spinner',
         id: 'txt_rotate_n_arrow',
@@ -240,10 +242,7 @@ export const northArrow = { /* eslint-disable-line import/prefer-default-export 
         step: 'any',
         type: 'number',
       })
-      .styles({
-        float: 'right',
-        width: '40px',
-      })
+      .styles({ width: '40px' })
       .property('value', old_rotate)
       .on('change', function () {
         const rotate_value = +this.value;
@@ -254,6 +253,9 @@ export const northArrow = { /* eslint-disable-line import/prefer-default-export 
         document.getElementById('range_rotate_n_arrow').value = rotate_value;
       });
 
+    b_group_angle.append('span')
+      .html(' °');
+
     b.append('input')
       .attrs({
         type: 'range',
@@ -261,11 +263,6 @@ export const northArrow = { /* eslint-disable-line import/prefer-default-export 
         max: 360,
         step: 0.1,
         id: 'range_rotate_n_arrow',
-      })
-      .styles({
-        float: 'right',
-        'vertical-align': 'middle',
-        width: '100px',
       })
       .property('value', old_rotate)
       .on('change', function () {
