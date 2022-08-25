@@ -1,8 +1,8 @@
 Changes
 =======
 
-Current master (not tagged yet)
--------------------------------
+0.8.15 (2022-08-26)
+-------------------
 
 - Allow to export CSV table (#75).
 
@@ -13,6 +13,16 @@ Current master (not tagged yet)
 - Update many dependencies to ease the installation with recent Python (such as 3.10) on a recent system (such as ubuntu 22.04).
 
 - Update Docker recipes.
+
+- Update the documentation about the possibility to change the role (target / layout) of the layers in the interface (#36).
+
+- Correctly update the count of layout layers (#82).
+
+- Fix some typos in french and English translations.
+
+- Improve the style of some buttons (they weren't readable when they were in "hover" state).
+
+- Improve the style of the "layer style" popups (elements were not properly aligned) and of the "layout feature style" popups.
 
 
 0.8.14 (2022-03-16)
