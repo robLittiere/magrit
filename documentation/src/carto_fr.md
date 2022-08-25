@@ -28,4 +28,4 @@ D'autres méthodes permettent de créer des représentations originales :
 * [carte de discontinuités](./carto/discont_fr.html)
 * [carte de liens](./carto/links_fr.html)
 * [carte en gaufre](./carto/waffle_fr.html)
-* [carte choroplèthe après analyse d'un semi de points](./carto/grid_pt_fr.html)
+* [carte choroplèthe après analyse d'un semis de points](./carto/grid_pt_fr.html)
