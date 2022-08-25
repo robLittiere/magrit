@@ -282,7 +282,7 @@
             "mini_summary" : "Min : {{min}} | Max : {{max}}<br>Moyenne : {{mean}} | Médiane : {{median}}<br>Écart-type : {{stddev}}"
         },
         "tooltips": {
-            "section1": "Faites glissez un fichier GeoJSON, GML, TopoJSON, Shapefile ou KML dans la fenêtre ou ajoutez manuellement une couche en cliquant sur le bouton",
+            "section1": "Faites glisser un fichier GeoJSON, GML, TopoJSON, Shapefile ou KML dans la fenêtre ou ajoutez manuellement une couche en cliquant sur le bouton",
             "load_project_file": "Chargement d'un fichier projet",
             "save_file": "Sauvegarde d'un fichier-projet",
             "new_project": "Création d'un nouveau projet",
