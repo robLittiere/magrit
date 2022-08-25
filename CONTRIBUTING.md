@@ -39,38 +39,29 @@ Each folder matches a language and contains a `translation.json` file: you can e
 
 The documentation is entirely written in *markdown* and translated to a webpage/book thanks to [**mdBook**](https://github.com/rust-lang-nursery/mdBook). It is located in the [documentation](https://github.com/riatelab/magrit/tree/master/documentation/) folder.  
 
-After making a change on these `.md` files, you should run the mdbook binary from the aforesaid folder to build the new book:
+After making a change on these `.md` files, you can run the mdbook binary from the aforesaid folder to build the new book:
 ```
 mdbook build
 ```
 The provided binary is only compatible with linux 64bits. If you're using another platform, please refer to [mdBook documentation](https://github.com/rust-lang-nursery/mdBook#installation) to install it.
 
-The documentation is currently only available in French. Don't hesitate to contact us if you want to contribute an other language.
+The documentation is currently only available in French. Don't hesitate to contact us if you want to contribute another language.
 
 ### Setting up the development environnement
 
 
 ##### Installing the required libraries/software on your system for the server application:
-* **Packages provided by `apt`:**
+* **Packages provided by `apt`, based on ubuntu 22.04:**
 ```
-$ sudo apt-get install -y libpython3.6-dev python3.6 python3.6-dev python3-pip \
-    libopenblas-dev libopenblas-base libfreetype6-dev libfreetype6 libproj-dev \
-    libspatialindex-dev libv8-3.14-dev libffi-dev nodejs nodejs-dev node-gyp \
-    libuv1-dev libxslt1-dev libxml2 libxml2-dev libkml-dev libgeos-dev \
-    npm git gcc redis-server wget
-```
-
-* **Manual installation of GDAL >= 2.2.0:**
-```
-$ wget http://download.osgeo.org/gdal/2.2.3/gdal-2.2.3.tar.gz
-$ tar -xvf gdal-2.2.3.tar.gz
-$ cd gdal-2.2.3/
-$ ./configure --with-static-proj4=/usr/lib --with-geos
-$ make -s -j 4
-$ sudo make install
+$ sudo apt-get install -y --no-install-recommends \
+    software-properties-common gcc g++ \
+    libpython3.10-dev python3.10 python3.10-dev python3-pip \
+    libgeos-c1v5 libgeos-dev libgdal30 libgdal-dev libspatialindex-dev libffi-dev \
+    nodejs npm redis-server libuv1 libuv1-dev unzip wget git \
+    libxslt1.1 libxslt1-dev libxml2 libxml2-dev libkml-dev locales \
 ```
 
-* **Python packages** *
+* **Python packages**
 ```
 $ pip3 install -r requirements/dev.txt
 ```
@@ -120,7 +111,7 @@ The tests are intended to be played on Travis CI but also locally. We use [selen
 
 Before running tests you need to download [ChromeDriver](http://chromedriver.chromium.org/downloads) and include its location in your `PATH` environment variable.
 
-Then you can use py.test to run the test suite :
+Then you can use `py.test` to run the test suite :
 
 ```
 py.test tests/tests_web.py
@@ -131,8 +122,8 @@ If you are fixing a bug you should try to create a test case that exposes the bu
 
 ### Contributing to the deployement recipes
 
-Deployement recipes are located in the `misc` folder.  
-In `misc/Docker` you will find the two dockerfiles (one for `nginx` and the other for the `Magrit` app) used to create and run the Magrit instance available on [our server] (http://magrit.cnrs.fr).
+Deployment recipes are located in the `misc` folder.  
+In `misc/Docker` you will find the two docker-compose recipes (with and without HTTPS support) used to create and run the Magrit instance available on [our server] (http://magrit.cnrs.fr).
 In `misc/dockerfiles` you will find the dockerfile used for the automated build on [Docker Hub](https://hub.docker.com/r/magrit/magrit/).
 
 
