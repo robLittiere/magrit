@@ -31,13 +31,15 @@ import docopt
 import logging
 
 import asyncio
+
 try:
     import uvloop
-except:
+except ModuleNotFoundError:
     uvloop = None
 import pandas as pd
 import numpy as np
 import matplotlib
+
 matplotlib.use('Agg')
 
 from tempfile import TemporaryDirectory
@@ -94,11 +96,11 @@ except:
     from .helpers.grid_layer_pt import get_grid_layer_pt
     from .helpers.error_middleware404 import error_middleware
 
-
 GEO2TOPO_PATH = None
 IS_WINDOWS = sys.platform.startswith('win')
 IS_FROZEN = True if getattr(sys, 'frozen', False) else False
 _ProcessPoolExecutor = ProcessPoolExecutor if not IS_WINDOWS else ThreadPoolExecutor
+
 
 async def kill_after_timeout(delay, pid):
     await asyncio.sleep(delay)
@@ -106,6 +108,7 @@ async def kill_after_timeout(delay, pid):
         os.kill(pid, 9)
     except:
         pass
+
 
 async def index_handler(request):
     """
@@ -185,7 +188,7 @@ def topojson_to_geojson(data):
 
 async def remove_layer(request):
     """
-    Removes layer(s) from the temporary storage (trigered either when
+    Removes layer(s) from the temporary storage (triggered either when
     the user removes result layer in the UI or when he leaves the application
     page).
     """
@@ -242,7 +245,7 @@ def get_user_id(session_redis, app_users, app=None):
     """
     Function to get (or retrieve) the user unique ID
     (ID is used amongst other things to set/get data in/from redis
-    and for retrieving the layers decribed in a "preference file" of an user)
+    and for retrieving the layers described in a "preference file" of a user)
     """
     if 'app_user' not in session_redis:
         if app:
@@ -316,7 +319,7 @@ async def convert(request):
     """
     posted_data, session_redis = \
         await asyncio.gather(*[request.post(), get_session(request)])
-    if not 'type' in posted_data:
+    if 'type' not in posted_data:
         return convert_error('Invalid request')
     type_input = posted_data.get('type')
     user_id = get_user_id(session_redis, request.app['app_users'])
@@ -371,7 +374,7 @@ async def _convert_from_multiple_files(app, posted_data, user_id, tmp_dir):
         # so let's use it instead of doing a new conversion again:
         asyncio.ensure_future(
             app['redis_conn'].pexpire(f_name, 14400000))
-        # Read the orignal projection to propose it later:
+        # Read the original projection to propose it later:
         proj_info_str = read_shp_crs(
             path_join(tmp_dir, name.replace('.shp', '.prj')))
 
@@ -382,7 +385,8 @@ async def _convert_from_multiple_files(app, posted_data, user_id, tmp_dir):
              '}']))
     else:
         with _ProcessPoolExecutor(max_workers=1) as executor:
-            res = await app.loop.run_in_executor(
+            loop = asyncio.get_running_loop()
+            res = await loop.run_in_executor(
                 executor, ogr_to_geojson, shp_path)
         if not res:
             return convert_error()
@@ -393,7 +397,7 @@ async def _convert_from_multiple_files(app, posted_data, user_id, tmp_dir):
         asyncio.ensure_future(
             app['redis_conn'].set(f_name, result, pexpire=14400000))
 
-        # Read the orignal projection to propose it later (client side):
+        # Read the original projection to propose it later (client side):
         proj_info_str = read_shp_crs(
             path_join(tmp_dir, name.replace('.shp', '.prj')))
 
@@ -449,7 +453,7 @@ async def _convert_from_single_file(app, posted_data, user_id, tmp_dir):
             slots = {"shp": None, "prj": None, "dbf": None, "shx": None}
             names = []
             try:
-                assert(4 <= len(list_files) < 8)
+                assert (4 <= len(list_files) < 8)
                 for f in list_files:
                     name, ext = f.rsplit('.', 1)
                     names.append(name)
@@ -464,9 +468,9 @@ async def _convert_from_single_file(app, posted_data, user_id, tmp_dir):
                     elif 'cpg' in ext.lower():
                         slots['cpg'] = f
                 # All slots (excepting maybe 'cpg' one) are not None:
-                assert(all(v is not None for v in slots.values()))
+                assert (all(v is not None for v in slots.values()))
                 # Each file has the same "base" name:
-                assert(all(name == names[0] for name in names))
+                assert (all(name == names[0] for name in names))
             except Exception as err:
                 _tb = traceback.format_exc(limit=2)
                 app['logger'].info(
@@ -478,7 +482,8 @@ async def _convert_from_single_file(app, posted_data, user_id, tmp_dir):
             slots = extractShpZip(myzip, slots, tmp_dir)
             try:
                 with _ProcessPoolExecutor(max_workers=1) as executor:
-                    res = await app.loop.run_in_executor(
+                    loop = asyncio.get_running_loop()
+                    res = await loop.run_in_executor(
                         executor, ogr_to_geojson, slots['shp'])
                 if not res:
                     return convert_error()
@@ -486,7 +491,7 @@ async def _convert_from_single_file(app, posted_data, user_id, tmp_dir):
                 if not result:
                     return convert_error()
 
-                # Read the orignal projection to propose it later:
+                # Read the original projection to propose it later:
                 proj_info_str = read_shp_crs(slots['prj'])
 
                 asyncio.ensure_future(
@@ -501,11 +506,11 @@ async def _convert_from_single_file(app, posted_data, user_id, tmp_dir):
                 return convert_error('Error with zip file content')
 
     elif ('octet-stream' in datatype or 'text/json' in datatype
-            or 'application/geo+json' in datatype
-            or 'application/json' in datatype
-            or 'text/plain' in datatype
-            or 'application/vnd.google-earth.kml+xml' in datatype
-            or 'application/gml+xml' in datatype) \
+          or 'application/geo+json' in datatype
+          or 'application/json' in datatype
+          or 'text/plain' in datatype
+          or 'application/vnd.google-earth.kml+xml' in datatype
+          or 'application/gml+xml' in datatype) \
             and ("kml" in name.lower()
                  or "gml" in name.lower() or 'json' in name.lower()):
         fname, ext = filepath.rsplit('.', 1)
@@ -520,19 +525,20 @@ async def _convert_from_single_file(app, posted_data, user_id, tmp_dir):
             new_ext = 'kml'
         filepath = ''.join([clean_name(fname), new_ext])
         tmp_path = path_join(tmp_dir, filepath)
-        # Convert the file to a GeoJSON file with sanitized column names:
+        # Convert the file to a GeoJSON file with sanitized column names:
         with open(tmp_path, 'wb') as f:
             f.write(data)
 
         with ThreadPoolExecutor(max_workers=1) as executor:
-            res = await app.loop.run_in_executor(
+            loop = asyncio.get_running_loop()
+            res = await loop.run_in_executor(
                 executor, ogr_to_geojson, tmp_path)
 
         if not res:
             return convert_error(
                 'Error reading the input file ({} format)'.format(new_ext))
 
-        # Convert the file to a TopoJSON:
+        # Convert the file to a TopoJSON:
         result = await geojson_to_topojson(res, layer_name)
         if not result:
             return convert_error('Error reading the input file')
@@ -611,7 +617,8 @@ async def carto_doug(posted_data, user_id, app):
         savefile(tmp_path, topojson_to_geojson(ref_layer).encode())
 
         with _ProcessPoolExecutor(max_workers=1) as executor:
-            fut = app.loop.run_in_executor(
+            loop = asyncio.get_running_loop()
+            fut = loop.run_in_executor(
                 executor,
                 make_carto_doug,
                 tmp_path,
@@ -647,7 +654,8 @@ async def links_map(posted_data, user_id, app):
     ref_layer = convert_from_topo(ref_layer)
 
     with ThreadPoolExecutor(max_workers=1) as executor:
-        result_geojson = await app.loop.run_in_executor(
+        loop = asyncio.get_running_loop()
+        result_geojson = await loop.run_in_executor(
             executor,
             make_geojson_links,
             ref_layer,
@@ -717,7 +725,8 @@ async def carto_gridded_point(posted_data, user_id, app):
 
         # Compute the result:
         with _ProcessPoolExecutor(max_workers=1) as executor:
-            fut = app.loop.run_in_executor(
+            loop = asyncio.get_running_loop()
+            fut = loop.run_in_executor(
                 executor,
                 get_grid_layer_pt,
                 filenames['src_layer'],
@@ -772,7 +781,8 @@ async def carto_gridded(posted_data, user_id, app):
                  topojson_to_geojson(ref_layer).encode())
 
         with _ProcessPoolExecutor(max_workers=1) as executor:
-            result_geojson = await app.loop.run_in_executor(
+            loop = asyncio.get_running_loop()
+            result_geojson = await loop.run_in_executor(
                 executor,
                 get_grid_layer,
                 filenames['src_layer'],
@@ -803,7 +813,8 @@ async def compute_olson(posted_data, user_id, app):
     ref_layer_geojson = convert_from_topo(ref_layer)
 
     with ThreadPoolExecutor(max_workers=1) as executor:
-        await app.loop.run_in_executor(
+        loop = asyncio.get_running_loop()
+        await loop.run_in_executor(
             executor,
             olson_transform,
             ref_layer_geojson,
@@ -863,7 +874,8 @@ async def compute_stewart(posted_data, user_id, app):
                 topojson_to_geojson(json.loads(mask_layer.decode())).encode())
 
         with _ProcessPoolExecutor(max_workers=1) as executor:
-            fut = app.loop.run_in_executor(
+            loop = asyncio.get_running_loop()
+            fut = loop.run_in_executor(
                 executor,
                 quick_stewart_mod,
                 filenames['point_layer'],
@@ -898,7 +910,7 @@ async def compute_stewart(posted_data, user_id, app):
 
 async def geo_compute(request):
     """
-    Function dispatching between the various available fonctionalities
+    Function dispatching between the various available functionalities
     (smoothed map, links creation, dougenik or olson cartogram, etc.)
     and returning (if nothing went wrong) the result to be added on the map.
     """
@@ -913,27 +925,27 @@ async def geo_compute(request):
         user_id = get_user_id(session_redis, request.app['app_users'])
         func = request.app['geo_function'][function]
         request.app['logger'].info(
-            'Dispatch between functions : {:.4f}s'.format(time.time()-s_t))
+            'Dispatch between functions : {:.4f}s'.format(time.time() - s_t))
         s_t = time.time()
         try:
             data_response = await func(posted_data, user_id, request.app)
             asyncio.ensure_future(
                 request.app['redis_conn'].lpush(
-                    '{}_time'.format(function), time.time()-s_t))
+                    '{}_time'.format(function), time.time() - s_t))
             request.app['logger'].info(
-                '{}: {:.4f}s'.format(function, time.time()-s_t))
+                '{}: {:.4f}s'.format(function, time.time() - s_t))
 
         except (asyncio.CancelledError, CancelledError):
             request.app['logger'].info(
                 'Cancelled after {:.4f}s : {}'
-                .format(time.time()-s_t, function))
+                .format(time.time() - s_t, function))
             data_response = json.dumps({})
 
         except TopologicalError as err:
             _tb = traceback.format_exc()
             request.app['logger'].info(
                 'Error on "{}" after {:.4f}s\n{}'
-                .format(function, time.time()-s_t, _tb))
+                .format(function, time.time() - s_t, _tb))
             data_response = json.dumps({
                 "Error": "Geometry error ({})".format(err)})
 
@@ -941,7 +953,7 @@ async def geo_compute(request):
             _tb = traceback.format_exc()
             request.app['logger'].info(
                 'Error on \"{}\" after {:.4f}s\n{}'
-                .format(function, time.time()-s_t, _tb))
+                .format(function, time.time() - s_t, _tb))
             msg = (
                 'The calculation was cancelled after '
                 'reaching the maximum duration allowed.') \
@@ -1091,7 +1103,7 @@ async def rawcsv_to_geo(data, logger):
     # Determine what is the separator for values (either comma, colon or tab):
     separator = guess_separator(None, data)
 
-    # Create a dataframe from our csv data:
+    # Create a dataframe from our csv data:
     df = pd.read_csv(StringIO(data), sep=separator)
     # Replace spaces in columns names:
     df.columns = [i.replace(' ', '_') for i in df.columns]
@@ -1108,7 +1120,7 @@ async def rawcsv_to_geo(data, logger):
     # Drop records containing empty values for latitude and/or longitude:
     df.dropna(subset=[name_geo_col_x, name_geo_col_y], inplace=True)
     # Replace NaN values by empty string (some column type might be changed to
-    # 'Object' if thay contains empty values)
+    # 'Object' if they contain empty values)
     df.replace(np.NaN, '', inplace=True)
     # Let's try to be sure there isn't empty values
     # in the latitude/longitude columns:
@@ -1123,7 +1135,7 @@ async def rawcsv_to_geo(data, logger):
             '\n{}'.format(err))
     # Try to convert the coordinates to float by applying the operation to the
     # whole column :
-    # (can fail if some cells are containing 'bad' values)
+    # (can fail if some cells contain 'bad' values)
     try:
         if df[name_geo_col_x].dtype == object:
             df[name_geo_col_x] = df[name_geo_col_x].apply(
@@ -1138,8 +1150,8 @@ async def rawcsv_to_geo(data, logger):
         logger.info(
             'Latitude/Longitude columns conversion failed using \'astype\':'
             '\n{}\n{}'.format(err, _tb))
-        # Conversion failed so we are gonna look in each cell of the x and y
-        # columns and creating a boolean array based on wheter
+        # Conversion failed, so we are going to look in each cell of the x and y
+        # columns and creating a boolean array based on whether
         # the x and y columns contains number:
         reg = re.compile('[+-]?\d+(?:\.\d+)?')
         mat = df[[name_geo_col_x, name_geo_col_y]].applymap(
@@ -1161,7 +1173,7 @@ async def rawcsv_to_geo(data, logger):
                 'using regex:\n{}\n{}'.format(err, _tb))
             return None
 
-    # Prepare the name of the columns to keep:
+    # Prepare the name of the columns to keep:
     columns_to_keep = [
         (n + 1, i) for n, i in enumerate(df.columns)
         if i not in (name_geo_col_x, name_geo_col_y)]
@@ -1209,7 +1221,8 @@ async def calc_helper(request):
         except:
             return web.Response(text='{"Error":"Invalid datatype"}')
     with ThreadPoolExecutor(max_workers=1) as executor:
-        result = await request.app.loop.run_in_executor(
+        loop = asyncio.get_running_loop()
+        result = await loop.run_in_executor(
             executor,
             run_calc,
             val1,
@@ -1244,15 +1257,15 @@ async def convert_csv_geo(request):
     res = await rawcsv_to_geo(data, request.app['logger'])
     if not res:
         return web.Response(text=json.dumps(
-            {'Error': 'An error occured when trying to convert a tabular file'
-             '(containing coordinates) to a geographic layer'}))
+            {'Error': 'An error occurred when trying to convert a tabular file'
+                      '(containing coordinates) to a geographic layer'}))
 
     # Convert the GeoJSON file to a TopoJSON file:
     result = await geojson_to_topojson(res.encode(), file_name)
     if not result:
         return web.Response(text=json.dumps(
-            {'Error': 'An error occured when trying to convert a tabular file'
-             '(containing coordinates) to a geographic layer'}))
+            {'Error': 'An error occurred when trying to convert a tabular file'
+                      '(containing coordinates) to a geographic layer'}))
 
     asyncio.ensure_future(
         request.app['redis_conn'].set(
@@ -1345,8 +1358,8 @@ async def convert_tabular(request):
 
             message = str(err) if isinstance(err, XLRDError) \
                 else ('Unable to convert the provided file. '
-                    'Please check that it is a tabular file supported '
-                    'by the application (in xls, xlsx, ods or csv format).')
+                      'Please check that it is a tabular file supported '
+                      'by the application (in xls, xlsx, ods or csv format).')
 
     else:
         request.app['logger'].info(
@@ -1354,8 +1367,8 @@ async def convert_tabular(request):
             .format(name, datatype))
         result = None
         message = ('Unknown tabular file format. '
-            'Please use a tabular file supported '
-            'by the application (in xls, xlsx, ods or csv format).')
+                   'Please use a tabular file supported '
+                   'by the application (in xls, xlsx, ods or csv format).')
 
     request.app['logger'].info(
         'timing : spreadsheet -> csv : {:.4f}s'
@@ -1364,9 +1377,9 @@ async def convert_tabular(request):
         {"file": result, "name": name, "message": message}))
 
 
-async def fetch_list_extrabasemaps(loop):
+async def fetch_list_extrabasemaps():
     url = 'https://api.github.com/repos/riatelab/basemaps/contents/'
-    async with ClientSession(loop=loop) as client:
+    async with ClientSession() as client:
         async with client.get(url) as resp:
             assert resp.status == 200
             data = await resp.text()
@@ -1375,24 +1388,24 @@ async def fetch_list_extrabasemaps(loop):
                         if d['name'] == "Countries"][0]['_links']['git']
             base_url = ('https://raw.githubusercontent.com/riatelab/basemaps'
                         '/master/Countries/')
-            async with client.get(tree_url + '?recursive=1') as resp:
-                assert resp.status == 200
-                list_elem = await resp.text()
-                list_elem = json.loads(list_elem)
-                name_url = []
-                for elem in list_elem['tree']:
-                    if '.geojson' in elem['path']:
-                        p = elem['path']
-                        url = base_url + p
-                        filename = p.split('/')[0]
-                        name_url.append((filename, url))
-                return name_url
+        async with client.get(tree_url + '?recursive=1') as resp_tree:
+            assert resp_tree.status == 200
+            list_elem = await resp_tree.text()
+            list_elem = json.loads(list_elem)
+            name_url = []
+            for elem in list_elem['tree']:
+                if '.geojson' in elem['path']:
+                    p = elem['path']
+                    url = base_url + p
+                    filename = p.split('/')[0]
+                    name_url.append((filename, url))
+            return name_url
 
 
 async def get_extrabasemaps(request):
     list_url = await request.app['redis_conn'].get('extrabasemaps')
     if not list_url:
-        list_url = await fetch_list_extrabasemaps(request.app.loop)
+        list_url = await fetch_list_extrabasemaps()
         list_url = json.dumps(list_url)
         asyncio.ensure_future(request.app['redis_conn'].set(
             'extrabasemaps', list_url.encode(), pexpire=21600000))
@@ -1425,12 +1438,12 @@ def check_valid_ip(addr):
     Returns
     -------
     boolean
-        Wheter the string is a valid IPv4 address.
+        Whether the string is a valid IPv4 address.
     """
     try:
         addr_valid = ip_address(addr)
         return True
-    except:
+    except ValueError:
         return False
 
 
@@ -1449,7 +1462,7 @@ def check_port_available(addr, port_nb):
     Returns
     -------
     boolean
-        Wheter the port is available or not.
+        Whether the port is available or not.
     """
     if port_nb < 7000:
         return False
@@ -1468,7 +1481,7 @@ def get_version():
     with open('__init__.py', 'r') as f:
         ver = f.read()
     ix = ver.find("'")
-    return ver[ix+1:ix + ver[ix+1:].find("'")+1]
+    return ver[ix + 1:ix + ver[ix + 1:].find("'") + 1]
 
 
 async def on_shutdown(app):
@@ -1509,8 +1522,7 @@ async def init(loop, addr='0.0.0.0', port=None, watch_change=False, use_redis=Tr
         redis_conn = await create_redis_pool(
             (redis_addr, 6379), db=1, loop=loop)
         app = web.Application(
-            loop=loop,
-            client_max_size=17408**2,
+            client_max_size=17408 ** 2,
             middlewares=[
                 error_middleware,
                 session_middleware(redis_storage.RedisStorage(redis_cookie))])
@@ -1521,7 +1533,7 @@ async def init(loop, addr='0.0.0.0', port=None, watch_change=False, use_redis=Tr
         secret_key = urlsafe_b64decode(fernet_key)
         app = web.Application(
             loop=loop,
-            client_max_size=17408**2,
+            client_max_size=17408 ** 2,
             middlewares=[error_middleware])
         aiohttp_session_setup(
             app, cookie_storage.EncryptedCookieStorage(secret_key))
@@ -1582,8 +1594,10 @@ async def init(loop, addr='0.0.0.0', port=None, watch_change=False, use_redis=Tr
     # If a port is specified the application is started "directly" and
     # we need to create the server :
     else:
-        handler = app.make_handler()
-        srv = await loop.create_server(handler, addr, port)
+        # handler = app.make_handler()
+        handler = web.AppRunner(app)
+        await handler.setup()
+        srv = await loop.create_server(handler.server, addr, port)
         return srv, app, handler
 
 
@@ -1632,9 +1646,9 @@ def create_app(redis_addr=None):
     GEO2TOPO_PATH = find_geo2topo()
     if not GEO2TOPO_PATH:
         sys.exit('Unable to find required `geo2topo` binary.')
-    if redis_addr:
-        if not check_valid_ip(redis_addr):
-            sys.exit('Invalid redis server address.')
+    # if redis_addr:
+    #     if not check_valid_ip(redis_addr):
+    #         sys.exit('Invalid redis server address.')
     loop = asyncio.get_event_loop()
     app = loop.run_until_complete(init(loop, port=None, redis_addr=redis_addr))
     return app

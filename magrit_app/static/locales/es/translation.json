@@ -443,6 +443,7 @@
         "explore_box": {
             "title": "Tabla de atributos",
             "button_add_field": "Añadir un campo...",
+            "button_export_csv": "Exportar a CSV",
             "add_field_box": {
                 "new_name_placeholder": "NuevoCampo",
                 "new_name": "Nombre del campo<br>",
@@ -610,7 +611,7 @@
             "field_symbol_color": "Campo utilizado para los <strong>colores de los símbolos</strong> : <i>{{ field }}</i><br>",
             "color_break": "Color de acuerdo con un valor límite",
             "break_value": "<br>Valor límite ",
-            "field_symbol_size": "Campo utilizado para los <strong>valores proporcionales</strong> : <i>{{ field }}</i><br><br>",
+            "field_symbol_size": "Campo utilizado para los <strong>valores proporcionales</strong> : <i>{{ field }}</i><br>",
             "symbol_fixed_size": "Tamaño fijo del símbolo ",
             "on_value": "en el valor...",
             "point_radius": "Tamaño del punto<br>",

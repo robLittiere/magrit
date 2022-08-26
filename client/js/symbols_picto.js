@@ -312,11 +312,14 @@ export function make_style_box_indiv_symbol(symbol_node) {
     .select('.modal-body')
     .style('width', '295px')
     .insert('div');
-  const a = box_content.append('p').attr('class', 'line_elem');
+
+  const a = box_content.append('div')
+    .attr('class', 'line_elem');
+
   a.append('span')
     .html(_tr('app_page.single_symbol_edit_box.image_size'));
   a.append('input')
-    .styles({ float: 'right', width: '70px' })
+    .styles({ width: '70px' })
     .attrs({
       type: 'number', id: 'font_size', min: 0, max: 150, step: 'any',
     })
@@ -331,12 +334,14 @@ export function make_style_box_indiv_symbol(symbol_node) {
 
   if (type_obj === 'layout') {
     // const current_state = parent.classList.contains('scalable-legend');
-    const b = box_content.append('p').attr('class', 'line_elem');
+    const b = box_content.append('div')
+      .attr('class', 'line_elem');
+
     b.append('label')
       .attrs({ for: 'checkbox_symbol_zoom_scale', class: 'i18n', 'data-i18n': '[html]app_page.single_symbol_edit_box.scale_on_zoom' })
       .html(_tr('app_page.single_symbol_edit_box.scale_on_zoom'));
+
     b.append('input')
-      .style('float', 'right')
       .attrs({ type: 'checkbox', id: 'checkbox_symbol_zoom_scale' })
       .on('change', function () {
         const zoom_scale = svg_map.__zoom;

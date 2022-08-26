@@ -10,7 +10,7 @@ import os
 
 
 def run():
-    # To be run in the current folder to use theses paths:
+    # To be run in the current folder to use these paths:
     trad_file = '../static/locales/fr/translation.json'
     paths = [
         '../static/js/' + i for i in os.listdir('../static/js') if 'js' in i] \
@@ -27,15 +27,15 @@ def make_list_translate_key(json_file_path, avoid_plural=True):
     """
     Args:
         json_file_path: str,
-            The path to a json translation file (as thoses used in i18next)
+            The path to a json translation file (as those used in i18next)
         avoid_plural: bool, default True,
             Don't list key with "plural" in their name
-            (as they typically aren't called explicitely in the code)
+            (as they typically aren't called explicitly in the code)
 
     Return:
         list_key: list of strings,
-            The 'reconstitued' translation keys
-            (ie. with their full path like "main_page.foobar_box.title")
+            The 'reconstituted' translation keys
+            (i.e. with their full path like "main_page.foobar_box.title")
     """
     def traverse(elem, path=""):
         for k, v in elem.items():
@@ -56,7 +56,7 @@ def make_list_translate_key(json_file_path, avoid_plural=True):
 def scan_folder_code(paths, list_key):
     """
     Args:
-        path: array-like,
+        paths: array-like,
             An array of path of source code files(html, js, etc.).
         list_key: array-like,
             The array of key extracted from a translation file.

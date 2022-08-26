@@ -1,6 +1,6 @@
 -r prod.txt
 flaky == 3.4.0
 selenium == 3.141.0
-pillow == 7.1.0
+imageio == 2.21.0
 pytest == 3.8.0
 pytest-aiohttp == 0.3.0

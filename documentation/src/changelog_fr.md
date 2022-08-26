@@ -1,9 +1,32 @@
 # Historique des versions et des changements effectués
 
+#### 0.8.15 (2022-08-26)
+
+- Ajout d'une fonctionnalité permettant d'exporter les données de chaque couche au format CSV (<a href="https://github.com/riatelab/magrit/issues/75">issue Github #75</a>).
+
+- Correction de la légende non visible sur la carte des liens proportionnels sur Firefox (<a href="https://github.com/riatelab/magrit/issues/74">issue Github #74</a>)
+
+- Correction du positionnement des symboles et labels lorsque le centroïde ne tombe pas à l'intérieur du polygone cible : il essaie maintenant de calculer le pôle d'inaccessibilité ou s'il ne trouve toujours pas de point dans le polygone, le point le plus proche du centroïde sur le bord du polygone (<a href="https://github.com/riatelab/magrit/issues/63">issue Github #63</a>)
+
+- Mise à jour de nombreuses dépendances pour faciliter l'installation avec un Python récent (tel que 3.10) sur un système récent (tel que ubuntu 22.04).
+
+- Mise à jour des recettes Docker.
+
+- Mise à jour de la documentation à propos de la possibilité de promouvoir les couches d'habillage en couche cible (<a href="https://github.com/riatelab/magrit/issues/36">issue Github #36</a>)
+
+- Correction d'erreurs dans les traductions de l'interface.
+
+- Amélioration du style de certains boutons.
+
+- Amélioration du style des fenêtres permettant de changer le style des couches et le styles des éléments d'habillage.
+
 #### 0.8.14 (2022-03-16)
 
-- Corrections dans la documentation
-- suppression de la page de contact
+- Corrections dans la documentation.
+
+- Suppression de la page de contact.
+
+- Correction d'un usage incorrect de `concurrent.futures.ProcessPoolExecutor` + kill les processus qui hébergent des calculs qui durent plus de 5min.
 
 
 #### 0.8.13 (2020-11-27)

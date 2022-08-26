@@ -1,11 +1,13 @@
 import { make_dialog_container, overlay_under_modal } from './dialogs';
-import { round_value } from './helpers_calc';
+import { max_fast, round_value } from './helpers_calc';
 import { binds_layers_buttons, handle_click_hand } from './interface';
 import {
   button_legend, button_replace, button_result_type,
   button_table, button_trash, button_type,
   button_zoom_fit, eye_open0, sys_run_button_t2,
 } from './ui/buttons';
+import { area, booleanPointInPolygon, nearestPoint, pointOnFeature, } from '@turf/turf';
+import * as polylabel from 'polylabel';
 
 
 export const isNumber = (value) => {
@@ -235,7 +237,7 @@ export function display_error_during_computation(msg) {
 *
 * @param {String} method - the method like "GET" or "POST"
 * @param {String} url - the targeted url
-* @param {FormData} data - Optionnal, the data to be send
+* @param {FormData} data - Optional, the data to be sent
 * @return {Promise} response
 */
 export function request_data(method, url, data) {
@@ -253,8 +255,8 @@ export function request_data(method, url, data) {
 *
 * @param {String} method - the method like "GET" or "POST"
 * @param {String} url - the targeted url
-* @param {FormData} data - Optionnal, the data to be send
-* @param {Boolean} waitingMessage - Optionnal, whether to display or not
+* @param {FormData} data - Optional, the data to be sent
+* @param {Boolean} waitingMessage - Optional, whether to display or not
 * a waiting message while the request is proceeded
 * @return {Promise} response
 */
@@ -417,7 +419,7 @@ export function get_display_name_on_layer_list(layer_name_to_add) {
 
 /**
 * Function triggered in order to add a new layer
-* in the "layer manager" (with appropriates icons regarding to its type, etc.)
+* in the "layer manager" (with appropriates icons regarding its type, etc.)
 * @param {string} layerName - The name of the new layer
 * @param {integer} nbFt - The number of feature in this layer
 * @param {string} typeGeom - The geometry type
@@ -651,10 +653,10 @@ export function make_box_type_fields(layerName) {
       }
     };
 
-    if (f.length === 0) { // If the user dont have already selected the type :
+    if (f.length === 0) { // If the user don't have already selected the type :
       fields_type = tmp.slice();
       container.querySelector('.btn_cancel').remove(); // Disabled cancel button to force the user to choose
-      const _onclose = () => { // Or use the default values if he use the X  close button
+      const _onclose = () => { // Or use the default values if user uses the X close button
         data_manager.current_layers[layerName].fields_type = tmp.slice();
         getAvailablesFunctionnalities(layerName);
         resolve(false);
@@ -667,7 +669,7 @@ export function make_box_type_fields(layerName) {
         if (f.indexOf(d.name) === -1) { fields_type.push(d); }
       });
       container.querySelector('.btn_cancel').remove(); // Disabled cancel button to force the user to choose
-      const _onclose = () => { // Or use the default values if he use the X  close button
+      const _onclose = () => { // Or use the default values if user uses the X close button
         data_manager.current_layers[layerName].fields_type = tmp.slice();
         getAvailablesFunctionnalities(layerName);
         resolve(false);
@@ -935,11 +937,11 @@ export function prepareFileExt(files_to_send) {
 
 /**
 * Try to parse a JSON string into. Returns an Array of two elements :
-* like [true, data] if parsing suceeded or like [false, error] if it failed.
+* like [true, data] if parsing succeeded or like [false, error] if it failed.
 *
 * @param {String} txt - The JSON string to be parsed.
-* @return {Array} An Array of two element, this first one is a Boolean (wheter
-* parsing the string sucedded or not) and the second is the resulting object or
+* @return {Array} An Array of two element, this first one is a Boolean (whether
+* parsing the string succeeded or not) and the second is the resulting object or
 * the error thrown.
 */
 export const isValidJSON = (txt) => {
@@ -970,3 +972,89 @@ export function getTargetLayerProps() {
   }
   return null;
 }
+
+/**
+ *
+ * @param {object} geom - A MultiPolygon GeoJSON Geometry.
+ * @returns {{coordinates: *[], type}} - A Polygon GeoJSON Geometry.
+ */
+const getLargestPolygon = (geom) => {
+  const areas = [];
+  for (let j = 0; j < geom.coordinates.length; j++) {
+    areas.push(area({
+      type: 'Feature',
+      geometry: {
+        type: 'Polygon',
+        coordinates: geom.coordinates[j],
+      },
+      properties: {},
+    }));
+  }
+  const ix = areas.indexOf(max_fast(areas));
+  return {
+    type: 'Polygon',
+    coordinates: geom.coordinates[ix],
+  };
+};
+
+
+/**
+ * Returns a point guaranteed to be on a Feature.
+ * On Polygon geometry it is done by testing (in that order)
+ * the centroid, the inaccessibility pole (polylabel algorithm)
+ * and the nearest point to the centroid on the border of the exterior ring
+ * of the polygon.
+ *
+ * @param {object} geom - The targeted GeoJSON Geometry.
+ * @returns {[number, number]} - Coordinates
+ */
+export const coordsPointOnFeature = (geom) => {
+  if (!geom) return null;
+  if (geom.type === 'Point') {
+    // Return the point itself
+    return geom.coordinates;
+  }
+  if (geom.type === 'MultiPoint') {
+    // Return the first point of the multipoint
+    return geom.coordinates[0];
+  }
+  if (geom.type.includes('Line')) {
+    // Return a point on the line or on the first line if multiline
+    return pointOnFeature({ type: 'Feature', geometry: geom }).geometry.coordinates;
+  }
+  // Implement our logic for polygon centroid, or inaccessibility pole or nearest point
+  // to centroid on polygon boundary
+  if (geom.type.includes('Polygon')) {
+    // Take the largest Polygon if MultiPolygon
+    const tGeom = geom.type.includes('Multi')
+      ? getLargestPolygon(geom)
+      : geom;
+    // Compute centroid
+    const centroid = d3.geoCentroid(tGeom);
+    // Return centroid coordinates if they are inside the target polygon ...
+    if (booleanPointInPolygon(centroid, tGeom, { ignoreBoundary: true })) {
+      return centroid;
+    }
+    // Otherwise compute the inaccessibility pole
+    const inaccessibilityPole = polylabel(tGeom.coordinates, 1.0);
+    // Return inaccessibility pole if it lies inside the target polygon
+    if (booleanPointInPolygon(inaccessibilityPole, tGeom, { ignoreBoundary: true })) {
+      return inaccessibilityPole;
+    }
+    // Otherwise compute the nearest point to the centroid on
+    // the exterior ring of the target polygon (as with turf/pointOnFeature)
+    // and return it
+    const vertices = {
+      type: 'FeatureCollection',
+      features: tGeom.coordinates[0].map((c) => ({
+        type: 'Feature',
+        properties: {},
+        geometry: {
+          type: 'Point',
+          coordinates: c,
+        },
+      })),
+    };
+    return nearestPoint(centroid, vertices).geometry.coordinates;
+  }
+};

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-@author: mz
+@author: mthh
 """
 from geopandas import GeoDataFrame, GeoSeries
 from shapely.geometry import Polygon
@@ -64,7 +64,7 @@ def get_grid_layer_pt(input_file, height, field_name,
         result_values = get_dens_from_pt(gdf, field_name, polygon_layer, func)
         polygon_layer[func] = [i[0] for i in result_values]
         polygon_layer['count'] = [i[1] for i in result_values]
-        return polygon_layer.to_crs({"init": "epsg:4326"}).to_json()
+        return polygon_layer.to_crs("epsg:4326").to_json()
 
     else:
         if mask_layer:
@@ -99,7 +99,7 @@ def get_grid_layer_pt(input_file, height, field_name,
                   'count': [i[2] for i in res_geoms]},
             geometry=[i[0] for i in res_geoms],
             crs=gdf.crs
-            ).to_crs({"init": "epsg:4326"})
+            ).to_crs("epsg:4326")
 
         total_bounds = result.total_bounds
         if total_bounds[0] < -179.9999 or total_bounds[1] < -89.9999 \

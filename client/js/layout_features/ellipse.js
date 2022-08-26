@@ -159,10 +159,16 @@ export default class UserEllipse {
       .insert('div')
       .attr('id', 'styleBoxEllipse');
 
-    const s1 = box_content.append('p').attr('class', 'line_elem2');
+    const s1 = box_content.append('div')
+      .attr('class', 'line_elem');
+
     s1.append('span')
-      .style('margin', 'auto')
+      .style('flex', '0.9')
       .html(_tr('app_page.ellipse_edit_box.stroke_width'));
+
+    const txt_line_weight = s1.append('span')
+      .html(`${self.stroke_width} px`);
+
     s1.append('input')
       .attrs({
         min: 0,
@@ -170,24 +176,20 @@ export default class UserEllipse {
         step: 0.1,
         type: 'range',
       })
-      .styles({ width: '80px', float: 'right' })
       .property('value', self.stroke_width)
       .on('change', function () {
         ellipse_elem.style.strokeWidth = this.value;
         txt_line_weight.html(`${this.value}px`);
       });
-    let txt_line_weight = s1.append('span')
-      .styles({ float: 'right', margin: '0 5px 0 5px' })
-      .html(`${self.stroke_width} px`);
 
-    const s2 = box_content.append('p').attr('class', 'line_elem2');
+    const s2 = box_content.append('div')
+      .attr('class', 'line_elem');
 
     s2.append('span')
       .style('margin', 'auto')
       .html(_tr('app_page.ellipse_edit_box.stroke_color'));
 
     s2.append('input')
-      .style('float', 'right')
       .attr('type', 'color')
       .property('value', self.stroke_color)
       .on('change', function () {

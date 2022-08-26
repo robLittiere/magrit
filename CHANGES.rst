@@ -1,10 +1,38 @@
 Changes
 =======
 
-Current master (not tagged yet)
--------------------------------
+0.8.15 (2022-08-26)
+-------------------
+
+- Allow to export CSV table (#75).
+
+- Fix legend not visible on proportional links map on Firefox (#74).
+
+- Fix positioning of symbols and labels when centroid doesn't fall inside the target polygon (it now tries to compute the inaccessibility pole or if it still doesn't find a point in the polygon, the closest point to the centroid on the edge of the polygon) (#63).
+
+- Update many dependencies to ease the installation with recent Python (such as 3.10) on a recent system (such as ubuntu 22.04).
+
+- Update Docker recipes.
+
+- Update the documentation about the possibility to change the role (target / layout) of the layers in the interface (#36).
+
+- Correctly update the count of layout layers (#82).
+
+- Fix some typos in french and English translations.
+
+- Improve the style of some buttons (they weren't readable when they were in "hover" state).
+
+- Improve the style of the "layer style" popups (elements were not properly aligned) and of the "layout feature style" popups.
+
+
+0.8.14 (2022-03-16)
+-------------------
 
 - Fix wrong usage of `concurrent.futures.ProcessPoolExecutor` + kill possibly long running computation after 5min (such as computing smoothed map and gridded map).
+
+- Update some python dependencies.
+
+- Change logo, contact email and name of UAR RIATE + Fixes in documentation.
 
 
 0.8.13 (2020-11-27)
@@ -24,9 +52,9 @@ Current master (not tagged yet)
 
 - Render crisp-edges (ie. disable SVG antialiasing) if the stroke-width or the stroke-opacity of a layer is set to 0 (#61). Note that this has an impact on the quality of the rendering, which is now slightly crenellated.
 
-- Avoid opening the overlay (dedicated to file upload and triggered by a drag event) when draging html elements (#64).
+- Avoid opening the overlay (dedicated to file upload and triggered by a drag event) when dragging html elements (#64).
 
-- Correctly set the "lang" HTML attribute to avoid having chrome translation poping up when it is not necessary (#65).
+- Correctly set the "lang" HTML attribute to avoid having chrome translation popping up when it is not necessary (#65).
 
 - Improves the retrieval of a useful error message in case of failed conversion of tabular file.
 

@@ -10,7 +10,7 @@ from psutil import Popen
 from flaky import flaky
 from functools import wraps
 #from io import BytesIO
-from scipy.misc import imread
+from imageio.v2 import imread
 from scipy.linalg import norm
 from scipy import average
 from uuid import uuid4

@@ -319,11 +319,15 @@ export default class UserRectangle {
       .insert('div')
       .attr('id', 'styleBoxRectangle');
 
-    const s1 = box_content.append('p').attr('class', 'line_elem2');
+    const s1 = box_content.append('div')
+      .attr('class', 'line_elem');
 
     s1.append('span')
-      .style('margin', 'auto')
+      .style('flex-grow', '0.9')
       .html(_tr('app_page.rectangle_edit_box.stroke_width'));
+
+    const txt_line_weight = s1.append('span')
+      .html(`${self.stroke_width} px`);
 
     s1.append('input')
       .attrs({
@@ -332,47 +336,48 @@ export default class UserRectangle {
         step: 0.1,
         type: 'range',
       })
-      .styles({ width: '55px', float: 'right' })
       .property('value', self.stroke_width)
       .on('change', function () {
         rectangle_elem.style.strokeWidth = this.value;
-        txt_line_weight.html(`${this.value}px`);
+        txt_line_weight.html(`${this.value} px`);
       });
 
-    const txt_line_weight = s1.append('span')
-      .styles({ float: 'right', margin: '0 5px 0 5px' })
-      .html(`${self.stroke_width} px`);
-
-    const s2 = box_content.append('p').attr('class', 'line_elem2');
+    const s2 = box_content.append('div')
+      .attr('class', 'line_elem');
 
     s2.append('span')
-      .style('margin', 'auto')
       .html(_tr('app_page.rectangle_edit_box.stroke_color'));
 
     s2.append('input')
-      .style('float', 'right')
       .attr('type', 'color')
       .property('value', rgb2hex(self.stroke_color))
       .on('change', function () {
         rectangle_elem.style.stroke = this.value;
       });
 
-    const s3 = box_content.append('p').attr('class', 'line_elem2');
+    const s3 = box_content.append('div')
+      .attr('class', 'line_elem');
+
     s3.append('span')
-      .style('margin', 'auto')
       .html(_tr('app_page.rectangle_edit_box.fill_color'));
+
     s3.append('input')
-      .style('float', 'right')
       .attr('type', 'color')
       .property('value', rgb2hex(self.fill_color))
       .on('change', function () {
         rectangle_elem.style.fill = this.value;
       });
 
-    const s4 = box_content.append('p').attr('class', 'line_elem2');
+    const s4 = box_content.append('div')
+      .attr('class', 'line_elem');
+
     s4.append('span')
-      .style('margin', 'auto')
+      .style('flex', '0.9')
       .html(_tr('app_page.rectangle_edit_box.fill_opacity'));
+
+    const txt_fillop_value = s4.append('span')
+      .html(`${rectangle_elem.style.fillOpacity}`);
+
     s4.append('input')
       .attrs({
         min: 0,
@@ -380,23 +385,24 @@ export default class UserRectangle {
         step: 0.1,
         type: 'range',
       })
-      .styles({ width: '55px', float: 'right' })
       .property('value', rectangle_elem.style.fillOpacity)
       .on('change', function () {
         rectangle_elem.style.fillOpacity = this.value;
         txt_fillop_value.html(`${rectangle_elem.style.fillOpacity}`);
       });
 
-    const txt_fillop_value = s4.append('span')
-      .styles({ float: 'right', margin: '0 5px 0 5px' })
-      .html(`${rectangle_elem.style.fillOpacity}`);
-
     // rx : Coordonnée sur l'axe X du centre de l'ellipse pour les angles arrondis
     // ry : .................... Y
-    const s5 = box_content.append('p').attr('class', 'line_elem2');
+    const s5 = box_content.append('div')
+      .attr('class', 'line_elem');
+
     s5.append('span')
-      .style('margin', 'auto')
+      .style('flex', '0.9')
       .html(_tr('app_page.rectangle_edit_box.rounded_corner'));
+
+    const txt_rx_value = s5.append('span')
+      .html(`${rectangle_elem.rx.baseVal.value}`);
+
     s5.append('input')
       .attrs({
         min: 0,
@@ -404,22 +410,11 @@ export default class UserRectangle {
         step: 1,
         type: 'range',
       })
-      .styles({ width: '55px', float: 'right' })
       .property('value', rectangle_elem.rx.baseVal.value)
       .on('change', function () {
         rectangle_elem.rx.baseVal.value = this.value;
+        rectangle_elem.ry.baseVal.value = this.value;
         txt_rx_value.html(`${rectangle_elem.rx.baseVal.value}`);
       });
-    const txt_rx_value = s5.append('span')
-      .styles({ float: 'right', margin: '0 5px 0 5px' })
-      .html(`${rectangle_elem.rx.baseVal.value}`);
-
-    // s5.append('input')
-    //   .attrs({ type: 'range', min: 0, max: Math.round(self.width / 2), step: 1 })
-    //   .styles({ width: '55px', float: 'right' })
-    //   .property('value', rectangle_elem.ry.baseVal.value)
-    //   .on('change', function () {
-    //     rectangle_elem.ry.baseVal.value = this.value;
-    //   });
   }
 }

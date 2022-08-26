@@ -921,9 +921,14 @@ export function update_section1_layout() {
     d3.select('#layout_layers_section')
       .style('display', 'inline-flex')
       .html(`<div>
-<img src="static/img/type_geom/layer_waffle.png" width="26" height="26" style="filter:opacity(0.7)"></img></div>
-<div style="margin-top: 7px;margin-left: 4px; font-style: italic;font-size: 90%;">
-${_tr('app_page.section1.plus_layout_layers', { count: nb_layout_layer})}</div>`);
+<img src="static/img/type_geom/layer_waffle.png" width="26" height="26" style="filter:opacity(0.7)"/></div>
+<div 
+  style="margin-top: 7px;margin-left: 4px; font-style: italic;font-size: 90%;"
+  class="i18n"
+  data-i18n="app_page.section1.plus_layout_layers"
+>
+    ${_tr('app_page.section1.plus_layout_layers', { count: nb_layout_layer })}
+</div>`);
   } else {
     d3.select('#layout_layers_section')
       .style('display', 'none')
@@ -976,31 +981,31 @@ export function update_section1(type, nb_fields, nb_ft, lyr_name_to_add) {
 
 function ask_downgrade_target_layer(name_layer) {
   return swal({
-      title: '',
-      text: _tr('app_page.common.replace_target_downgrade', { name_layer }),
-      allowOutsideClick: false,
-      allowEscapeKey: true,
-      type: 'question',
-      showConfirmButton: true,
-      showCancelButton: true,
-      confirmButtonText: _tr('app_page.common.yes'),
-      cancelButtonText: _tr('app_page.common.no'),
-    });
+    title: '',
+    text: _tr('app_page.common.replace_target_downgrade', { name_layer }),
+    allowOutsideClick: false,
+    allowEscapeKey: true,
+    type: 'question',
+    showConfirmButton: true,
+    showCancelButton: true,
+    confirmButtonText: _tr('app_page.common.yes'),
+    cancelButtonText: _tr('app_page.common.no'),
+  });
 }
 
 
 function ask_replace_target_layer(name_layer) {
   return swal({
-      title: '',
-      text: _tr('app_page.common.replace_target_promote', { name_layer }),
-      allowOutsideClick: false,
-      allowEscapeKey: true,
-      type: 'question',
-      showConfirmButton: true,
-      showCancelButton: true,
-      confirmButtonText: _tr('app_page.common.yes'),
-      cancelButtonText: _tr('app_page.common.no'),
-    });
+    title: '',
+    text: _tr('app_page.common.replace_target_promote', { name_layer }),
+    allowOutsideClick: false,
+    allowEscapeKey: true,
+    type: 'question',
+    showConfirmButton: true,
+    showCancelButton: true,
+    confirmButtonText: _tr('app_page.common.yes'),
+    cancelButtonText: _tr('app_page.common.no'),
+  });
 }
 
 export function ask_join_now(layer_name, on_add = 'layer') {
@@ -1229,7 +1234,7 @@ export function prepare_available_symbols() {
   return xhrequest('GET', 'static/json/list_symbols.json', null)
     .then((result) => {
       const list_res = JSON.parse(result);
-      return Promise.all(list_res.map(name => getImgDataUrl(`static/img/svg_symbols/${name}`)))
+      return Promise.all(list_res.map((name) => getImgDataUrl(`static/img/svg_symbols/${name}`)))
         .then((symbols) => {
           for (let i = 0; i < list_res.length; i++) {
             _app.default_symbols.push([list_res[i], symbols[i]]);
@@ -1239,9 +1244,11 @@ export function prepare_available_symbols() {
 }
 
 export function accordionize(css_selector = '.accordion', parent) {
-  const _parent = parent && typeof parent === 'object' ? parent
-          : parent && typeof parent === 'string' ? document.querySelector(parent)
-          : document;
+  const _parent = parent && typeof parent === 'object'
+    ? parent
+    : parent && typeof parent === 'string'
+      ? document.querySelector(parent)
+      : document;
   const acc = _parent.querySelectorAll(css_selector);
   for (let i = 0; i < acc.length; i++) {
     acc[i].onclick = function () {
@@ -1270,7 +1277,6 @@ function downgradeTargetLayer() {
   getAvailablesFunctionnalities();
   const id_lyr = _app.layer_to_id.get(old_target);
   document.querySelector(`.${id_lyr}.sortable_target`).classList.remove('sortable_target');
-  return old_target;
 }
 
 function changeTargetLayer(new_target) {
@@ -1295,17 +1301,21 @@ function changeTargetLayer(new_target) {
     }
   }
   downgradeTargetLayer();
-  // const old_target = downgradeTargetLayer();
   data_manager.current_layers[new_target].targeted = true;
   _app.targeted_layer_added = true;
   data_manager.user_data[new_target] = Array.from(document.querySelector(`#${_app.layer_to_id.get(new_target)}`).querySelectorAll('path')).map(d => d.__data__.properties);
   const fields = Object.keys(data_manager.user_data[new_target][0]);
-  update_section1(data_manager.current_layers[new_target].type, fields.length, data_manager.current_layers[new_target].n_features, new_target);
+  update_section1(
+    data_manager.current_layers[new_target].type,
+    fields.length, data_manager.current_layers[new_target].n_features,
+    new_target,
+  );
+  update_section1_layout();
   if (!data_manager.current_layers[new_target].fields_type) {
     data_manager.current_layers[new_target].original_fields = new Set(fields);
   }
   if (!data_manager.current_layers[new_target].fields_type) {
-      data_manager.current_layers[new_target].fields_type =  type_col2(data_manager.user_data[new_target]);
+    data_manager.current_layers[new_target].fields_type = type_col2(data_manager.user_data[new_target]);
   }
   document.getElementById('btn_type_fields').removeAttribute('disabled');
   getAvailablesFunctionnalities(new_target);
@@ -1325,10 +1335,12 @@ function changeTargetLayer(new_target) {
   const id_new_target_lyr = _app.layer_to_id.get(new_target);
   document.querySelector(`#sortable > .${id_new_target_lyr}`).classList.add('sortable_target');
 
-  const d = {};
-  d[new_target] = {
-    type: 'FeatureCollection',
-    features: Array.prototype.slice.call(document.querySelectorAll(`#${id_new_target_lyr} > path`)).map(d => d.__data__),
+  const d = {
+    [new_target]: {
+      type: 'FeatureCollection',
+      features: Array.prototype.slice.call(document.querySelectorAll(`#${id_new_target_lyr} > path`))
+        .map(d => d.__data__),
+    },
   };
   window._target_layer_file = topojson.topology(d);
 
@@ -1369,8 +1381,11 @@ function resetSection1() {
   // Set all the representation modes to "unavailable":
   getAvailablesFunctionnalities();
 
-  // Reset some values stored in the functionnality panel:
+  // Reset some values stored in the functionality panel:
   reset_user_values();
+
+  // Update the part counting layout layers
+  update_section1_layout();
 }
 
 // Function to be called after clicking on "render" in order to close the section 2
@@ -1429,8 +1444,8 @@ export function handle_title_properties() {
     stroke_width: title.style('stroke-width'),
   };
   title_props.font_weight = (title_props.font_weight === '400' || title_props.font_weight === '') ? '' : 'bold';
-  // Font name don't seems to be formatted in the same way on Firefox and Chrome
-  // (a space is inserted after the comma in Chrome so we are removing it)
+  // Font name don't seem to be formatted in the same way on Firefox and Chrome
+  // (a space is inserted after the comma in Chrome, so we are removing it)
   title_props.font_family = title_props.font_family ? title_props.font_family.replace(', ', ',') : title_props.font_family;
 
   // Properties on the title are changed in real-time by the user
@@ -1469,7 +1484,7 @@ export function handle_title_properties() {
   box_content.append('p')
     .html(_tr('app_page.title_box.ypos'))
     .insert('input')
-    .attrs({ type: 'number', min: 0, max: 100, step: 1  })
+    .attrs({ type: 'number', min: 0, max: 100, step: 1 })
     .property('value', title_props.position_y_pct)
     .style('width', '65px')
     .on('change', function () { title.attr('y', h * +this.value / 100); });
@@ -1486,12 +1501,20 @@ export function handle_title_properties() {
   available_fonts.forEach((font) => {
     font_select.append('option').text(font[0]).attr('value', font[1]);
   });
-  font_select.node().selectedIndex = available_fonts.map(d => (d[1] === title_props.font_family ? '1' : '0')).indexOf('1');
+  font_select.node().selectedIndex = available_fonts
+    .map((d) => (d[1] === title_props.font_family ? '1' : '0'))
+    .indexOf('1');
 
-  const options_format = box_content.append('p'),
-    btn_bold = options_format.insert('span').attr('class', title_props.font_weight === 'bold' ? 'active button_disc' : 'button_disc').html('<img title="Bold" src="data:image/gif;base64,R0lGODlhFgAWAID/AMDAwAAAACH5BAEAAAAALAAAAAAWABYAQAInhI+pa+H9mJy0LhdgtrxzDG5WGFVk6aXqyk6Y9kXvKKNuLbb6zgMFADs=">'),
-    btn_italic = options_format.insert('span').attr('class', title_props.font_style === 'italic' ? 'active button_disc' : 'button_disc').html('<img title="Italic" src="data:image/gif;base64,R0lGODlhFgAWAKEDAAAAAF9vj5WIbf///yH5BAEAAAMALAAAAAAWABYAAAIjnI+py+0Po5x0gXvruEKHrF2BB1YiCWgbMFIYpsbyTNd2UwAAOw==">'),
-    btn_underline = options_format.insert('span').attr('class', title_props.text_decoration === 'underline' ? 'active button_disc' : 'button_disc').html('<img title="Underline" src="data:image/gif;base64,R0lGODlhFgAWAKECAAAAAF9vj////////yH5BAEAAAIALAAAAAAWABYAAAIrlI+py+0Po5zUgAsEzvEeL4Ea15EiJJ5PSqJmuwKBEKgxVuXWtun+DwxCCgA7">');
+  const options_format = box_content.append('p');
+  const btn_bold = options_format.insert('span')
+    .attr('class', title_props.font_weight === 'bold' ? 'active button_disc' : 'button_disc')
+    .html('<img title="Bold" src="data:image/gif;base64,R0lGODlhFgAWAID/AMDAwAAAACH5BAEAAAAALAAAAAAWABYAQAInhI+pa+H9mJy0LhdgtrxzDG5WGFVk6aXqyk6Y9kXvKKNuLbb6zgMFADs=">');
+  const btn_italic = options_format.insert('span')
+    .attr('class', title_props.font_style === 'italic' ? 'active button_disc' : 'button_disc')
+    .html('<img title="Italic" src="data:image/gif;base64,R0lGODlhFgAWAKEDAAAAAF9vj5WIbf///yH5BAEAAAMALAAAAAAWABYAAAIjnI+py+0Po5x0gXvruEKHrF2BB1YiCWgbMFIYpsbyTNd2UwAAOw==">');
+  const btn_underline = options_format.insert('span')
+    .attr('class', title_props.text_decoration === 'underline' ? 'active button_disc' : 'button_disc')
+    .html('<img title="Underline" src="data:image/gif;base64,R0lGODlhFgAWAKECAAAAAF9vj////////yH5BAEAAAIALAAAAAAWABYAAAIrlI+py+0Po5zUgAsEzvEeL4Ea15EiJJ5PSqJmuwKBEKgxVuXWtun+DwxCCgA7">');
 
   btn_bold.on('click', function () {
     if (this.classList.contains('active')) {
@@ -1602,7 +1625,9 @@ export function displayInfoOnMove() {
       const txt_info = [
         '<h3>', top_visible_layer, '</h3><i>Feature ',
         i + 1, '/', data_manager.current_layers[top_visible_layer].n_features, '</i><p>'];
-      const properties = data_manager.result_data[top_visible_layer] ? data_manager.result_data[top_visible_layer][i] : d.properties;
+      const properties = data_manager.result_data[top_visible_layer]
+        ? data_manager.result_data[top_visible_layer][i]
+        : d.properties;
       Object.getOwnPropertyNames(properties).forEach((el) => {
         txt_info.push(`<br><b>${el}</b> : ${properties[el]}`);
       });
@@ -1700,7 +1725,7 @@ function remove_layer(name) {
     cancelButtonText: _tr('app_page.common.cancel'),
   }).then(() => { remove_layer_cleanup(name); },
           () => null);
-  // ^^^^^^^^^^^^ Do nothing on cancel, but this avoid having an "uncaught exeption (cancel)" comming in the console if nothing is set here
+  // ^^^^^^^^^^^^ Do nothing on cancel, but this avoid having an "uncaught exception (cancel)" coming in the console if nothing is set here
               //  ^^^^^^^^^^^^^^^^^^^^^^^ Not sure anymore :/
 }
 
@@ -1737,7 +1762,7 @@ function remove_ext_dataset_cleanup() {
 
 // Do some clean-up when a layer is removed
 // Most of the job is to do when it's the targeted layer which is removed in
-// order to restore functionnalities to their initial states
+// order to restore functionalities to their initial states
 export function remove_layer_cleanup(name) {
   if (!data_manager.current_layers[name]) return;
   const layer_id = global._app.layer_to_id.get(name);
@@ -1771,8 +1796,10 @@ export function remove_layer_cleanup(name) {
   if (a) a.remove();
 
   // Remove the layer from the "mask" section if the "smoothed map" menu is open :
-  if (global._app.current_functionnality && (
-      global._app.current_functionnality.name === 'smooth' || global._app.current_functionnality.name === 'grid')) {
+  if (
+    global._app.current_functionnality && (
+      global._app.current_functionnality.name === 'smooth' || global._app.current_functionnality.name === 'grid')
+  ) {
     Array.prototype.slice.call(document.querySelectorAll('.mask_field'))
       .forEach((elem) => {
         const aa = elem.querySelector(`option[value="${name}"]`);
@@ -1780,9 +1807,9 @@ export function remove_layer_cleanup(name) {
       });
   }
 
-  // Reset the panel displaying info on the targeted layer if she"s the one to be removed :
+  // Reset the panel displaying info on the targeted layer if it's the one to be removed :
   if (data_manager.current_layers[name].targeted) {
-    // Unfiling the fields related to the targeted functionnality:
+    // Unfiling the fields related to the targeted functionality:
     if (global._app.current_functionnality) {
       clean_menu_function();
     }
@@ -1816,7 +1843,7 @@ export function remove_layer_cleanup(name) {
 
 
 // To bind the set of small buttons
-// (trash icon, paint icon, active/deactive visibility, info tooltip, etc..)
+// (trash icon, paint icon, activate/deactivate visibility, info tooltip, etc..)
 // which are on each feature representing a layer in the layer manager
 // (the function is called each time that a new feature is put in this layer manager)
 export function binds_layers_buttons(layer_name) {

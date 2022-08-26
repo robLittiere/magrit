@@ -15,7 +15,6 @@ develop-eggs/
 downloads/
 eggs/
 .eggs/
-src/
 
 # Virtual environnements
 venv/
@@ -83,6 +82,16 @@ tmp/
 node_modules/
 jspm_packages/
 
-# Exception for the builded js file of Magrit:
-!magrit_app/static/dist
+# Dont track built js and html files
+client/dist
+magrit_app/static/dist
+magrit_app/static/*.html
+
+# Dont track built documentation files
+margrit_app/static/book
+
+# Pytest cache
 /.pytest_cache/
+
+# IDE stuff
+.idea/

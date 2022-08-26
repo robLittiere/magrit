@@ -7,7 +7,7 @@
             "load_preferences": "Charger un projet",
             "too_large_input": "Fichier d'entrée trop volumineux (26Mo maximum)",
             "alert_upload1": "Les couches doivent être téléversées une par une et l'ensemble des fichier requis (.shp, .dbf, .shx, .prj) pour lire un shapefile doit être fournis.",
-            "alert_upload_shp": "L'ensemble des fichier requis (.shp, .dbf, .shx, .prj) pour lire un shapefile doit être fournis.",
+            "alert_upload_shp": "L'ensemble des fichier requis (.shp, .dbf, .shx, .prj) pour lire un shapefile doit être fourni.",
             "alert_upload_invalid": "Source de données invalide (pas de GeoJSON/TopoJSON/zip/Shapefile/KML/GML détecté).",
             "layer_success": "Résultat ajouté à la carte!",
             "layer_success_and_proj": "Résultat ajouté à la carte! Souhaitez-vous utiliser les informations de projection contenues dans le fichier ?",
@@ -116,7 +116,7 @@
             "search": "Recherche...",
             "entries_page": "{select} entrées par page",
             "no_rows": "Pas d'entrées trouvées",
-            "info": "Affichage des entitées {start} à {end} sur {rows}"
+            "info": "Affichage des entités {start} à {end} sur {rows}"
         },
         "notification":{
             "brush_map_cancelled": "Pas de rectangle détecté. L'opération a été annulée.",
@@ -126,8 +126,8 @@
             "warning_deactivation_prop_symbol_legend": "Désactivation de la légende des symboles proportionnels",
             "instruction_brush_map": "Tracer un rectangle sur la carte en conservant le curseur appuyé. Appuyer sur 'Échap' pour annuler.",
             "instruction_click_map": "Cliquer sur la carte pour ajouter l'élément. Appuyer sur 'Échap' pour annuler.",
-            "instruction_click_map_arrow1": "Cliquer sur la carte localiser le point de départ de la flèche. Appuyer sur 'Échap' pour annuler.",
-            "instruction_click_map_arrow2": "Cliquer sur la carte localiser le point d'arrivée de la flèche. Appuyer sur 'Échap' pour annuler.",
+            "instruction_click_map_arrow1": "Cliquer sur la carte pour localiser le point de départ de la flèche. Appuyer sur 'Échap' pour annuler.",
+            "instruction_click_map_arrow2": "Cliquer sur la carte pour localiser le point d'arrivée de la flèche. Appuyer sur 'Échap' pour annuler.",
             "instruction_modify_feature": "Utiliser les poignées rouges pour modifier l'élément.<br>Double-cliquer pour quitter l'édition de l'élément."
         },
         "section1": {
@@ -279,10 +279,10 @@
             "variance": "Variance",
             "stddev": "Écart-type",
             "cov": "Coefficient de variation",
-            "mini_summary" : "Min : {{min}} | Max : {{max}}<br>Moyenne : {{mean}} | Médianne : {{median}}<br>Écart-type : {{stddev}}"
+            "mini_summary" : "Min : {{min}} | Max : {{max}}<br>Moyenne : {{mean}} | Médiane : {{median}}<br>Écart-type : {{stddev}}"
         },
         "tooltips": {
-            "section1": "Faites glissez un fichier GeoJSON, GML, TopoJSON, Shapefile ou KML dans la fenêtre ou ajoutez manuellement une couche en cliquant sur le bouton",
+            "section1": "Faites glisser un fichier GeoJSON, GML, TopoJSON, Shapefile ou KML dans la fenêtre ou ajoutez manuellement une couche en cliquant sur le bouton",
             "load_project_file": "Chargement d'un fichier projet",
             "save_file": "Sauvegarde d'un fichier-projet",
             "new_project": "Création d'un nouveau projet",
@@ -449,6 +449,7 @@
         "explore_box": {
             "title": "Table de données",
             "button_add_field": "Ajout d'un champ...",
+            "button_export_csv": "Exporter en CSV",
             "add_field_box": {
                 "new_name_placeholder": "NouveauChamp",
                 "new_name": "Nom du nouveau champ<br>",
@@ -616,7 +617,7 @@
             "field_symbol_color": "Champ utilisé pour les <strong>couleurs des symboles</strong> : <i>{{ field }}</i><br>",
             "color_break": "Couleur selon une valeur limite",
             "break_value": "<br>Valeur limite ",
-            "field_symbol_size": "Champ utilisé pour les <strong>valeurs proportionnelles</strong> : <i>{{ field }}</i><br><br>",
+            "field_symbol_size": "Champ utilisé pour les <strong>valeurs proportionnelles</strong> : <i>{{ field }}</i><br>",
             "symbol_fixed_size": "Taille du symbole fixée ",
             "on_value": "sur la valeur ...",
             "point_radius": "Taille du point<br>",

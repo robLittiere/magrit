@@ -94,7 +94,7 @@ def guess_separator(file, raw_data=None):
         Path to file to use.
 
     raw_data: str
-        Csv file as string (optionnal, to be used if the csv file is already in
+        Csv file as string (optional, to be used if the csv file is already in
         memory; so it won't use the 'file' parameters if raw_data isn't empty).
 
     Returns
@@ -139,8 +139,8 @@ def extractShpZip(myzip, slots, directory):
     """
     Extract in "directory" the members of "myzip" which are listed in "slots".
 
-    Replace any extension in uppercase by its lowercase couterpart and updated
-    the "slots" dictionnary according to hold the real path of the extracted
+    Replace any extension in uppercase by its lowercase counterpart and updated
+    the "slots" dictionary according to hold the real path of the extracted
     files.
 
     Parameters
@@ -204,19 +204,3 @@ def zip_layer_folder(dir_path, layer_name):
     myZip.close()
     zip_stream.seek(0)
     return zip_stream.read(), ''.join([layer_name, ".zip"])
-
-
-# def mmh3_file(path):
-#     with open(path, 'rb') as f:
-#         buf = f.read()
-#     return mmh3_hash(buf)
-
-# def prepare_folder():
-#     for i in range(10):
-#         try:
-#             tmp_path = "/tmp/" + get_name()
-#             os.mkdir(tmp_path)
-#             return tmp_path
-#         except:
-#             continue
-#     raise ValueError("Unable to create folder")
