@@ -1,7 +1,7 @@
 # All-in-one image to build and execute magrit in a single container.
 # See the other recipes (with docker compose) if you want to use magrit with nginx.
 FROM ubuntu:22.04
-MAINTAINER Matthieu Viry <matthieu.viry@univ-grenoble-alpes.fr>
+MAINTAINER Matthieu Viry <matthieu.viry@cnrs.fr>
 
 ENV DEBIAN_FRONTEND='noninteractive' TZ='Europe/Paris'
 

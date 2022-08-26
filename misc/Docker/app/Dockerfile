@@ -1,5 +1,5 @@
 FROM ubuntu:22.04
-MAINTAINER Matthieu Viry <matthieu.viry@univ-grenoble-alpes.fr>
+MAINTAINER Matthieu Viry <matthieu.viry@cnrs.fr>
 
 ENV DEBIAN_FRONTEND='noninteractive' TZ='Europe/Paris'
 

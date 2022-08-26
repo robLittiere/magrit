@@ -131,7 +131,7 @@ module.exports = [
     plugins: [{
       apply: (compiler) => {
         compiler.hooks.afterEmit.tap('AfterEmitPlugin', (compilation) => {
-          exec('cp dist/d3-custom.min.js ../magrit_app/static/dist/', (err, stdout, stderr) => {
+          exec('mkdir -p ../magrit_app/static/dist/ && cp dist/d3-custom.min.js ../magrit_app/static/dist/ && echo "Replacing d3-custom.min.js..."', (err, stdout, stderr) => {
             if (stdout) process.stdout.write(stdout);
             if (stderr) process.stderr.write(stderr);
           });
