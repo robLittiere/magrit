@@ -20,7 +20,7 @@ ENV LANG='fr_FR.UTF-8' LANGUAGE='fr_FR' LC_ALL='fr_FR.UTF-8' NODE_ENV='PRODUCTIO
 
 WORKDIR /home
 
-RUN mkdir /home/app && cd /home/app && wget https://github.com/mthh/magrit/archive/master.zip && unzip master.zip && mv magrit-master magrit
+RUN mkdir /home/app && cd /home/app && wget https://github.com/riatelab/magrit/archive/master.zip && unzip master.zip && mv magrit-master magrit
 
 RUN cd /home/app/magrit/ \
     && pip3.10 install -U setuptools numpy==1.23.1 \
