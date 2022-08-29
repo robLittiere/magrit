@@ -115,21 +115,26 @@ export default class Textbox {
         'font-size': `${this.fontSize}px`,
         'font-family': 'verdana',
         'text-anchor': 'start',
+        'paint-order': 'stroke fill',
       });
     text_elem.append('tspan')
       .attr('x', this.x)
       .text(_tr('app_page.text_box_edit_box.constructor_default'));
-    group_elem.call(drag_txt_annot);
-    group_elem.on('dblclick', () => {
-      d3.event.preventDefault();
-      d3.event.stopPropagation();
-      this.editStyle();
-    })
-    .on('contextmenu', () => {
-      context_menu.showMenu(d3.event,
-                            document.querySelector('body'),
-                            getItems());
-    });
+
+    group_elem
+      .call(drag_txt_annot)
+      .on('dblclick', () => {
+        d3.event.preventDefault();
+        d3.event.stopPropagation();
+        this.editStyle();
+      })
+      .on('contextmenu', () => {
+        context_menu.showMenu(
+          d3.event,
+          document.querySelector('body'),
+          getItems(),
+        );
+      });
 
     this.lineHeight = round(this.fontSize * 1.4);
     this.textAnnot = text_elem;
@@ -177,7 +182,7 @@ export default class Textbox {
         x: bbox.x - 10,
         y: bbox.y - 10,
         height: this.height + 20,
-        width: this.width + 20
+        width: this.width + 20,
       });
   }
 
@@ -207,7 +212,8 @@ export default class Textbox {
       font_style: text_elem.style('font-style'),
       text_decoration: text_elem.style('text-decoration'),
       buffer: self.buffer !== undefined ? cloneObj(self.buffer) : undefined,
-      text_shadow: text_elem.style('text-shadow'),
+      stroke_width: text_elem.style('stroke-width'),
+      stroke: text_elem.style('stroke'),
       font_family: self.fontFamily,
     };
     current_options.font_weight = (current_options.font_weight === '400' || current_options.font_weight === '') ? '' : 'bold';
@@ -221,8 +227,10 @@ export default class Textbox {
               'font-weight': current_options.font_weight,
               'text-decoration': current_options.text_decoration,
               'font-style': current_options.font_style,
-              'text-shadow': current_options.text_shadow,
               'font-family': current_options.font_family,
+              stroke: current_options.stroke,
+              'stroke-width': current_options.stroke_width,
+              'paint-order': 'stroke fill',
             });
           self.fontSize = current_options.size;
           self.fontFamily = current_options.font_family;
@@ -309,7 +317,13 @@ export default class Textbox {
     });
 
     font_select.node().selectedIndex = available_fonts
-      .map((d) => (d[1] === self.fontFamily ? '1' : '0')).indexOf('1');
+      .map(([name, cssString]) => {
+        if (self.fontFamily.includes(name)) {
+          return 1;
+        }
+        return 0;
+      })
+      .indexOf(1);
 
     options_font.append('input')
       .attrs({
@@ -417,11 +431,13 @@ export default class Textbox {
           const color = self.buffer.color,
             size = self.buffer.size;
           text_elem
-            .style('text-shadow',
-                   `-${size}px 0px 0px ${color}, 0px ${size}px 0px ${color}, ${size}px 0px 0px ${color}, 0px -${size}px 0px ${color}`);
+            .style('stroke', color)
+            .style('stroke-width', `${size}px`);
         } else {
           buffer_color.style('display', 'none');
-          text_elem.style('text-shadow', 'none');
+          text_elem
+            .style('stroke', 'unset')
+            .style('stroke-width', 'unset');
         }
       });
 
@@ -435,14 +451,14 @@ export default class Textbox {
         float: 'right',
       })
       .attr('type', 'color')
-      .property('value', current_options.buffer && current_options.buffer.color ? current_options.buffer.color : '#FFFFFF')
+      .property('value', current_options.buffer && current_options.buffer.color ? rgb2hex(current_options.buffer.color) : '#FFFFFF')
       .on('change', function () {
         self.buffer.color = this.value;
         const color = self.buffer.color,
           size = self.buffer.size;
         text_elem
-          .style('text-shadow',
-                 `-${size}px 0px 0px ${color}, 0px ${size}px 0px ${color}, ${size}px 0px 0px ${color}, 0px -${size}px 0px ${color}`);
+          .style('stroke', color)
+          .style('stroke-width', `${size}px`);
       });
 
     btn_bold.on('click', function () {

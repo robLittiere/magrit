@@ -1405,8 +1405,19 @@ export function handle_title(txt) {
       .attrs({ class: 'legend title', id: 'map_title' })
       .style('cursor', 'pointer')
       .insert('text')
-      .attrs({ x: w / 2, y: h / 12, 'alignment-baseline': 'middle', 'text-anchor': 'middle' })
-      .styles({ 'font-family': 'verdana', 'font-size': '20px', position: 'absolute', color: 'black' })
+      .attrs({
+        x: w / 2,
+        y: h / 12,
+        'alignment-baseline': 'middle',
+        'text-anchor': 'middle',
+      })
+      .styles({
+        color: 'black',
+        'font-family': 'verdana',
+        'font-size': '20px',
+        'paint-order': 'stroke fill',
+        position: 'absolute',
+      })
       .text(txt)
       .on('contextmenu dblclick', () => {
         d3.event.preventDefault();
@@ -1463,6 +1474,7 @@ export function handle_title_properties() {
             'font-style': title_props.font_style,
             'font-weight': title_props.font_weight,
             'text-decoration': title_props.text_decoration,
+            'paint-order': 'stroke fill',
           });
       }
     });
@@ -1494,16 +1506,26 @@ export function handle_title_properties() {
     .property('value', rgb2hex(title_props.color))
     .on('change', function () { title.style('fill', this.value); });
 
+  // Dropdown menu for selecting fonts
   const font_select = box_content.append('p')
     .html(_tr('app_page.title_box.font_family'))
     .insert('select').attr('class', 'params')
     .on('change', function () { title.style('font-family', this.value); });
+
+  // Fill it with the available fonts
   available_fonts.forEach((font) => {
     font_select.append('option').text(font[0]).attr('value', font[1]);
   });
+
+  // Get the current font and select it in the dropdown
   font_select.node().selectedIndex = available_fonts
-    .map((d) => (d[1] === title_props.font_family ? '1' : '0'))
-    .indexOf('1');
+    .map(([name, cssString]) => {
+      if (title_props.font_family.includes(name)) {
+        return 1;
+      }
+      return 0;
+    })
+    .indexOf(1);
 
   const options_format = box_content.append('p');
   const btn_bold = options_format.insert('span')

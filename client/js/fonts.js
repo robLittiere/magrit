@@ -19,7 +19,7 @@ export const available_fonts = [
   ['Verdana', 'verdana'],
 ];
 
-// This variable have to be (well, we could easily do this in an other way!) up to date
+// This variable have to be (well, we could easily do this in another way!) up to date
 // with the style-fonts.css file as we are using their order to lookup for their definition
 // the .css file.
 export const custom_fonts = [

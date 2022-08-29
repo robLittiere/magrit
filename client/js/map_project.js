@@ -14,7 +14,7 @@ import {
 } from './interface';
 import {
   clickLinkFromDataUrl, create_li_layer_elem, drag_elem_geo,
-  getAvailablesFunctionnalities, isValidJSON,
+  getAvailablesFunctionnalities, isValidJSON, makeStyleString, parseStyleToObject,
 } from './helpers';
 import { createDropShadow, handleEdgeShapeRendering } from './layers_style_popup';
 import {
@@ -719,7 +719,7 @@ export function apply_user_preferences(json_pref) {
   // Display waiting overlay:
   _app.waitingOverlay.display({ cancel_button: false });
 
-  // Restore the state of the page (ie. without any open functionnality):
+  // Restore the state of the page (ie. without any open functionality):
   if (window.fields_handler) {
     clean_menu_function();
   }
@@ -805,6 +805,10 @@ export function apply_user_preferences(json_pref) {
     if (map_config.title) {
       // Create the title object :
       handle_title(map_config.title.content);
+      // Since v0.9.0, we are adding the 'paint-order' CSS property to the title element :
+      if (p_version.minor < 9) {
+        map_config.title.style += ' paint-order: stroke fill;';
+      }
       // Use its old properties :
       const title = document.getElementById('map_title').getElementsByTagName('text')[0];
       title.setAttribute('x', map_config.title.x);
@@ -882,8 +886,24 @@ export function apply_user_preferences(json_pref) {
       if (map_config.layout_features.text_annot) {
         for (let i = 0; i < map_config.layout_features.text_annot.length; i++) {
           const ft = map_config.layout_features.text_annot[i];
+          let style = ft.style;
           const new_txt_box = new Textbox(svg_map, ft.id, [ft.position_x, ft.position_y]);
-          new_txt_box.textAnnot.node().setAttribute('style', ft.style);
+          const styleObj = parseStyleToObject(style);
+          // In version 0.9.0 we changed how the text buffer is defined
+          // (before it was with text-shadow, now it is with stroke and stroke-width properties)
+          if (p_version.minor < 9) {
+            if (styleObj.hasOwnProperty('text-shadow')) {
+              // Remove the text-shadow property and replace by appropriate stroke / stroke-width properties
+              const tTextShadow = styleObj['text-shadow'];
+              const color = tTextShadow.substring(tTextShadow.indexOf('rgb'), tTextShadow.indexOf(') ') + 1);
+              delete styleObj['text-shadow'];
+              styleObj['stroke'] = color;
+              styleObj['stroke-width'] = '1px';
+              styleObj['paint-order'] = 'stroke fill';
+              style = makeStyleString(styleObj);
+            }
+          }
+          new_txt_box.textAnnot.node().setAttribute('style', style);
           new_txt_box.textAnnot
             .attrs({
               transform: ft.transform,
@@ -895,8 +915,10 @@ export function apply_user_preferences(json_pref) {
               x: ft.position_x,
               y: ft.position_y,
             });
-          new_txt_box.fontSize = +ft.style.split('font-size: ')[1].split('px')[0];
-          new_txt_box.fontFamily = (ft.style.split('font-family: ')[1].split(';')[0] || '').replace(', ', ',');
+          new_txt_box.fontSize = +styleObj['font-size'].split('px')[0];
+          new_txt_box.fontFamily = styleObj['font-family'];
+          new_txt_box.anchor = styleObj['text-anchor'];
+          new_txt_box.buffer = styleObj.stroke ? { color: styleObj.stroke, size: +styleObj['stroke-width'].split('px')[0] } : undefined;
           new_txt_box.updateLineHeight();
           new_txt_box.update_text(ft.content);
         }
@@ -1253,12 +1275,12 @@ export function apply_user_preferences(json_pref) {
         const symbols_map = new Map(_layer.symbols_map);
         const new_layer_data = {
           type: 'FeatureCollection',
-          features: _layer.current_state.map(d => d.data),
+          features: _layer.current_state.map((d) => d.data),
         };
 
         const nb_features = new_layer_data.features.length;
         const context_menu = new ContextMenu();
-        const getItems = self_parent => [
+        const getItems = (self_parent) => [
           { name: _tr('app_page.common.edit_style'), action: () => { make_style_box_indiv_symbol(self_parent); } },
           { name: _tr('app_page.common.delete'), action: () => { self_parent.style.display = 'none'; } }, // eslint-disable-line no-param-reassign
         ];
