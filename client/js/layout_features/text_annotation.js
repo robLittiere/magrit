@@ -419,12 +419,16 @@ export default class Textbox {
       });
     document.getElementById('annotation_content').value = current_options.content;
 
-    const buffer_text_zone = box_content.append('p');
+    const buffer_text_zone = box_content.append('div')
+      .attr('class', 'line_elem');
+
     let buffer_txt_chk = buffer_text_zone.append('input')
       .attrs({ type: 'checkbox', id: 'buffer_txt_chk', checked: current_options.buffer !== undefined ? true : null })
+      .style('margin', '0 !important')
       .on('change', function () {
         if (this.checked) {
           buffer_color.style('display', '');
+          buffer_size.style('display', '');
           if (self.buffer === undefined) {
             self.buffer = { color: '#FFFFFF', size: 1 };
           }
@@ -435,6 +439,7 @@ export default class Textbox {
             .style('stroke-width', `${size}px`);
         } else {
           buffer_color.style('display', 'none');
+          buffer_size.style('display', 'none');
           text_elem
             .style('stroke', 'unset')
             .style('stroke-width', 'unset');
@@ -445,10 +450,25 @@ export default class Textbox {
       .attrs({ for: 'buffer_txt_chk' })
       .text(_tr('app_page.text_box_edit_box.buffer'));
 
-    let buffer_color = buffer_text_zone.append('input')
+    const buffer_size = buffer_text_zone.append('input')
       .styles({
         display: current_options.buffer !== undefined ? '' : 'none',
-        float: 'right',
+        width: '40px',
+      })
+      .attr('type', 'number')
+      .property('value', current_options.buffer !== undefined ? current_options.buffer.size : 1)
+      .on('change', function () {
+        self.buffer.size = this.value;
+        const color = self.buffer.color,
+          size = self.buffer.size;
+        text_elem
+          .style('stroke', color)
+          .style('stroke-width', `${size}px`);
+      });
+
+    const buffer_color = buffer_text_zone.append('input')
+      .styles({
+        display: current_options.buffer !== undefined ? '' : 'none',
       })
       .attr('type', 'color')
       .property('value', current_options.buffer && current_options.buffer.color ? rgb2hex(current_options.buffer.color) : '#FFFFFF')
