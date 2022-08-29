@@ -444,6 +444,7 @@ export function get_map_project() {
       layer_style_i.default_font = current_layer_prop.default_font;
       layer_style_i.default_size = +current_layer_prop.default_size.slice(0, 2);
       layer_style_i.fill_color = current_layer_prop.fill_color;
+      layer_style_i.buffer = current_layer_prop.buffer;
       const features = [];
       const current_position = [];
       for (let j = selec.length - 1; j > -1; j--) {
@@ -457,6 +458,8 @@ export function get_map_project() {
           s.style.fontFamily,
           s.style.fill,
           s.textContent,
+          s.style.stroke,
+          s.style.strokeWidth,
         ]);
       }
       layer_style_i.data_labels = features;
@@ -1242,6 +1245,7 @@ export function apply_user_preferences(json_pref) {
           color: _layer.fill_color,
           ref_font_size: _layer.default_size,
           font: _layer.default_font,
+          buffer: _layer.buffer,
         };
         // TODO : apply the same thing as with PropSymbol
         // for setting label at their original positions :

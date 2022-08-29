@@ -441,8 +441,8 @@ export default class Textbox {
           buffer_color.style('display', 'none');
           buffer_size.style('display', 'none');
           text_elem
-            .style('stroke', 'unset')
-            .style('stroke-width', 'unset');
+            .style('stroke', null)
+            .style('stroke-width', null);
         }
       });
 

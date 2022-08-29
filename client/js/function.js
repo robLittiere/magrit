@@ -4460,6 +4460,9 @@ export const render_label = function render_label(layer, rendering_params, optio
   const txt_color = rendering_params.color;
   const selected_font = rendering_params.font;
   const font_size = `${rendering_params.ref_font_size}px`;
+  const buffer = rendering_params.buffer;
+  const stroke = buffer ? buffer.color : null;
+  const stroke_width = buffer ? buffer.size : null;
   let new_layer_data = [];
   const warn_empty_features = [];
   const layer_to_add = rendering_params.uo_layer_name && rendering_params.uo_layer_name.length > 0
@@ -4468,9 +4471,9 @@ export const render_label = function render_label(layer, rendering_params, optio
   let filter_test = () => true;
   if (rendering_params.filter_options !== undefined) {
     if (rendering_params.filter_options.type_filter === 'sup') {
-      filter_test = prop => prop[rendering_params.filter_options.field] > rendering_params.filter_options.filter_value;
+      filter_test = (prop) => (prop[rendering_params.filter_options.field] > rendering_params.filter_options.filter_value);
     } else if (rendering_params.filter_options.type_filter === 'inf') {
-      filter_test = prop => prop[rendering_params.filter_options.field] < rendering_params.filter_options.filter_value;
+      filter_test = (prop) => (prop[rendering_params.filter_options.field] < rendering_params.filter_options.filter_value);
     }
   }
   const layer_id = encodeId(layer_to_add);
@@ -4510,7 +4513,7 @@ export const render_label = function render_label(layer, rendering_params, optio
     }
   }
   const context_menu = new ContextMenu();
-  const getItems = self_parent => [
+  const getItems = (self_parent) => [
     { name: _tr('app_page.common.edit_style'), action: () => { make_style_box_indiv_label(self_parent); } },
     { name: _tr('app_page.common.delete'), action: () => { self_parent.style.display = 'none'; } }, // eslint-disable-line no-param-reassign
   ];
@@ -4534,6 +4537,9 @@ export const render_label = function render_label(layer, rendering_params, optio
         'font-size': pt_position[i][3],
         'font-family': pt_position[i][4],
         fill: pt_position[i][5],
+        stroke: pt_position[i][7],
+        'stroke-width': pt_position[i][8],
+        'paint-order': 'stroke fill',
       }))
       .text((_, i) => pt_position[i][6]);
   } else {
@@ -4548,8 +4554,15 @@ export const render_label = function render_label(layer, rendering_params, optio
           'text-anchor': 'middle',
         };
       })
-      .styles({ 'font-size': font_size, 'font-family': selected_font, fill: txt_color })
-      .text(d => d.properties.label);
+      .styles({
+        'font-size': font_size,
+        'font-family': selected_font,
+        fill: txt_color,
+        'paint-order': 'stroke fill',
+        stroke: stroke,
+        'stroke-width': stroke_width,
+      })
+      .text((d) => d.properties.label);
   }
 
   selection
@@ -4570,6 +4583,7 @@ export const render_label = function render_label(layer, rendering_params, optio
     ref_layer_name: layer,
     default_size: font_size,
     default_font: selected_font,
+    buffer,
   };
   create_li_layer_elem(layer_to_add, nb_ft, ['Point', 'label'], 'result');
   if (warn_empty_features.length > 0) {
