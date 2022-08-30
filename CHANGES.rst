@@ -1,6 +1,15 @@
 Changes
 =======
 
+0.9.0 (xxxx-xx-xx)
+------------------
+
+- Implement text buffer for label layers (#79).
+
+- Improve the rendering of all the text buffer (title, text annotation and label layer) by using `stroke`, `stroke-width` and `paint-order` attributes.
+
+- Improve the detection of the current font when reopening style popup for title and text annotation.
+
 0.8.15 (2022-08-26)
 -------------------
 

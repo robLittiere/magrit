@@ -1,5 +1,14 @@
 # Historique des versions et des changements effectués
 
+#### 0.9.0 (xxxx-xx-xx)
+
+- Implémentation d'un tampon de texte pour les couches de labels (<a href="https://github.com/riatelab/magrit/issues/79">issue Github #79</a>).
+
+- Améliorer le rendu de tous les tampons de texte (titre, annotation de texte et couche d'étiquette) en utilisant les attributs `stroke`, `stroke-width` et `paint-order`.
+
+- Améliorer la détection de la police d'écriture actuelle lors de la réouverture de la fenêtre contextuelle de style pour le titre et l'annotation de texte.
+
+
 #### 0.8.15 (2022-08-26)
 
 - Ajout d'une fonctionnalité permettant d'exporter les données de chaque couche au format CSV (<a href="https://github.com/riatelab/magrit/issues/75">issue Github #75</a>).
