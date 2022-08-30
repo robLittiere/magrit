@@ -23,8 +23,8 @@ WORKDIR /home
 RUN mkdir /home/app && cd /home/app && wget https://github.com/riatelab/magrit/archive/master.zip && unzip master.zip && mv magrit-master magrit
 
 RUN cd /home/app/magrit/ \
-    && pip3.10 install -U setuptools numpy==1.23.1 \
-    && pip3.10 install -U -r requirements/prod.txt \
+    && pip3.10 install --no-cache-dir -U setuptools numpy==1.23.1 \
+    && pip3.10 install --no-cache-dir -U -r requirements/prod.txt \
     && python3.10 setup.py build_ext --inplace \
     && cd client \
     && npm install \
