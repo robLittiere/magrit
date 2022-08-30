@@ -1405,8 +1405,19 @@ export function handle_title(txt) {
       .attrs({ class: 'legend title', id: 'map_title' })
       .style('cursor', 'pointer')
       .insert('text')
-      .attrs({ x: w / 2, y: h / 12, 'alignment-baseline': 'middle', 'text-anchor': 'middle' })
-      .styles({ 'font-family': 'verdana', 'font-size': '20px', position: 'absolute', color: 'black' })
+      .attrs({
+        x: w / 2,
+        y: h / 12,
+        'alignment-baseline': 'middle',
+        'text-anchor': 'middle',
+      })
+      .styles({
+        color: 'black',
+        'font-family': 'verdana',
+        'font-size': '20px',
+        'paint-order': 'stroke fill',
+        position: 'absolute',
+      })
       .text(txt)
       .on('contextmenu dblclick', () => {
         d3.event.preventDefault();
@@ -1463,6 +1474,7 @@ export function handle_title_properties() {
             'font-style': title_props.font_style,
             'font-weight': title_props.font_weight,
             'text-decoration': title_props.text_decoration,
+            'paint-order': 'stroke fill',
           });
       }
     });
@@ -1494,16 +1506,31 @@ export function handle_title_properties() {
     .property('value', rgb2hex(title_props.color))
     .on('change', function () { title.style('fill', this.value); });
 
+  // Dropdown menu for selecting fonts
   const font_select = box_content.append('p')
     .html(_tr('app_page.title_box.font_family'))
     .insert('select').attr('class', 'params')
     .on('change', function () { title.style('font-family', this.value); });
+
+  // Fill it with the available fonts
   available_fonts.forEach((font) => {
     font_select.append('option').text(font[0]).attr('value', font[1]);
   });
-  font_select.node().selectedIndex = available_fonts
-    .map((d) => (d[1] === title_props.font_family ? '1' : '0'))
-    .indexOf('1');
+
+  // Get the current font and select it in the dropdown
+  // (we read the list in reverse order because we have Arial then Arial Black in
+  // the list, and we don't want to get 'arial' result when its in fact 'arial black'
+  // - because we use 'include' predicate just below)
+  font_select.node().selectedIndex = (
+    available_fonts.length - 1 - available_fonts.slice().reverse()
+      .map(([name, cssString]) => {
+        if (title_props.font_family.toLowerCase().includes(name.toLowerCase())) {
+          return 1;
+        }
+        return 0;
+      })
+      .indexOf(1)
+  );
 
   const options_format = box_content.append('p');
   const btn_bold = options_format.insert('span')
@@ -1546,8 +1573,12 @@ export function handle_title_properties() {
 
   const hasBuffer = title_props.stroke !== 'none';
   const buffer_section1 = box_content.append('p');
-  const buffer_section2 = box_content.append('p').style('display', hasBuffer ? '' : 'none');
-  box_content.append('p').style('clear', 'both');
+  const buffer_section2 = box_content.append('div')
+    .attr('class', 'line_elem')
+    .styles({
+      display: hasBuffer ? null : 'none',
+      width: '80%',
+    });
 
   buffer_section1.append('input')
     .attrs({ type: 'checkbox', id: 'title_buffer_chkbox', checked: hasBuffer ? true : null })
@@ -1567,24 +1598,23 @@ export function handle_title_properties() {
     .attrs({ for: 'title_buffer_chkbox' })
     .text(_tr('app_page.title_box.buffer'));
 
-  let buffer_color = buffer_section2.insert('input')
-    .style('float', 'left')
-    .attrs({ type: 'color' })
-    .property('value', hasBuffer ? rgb2hex(title_props.stroke) : '#ffffff')
-    .on('change', function () {
-      title.style('stroke', this.value);
-    });
-
-  buffer_section2.insert('span')
-    .style('float', 'right')
-    .html(' px');
-
-  let buffer_width = buffer_section2.insert('input')
-    .styles({ float: 'right', width: '60px' })
+  let buffer_width = buffer_section2.append('input')
+    .styles({ width: '60px' })
     .attrs({ type: 'number', step: '0.1' })
     .property('value', hasBuffer ? +title_props.stroke_width.replace('px', '') : 1)
     .on('change', function () {
       title.style('stroke-width', `${this.value}px`);
+    });
+
+  buffer_section2.append('span')
+    .html('px');
+
+  let buffer_color = buffer_section2.append('input')
+    .attrs({ type: 'color' })
+    .styles({ 'margin-left': '10px' })
+    .property('value', hasBuffer ? rgb2hex(title_props.stroke) : '#ffffff')
+    .on('change', function () {
+      title.style('stroke', this.value);
     });
 }
 

@@ -1058,3 +1058,31 @@ export const coordsPointOnFeature = (geom) => {
     return nearestPoint(centroid, vertices).geometry.coordinates;
   }
 };
+
+
+/**
+ * Parse a CSS style string and return an object with the style properties.
+ *
+ * @param {string} styleString
+ * @returns {{}}
+ */
+export const parseStyleToObject = (styleString) => {
+  const o = {};
+  styleString.split(';')
+    .forEach((el) => {
+      if (el === '') return;
+      const [k, v] = el.split(':');
+      o[k.trim()] = v.trim();
+    });
+  return o;
+};
+
+/**
+ * Format a CSS style string from an object of CSS properties.
+ *
+ * @param {object} o
+ * @returns {string}
+ */
+export const makeStyleString = (o) => Object.entries(o)
+  .map(([k, v]) => `${k}: ${v}`)
+  .join('; ');

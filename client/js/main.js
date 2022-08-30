@@ -69,6 +69,7 @@ global.proj = d3.geoNaturalEarth2().scale(1).translate([0, 0]);
 global.path = d3.geoPath().projection(proj).pointRadius(4);
 global.t = proj.translate();
 global.s = proj.scale();
+global.defs = null;
 
 /*
 A bunch of global variable, storing oftently reused informations :

@@ -310,6 +310,7 @@ function createStyleBoxLabel(layer_name) {
       color: data_manager.current_layers[layer_name].fill_color,
       size: data_manager.current_layers[layer_name].default_size,
       font: data_manager.current_layers[layer_name].default_font,
+      buffer: data_manager.current_layers[layer_name].buffer,
     };
   }
 
@@ -327,6 +328,7 @@ function createStyleBoxLabel(layer_name) {
     data_manager.current_layers[layer_name].fill_color = prev_settings_defaults.color;
     data_manager.current_layers[layer_name].default_size = prev_settings_defaults.size;
     data_manager.current_layers[layer_name].default_font = prev_settings_defaults.font;
+    data_manager.current_layers[layer_name].buffer = prev_settings_defaults.buffer;
   }
 
   check_remove_existing_box('.styleBox');
@@ -393,15 +395,10 @@ function createStyleBoxLabel(layer_name) {
     .html(_tr('app_page.layer_style_popup.overrride_warning'));
 
   const label_sizes = popup.append('div')
-    .styles({ display: 'block', flex: '0.9' })
     .attr('class', 'line_elem');
 
   label_sizes.append('span')
     .html(_tr('app_page.layer_style_popup.labels_default_size'));
-
-  label_sizes.insert('span')
-    .styles({ display: 'block', width: '20%' })
-    .html(' px');
 
   label_sizes.insert('input')
     .attr('type', 'number')
@@ -447,6 +444,73 @@ function createStyleBoxLabel(layer_name) {
     choice_font.append('option').attr('value', name[1]).text(name[0]);
   });
   choice_font.node().value = data_manager.current_layers[layer_name].default_font;
+
+  const e = popup.append('div')
+    .attr('class', 'line_elem');
+
+  e.append('label')
+    .attr('for', 'text_option_buffer_chk')
+    .html(_tr('app_page.layer_style_popup.label_buffer'));
+
+  e.append('input')
+    .attrs({ type: 'checkbox', id: 'text_option_buffer_chk' })
+    .property('checked', !!data_manager.current_layers[layer_name].buffer)
+    .on('change', function () {
+      if (this.checked) {
+        popup
+          .select('#text_option_buffer_section')
+          .style('display', null);
+        input_size_buffer.property('value', 1);
+        input_color_buffer.property('value', '#FEFEFE');
+        data_manager.current_layers[layer_name].buffer = { color: '#FEFEFE', size: 1 };
+        selection.transition()
+          .style('paint-order', 'stroke fill')
+          .style('stroke', '#FEFEFE')
+          .style('stroke-width', '1px');
+      } else {
+        popup
+          .select('#text_option_buffer_section')
+          .style('display', 'none');
+        data_manager.current_layers[layer_name].buffer = null;
+        selection.transition()
+          .style('paint-order', null)
+          .style('stroke', null)
+          .style('stroke-width', null);
+      }
+    });
+
+  const f = popup.append('div')
+    .attr('id', 'text_option_buffer_section')
+    .attr('class', 'line_elem')
+    .styles({
+      width: '60%',
+      position: 'relative',
+      right: '-128px',
+      margin: '-5px 0 15px 0',
+      display: !!data_manager.current_layers[layer_name].buffer ? null : 'none',
+    });
+
+  const input_size_buffer = f.append('input')
+    .property('value', data_manager.current_layers[layer_name].buffer ? data_manager.current_layers[layer_name].buffer.size : 1)
+    .attrs({ type: 'number' })
+    .on('change', function () {
+      data_manager.current_layers[layer_name].buffer.size = this.value;
+      selection.transition()
+        .style('stroke-width', `${this.value}px`);
+    });
+
+  f.append('span')
+    .style('flex', '0.9')
+    .html('px');
+
+  const input_color_buffer = f.append('input')
+    .property('value', data_manager.current_layers[layer_name].buffer ? data_manager.current_layers[layer_name].buffer.color : '#FEFEFE')
+    .attrs({ type: 'color' })
+    .on('change', function () {
+      data_manager.current_layers[layer_name].buffer.color = this.value;
+      selection.transition()
+        .style('stroke', this.value);
+    });
 }
 
 function createStyleBoxGraticule(layer_name) {
@@ -2798,6 +2862,8 @@ export function make_style_box_indiv_label(label_node) {
     content: label_node.textContent,
     font: label_node.style.fontFamily,
     color: label_node.style.fill,
+    stroke: label_node.style.stroke,
+    strokeWidth: label_node.style.strokeWidth,
   };
   // const new_params = {};
   if (current_options.color.startsWith('rgb')) {
@@ -2807,10 +2873,12 @@ export function make_style_box_indiv_label(label_node) {
   make_confirm_dialog2('styleTextAnnotation', _tr('app_page.func_options.label.title_box_indiv'), { widthFitContent: true, draggable: true })
     .then((confirmed) => {
       if (!confirmed) {
-        label_node.style.fontsize = current_options.size; // eslint-disable-line no-param-reassign
+        label_node.style.fontSize = current_options.size; // eslint-disable-line no-param-reassign
         label_node.textContent = current_options.content; // eslint-disable-line no-param-reassign
         label_node.style.fill = current_options.color; // eslint-disable-line no-param-reassign
         label_node.style.fontFamily = current_options.font; // eslint-disable-line no-param-reassign
+        label_node.style.stroke = current_options.stroke; // eslint-disable-line no-param-reassign
+        label_node.style.strokeWidth = current_options.strokeWidth; // eslint-disable-line no-param-reassign
       }
     });
   const box_content = d3.select('.styleTextAnnotation')
@@ -2818,6 +2886,20 @@ export function make_style_box_indiv_label(label_node) {
     .style('width', '350px')
     .select('.modal-body')
     .insert('div');
+
+  const b = box_content.append('div')
+    .attr('class', 'line_elem');
+
+  b.insert('span')
+    .html(_tr('app_page.func_options.label.content'));
+
+  b.append('input')
+    .attr('id', 'label_content')
+    .styles({ width: '200px', 'text-align': 'right' })
+    .property('value', label_node.textContent)
+    .on('keyup', function () {
+      label_node.textContent = this.value; // eslint-disable-line no-param-reassign
+    });
 
   const a = box_content.append('div')
     .attr('class', 'line_elem');
@@ -2837,20 +2919,6 @@ export function make_style_box_indiv_label(label_node) {
     .property('value', +label_node.style.fontSize.slice(0, -2))
     .on('change', function () {
       label_node.style.fontSize = `${this.value}px`; // eslint-disable-line no-param-reassign
-    });
-
-  const b = box_content.append('div')
-    .attr('class', 'line_elem');
-
-  b.insert('span')
-    .html(_tr('app_page.func_options.label.content'));
-
-  b.append('input')
-    .attr('id', 'label_content')
-    .styles({ width: '70px' })
-    .property('value', label_node.textContent)
-    .on('keyup', function () {
-      label_node.textContent = this.value; // eslint-disable-line no-param-reassign
     });
 
   const c = box_content.append('div')
@@ -2881,7 +2949,80 @@ export function make_style_box_indiv_label(label_node) {
   available_fonts.forEach((name) => {
     selec_fonts.append('option').attr('value', name[1]).text(name[0]);
   });
-  selec_fonts.node().value = label_node.style.fontFamily;
+
+  // Get the current font and select it in the dropdown
+  // (we read the list in reverse order because we have Arial then Arial Black in
+  // the list, and we don't want to get 'arial' result when its in fact 'arial black'
+  // - because we use 'include' predicate just below)
+  selec_fonts.node().selectedIndex = (
+    available_fonts.length - 1 - available_fonts.slice().reverse()
+      .map(([name, cssString]) => {
+        if (label_node.style.fontFamily.toLowerCase().includes(name.toLowerCase())) {
+          return 1;
+        }
+        return 0;
+      })
+      .indexOf(1)
+  );
+
+  const e = box_content.append('div')
+    .attr('class', 'line_elem');
+
+  e.append('label')
+    .attr('for', 'text_option_buffer_chk')
+    .html(_tr('app_page.layer_style_popup.label_buffer'));
+
+  e.append('input')
+    .attrs({ type: 'checkbox', id: 'text_option_buffer_chk' })
+    .property('checked', !!label_node.style.stroke)
+    .on('change', function () {
+      if (this.checked) {
+        box_content
+          .select('#text_option_buffer_section')
+          .style('display', null);
+        const s = current_options.stroke ? rgb2hex(current_options.stroke) : '#FEFEFE';
+        const sw = current_options.strokeWidth ? current_options.strokeWidth.split('px')[0] : 1;
+        label_node.style.stroke = s; // eslint-disable-line no-param-reassign
+        label_node.style.strokeWidth = sw; // eslint-disable-line no-param-reassign
+        input_color_buffer.property('value', s);
+        input_size_buffer.property('value', sw);
+      } else {
+        box_content
+          .select('#text_option_buffer_section')
+          .style('display', 'none');
+        label_node.style.stroke = null; // eslint-disable-line no-param-reassign
+        label_node.style.strokeWidth = null; // eslint-disable-line no-param-reassign
+      }
+    });
+
+  const f = box_content.append('div')
+    .attr('id', 'text_option_buffer_section')
+    .attr('class', 'line_elem')
+    .styles({
+      width: '60%',
+      position: 'relative',
+      right: '-128px',
+      margin: '-5px 0 15px 0',
+      display: !!label_node.style.stroke ? null : 'none',
+    });
+
+  const input_size_buffer = f.append('input')
+    .property('value', label_node.style.strokeWidth ? label_node.style.strokeWidth.split('px')[0] : 1)
+    .attrs({ type: 'number' })
+    .on('change', function () {
+      label_node.style.strokeWidth = `${this.value}px`; // eslint-disable-line no-param-reassign
+    });
+
+  f.append('span')
+    .style('flex', '0.9')
+    .html('px');
+
+  const input_color_buffer = f.append('input')
+    .property('value', label_node.style.stroke ? rgb2hex(label_node.style.stroke) : '#FEFEFE')
+    .attrs({ type: 'color' })
+    .on('change', function () {
+      label_node.style.stroke = this.value; // eslint-disable-line no-param-reassign
+    });
 }
 
 /**

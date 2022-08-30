@@ -966,8 +966,13 @@ select.m_elem_right {
 
 .modal-body div.line_elem > input[type=color],
 .modal-body div.line_elem > input[type=range],
-.modal-body div.line_elem > input[type=number]{
+.modal-body div.line_elem > input[type=number] {
   width: 70px;
+  margin: 0;
+}
+
+.modal-body div.line_elem > input[type=checkbox],
+.modal-body div.line_elem > input[type=radio] {
   margin: 0;
 }
 
