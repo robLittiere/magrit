@@ -2873,7 +2873,7 @@ export function make_style_box_indiv_label(label_node) {
   make_confirm_dialog2('styleTextAnnotation', _tr('app_page.func_options.label.title_box_indiv'), { widthFitContent: true, draggable: true })
     .then((confirmed) => {
       if (!confirmed) {
-        label_node.style.fontsize = current_options.size; // eslint-disable-line no-param-reassign
+        label_node.style.fontSize = current_options.size; // eslint-disable-line no-param-reassign
         label_node.textContent = current_options.content; // eslint-disable-line no-param-reassign
         label_node.style.fill = current_options.color; // eslint-disable-line no-param-reassign
         label_node.style.fontFamily = current_options.font; // eslint-disable-line no-param-reassign
