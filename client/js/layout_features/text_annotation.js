@@ -432,7 +432,6 @@ export default class Textbox {
 
     let buffer_txt_chk = buffer_text_zone.append('input')
       .attrs({ type: 'checkbox', id: 'buffer_txt_chk', checked: current_options.buffer !== undefined ? true : null })
-      .style('margin', '0 !important')
       .on('change', function () {
         if (this.checked) {
           buffer_color.style('display', '');
@@ -455,6 +454,7 @@ export default class Textbox {
       });
 
     buffer_text_zone.append('label')
+      .style('width', 'inherit')
       .attrs({ for: 'buffer_txt_chk' })
       .text(_tr('app_page.text_box_edit_box.buffer'));
 
