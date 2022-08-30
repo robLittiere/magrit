@@ -2957,7 +2957,7 @@ export function make_style_box_indiv_label(label_node) {
   selec_fonts.node().selectedIndex = (
     available_fonts.length - 1 - available_fonts.slice().reverse()
       .map(([name, cssString]) => {
-        if (label_node.style.toLowerCase().includes(name.toLowerCase())) {
+        if (label_node.style.fontFamily.toLowerCase().includes(name.toLowerCase())) {
           return 1;
         }
         return 0;
