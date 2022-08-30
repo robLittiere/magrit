@@ -1573,8 +1573,12 @@ export function handle_title_properties() {
 
   const hasBuffer = title_props.stroke !== 'none';
   const buffer_section1 = box_content.append('p');
-  const buffer_section2 = box_content.append('p').style('display', hasBuffer ? '' : 'none');
-  box_content.append('p').style('clear', 'both');
+  const buffer_section2 = box_content.append('div')
+    .attr('class', 'line_elem')
+    .styles({
+      display: hasBuffer ? null : 'none',
+      width: '80%',
+    });
 
   buffer_section1.append('input')
     .attrs({ type: 'checkbox', id: 'title_buffer_chkbox', checked: hasBuffer ? true : null })
@@ -1594,24 +1598,23 @@ export function handle_title_properties() {
     .attrs({ for: 'title_buffer_chkbox' })
     .text(_tr('app_page.title_box.buffer'));
 
-  let buffer_color = buffer_section2.insert('input')
-    .style('float', 'left')
-    .attrs({ type: 'color' })
-    .property('value', hasBuffer ? rgb2hex(title_props.stroke) : '#ffffff')
-    .on('change', function () {
-      title.style('stroke', this.value);
-    });
-
-  buffer_section2.insert('span')
-    .style('float', 'right')
-    .html(' px');
-
-  let buffer_width = buffer_section2.insert('input')
-    .styles({ float: 'right', width: '60px' })
+  let buffer_width = buffer_section2.append('input')
+    .styles({ width: '60px' })
     .attrs({ type: 'number', step: '0.1' })
     .property('value', hasBuffer ? +title_props.stroke_width.replace('px', '') : 1)
     .on('change', function () {
       title.style('stroke-width', `${this.value}px`);
+    });
+
+  buffer_section2.append('span')
+    .html('px');
+
+  let buffer_color = buffer_section2.append('input')
+    .attrs({ type: 'color' })
+    .styles({ 'margin-left': '10px' })
+    .property('value', hasBuffer ? rgb2hex(title_props.stroke) : '#ffffff')
+    .on('change', function () {
+      title.style('stroke', this.value);
     });
 }
 
