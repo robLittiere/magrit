@@ -1520,7 +1520,7 @@ export function handle_title_properties() {
   // Get the current font and select it in the dropdown
   font_select.node().selectedIndex = available_fonts
     .map(([name, cssString]) => {
-      if (title_props.font_family.includes(name)) {
+      if (title_props.font_family.toLowerCase().includes(name.toLowerCase())) {
         return 1;
       }
       return 0;

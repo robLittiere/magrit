@@ -851,6 +851,7 @@ export function apply_user_preferences(json_pref) {
         northArrow.x_center = map_config.layout_features.north_arrow.x_center;
         northArrow.y_center = map_config.layout_features.north_arrow.y_center;
         northArrow.displayed = map_config.layout_features.north_arrow.displayed;
+        northArrow.update_bbox();
       }
       if (map_config.layout_features.arrow) {
         for (let i = 0; i < map_config.layout_features.arrow.length; i++) {

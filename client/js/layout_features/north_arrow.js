@@ -152,6 +152,15 @@ export const northArrow = { /* eslint-disable-line import/prefer-default-export 
     this.svg_node.remove();
     this.displayed = false;
   },
+  update_bbox() {
+    const bbox = this.arrow_img.node().getBBox();
+    this.under_rect.attrs({
+      x: bbox.x - 7.5,
+      y: bbox.y - 7.5,
+      height: bbox.height + 15,
+      width: bbox.width + 15,
+    });
+  },
   editStyle() {
     const self = this,
       old_dim = +self.under_rect.attr('width'),
@@ -161,9 +170,11 @@ export const northArrow = { /* eslint-disable-line import/prefer-default-export 
 
     make_confirm_dialog2('arrowEditBox', _tr('app_page.north_arrow_edit_box.title'), { widthFitContent: true })
       .then((confirmed) => {
-        if (confirmed) {
-          null;
+        if (!confirmed) {
+          // TODO: reset old values...
         }
+        // always update the bbox when closing the dialog
+        this.update_bbox();
       });
 
     const box_body = d3.select('.arrowEditBox').select('.modal-body').style('width', '295px');
@@ -187,7 +198,7 @@ export const northArrow = { /* eslint-disable-line import/prefer-default-export 
         type: 'number',
       })
       .styles({ width: '40px' })
-      .property('value', old_dim)
+      .property('value', old_dim - 15)
       .on('change', function () {
         const elem = document.getElementById('range_size_n_arrow');
         elem.value = +this.value;
@@ -205,20 +216,14 @@ export const northArrow = { /* eslint-disable-line import/prefer-default-export 
         step: 1,
         id: 'range_size_n_arrow',
       })
-      .property('value', old_dim)
+      .property('value', old_dim - 15)
       .on('change', function () {
         const new_size = +this.value;
         self.arrow_img.attrs({
           width: new_size,
           height: new_size,
         });
-        const bbox = self.arrow_img.node().getBBox();
-        self.under_rect.attrs({
-          x: bbox.x - 7.5,
-          y: bbox.y - 7.5,
-          height: bbox.height + 15,
-          width: bbox.width + 15,
-        });
+        self.update_bbox();
         self.x_center = x_pos + new_size / 2;
         self.y_center = y_pos + new_size / 2;
         document.getElementById('txt_size_n_arrow').value = new_size;

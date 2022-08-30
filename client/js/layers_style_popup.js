@@ -2952,7 +2952,7 @@ export function make_style_box_indiv_label(label_node) {
 
   selec_fonts.node().selectedIndex = available_fonts
     .map(([name, cssString]) => {
-      if (label_node.style.fontFamily.includes(name)) {
+      if (label_node.style.toLowerCase().fontFamily.includes(name.toLowerCase())) {
         return 1;
       }
       return 0;

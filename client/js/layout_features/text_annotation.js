@@ -240,6 +240,8 @@ export default class Textbox {
         } else if (!buffer_txt_chk.node().checked) {
           self.buffer = undefined;
         }
+        // always update the bbox when quitting the dialog
+        this.update_bbox();
       });
     const box_content = d3.select('.styleTextAnnotation')
       .select('.modal-body')
@@ -318,7 +320,7 @@ export default class Textbox {
 
     font_select.node().selectedIndex = available_fonts
       .map(([name, cssString]) => {
-        if (self.fontFamily.includes(name)) {
+        if (self.fontFamily.toLowerCase().includes(name.toLowerCase())) {
           return 1;
         }
         return 0;
