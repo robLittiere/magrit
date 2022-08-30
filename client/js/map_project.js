@@ -809,7 +809,7 @@ export function apply_user_preferences(json_pref) {
       // Create the title object :
       handle_title(map_config.title.content);
       // Since v0.9.0, we are adding the 'paint-order' CSS property to the title element :
-      if (p_version.minor < 9) {
+      if (p_version.major < 1 && p_version.minor < 9) {
         map_config.title.style += ' paint-order: stroke fill;';
       }
       // Use its old properties :
@@ -895,7 +895,7 @@ export function apply_user_preferences(json_pref) {
           const styleObj = parseStyleToObject(style);
           // In version 0.9.0 we changed how the text buffer is defined
           // (before it was with text-shadow, now it is with stroke and stroke-width properties)
-          if (p_version.minor < 9) {
+          if (p_version.major < 1 && p_version.minor < 9) {
             if (styleObj.hasOwnProperty('text-shadow')) {
               // Remove the text-shadow property and replace by appropriate stroke / stroke-width properties
               const tTextShadow = styleObj['text-shadow'];
