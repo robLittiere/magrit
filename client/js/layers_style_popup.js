@@ -2950,14 +2950,20 @@ export function make_style_box_indiv_label(label_node) {
     selec_fonts.append('option').attr('value', name[1]).text(name[0]);
   });
 
-  selec_fonts.node().selectedIndex = available_fonts
-    .map(([name, cssString]) => {
-      if (label_node.style.toLowerCase().fontFamily.includes(name.toLowerCase())) {
-        return 1;
-      }
-      return 0;
-    })
-    .indexOf(1);
+  // Get the current font and select it in the dropdown
+  // (we read the list in reverse order because we have Arial then Arial Black in
+  // the list, and we don't want to get 'arial' result when its in fact 'arial black'
+  // - because we use 'include' predicate just below)
+  selec_fonts.node().selectedIndex = (
+    available_fonts.length - 1 - available_fonts.slice().reverse()
+      .map(([name, cssString]) => {
+        if (label_node.style.toLowerCase().includes(name.toLowerCase())) {
+          return 1;
+        }
+        return 0;
+      })
+      .indexOf(1)
+  );
 
   const e = box_content.append('div')
     .attr('class', 'line_elem');

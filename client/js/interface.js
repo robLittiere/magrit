@@ -1518,14 +1518,19 @@ export function handle_title_properties() {
   });
 
   // Get the current font and select it in the dropdown
-  font_select.node().selectedIndex = available_fonts
-    .map(([name, cssString]) => {
-      if (title_props.font_family.toLowerCase().includes(name.toLowerCase())) {
-        return 1;
-      }
-      return 0;
-    })
-    .indexOf(1);
+  // (we read the list in reverse order because we have Arial then Arial Black in
+  // the list, and we don't want to get 'arial' result when its in fact 'arial black'
+  // - because we use 'include' predicate just below)
+  font_select.node().selectedIndex = (
+    available_fonts.length - 1 - available_fonts.slice().reverse()
+      .map(([name, cssString]) => {
+        if (title_props.font_family.toLowerCase().includes(name.toLowerCase())) {
+          return 1;
+        }
+        return 0;
+      })
+      .indexOf(1)
+  );
 
   const options_format = box_content.append('p');
   const btn_bold = options_format.insert('span')
