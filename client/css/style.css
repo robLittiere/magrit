@@ -900,7 +900,7 @@ th {
 }
 
 tr:nth-child(even) {background: #DBDADA;}
-tr:nth-child(odd) {background: #EFECEC;}
+tr:nth-child(odd) {background: #F7F6F6;}
 
 .m_elem_right {
   position: absolute;
