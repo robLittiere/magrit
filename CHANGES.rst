@@ -1,6 +1,12 @@
 Changes
 =======
 
+0.9.1 (2022-08-31)
+-----------------
+
+- Fix repositioning of the labels after reloading project file if they were manually displaced (#86).
+
+
 0.9.0 (2022-08-31)
 ------------------
 
@@ -11,6 +17,7 @@ Changes
 - Improve the detection of the current font when reopening style popup for title and text annotation.
 
 - Fix import of `xlsx` files (#85).
+
 
 0.8.15 (2022-08-26)
 -------------------
