@@ -38,9 +38,12 @@ except ModuleNotFoundError:
     uvloop = None
 import pandas as pd
 import numpy as np
+import xlrd
 import matplotlib
 
 matplotlib.use('Agg')
+xlrd.xlsx.ensure_elementtree_imported(False, None)
+xlrd.xlsx.Element_has_iter = True
 
 from tempfile import TemporaryDirectory
 from base64 import b64encode, urlsafe_b64decode
