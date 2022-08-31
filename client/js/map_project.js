@@ -730,7 +730,6 @@ export function apply_user_preferences(json_pref) {
   // Clean the values remembered for the user from the previous rendering if any:
   reset_user_values();
 
-
   const restorePreviousPos = (layer_id, current_position, type_symbol) => {
     const selection = map.select(`#${layer_id}`)
       .selectAll(type_symbol);
@@ -1248,13 +1247,17 @@ export function apply_user_preferences(json_pref) {
           font: _layer.default_font,
           buffer: _layer.buffer,
         };
-        // TODO : apply the same thing as with PropSymbol
-        // for setting label at their original positions :
         render_label(null, rendering_params, {
           data: _layer.data_labels,
           current_position: _layer.current_position,
         });
         layer_id = _app.layer_to_id.get(layer_name);
+
+        // Restore previous positions after everything is settled
+        if (_layer.current_position) {
+          const cp = _layer.current_position.map((el) => ({ x: el[0], y: el[1] }));
+          at_end.push([restorePreviousPos, layer_id, cp, 'text']);
+        }
       } else if (_layer.renderer && _layer.renderer === 'TwoStocksWaffle') {
         render_twostocks_waffle(undefined, {
           nCol: _layer.nCol,
@@ -1292,7 +1295,7 @@ export function apply_user_preferences(json_pref) {
         layer_id = encodeId(layer_name);
         _app.layer_to_id.set(layer_name, layer_id);
         _app.id_to_layer.set(layer_id, layer_name);
-        // Add the features at there original positions :
+        // Add the features at their original positions :
         map.append('g').attrs({ id: layer_id, class: 'layer' })
           .selectAll('image')
           .data(new_layer_data.features)
