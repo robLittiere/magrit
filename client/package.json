@@ -4,7 +4,7 @@
     "minify": "NODE_ENV=production ./node_modules/webpack/bin/webpack.js",
     "watch": "./node_modules/webpack/bin/webpack.js --watch"
   },
-  "version": "0.8.15",
+  "version": "0.9.0",
   "dependencies": {
     "@turf/turf": "^6.5.0",
     "alertifyjs": "^1.13.1",

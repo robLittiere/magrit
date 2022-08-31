@@ -1,6 +1,6 @@
 # Historique des versions et des changements effectués
 
-#### 0.9.0 (xxxx-xx-xx)
+#### 0.9.0 (2022-08-31)
 
 - Implémentation d'un tampon de texte pour les couches de labels (<a href="https://github.com/riatelab/magrit/issues/79">issue Github #79</a>).
 
@@ -8,6 +8,7 @@
 
 - Améliorer la détection de la police d'écriture actuelle lors de la réouverture de la fenêtre contextuelle de style pour le titre et l'annotation de texte.
 
+- Corrige l'import des fichiers `xlsx` (<a href="https://github.com/riatelab/magrit/issues/85">issue Github #85</a>).
 
 #### 0.8.15 (2022-08-26)
 

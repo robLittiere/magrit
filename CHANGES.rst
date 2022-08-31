@@ -1,7 +1,7 @@
 Changes
 =======
 
-0.9.0 (xxxx-xx-xx)
+0.9.0 (2022-08-31)
 ------------------
 
 - Implement text buffer for label layers (#79).
@@ -9,6 +9,8 @@ Changes
 - Improve the rendering of all the text buffer (title, text annotation and label layer) by using `stroke`, `stroke-width` and `paint-order` attributes.
 
 - Improve the detection of the current font when reopening style popup for title and text annotation.
+
+- Fix import of `xlsx` files (#85).
 
 0.8.15 (2022-08-26)
 -------------------
