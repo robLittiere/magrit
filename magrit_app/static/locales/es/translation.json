@@ -836,6 +836,9 @@
           "open": "Abrir",
           "details": "Detalles de las capas",
           "description": {}
+        },
+        "meta": {
+            "description": "Magrit es una aplicación de cartografía temática en línea y de código abierto. Permite crear mapas a partir de sus propios datos."
         }
     },
     "contact_form": {

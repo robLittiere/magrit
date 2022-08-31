@@ -842,6 +842,9 @@
           "open": "Open",
           "details": "Layer details",
           "description": {}
+        },
+        "meta": {
+            "description": "Magrit is an open source thematic mapping application available online. It allows you to create maps from your own data."
         }
     },
     "contact_form": {

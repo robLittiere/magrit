@@ -5,10 +5,16 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="">
-    <meta name="author" content="">
+    <meta name="author" content="UAR RIATE (CNRS, Université de Paris)">
+    <meta name="description" content="Magrit est une application de cartographie thématique open source et accessible en ligne. Elle permet de créer des cartes à partir de vos propres données." data-i18n="[content]index.meta.description">
 
-    <title>Magrit</title>
+    <title data-i18n="index.title">Magrit - Cartographie thématique</title>
+
+    <meta property="og:title" content="Magrit - Cartographie thématique" data-i18n="[content]index.title">
+    <meta property="og:site_name" content="Magrit - Cartographie thématique" data-i18n="[content]index.title">
+    <meta property="og:type" content="website">
+    <meta property="og:description" content="Magrit est une application de cartographie thématique open source et accessible en ligne. Elle permet de créer des cartes à partir de vos propres données." data-i18n="[content]index.meta.description">
+    <meta property="og:url" content="https://magrit.cnrs.fr/">
     <link rel="icon" type="image/png" href="static/img/favicon.png" />
     <link href="static/vendor/css/bootstrap4.min.css" rel="stylesheet">
     <script src="static/vendor/popper.min.js"></script>
@@ -161,7 +167,7 @@ img.hover_scale:hover {
 
     <section id="intro" class="intro-section">
         <div class="container">
-          <h1 id="title_app" style="font-family:Dosis;" class="i18n" data-i18n="index.title"></h1>
+          <h1 id="app-title" style="font-family:Dosis;" class="i18n" data-i18n="index.title"></h1>
           <a class="btn btn-secondary enter_button i18n" style="background:black;font-weight:800;border-color:none;" data-i18n="[html]index.buttons.start_now"></a>
           <hr class="grad-transp"></hr>
             <div class="row">
@@ -263,7 +269,7 @@ img.hover_scale:hover {
     <section id="templates" class="template-section">
       <div class="album py-5 bg-light">
         <div class="container">
-          <h2 id="title_app" style="font-family:Dosis;" class="i18n" data-i18n="index.template_title"></h2>
+          <h2 id="template-title" style="font-family:Dosis;" class="i18n" data-i18n="index.template_title"></h2>
           <hr class="grad-transp"></hr>
           <div class="row">
           </div>
@@ -375,7 +381,7 @@ function handle_change_lang(){
 // Actually change the content of the page :
 function change_lang(new_lang){
   docCookies.setItem("user_lang", new_lang, 31536e3, "/");
-  i18next.changeLanguage(new_lang, () => { localize(".i18n"); });
+  i18next.changeLanguage(new_lang, () => { localize("[data-i18n]"); });
   var other_langs = new_lang == "en" ? ["es", "fr"] : new_lang == "fr" ? ["en", "es"] : ["en", "fr"];
   document.querySelector('html').setAttribute('lang', new_lang);
   document.getElementById("lang_current").innerHTML = new_lang;
@@ -429,13 +435,16 @@ function prepare_lang_buttons(){
   button_lang3.parentElement.onclick = handle_change_lang;
 }
 
-//i18n initialization :
+// initialization
 (function(){
   var existing_lang = ["en", "es", "fr"];
+  // Use value of cookie for the user language or the language of the browser if no cookie is set.
+  // If we don't support the language of the browser, use English.
   var lang = docCookies.getItem("user_lang") || window.navigator.language.split('-')[0];
   lang = existing_lang.indexOf(lang) > -1 ? lang : 'en';
   document.querySelector('html').setAttribute('lang', lang);
   docCookies.setItem("user_lang", lang, 31536e3, "/");
+  // i18n initialisation
   i18next.use(i18nextXHRBackend)
     .init({
         debug: true,
@@ -449,7 +458,7 @@ function prepare_lang_buttons(){
       throw err;
     else {
       window.localize = locI18next.init(i18next);
-      localize(".i18n");
+      localize("[data-i18n]");
       bind_enter_buttons();
       handle_div_cookie();
       prepare_lang_buttons();
@@ -483,8 +492,7 @@ function prepare_lang_buttons(){
           i18next.addResourceBundle('fr', 'translation_template', fr);
           i18next.addResourceBundle('en', 'translation_template', en);
           i18next.addResourceBundle('es', 'translation_template', es);
-          localize(".i18n");
-          document.querySelector('.lds-roller').remove();
+          localize("[data-i18n]");
         });
     }
   });
