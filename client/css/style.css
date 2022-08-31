@@ -127,7 +127,7 @@ input[type=range]:focus::-ms-fill-upper {
 }
 
 #map {
-  padding: 0px;
+  padding: 0;
   left: 355px;
   margin-top: 5px;
   background-color: white;
@@ -142,7 +142,6 @@ h1.menu {
 .icon {
   box-sizing: border-box;
   padding:10px;
-  box-sizing: border-box;
   text-align:center;
   vertical-align:middle;
   display:inline-block;
@@ -169,11 +168,6 @@ h3 {
   color : #2e91ce;
   font-weight: bold;
 }
-
-/* a.menu {
-    line-height:30px;
-    color: white;
-} */
 
 /*  Styles for menu located on the left of the interface */
 #section1 {
@@ -237,8 +231,8 @@ ul.config_map_options {
   display: inline-block;
   line-height: 17px;
   list-style: outside none none;
-  margin-top: 0px;
-  padding: 0px;
+  margin-top: 0;
+  padding: 0;
   width: 100%;
 }
 
@@ -314,7 +308,7 @@ li.to_hide > input[type="number"] {
   transform: translateX(-50%) translateY(-50%);
   font-size: 14px;
   width: auto;
-  bottom: 0px;
+  bottom: 0;
   opacity: 0.85;
   text-align: center;
   color: white;
@@ -324,9 +318,9 @@ li.to_hide > input[type="number"] {
 
 /* Styles for buttons located on the left of the map */
 .light-menu {
-  bottom: 0px;
+  bottom: 0;
   position: absolute;
-  right: 0px;
+  right: 0;
 }
 
 p.cont_map_btn {
@@ -393,10 +387,10 @@ p.cont_map_btn {
 
 a.logo {
   position: absolute;
-  left : 0px;
-  top : 0px;
+  left : 0;
+  top : 0;
   height:30px;
-  padding:0px;
+  padding:0;
   vertical-align:middle;
   font-weight : bold;
   font-family: 'Helvetica Neue', sans-serif;
@@ -414,10 +408,9 @@ a.logo {
 }
 
 .styled-select {
-  background: url(/static/img/arrow_select.png) no-repeat 100% 0;
   height: 29px;
   overflow: hidden;
-  background-color: #000;
+  background: #000 url(/static/img/arrow_select.png) no-repeat 100% 0;
   -webkit-border-radius: 20px;
   -moz-border-radius: 20px;
   border-radius: 20px;
@@ -702,8 +695,8 @@ a.logo {
 }
 
 .mini_button_none {
-  -webkit-border-radius: 12;
-  -moz-border-radius: 12;
+  -webkit-border-radius: 12px;
+  -moz-border-radius: 12px;
   border-radius: 12px;
   font-family: Arial;
   color: #ffffff;
@@ -726,8 +719,8 @@ a.logo {
 }
 
 .mini_button_none_orange {
-  -webkit-border-radius: 12;
-  -moz-border-radius: 12;
+  -webkit-border-radius: 12px;
+  -moz-border-radius: 12px;
   border-radius: 12px;
   font-family: Arial;
   color: #ffffff;
@@ -798,9 +791,6 @@ div.panel {
   height: 0;
   /* max-height: 0; */
   border: 1px solid #aaaaaa;
-  border-top-color: rgb(170, 170, 170);
-  border-top-style: solid;
-  border-top-width: 1px;
   border-bottom-right-radius: 8px;
   border-bottom-left-radius: 8px;
   transition: all 350ms ease-in-out;
@@ -811,8 +801,7 @@ div.panel.show {
   height: auto;
   max-height: 775px;
   width: 335px;
-  margin: auto;
-  margin-bottom: 5px;
+  margin: auto auto 5px auto;
   overflow: auto;
   visibility: visible;
   transition: all 350ms ease-in-out;
@@ -824,15 +813,6 @@ div.panel.show {
 }
 .panel.show > div {
   opacity: 1;
-}
-
-.twbs .panel {
-  border: 1px solid #aaaaaa;
-  border-top-color: rgb(170, 170, 170);
-  border-top-style: solid;
-  border-top-width: 1px;
-  border-bottom-right-radius: 8px;
-  border-bottom-left-radius: 8px;
 }
 
 .twbs h3 {
@@ -852,10 +832,7 @@ div.panel.show {
   font-weight: bold;
   font-size: 1.3em;
   padding: 4px;
-  border-top-right-radius: 8px;
-  border-top-left-radius: 8px;
-  border-bottom-right-radius: 8px;
-  border-bottom-left-radius: 8px;
+  border-radius: 8px;
   overflow-wrap: break-word;
   word-wrap: break-word;
   width: 90%;
@@ -872,7 +849,7 @@ div.panel.show {
 
 .twbs .modal-body > p > input {
   display: inline-block;
-  margin: 0px 0px 0px 15px;
+  margin: 0 0 0 15px;
 }
 
 .twbs .modal-footer {
@@ -903,7 +880,7 @@ div.panel.show {
 }
 
 .twbs .modal-body > p.inp_bottom {
-  margin: 10px 0px 15px 0px !important;
+  margin: 10px 0 15px 0 !important;
 }
 
 .twbs .modal-body > hr.bottom-layer-name {
@@ -922,8 +899,8 @@ th {
   font-size: 12px;
 }
 
-tr:nth-child(even) {background: #DBDADA}
-tr:nth-child(odd) {background: ##EFECEC;}
+tr:nth-child(even) {background: #DBDADA;}
+tr:nth-child(odd) {background: #EFECEC;}
 
 .m_elem_right {
   position: absolute;
@@ -1008,7 +985,7 @@ img.layout_ft_ico {
   width: 27px;
   height: auto;
   margin: 2px;
-  -webkit-filter: grayscale(1); /* Webkit Nightlies & Chrome Canary */
+  -webkit-filter: grayscale(1);
   -webkit-transform: scale(0.9);
   -webkit-transition: all .2s;
 }
