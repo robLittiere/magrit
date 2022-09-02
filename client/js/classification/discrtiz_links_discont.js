@@ -1,3 +1,4 @@
+import geostats from 'geostats';
 import { make_dialog_container, overlay_under_modal, reOpenParent } from './../dialogs';
 import { fetch_min_max_table_value, make_min_max_tableau } from './../function';
 import { make_content_summary } from './../helpers';

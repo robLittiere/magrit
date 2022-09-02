@@ -1,3 +1,4 @@
+import geostats from 'geostats';
 import ContextMenu from './context-menu';
 import { getColorBrewerArray, ColorsSelected, randomColor } from './colors_helpers';
 import { display_discretization } from './classification/discretization_panel';

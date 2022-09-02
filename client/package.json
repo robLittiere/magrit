@@ -31,6 +31,7 @@
     "d3-transition": "^1.3.2",
     "d3-voronoi": "^1.1.4",
     "d3-zoom": "^1.8.3",
+    "geostats": "^2.0.0",
     "i18next": "^11.10.2",
     "i18next-xhr-backend": "^1.5.1",
     "jschardet": "^1.6.0",

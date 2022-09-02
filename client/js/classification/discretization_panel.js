@@ -1,3 +1,4 @@
+import geostats from 'geostats';
 import { addNewCustomPalette, getColorBrewerArray, randomColor } from './../colors_helpers';
 import { make_dialog_container, overlay_under_modal, reOpenParent } from './../dialogs';
 import { isNumber, make_content_summary, setSelected } from './../helpers';
