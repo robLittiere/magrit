@@ -18,11 +18,11 @@ export const discretiz_geostats_switch = new Map([
 ]);
 
 /**
-* Compute the "optimal" (cf. xxx) number of class according to the number
-* of features in series of values.
+* Compute the "optimal" (according to Sturges rule) number of class given the number
+* of entries in series of values.
 *
-* @param {Integer} len_series - The length of the series of values.
-* @return {Integer} - The "optimal" number of classes to be used to classify the series.
+* @param {Number} len_series - The length of the series of values.
+* @return {Number} - The "optimal" number of classes to be used to classify the series.
 */
 export function getOptNbClass(len_series) {
   return floor(1 + 3.3 * log10(len_series));
@@ -177,7 +177,7 @@ export function discretize_to_colors(values, type, nb_class, col_ramp_name) {
 /**
 * Parse a string of comma separated break values
 * to an actual Array of break values.
-* The series is used to defined if there may be negative values
+* The series is used to define if there may be negative values
 * in the defined break values.
 *
 * @param {Array} series - The series of values to be classified with `breaks_list`.
