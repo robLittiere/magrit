@@ -496,7 +496,6 @@ export const display_discretization = (layer_name, field_name, nb_class, options
       serie = new geostats(values);
       breaks = [];
       values = serie.sorted();
-      const deferred = Promise.pending();
       return new Promise((resolve, reject) => {
         if (values.length > 7500 && type === 'jenks') {
           const jenks_worker = new Worker('static/js/webworker_jenks.js');
