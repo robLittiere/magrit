@@ -11,9 +11,7 @@ const log10 = Math.log10;
 export const discretiz_geostats_switch = new Map([
   ['jenks', 'getJenks2'],
   ['equal_interval', 'getEqInterval'],
-  // ['std_dev', 'getStdDeviation'],
   ['quantiles', 'getQuantile'],
-  ['Q6', 'getBreaksQ6'],
   ['geometric_progression', 'getGeometricProgression'],
 ]);
 
