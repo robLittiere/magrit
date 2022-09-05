@@ -42,6 +42,9 @@ export const display_box_symbol_typo = function (layer, field, categories) {
         name: k, new_name: k, nb_elem: v[0], img: default_d_url,
       });
     });
+    // Sort categories by name for the first time the picto panel
+    // will be displayed
+    cats.sort((a, b) => a.name.localeCompare(b.name));
   } else {
     categories.forEach((v, k) => {
       cats.push({

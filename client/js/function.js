@@ -2649,7 +2649,7 @@ function fillMenu_PropSymbolTypo() {
     .styles({ width: '100px', 'margin-left': '10px' })
     .attrs({
       type: 'number', class: 'params', id: 'PropSymbolTypo_ref_value', min: 0.1, step: 0.1,
-     });
+    });
 
   // Other symbols could probably easily be proposed :
   const d = dv2.append('p').attr('class', 'params_section2');
@@ -2684,9 +2684,19 @@ function fillMenu_PropSymbolTypo() {
   section2.selectAll('.params').attr('disabled', true);
 }
 
+
+/**
+ *
+ * @param {string} layer_name - The name of the targeted layer
+ * @param {string} selected_field - The name of the targeted field
+ * @param {Map} col_map - Existing color map if any, optional
+ * @returns {(*[]|Map<any, any>)[]} - An array containing the category array (used in categorical panel)
+ *                                    in first position and the color map in second position.
+ */
 export function prepare_categories_array(layer_name, selected_field, col_map) {
   const cats = [];
   if (!col_map) {
+    // This is the first time we are preparing the categories array for this field on this layer
     let _col_map = new Map();
     for (let i = 0, data_layer = data_manager.user_data[layer_name]; i < data_layer.length; ++i) {
       const value = data_layer[i][selected_field],
@@ -2696,15 +2706,25 @@ export function prepare_categories_array(layer_name, selected_field, col_map) {
     _col_map.forEach((v, k) => {
       cats.push({ name: k, display_name: k, nb_elem: v[0], color: randomColor() });
     });
+
+    // Sort categories by name for the first time the categorical panel
+    // will be displayed
+    cats.sort((a, b) => a.name.localeCompare(b.name));
+
     _col_map = new Map();
     for (let i = 0; i < cats.length; i++) {
       _col_map.set(cats[i].name, [cats[i].color, cats[i].name, cats[i].nb_elem]);
     }
+
     return [cats, _col_map];
   }
+
+  // We already have the color map for this field on this layer
+  // so we just rebuild the categories array
   col_map.forEach((v, k) => {
     cats.push({ name: k, display_name: v[1], nb_elem: v[2], color: v[0] });
   });
+
   return [cats, col_map];
 }
 
