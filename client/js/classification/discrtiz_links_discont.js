@@ -303,19 +303,17 @@ export const display_discretization_links_discont = function (layer_name, field_
     last_max = max_fast(sizes),
     array_color = d3.schemeSet3.slice();
 
+  serie.roundlength = serie.precision;
+  serie.resetStatistics();
+
   breaks_info.forEach((elem) => { breaks.push(elem[0][1]); });
 
-  if (serie.variance() === 0 && serie.stddev() === 0) {
-    serie = new geostats(values);
-  }
-
   values = serie.sorted();
-//    serie.setPrecision(6);
+
   const available_functions = [
     [_tr('app_page.common.equal_interval'), 'equal_interval'],
     [_tr('app_page.common.quantiles'), 'quantiles'],
     [_tr('app_page.common.user_defined'), 'user_defined'],
-//     [_tr("app_page.common.std_dev"), "std_dev"],
     [_tr('app_page.common.Q6'), 'Q6'],
     [_tr('app_page.common.jenks'), 'jenks'],
   ];

@@ -25,7 +25,13 @@ export function make_dialog_container(id_box, title, class_box) {
     <button type="button" class="btn btn-primary btn_ok" data-dismiss="modal">${_tr('app_page.common.confirm')}</button>
     <button type="button" class="btn btn-default btn_cancel">${_tr('app_page.common.cancel')}</button>
     </div>`;
-  const modal_box = new Modal(document.getElementById(_id_box), { content: html_content });
+  const modal_box = new Modal(
+    document.getElementById(_id_box),
+    {
+      content: html_content,
+      keyboard: false,
+    },
+  );
   modal_box.show();
   return modal_box;
 }
@@ -48,7 +54,7 @@ export const overlay_under_modal = (function () {
     display() {
       bg.style.display = '';
     },
-    hide () {
+    hide() {
       bg.style.display = 'none';
     },
   };
@@ -105,7 +111,10 @@ export const make_confirm_dialog2 = (function (class_box, title, options) {
       modal_box.show();
       container.modal = modal_box;
       overlay_under_modal.display();
-      const func_cb = (evt) => { helper_esc_key_twbs_cb(evt, _onclose_false); };
+      const func_cb = (evt) => {
+        if (dialogHasChildren(container)) return;
+        helper_esc_key_twbs_cb(evt, _onclose_false);
+      };
       const clean_up_box = () => {
         document.removeEventListener('keydown', func_cb);
         existing.delete(new_id);
@@ -126,6 +135,12 @@ export const make_confirm_dialog2 = (function (class_box, title, options) {
     });
   };
 })();
+
+function dialogHasChildren(dialogContainer) {
+  if (dialogContainer.nextElementSibling && dialogContainer.nextElementSibling.classList.contains('modal')) {
+    return true;
+  }
+}
 
 export function reOpenParent(css_selector) {
   const parent_style_box = css_selector !== undefined ? document.querySelector(css_selector) : document.querySelector('.styleBox');

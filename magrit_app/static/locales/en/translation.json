@@ -442,7 +442,7 @@
         },
         "palette_box": {
             "button": "Custom palette?",
-            "title": "Custom palette",
+            "title": "Custom palette ({{nb_classes}} classes)",
             "error_name_existing": "Palette name already in use",
             "error_name_invalid": "Invalid palette name",
             "new_name": "Palette name:"
@@ -787,6 +787,7 @@
         "line_size": "<b>Line size :</b>",
         "sequential": "Sequential",
         "diverging": "Diverging",
+        "custom": "Custom palette",
         "reverse_palette": "Reverse palette",
         "withnodata": "{{ count }} feature without data",
         "withnodata_plural": "{{ count }} features without data",

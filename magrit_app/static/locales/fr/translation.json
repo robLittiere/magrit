@@ -441,7 +441,7 @@
         },
         "palette_box": {
             "button": "Palette personnalisée ?",
-            "title": "Palette personnalisée",
+            "title": "Palette personnalisée ({{nb_classes}} classes)",
             "error_name_existing": "Nom de palette déjà utilisé",
             "error_name_invalid": "Nom de palette invalide",
             "new_name": "Nom de la palette :"
@@ -787,6 +787,7 @@
         "line_size": "<b>Taille des segments :</b>",
         "sequential": "Séquentiel",
         "diverging": "Divergent",
+        "custom": "Palette personnalisée",
         "reverse_palette": "Inverser l'ordre des couleurs",
         "withnodata": "{{ count }} entité sans valeur",
         "withnodata_plural": "{{ count }} entités sans valeur",

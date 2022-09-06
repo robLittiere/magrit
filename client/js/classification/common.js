@@ -78,7 +78,7 @@ export function getBreaksQ6(series, precision = null) {
 * Compute breaks according to our "mean and standard deviation" method
 * and compute the number of item in each bin.
 *
-* @param {Array} series - An array of ordered values.
+* @param {geostats} series - An instance of a geostats object.
 * @param {Number} share - The ratio of stddev to be used a size for each class.
 * @param {String} mean_position - The position of the mean value.
 * @param {Number} precision - An integer value describing the precision of the series.

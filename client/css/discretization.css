@@ -14,6 +14,11 @@
     stroke-width: 0.2;
 }
 
+.modal-content #color_div input[name="color_scheme"] {
+  vertical-align: bottom;
+  margin: 0 0 0 5px
+}
+
 .btn_mean {
   background: #3498db;
   background-image: -webkit-linear-gradient(top, #3498db, #2980b9);

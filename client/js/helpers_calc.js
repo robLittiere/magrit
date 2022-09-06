@@ -83,10 +83,10 @@ export function has_duplicate(arr) {
 * @param {Number} precision - The wanted precision.
 * @return {Number} value - The rounded value.
 */
-export const round_value = function (val, nb) {
-  if (nb === undefined) { return val; }
-  const dec_mult = +['1', Array(Mabs(nb)).fill('0').join('')].join('');
-  return nb >= 0
+export const round_value = function (val, precision) {
+  if (precision === undefined) { return val; }
+  const dec_mult = +['1', Array(Mabs(precision)).fill('0').join('')].join('');
+  return precision >= 0
     ? Mround(+val * dec_mult) / dec_mult
     : Mround(+val / dec_mult) * dec_mult;
 };
