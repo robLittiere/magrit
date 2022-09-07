@@ -226,10 +226,12 @@ export const display_discretization_links_discont = function (layer_name, field_
       return true;
     },
     draw() {
-            // Clean-up previously made histogram :
+      // Clean-up previously made histogram :
       d3.select('#svg_discretization').selectAll('.bar').remove();
 
-      for (let i = 0, len = bins.length; i < len; ++i) { bins[i].color = array_color[i]; }
+      for (let i = 0, len = bins.length; i < len; ++i) {
+        bins[i].color = array_color[i % array_color.length];
+      }
 
       const x = d3.scaleLinear()
         .domain([serie.min(), serie.max()])
@@ -273,8 +275,6 @@ export const display_discretization_links_discont = function (layer_name, field_
     db_data = data_manager.user_data[layer_name];
   }
 
-  const color_array = [];
-  const indexes = [];
   let nb_values = db_data.length;
   let values = [];
   let no_data;
@@ -282,7 +282,6 @@ export const display_discretization_links_discont = function (layer_name, field_
   for (let i = 0; i < nb_values; i++) {
     if (db_data[i][field_name] != null) {
       values.push(+db_data[i][field_name]);
-      indexes.push(i);
     }
   }
 
@@ -435,12 +434,13 @@ export const display_discretization_links_discont = function (layer_name, field_
       redisplay.draw();
     });
 
-  const svg_h = h / 5 > 90 ? h / 5 : 90,
-    svg_w = w - (w / 8),
+  const svg_h = h / 5 > 100 ? h / 5 : 100,
+    svg_w = (window.innerWidth - 40) > 760 ? 760 : (window.innerWidth - 40),
     margin = { top: 17.5, right: 30, bottom: 7.5, left: 30 },
     height = svg_h - margin.top - margin.bottom;
 
-  d3.select('#discretiz_charts').select('.modal-dialog')
+  d3.select('#discretiz_charts')
+    .select('.modal-dialog')
     .styles({
       width: `${svg_w + margin.top + margin.bottom + 90}px`,
       height: `${window.innerHeight - 60}px`,
@@ -486,19 +486,28 @@ export const display_discretization_links_discont = function (layer_name, field_
       .scale(x)
       .tickFormat(formatCount));
 
-  const box_content = newBox.append('div').attr('id', 'box_content');
+  const box_content = newBox.append('div')
+    .attr('id', 'box_content')
+    .style('text-align', 'center')
+    .style('margin-top', '20px');
+
   box_content.append('h3')
     .style('margin', '0')
     .html(_tr('disc_box.line_size'));
+
   box_content
     .append('div')
     .attr('id', 'sizes_div');
+
+  // What to do when the min - max - size table changes
   const callback = function () {
     discretization_choice.node().value = type;
     update_breaks(true);
     redisplay.compute();
     redisplay.draw();
   };
+
+  // Make and fill the min - max - size table
   make_min_max_tableau(null, nb_class, type, null, null, 'sizes_div', breaks_info, callback);
 
   redisplay.compute();
