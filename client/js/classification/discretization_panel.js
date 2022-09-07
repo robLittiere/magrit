@@ -444,22 +444,7 @@ export const display_discretization = (layer_name, field_name, nb_class, options
       .tickFormat(formatCount));
   };
 
-  const update_overlay_elements = () => {
-    const x_mean = x(mean_serie),
-      x_med = x(serie.median()),
-      x_std_left = x(mean_serie - stddev_serie),
-      x_std_right = x(mean_serie + stddev_serie);
-    line_mean.transition().attrs({ x1: x_mean, x2: x_mean });
-    txt_mean.transition().attr('x', x_mean);
-    line_median.transition().attrs({ x1: x_med, x2: x_med });
-    txt_median.transition().attr('x', x_med);
-    line_std_left.transition().attrs({ x1: x_std_left, x2: x_std_left });
-    line_std_right.transition().attrs({ x1: x_std_right, x2: x_std_right });
-    rug_plot.selectAll('.indiv').attrs(d => ({ x1: x(d.value), x2: x(d.value) }));
-  };
-
   const make_overlay_elements = () => {
-    console.log(mean_serie, serie.median(), stddev_serie);
     line_mean = overlay_svg.append('line')
       .attrs({
         class: 'line_mean',
@@ -692,8 +677,13 @@ export const display_discretization = (layer_name, field_name, nb_class, options
       for (let i = 0, len = bins.length; i < len; ++i) {
         bins[i].color = color_array[i];
       }
-      x.domain([breaks[0], breaks[breaks.length - 1]]);
+
       y.domain([0, d3.max(bins.map(d => d.height + d.height / 3))]);
+
+      // This could be removed because
+      // we (or at least we should) ensure that
+      // breaks[0] = min_serie and breaks[breaks.length - 1] = max_serie
+      x.domain([breaks[0], breaks[breaks.length - 1]]);
 
       svg_histo.select('.x_axis')
         .transition()
@@ -718,7 +708,7 @@ export const display_discretization = (layer_name, field_name, nb_class, options
           width: xx(d.width),
           height: svg_h - y(d.height),
         }))
-        .styles(d => ({
+        .styles((d) => ({
           fill: d.color,
           opacity: 0.95,
           'stroke-opacity': 1,
@@ -742,7 +732,7 @@ export const display_discretization = (layer_name, field_name, nb_class, options
           y: y(d.height) - margin.top * 2 - margin.bottom - 1.5,
         }))
         .styles({ color: 'black', cursor: 'default', display: 'none' })
-        .text(d => formatCount(d.val));
+        .text((d) => formatCount(d.val));
 
       document.getElementById('user_breaks_area').value = breaks.join(' - ');
       return true;
@@ -1126,6 +1116,8 @@ export const display_discretization = (layer_name, field_name, nb_class, options
 
   accordionize('.accordion_disc', container);
 
+  make_overlay_elements();
+
   if (no_data > 0) {
     make_no_data_section();
     if (options.no_data) {
@@ -1167,8 +1159,6 @@ export const display_discretization = (layer_name, field_name, nb_class, options
   if (options.type && options.type === 'user_defined') {
     user_break_list = options.breaks;
   }
-
-  make_overlay_elements();
 
   redisplay.compute().then((v) => {
     if (v) redisplay.draw(options.colors);

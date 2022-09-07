@@ -246,7 +246,7 @@ export const prepare_ref_histo = (parent_node, series, formatCount) => {
 
   const x = d3.scaleLinear()
     .domain([series.min(), series.max()])
-    .rangeRound([0, m_width]);
+    .range([0, m_width]);
 
   let svg_ref_histo = c.append('g')
     .attr('transform', `translate(${m_margin.left + m_margin.right}, ${m_margin.top})`);
@@ -268,14 +268,14 @@ export const prepare_ref_histo = (parent_node, series, formatCount) => {
         .data(data)
         .enter()
         .append('rect')
-        .attrs(d => ({
+        .attrs((d) => ({
           class: 'bar',
-          width: Mabs(x(d.x1)) - Mabs(x(d.x0)),
+          width: Mabs(x(d.x1)) - Mabs(x(d.x0)) - 1,
           height: m_height - y(d.length),
           x: 0,
           transform: `translate(${x(d.x0)},${y(d.length)})`,
         }))
-        .styles({ fill: 'beige', stroke: 'black', 'stroke-width': '0.4px' });
+        .styles({ fill: '#87c5d9' }); // 'rgb(105, 179, 162)'
 
       svg_ref_histo.append('g')
         .style('font-size', '10px')
@@ -327,7 +327,7 @@ export const prepare_ref_histo = (parent_node, series, formatCount) => {
       svg_ref_histo.append('g')
         .insert('rect')
         .attrs({ x: x(q5[1]), y: m_margin.top, width: x(q5[2]) - x(q5[1]), height: m_height - m_margin.bottom - m_margin.top })
-        .styles({ 'stroke-width': 1, stroke: 'black', fill: 'lightblue' });
+        .styles({ 'stroke-width': 1, stroke: 'black', fill: '#87c5d9' });
 
       svg_ref_histo.append('g')
         .insert('line')
@@ -337,7 +337,7 @@ export const prepare_ref_histo = (parent_node, series, formatCount) => {
       svg_ref_histo.append('g')
         .insert('rect')
         .attrs({ x: x(q5[2]), y: m_margin.top, width: x(q5[3]) - x(q5[2]), height: m_height - m_margin.bottom - m_margin.top })
-        .styles({ 'stroke-width': 1, stroke: 'black', fill: 'lightblue' });
+        .styles({ 'stroke-width': 1, stroke: 'black', fill: '#87c5d9' });
 
       svg_ref_histo.append('g')
         .insert('line')
