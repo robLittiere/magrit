@@ -33,23 +33,23 @@ export const northArrow = { /* eslint-disable-line import/prefer-default-export 
           snap_lines,
         };
       })
-      .on('start', () => {
-        d3.event.sourceEvent.stopPropagation();
+      .on('start', (event) => {
+        event.sourceEvent.stopPropagation();
         handle_click_hand('lock');
       })
-      .on('end', function () {
-        if (d3.event.subject && !d3.event.subject.map_locked) {
+      .on('end', function (event) {
+        if (event.subject && !event.subject.map_locked) {
           handle_click_hand('unlock');
         }
         pos_lgds_elem.set(this.id, get_bounding_rect(this));
       })
-      .on('drag', function () {
-        d3.event.sourceEvent.preventDefault();
+      .on('drag', function (event) {
+        event.sourceEvent.preventDefault();
         const t1 = this.querySelector('image'),
           t2 = this.querySelector('rect'),
           dim = t2.width.baseVal.value / 2;
-        let tx = +d3.event.x,
-          ty = +d3.event.y;
+        let tx = +event.x,
+          ty = +event.y;
         if (tx < 0 - dim || tx > w + dim || ty < 0 - dim || ty > h + dim) {
           return;
         }
@@ -65,8 +65,8 @@ export const northArrow = { /* eslint-disable-line import/prefer-default-export 
             xmax = xmin + bbox.width,
             ymin = t2.y.baseVal.value,
             ymax = ymin + bbox.height,
-            snap_lines_x = d3.event.subject.snap_lines.x,
-            snap_lines_y = d3.event.subject.snap_lines.y;
+            snap_lines_x = event.subject.snap_lines.x,
+            snap_lines_y = event.subject.snap_lines.y;
           for (let i = 0; i < snap_lines_x.length; i++) {
             if (Mabs(snap_lines_x[i][0] - xmin) < 10) {
               const _y1 = Mmin(Mmin(snap_lines_y[i][0], snap_lines_y[i][1]), ymin);
@@ -135,10 +135,10 @@ export const northArrow = { /* eslint-disable-line import/prefer-default-export 
       .on('mouseout', () => {
         self.under_rect.style('fill-opacity', 0);
       })
-      .on('contextmenu dblclick', () => {
-        d3.event.preventDefault();
+      .on('contextmenu dblclick', (event) => {
+        event.preventDefault();
         return arrow_context_menu
-          .showMenu(d3.event, document.querySelector('body'), getItems());
+          .showMenu(event, document.querySelector('body'), getItems());
       });
   },
   up_element() {

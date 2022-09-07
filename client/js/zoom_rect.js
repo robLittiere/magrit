@@ -15,8 +15,8 @@ const makeZoomRect = function makeZoomRect() {
   const idleDelay = 350;
   let idleTimeout;
   function idled() { idleTimeout = null; }
-  function brushended() {
-    const s = d3.event.selection;
+  function brushended(event) {
+    const s = event.selection;
     if (!s) {
       if (!idleTimeout) {
         idleTimeout = setTimeout(idled, idleDelay);

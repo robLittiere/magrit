@@ -1419,9 +1419,9 @@ export function handle_title(txt) {
         position: 'absolute',
       })
       .text(txt)
-      .on('contextmenu dblclick', () => {
-        d3.event.preventDefault();
-        d3.event.stopPropagation();
+      .on('contextmenu dblclick', (event) => {
+        event.preventDefault();
+        event.stopPropagation();
         handle_title_properties();
       })
       .call(drag_elem_geo);
@@ -1880,7 +1880,7 @@ export function binds_layers_buttons(layer_name) {
   const layer_id = global._app.layer_to_id.get(layer_name);
   const sortable_elem = d3.select('#sortable').select(`.${layer_id}`);
   sortable_elem.on('dblclick', () => { handle_click_layer(layer_name); });
-  sortable_elem.on('contextmenu', () => { d3.event.preventDefault(); });
+  sortable_elem.on('contextmenu', (event) => { event.preventDefault(); });
   sortable_elem.select('#trash_button').on('click', () => { remove_layer(layer_name); });
   sortable_elem.select('.active_button').on('click', () => { handle_active_layer(layer_name); });
   sortable_elem.select('.style_button').on('click', () => { handle_click_layer(layer_name); });

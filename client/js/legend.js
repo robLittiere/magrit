@@ -183,15 +183,15 @@ function make_legend_context_menu(legend_node) {
       },
     },
   ];
-  legend_node.on('dblclick', () => {
-    d3.event.stopPropagation();
-    d3.event.preventDefault();
+  legend_node.on('dblclick', (event) => {
+    event.stopPropagation();
+    event.preventDefault();
     createlegendEditBox(legend_node.attr('id'), legend_node.attr('layer_name'));
   });
 
-  legend_node.on('contextmenu', () => {
+  legend_node.on('contextmenu', (event) => {
     context_menu.showMenu(
-      d3.event,
+      event,
       document.querySelector('body'),
       getItems(),
     );
@@ -216,20 +216,20 @@ export const drag_legend_func = function drag_legend_func(legend_group) {
         offset: [+legend_group.select('#under_rect').attr('x'), +legend_group.select('#under_rect').attr('y')],
       };
     })
-    .on('start', () => {
-      d3.event.sourceEvent.stopPropagation();
-      d3.event.sourceEvent.preventDefault();
+    .on('start', (event) => {
+      event.sourceEvent.stopPropagation();
+      event.sourceEvent.preventDefault();
       handle_click_hand('lock');
     })
-    .on('end', () => {
-      if (d3.event.subject && !d3.event.subject.map_locked) { handle_click_hand('unlock'); }
+    .on('end', (event) => {
+      if (event.subject && !event.subject.map_locked) { handle_click_hand('unlock'); }
       legend_group.style('cursor', 'grab');
       pos_lgds_elem.set(`${legend_group.attr('id')} ${legend_group.attr('class')}`, get_bounding_rect(legend_group.node()));
     })
-    .on('drag', () => {
+    .on('drag', (event) => {
       const Min = Mmin;
       const Max = Mmax;
-      const new_value = [d3.event.x, d3.event.y];
+      const new_value = [event.x, event.y];
       let prev_value = legend_group.attr('transform');
       prev_value = prev_value ? prev_value.slice(10, -1).split(/[ ,]+/).map(f => +f) : [0, 0];
       if (prev_value.length === 1) prev_value = [prev_value[0], 0];
@@ -237,8 +237,8 @@ export const drag_legend_func = function drag_legend_func(legend_group) {
         .style('cursor', 'grabbing');
 
       const bbox_elem = get_bounding_rect(legend_group.node());
-      let val_x = d3.event.x,
-        val_y = d3.event.y,
+      let val_x = event.x,
+        val_y = event.y,
         change;
 
       if (_app.autoalign_features) {
@@ -247,35 +247,35 @@ export const drag_legend_func = function drag_legend_func(legend_group) {
           ymin = bbox_elem.y,
           ymax = bbox_elem.y + bbox_elem.height;
 
-        const snap_lines_x = d3.event.subject.snap_lines.x,
-          snap_lines_y = d3.event.subject.snap_lines.y;
+        const snap_lines_x = event.subject.snap_lines.x,
+          snap_lines_y = event.subject.snap_lines.y;
         for (let i = 0; i < snap_lines_x.length; i++) {
           if (Mabs(snap_lines_x[i][0] - xmin) < 10) {
             const _y1 = Min(Min(snap_lines_y[i][0], snap_lines_y[i][1]), ymin);
             const _y2 = Max(Max(snap_lines_y[i][0], snap_lines_y[i][1]), ymax);
             make_red_line_snap(snap_lines_x[i][0], snap_lines_x[i][0], _y1, _y2);
-            val_x = snap_lines_x[i][0] - d3.event.subject.offset[0];
+            val_x = snap_lines_x[i][0] - event.subject.offset[0];
             change = true;
           }
           if (Mabs(snap_lines_x[i][0] - xmax) < 10) {
             const _y1 = Min(Min(snap_lines_y[i][0], snap_lines_y[i][1]), ymin);
             const _y2 = Max(Max(snap_lines_y[i][0], snap_lines_y[i][1]), ymax);
             make_red_line_snap(snap_lines_x[i][0], snap_lines_x[i][0], _y1, _y2);
-            val_x = snap_lines_x[i][0] - bbox_elem.width - d3.event.subject.offset[0];
+            val_x = snap_lines_x[i][0] - bbox_elem.width - event.subject.offset[0];
             change = true;
           }
           if (Mabs(snap_lines_y[i][0] - ymin) < 10) {
             const x1 = Min(Min(snap_lines_x[i][0], snap_lines_x[i][1]), xmin);
             const x2 = Max(Max(snap_lines_x[i][0], snap_lines_x[i][1]), xmax);
             make_red_line_snap(x1, x2, snap_lines_y[i][0], snap_lines_y[i][0]);
-            val_y = snap_lines_y[i][0] - d3.event.subject.offset[1];
+            val_y = snap_lines_y[i][0] - event.subject.offset[1];
             change = true;
           }
           if (Mabs(snap_lines_y[i][0] - ymax) < 10) {
             const x1 = Min(Min(snap_lines_x[i][0], snap_lines_x[i][1]), xmin);
             const x2 = Max(Max(snap_lines_x[i][0], snap_lines_x[i][1]), xmax);
             make_red_line_snap(x1, x2, snap_lines_y[i][0], snap_lines_y[i][0]);
-            val_y = snap_lines_y[i][0] - bbox_elem.height - d3.event.subject.offset[1];
+            val_y = snap_lines_y[i][0] - bbox_elem.height - event.subject.offset[1];
             change = true;
           }
         }

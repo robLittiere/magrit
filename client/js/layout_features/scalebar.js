@@ -88,11 +88,11 @@ export const scaleBar = {
       this.style.cursor = 'pointer';
       self.under_rect.style('fill-opacity', 0);
     })
-    .on('contextmenu dblclick', () => {
-      d3.event.preventDefault();
-      d3.event.stopPropagation();
+    .on('contextmenu dblclick', (event) => {
+      event.preventDefault();
+      event.stopPropagation();
       return scale_context_menu
-        .showMenu(d3.event, document.querySelector('body'), getItems());
+        .showMenu(event, document.querySelector('body'), getItems());
     });
     if (x && y) {
       scale_gp.attr('transform', `translate(${[x - this.x, y - this.y]})`);

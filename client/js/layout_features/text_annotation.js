@@ -34,23 +34,23 @@ export default class Textbox {
           snap_lines,
         };
       })
-      .on('start', () => {
-        d3.event.sourceEvent.stopPropagation();
+      .on('start', (event) => {
+        event.sourceEvent.stopPropagation();
         handle_click_hand('lock');
       })
-      .on('end', function () {
-        if (d3.event.subject && !d3.event.subject.map_locked) { handle_click_hand('unlock'); }
+      .on('end', function (event) {
+        if (event.subject && !event.subject.map_locked) { handle_click_hand('unlock'); }
         pos_lgds_elem.set(this.id, get_bounding_rect(this.querySelector('rect')));
       })
-      .on('drag', function () {
-        d3.event.sourceEvent.preventDefault();
-        const elem = d3.select(this).select('text').attrs({ x: +d3.event.x, y: +d3.event.y });
+      .on('drag', function (event) {
+        event.sourceEvent.preventDefault();
+        const elem = d3.select(this).select('text').attrs({ x: +event.x, y: +event.y });
         const transform = elem.attr('transform');
         if (transform) {
           const v = +transform.match(/[-.0-9]+/g)[0];
-          elem.attr('transform', `rotate(${v}, ${d3.event.x + self.width}, ${d3.event.y + self.height})`);
+          elem.attr('transform', `rotate(${v}, ${event.x + self.width}, ${event.y + self.height})`);
         }
-        elem.selectAll('tspan').attr('x', +d3.event.x);
+        elem.selectAll('tspan').attr('x', +event.x);
 
         if (_app.autoalign_features) {
           const bbox = get_bounding_rect(elem.node()),
@@ -58,8 +58,8 @@ export default class Textbox {
             xmax = xmin + bbox.width + 20,
             ymin = bbox.y - 10,
             ymax = ymin + bbox.height + 20,
-            snap_lines_x = d3.event.subject.snap_lines.x,
-            snap_lines_y = d3.event.subject.snap_lines.y;
+            snap_lines_x = event.subject.snap_lines.x,
+            snap_lines_y = event.subject.snap_lines.y;
           for (let i = 0; i < snap_lines_x.length; i++) {
             if (Mabs(snap_lines_x[i][0] - xmin) < 10) {
               const _y1 = Mmin(Mmin(snap_lines_y[i][0], snap_lines_y[i][1]), ymin);
@@ -123,14 +123,14 @@ export default class Textbox {
 
     group_elem
       .call(drag_txt_annot)
-      .on('dblclick', () => {
-        d3.event.preventDefault();
-        d3.event.stopPropagation();
+      .on('dblclick', (event) => {
+        event.preventDefault();
+        event.stopPropagation();
         this.editStyle();
       })
-      .on('contextmenu', () => {
+      .on('contextmenu', (event) => {
         context_menu.showMenu(
-          d3.event,
+          event,
           document.querySelector('body'),
           getItems(),
         );

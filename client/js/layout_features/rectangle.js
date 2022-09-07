@@ -37,19 +37,19 @@ export default class UserRectangle {
           map_locked: !!map_div.select('#hand_button').classed('locked'),
         };
       })
-      .on('start', () => {
-        d3.event.sourceEvent.stopPropagation();
+      .on('start', (event) => {
+        event.sourceEvent.stopPropagation();
         handle_click_hand('lock');
       })
-      .on('end', () => {
-        if (d3.event.subject && !d3.event.subject.map_locked) { handle_click_hand('unlock'); }
+      .on('end', (event) => {
+        if (event.subject && !event.subject.map_locked) { handle_click_hand('unlock'); }
       })
-      .on('drag', function () {
-        d3.event.sourceEvent.preventDefault();
+      .on('drag', function (event) {
+        event.sourceEvent.preventDefault();
         const _t = this.querySelector('rect'),
-          subject = d3.event.subject,
-          tx = (+d3.event.x - +subject.x) / svg_map.__zoom.k,
-          ty = (+d3.event.y - +subject.y) / svg_map.__zoom.k;
+          subject = event.subject,
+          tx = (+event.x - +subject.x) / svg_map.__zoom.k,
+          ty = (+event.y - +subject.y) / svg_map.__zoom.k;
         self.pt1 = [+subject.x + tx, +subject.y + ty];
         // self.pt2 = [self.pt1[0] + self.width, self.pt1[1] + self.height];
           // if(_app.autoalign_features){
@@ -126,12 +126,12 @@ export default class UserRectangle {
       });
 
     this.rectangle
-      .on('contextmenu', () => {
-        context_menu.showMenu(d3.event, document.body, getItems());
+      .on('contextmenu', (event) => {
+        context_menu.showMenu(event, document.body, getItems());
       })
-      .on('dblclick', () => {
-        d3.event.preventDefault();
-        d3.event.stopPropagation();
+      .on('dblclick', (event) => {
+        event.preventDefault();
+        event.stopPropagation();
         this.handle_ctrl_pt();
       })
       .call(this.drag_behavior);
@@ -162,9 +162,9 @@ export default class UserRectangle {
       edit_layer.remove();
       msg.dismiss();
       self.rectangle.call(self.drag_behavior);
-      self.rectangle.on('dblclick', () => {
-        d3.event.preventDefault();
-        d3.event.stopPropagation();
+      self.rectangle.on('dblclick', (event) => {
+        event.preventDefault();
+        event.stopPropagation();
         self.handle_ctrl_pt();
       });
       if (!map_locked) {
@@ -189,9 +189,9 @@ export default class UserRectangle {
     edit_layer.append('rect')
       .attrs({ x: 0, y: 0, width: w, height: h, class: 'edit_rect' })
       .style('fill', 'transparent')
-      .on('dblclick', () => {
-        d3.event.stopPropagation();
-        d3.event.preventDefault();
+      .on('dblclick', (event) => {
+        event.stopPropagation();
+        event.preventDefault();
         cleanup_edit_state();
       });
 
@@ -205,12 +205,12 @@ export default class UserRectangle {
         x: center_pt[0] * zoom_param.k + zoom_param.x - 4,
         y: (center_pt[1] - rectangle_elem.height.baseVal.value / 2) * zoom_param.k + zoom_param.y - 4,
       })
-      .call(d3.drag().on('drag', function () {
-        const dist = (d3.event.y - zoom_param.y) / zoom_param.k;
+      .call(d3.drag().on('drag', function (event) {
+        const dist = (event.y - zoom_param.y) / zoom_param.k;
         if ((self.height - (dist - self.pt1[1])) < 2) {
           return;
         }
-        d3.select(this).attr('y', d3.event.y - 4);
+        d3.select(this).attr('y', event.y - 4);
         const a = self.pt1[1];
         self.pt1[1] = rectangle_elem.y.baseVal.value = dist;
         topleft = self.pt1.slice();
@@ -228,12 +228,12 @@ export default class UserRectangle {
         x: (center_pt[0] - rectangle_elem.width.baseVal.value / 2) * zoom_param.k + zoom_param.x - 4,
         y: center_pt[1] * zoom_param.k + zoom_param.y - 4
       })
-      .call(d3.drag().on('drag', function () {
-        const dist = /*topleft[0] -*/ (d3.event.x - zoom_param.x) / zoom_param.k;
+      .call(d3.drag().on('drag', function (event) {
+        const dist = /*topleft[0] -*/ (event.x - zoom_param.x) / zoom_param.k;
         if ((self.width + (self.pt1[0] -dist)) < 2) {
           return;
         }
-        d3.select(this).attr('x', d3.event.x - 4);
+        d3.select(this).attr('x', event.x - 4);
         const a = self.pt1[0];
         self.pt1[0] = rectangle_elem.x.baseVal.value = dist; // topleft[0] - dist;
         topleft = self.pt1.slice();
@@ -251,12 +251,12 @@ export default class UserRectangle {
         height: 8,
         width: 8,
       })
-      .call(d3.drag().on('drag', function () {
-        const dist = -(topleft[1] - (d3.event.y - zoom_param.y) / zoom_param.k);
+      .call(d3.drag().on('drag', function (event) {
+        const dist = -(topleft[1] - (event.y - zoom_param.y) / zoom_param.k);
         if (dist < 2) {
           return;
         }
-        d3.select(this).attr('y', d3.event.y - 4);
+        d3.select(this).attr('y', event.y - 4);
         self.height = rectangle_elem.height.baseVal.value = dist;
         map.selectAll('#pt_left,#pt_right').attr('y', (topleft[1] + self.height / 2) * zoom_param.k + zoom_param.y);
       }));
@@ -271,19 +271,19 @@ export default class UserRectangle {
         height: 8,
         width: 8,
       })
-      .call(d3.drag().on('drag', function () {
-        const dist = -(topleft[0] - (d3.event.x - zoom_param.x) / zoom_param.k);
+      .call(d3.drag().on('drag', function (event) {
+        const dist = -(topleft[0] - (event.x - zoom_param.x) / zoom_param.k);
         if (dist < 2) {
           return;
         }
-        d3.select(this).attr('x', d3.event.x - 4);
+        d3.select(this).attr('x', event.x - 4);
         self.width = rectangle_elem.width.baseVal.value = dist;
         map.selectAll('#pt_top,#pt_bottom').attr('x', (topleft[0] + self.width / 2) * zoom_param.k + zoom_param.x);
       }));
 
-    self.rectangle.on('dblclick', () => {
-      d3.event.stopPropagation();
-      d3.event.preventDefault();
+    self.rectangle.on('dblclick', (event) => {
+      event.stopPropagation();
+      event.preventDefault();
       cleanup_edit_state();
     });
   }

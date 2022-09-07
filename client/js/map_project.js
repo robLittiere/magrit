@@ -1316,8 +1316,8 @@ export function apply_user_preferences(json_pref) {
           .style('display', (d, j) => _layer.current_state[j].display)
           .on('mouseover', function () { this.style.cursor = 'pointer'; })
           .on('mouseout', function () { this.style.cursor = 'initial'; })
-          .on('contextmenu dblclick', function () {
-            context_menu.showMenu(d3.event, document.querySelector('body'), getItems(this));
+          .on('contextmenu dblclick', function (event) {
+            context_menu.showMenu(event, document.querySelector('body'), getItems(this));
           })
           .call(drag_elem_geo);
 

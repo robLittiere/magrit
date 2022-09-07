@@ -77,16 +77,16 @@ export const drag_elem_geo = d3.drag()
       map_locked: !!map_div.select('#hand_button').classed('locked'),
     };
   })
-  .on('start', () => {
-    d3.event.sourceEvent.stopPropagation();
-    d3.event.sourceEvent.preventDefault();
+  .on('start', (event) => {
+    event.sourceEvent.stopPropagation();
+    event.sourceEvent.preventDefault();
     handle_click_hand('lock');
   })
-  .on('end', () => {
-    if (d3.event.subject && !d3.event.subject.map_locked) { handle_click_hand('unlock'); }
+  .on('end', (event) => {
+    if (event.subject && !event.subject.map_locked) { handle_click_hand('unlock'); }
   })
-  .on('drag', function () {
-    d3.select(this).attr('x', d3.event.x).attr('y', d3.event.y);
+  .on('drag', function (event) {
+    d3.select(this).attr('x', event.x).attr('y', event.y);
   });
 
 export const drag_elem_geo2 = d3.drag()
@@ -113,9 +113,9 @@ export const drag_elem_geo2 = d3.drag()
       };
     }
   })
-  .on('start', function () {
-    d3.event.sourceEvent.stopPropagation();
-    d3.event.sourceEvent.preventDefault();
+  .on('start', function (event) {
+    event.sourceEvent.stopPropagation();
+    event.sourceEvent.preventDefault();
     handle_click_hand('lock');
     const zoom = svg_map.__zoom;
     const centroid = path.centroid(this.__data__.geometry);
@@ -131,17 +131,17 @@ export const drag_elem_geo2 = d3.drag()
       })
       .style('fill', 'red');
   })
-  .on('end', () => {
-    if (d3.event.subject && !d3.event.subject.map_locked) {
+  .on('end', (event) => {
+    if (event.subject && !event.subject.map_locked) {
       handle_click_hand('unlock');
     }
     map.selectAll('#ref_symbol_location').remove();
   })
-  .on('drag', function () {
-    if (d3.event.subject.symbol === 'rect') {
-      d3.select(this).attr('x', d3.event.x).attr('y', d3.event.y);
-    } else if (d3.event.subject.symbol === 'circle') {
-      d3.select(this).attr('cx', d3.event.x).attr('cy', d3.event.y);
+  .on('drag', function (event) {
+    if (event.subject.symbol === 'rect') {
+      d3.select(this).attr('x', event.x).attr('y', event.y);
+    } else if (event.subject.symbol === 'circle') {
+      d3.select(this).attr('cx', event.x).attr('cy', event.y);
     }
   });
 
@@ -159,20 +159,20 @@ export const drag_waffle = d3.drag()
       map_locked: !!map_div.select('#hand_button').classed('locked'),
     };
   })
-  .on('start', () => {
-    d3.event.sourceEvent.stopPropagation();
-    d3.event.sourceEvent.preventDefault();
+  .on('start', (event) => {
+    event.sourceEvent.stopPropagation();
+    event.sourceEvent.preventDefault();
     handle_click_hand('lock');
   })
-  .on('end', function () {
-    if (d3.event.subject && !d3.event.subject.map_locked) {
+  .on('end', function (event) {
+    if (event.subject && !event.subject.map_locked) {
       handle_click_hand('unlock');
     }
     d3.select(this).style('cursor', 'grab');
   })
-  .on('drag', function () {
+  .on('drag', function (event) {
     d3.select(this)
-      .attr('transform', `translate(${[d3.event.x, d3.event.y]})`)
+      .attr('transform', `translate(${[event.x, event.y]})`)
       .style('cursor', 'grabbing');
   });
 

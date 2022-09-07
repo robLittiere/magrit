@@ -41,22 +41,22 @@ export default class UserArrow {
           map_locked: !!map_div.select('#hand_button').classed('locked'), //  , snap_lines: snap_lines
         };
       })
-      .on('start', () => {
-        d3.event.sourceEvent.stopPropagation();
+      .on('start', (event) => {
+        event.sourceEvent.stopPropagation();
         handle_click_hand('lock');
       })
-      .on('end', () => {
-        if (d3.event.subject && !d3.event.subject.map_locked) {
+      .on('end', (event) => {
+        if (event.subject && !event.subject.map_locked) {
           handle_click_hand('unlock');
         }
       })
-      .on('drag', function () {
-        d3.event.sourceEvent.preventDefault();
+      .on('drag', function (event) {
+        event.sourceEvent.preventDefault();
         const _t = this.querySelector('line'),
           // arrow_head_size = +_t.style.strokeWidth.replace('px', ''),
-          subject = d3.event.subject,
-          tx = (+d3.event.x - +subject.x) / svg_map.__zoom.k,
-          ty = (+d3.event.y - +subject.y) / svg_map.__zoom.k;
+          subject = event.subject,
+          tx = (+event.x - +subject.x) / svg_map.__zoom.k,
+          ty = (+event.y - +subject.y) / svg_map.__zoom.k;
         self.pt1 = [+subject.x1 + tx, +subject.y1 + ty];
         self.pt2 = [+subject.x2 + tx, +subject.y2 + ty];
           // if(_app.autoalign_features){
@@ -150,16 +150,16 @@ export default class UserArrow {
 
     this.arrow.call(this.drag_behavior);
 
-    this.arrow.on('contextmenu', () => {
+    this.arrow.on('contextmenu', (event) => {
       context_menu.showMenu(
-        d3.event,
+        event,
         document.querySelector('body'),
         getItems(),
       );
     });
-    this.arrow.on('dblclick', () => {
-      d3.event.preventDefault();
-      d3.event.stopPropagation();
+    this.arrow.on('dblclick', (event) => {
+      event.preventDefault();
+      event.stopPropagation();
       this.handle_ctrl_pt();
     });
   }
@@ -195,9 +195,9 @@ export default class UserArrow {
       self.arrow.call(self.drag_behavior);
 
       // Restore the ability to edit the control points on dblclick on the arrow :
-      self.arrow.on('dblclick', () => {
-        d3.event.preventDefault();
-        d3.event.stopPropagation();
+      self.arrow.on('dblclick', (event) => {
+        event.preventDefault();
+        event.stopPropagation();
         self.handle_ctrl_pt();
       });
       if (!map_locked) {
@@ -222,9 +222,9 @@ export default class UserArrow {
     edit_layer.append('rect')
       .attrs({ x: 0, y: 0, width: w, height: h, class: 'edit_rect' })
       .style('fill', 'transparent')
-      .on('dblclick', () => {
-        d3.event.stopPropagation();
-        d3.event.preventDefault();
+      .on('dblclick', (event) => {
+        event.stopPropagation();
+        event.preventDefault();
         cleanup_edit_state();
       });
 
@@ -232,10 +232,10 @@ export default class UserArrow {
     edit_layer.append('rect')
       .attrs({ x: self.pt1[0] * zoom_params.k + zoom_params.x - 3, y: self.pt1[1] * zoom_params.k + zoom_params.y - 3, height: 6, width: 6, id: 'arrow_start_pt' })
       .styles({ fill: 'red', cursor: 'grab' })
-      .call(d3.drag().on('drag', function () {
+      .call(d3.drag().on('drag', function (event) {
         const t = d3.select(this),
-          nx = d3.event.x,
-          ny = d3.event.y;
+          nx = event.x,
+          ny = event.y;
         t.attrs({ x: nx - 3, y: ny - 3 });
         line.x1.baseVal.value = (nx - zoom_params.x) / zoom_params.k;
         line.y1.baseVal.value = (ny - zoom_params.y) / zoom_params.k;
@@ -243,19 +243,19 @@ export default class UserArrow {
     edit_layer.append('rect')
       .attrs({ x: self.pt2[0] * zoom_params.k + zoom_params.x - 3, y: self.pt2[1] * zoom_params.k + zoom_params.y - 3, height: 6, width: 6, id: 'arrow_end_pt' })
       .styles({ fill: 'red', cursor: 'grab' })
-      .call(d3.drag().on('drag', function () {
+      .call(d3.drag().on('drag', function (event) {
         const t = d3.select(this),
-          nx = d3.event.x,
-          ny = d3.event.y;
+          nx = event.x,
+          ny = event.y;
         t.attrs({ x: nx - 3, y: ny - 3 });
         line.x2.baseVal.value = (nx - zoom_params.x) / zoom_params.k;
         line.y2.baseVal.value = (ny - zoom_params.y) / zoom_params.k;
       }));
 
     // Exit the "edit" state by double-clicking again on the arrow :
-    self.arrow.on('dblclick', () => {
-      d3.event.stopPropagation();
-      d3.event.preventDefault();
+    self.arrow.on('dblclick', (event) => {
+      event.stopPropagation();
+      event.preventDefault();
       cleanup_edit_state();
     });
   }

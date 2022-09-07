@@ -3534,8 +3534,8 @@ function render_TypoSymbols(rendering_params, new_name) {
     })
     .on('mouseover', function () { this.style.cursor = 'pointer'; })
     .on('mouseout', function () { this.style.cursor = 'initial'; })
-    .on('contextmenu dblclick', function () {
-      context_menu.showMenu(d3.event, document.querySelector('body'), getItems(this));
+    .on('contextmenu dblclick', function (event) {
+      context_menu.showMenu(event, document.querySelector('body'), getItems(this));
     })
     .call(drag_elem_geo);
 
@@ -4589,8 +4589,8 @@ export const render_label = function render_label(layer, rendering_params, optio
   selection
     .on('mouseover', function () { this.style.cursor = 'pointer'; })
     .on('mouseout', function () { this.style.cursor = 'initial'; })
-    .on('dblclick contextmenu', function () {
-      context_menu.showMenu(d3.event, document.querySelector('body'), getItems(this));
+    .on('dblclick contextmenu', function (event) {
+      context_menu.showMenu(event, document.querySelector('body'), getItems(this));
     })
     .call(drag_elem_geo);
 
@@ -4683,9 +4683,9 @@ export const render_label_graticule = function render_label_graticule(layer, ren
     .text(d => d.properties.label)
     .on('mouseover', function () { this.style.cursor = 'pointer'; })
     .on('mouseout', function () { this.style.cursor = 'initial'; })
-    .on('dblclick contextmenu', function () {
+    .on('dblclick contextmenu', function (event) {
       context_menu.showMenu(
-        d3.event,
+        event,
         document.querySelector('body'),
         getItems(this),
       );
