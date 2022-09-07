@@ -434,7 +434,7 @@
             "id": "Identificación"
         },
         "palette_box": {
-            "button": "Paleta personalizada?",
+            "button": "¿Crear una nueva paleta?",
             "title": "Paleta personalizada ({{nb_classes}} clases)",
             "error_name_existing": "El nombre del palet ya está en uso",
             "error_name_invalid": "Nombre de paleta no válido",

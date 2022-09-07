@@ -441,7 +441,7 @@
             "id": "Id"
         },
         "palette_box": {
-            "button": "Custom palette?",
+            "button": "Create a new palette?",
             "title": "Custom palette ({{nb_classes}} classes)",
             "error_name_existing": "Palette name already in use",
             "error_name_invalid": "Invalid palette name",

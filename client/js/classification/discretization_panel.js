@@ -178,7 +178,7 @@ export const display_discretization = (layer_name, field_name, nb_class, options
     col_div.append('p')
       .style('text-align', 'center')
       .insert('button')
-      .style('margin-top', '10px')
+      .style('margin-top', '8px')
       .attrs({ class: 'button_st3', id: 'reverse_pal_btn' })
       .html(_tr('disc_box.reverse_palette'))
       .on('click', () => {
@@ -186,6 +186,7 @@ export const display_discretization = (layer_name, field_name, nb_class, options
         redisplay.draw();
       });
 
+    // Button that allows the user to create a new custom palette
     col_div
       .append('p')
       .attr('id', 'button_palette_box')
@@ -211,8 +212,9 @@ export const display_discretization = (layer_name, field_name, nb_class, options
 
   const make_sequential_section = () => {
     const col_div = d3.select('#color_div');
+
     col_div.selectAll('p').remove();
-    // document.getElementById('button_palette_box').style.display = '';
+
     const sequential_color_select = col_div.insert('p')
       .attr('class', 'color_txt')
       .style('margin-left', '10px')
@@ -255,8 +257,9 @@ export const display_discretization = (layer_name, field_name, nb_class, options
 
   const make_diverging_section = () => {
     const col_div = d3.select('#color_div');
+
     col_div.selectAll('p').remove();
-    //  document.getElementById('button_palette_box').style.display = 'none';
+
     col_div.insert('p')
       .attr('class', 'central_class')
       .html(_tr('disc_box.break_on'))

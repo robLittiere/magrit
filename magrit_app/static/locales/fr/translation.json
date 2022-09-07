@@ -440,7 +440,7 @@
             "id": "Identifiant"
         },
         "palette_box": {
-            "button": "Palette personnalisée ?",
+            "button": "Créer une nouvelle palette ?",
             "title": "Palette personnalisée ({{nb_classes}} classes)",
             "error_name_existing": "Nom de palette déjà utilisé",
             "error_name_invalid": "Nom de palette invalide",
