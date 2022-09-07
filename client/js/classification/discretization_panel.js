@@ -536,11 +536,7 @@ export const display_discretization = (layer_name, field_name, nb_class, options
   const redisplay = {
     compute() {
       let tmp;
-      serie = new geostats(values);
-      serie.roundlength = serie.precision;
-      serie.resetStatistics();
       breaks = [];
-      values = serie.sorted();
       return new Promise((resolve, reject) => {
         if (values.length > 7500 && type === 'jenks') {
           const jenks_worker = new Worker('static/js/webworker_jenks.js');
@@ -755,7 +751,7 @@ export const display_discretization = (layer_name, field_name, nb_class, options
     const layer = svg_map.querySelector(`#${_app.idLayer.get(layer_name)}`);
     db_data = Array.prototype.map.call(layer.children, d => d.__data__.properties);
   }
-  const indexes = [];
+
   let color_array = [],
     nb_values = db_data.length,
     values = [],
@@ -769,10 +765,8 @@ export const display_discretization = (layer_name, field_name, nb_class, options
 
   for (let i = 0; i < nb_values; i++) {
     const value = db_data[i][field_name];
-    // if (value != null && value !== '' && isFinite(value) && !isNaN(+value)) {
-    if (isNumber(value)) {
-      values.push(+db_data[i][field_name]);
-      indexes.push(i);
+    if (isNumber(value)) { // eslint-disable-line no-restricted-globals
+      values.push(+value);
     }
   }
 
@@ -1035,8 +1029,6 @@ export const display_discretization = (layer_name, field_name, nb_class, options
     txt_median,
     txt_mean,
     rug_plot;
-
-  // make_overlay_elements();
 
   svg_histo.append('g')
     .attrs({ class: 'x_axis', transform: `translate(0,${height})` })
