@@ -1,6 +1,18 @@
 Changes
 =======
 
+Current master (Not released yet)
+---------------------------------
+
+- Change how is proposed the 'custom palette' option in the classification panel (#78).
+
+- Improve CSS of the classification panel.
+
+- Improve the rendering of the histogram in the classification panel.
+
+- Sort alphabetically categories of 'typo' and 'picto' by default.
+
+
 0.9.1 (2022-08-31)
 -----------------
 
