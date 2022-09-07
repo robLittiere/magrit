@@ -10,9 +10,7 @@ import { area, booleanPointInPolygon, nearestPoint, pointOnFeature, } from '@tur
 import * as polylabel from 'polylabel';
 
 
-export const isNumber = (value) => {
- return value != null && value !== '' && isFinite(value) && !Number.isNaN(+value);
-};
+export const isNumber = (value) => value != null && value !== '' && isFinite(value);
 
 export const createWaitingOverlay = () => {
   const bg = document.createElement('div');
