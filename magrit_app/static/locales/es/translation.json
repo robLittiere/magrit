@@ -684,13 +684,13 @@
                 "discretization_choice": "Tipo de discretización..."
             },
             "flow": {
-                "subtitle1": "Campos que serán utilizados",
+                "subtitle1": "Campos que serán utilizados :",
                 "discretization": "Tipo de discretización ",
                 "nb_class": "Número de clases ",
                 "origin_field": "Campo de origen",
                 "destination_field": "Campo de destino",
                 "intensity_field": "Campo de intensidad",
-                "ref_layer_field": "Capa geográfica de referencia",
+                "ref_layer_field": "Capa geográfica de referencia :",
                 "join_field": "Capa de unión"
             },
             "grid": {

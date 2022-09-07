@@ -393,11 +393,7 @@ export function make_min_max_tableau(values, nb_class, discontinuity_type, min_s
   parent_nd.style.marginBottom = '3px';
 
   const title = document.createElement('p');
-  // title.style = "margin: 1px; word-spacing: 1.8em;";
-  title.style.margin = '1px';
-  title.style.wordSpacing = '1.8em';
-  title.style.paddingLeft = '22px';
-  title.innerHTML = 'Min - Max - Size';
+  title.innerHTML = 'Min Max Size';
   parent_nd.appendChild(title);
 
   const div_table = document.createElement('div');
@@ -4097,6 +4093,7 @@ function fillMenu_FlowMap() {
     .attr('class', 'params_section2');
   subtitle.append('span')
     .attrs({ class: 'i18n', 'data-i18n': '[html]app_page.func_options.flow.subtitle1' })
+    .style('font-style', 'italic')
     .html(_tr('app_page.func_options.flow.subtitle1'));
 
   const origin_section = dv2.append('p')
@@ -4191,9 +4188,12 @@ function fillMenu_FlowMap() {
 
   with_discretisation.append('p')
     .attrs({ class: 'params', id: 'FlowMap_discTable' });
-  with_discretisation.append('p').attr('class', 'params_section2')
+
+  dv2.append('p')
+    .attr('class', 'params_section2')
     .insert('span')
     .attrs({ class: 'i18n', 'data-i18n': '[html]app_page.func_options.flow.ref_layer_field' })
+    .style('font-style', 'italic')
     .html(_tr('app_page.func_options.flow.ref_layer_field'));
 
   const join_field_section = dv2.append('p')

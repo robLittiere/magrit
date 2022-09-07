@@ -690,13 +690,13 @@
                 "discretization_choice": "Choix de la discrétisation ..."
             },
             "flow": {
-                "subtitle1": "Choix des champs à utiliser",
+                "subtitle1": "Choix des champs à utiliser :",
                 "discretization": "Type de discrétisation ",
                 "nb_class": "Nombre de classes ",
                 "origin_field": "Champ Origine",
                 "destination_field": "Champ Destination",
                 "intensity_field": "Champ Intensité",
-                "ref_layer_field": "Couche géographique de référence",
+                "ref_layer_field": "Couche géographique de référence :",
                 "join_field": "Champ de jointure"
             },
             "grid": {

@@ -696,7 +696,7 @@
                 "origin_field": "Origin field",
                 "destination_field": "Destination field",
                 "intensity_field": "Intensity field",
-                "ref_layer_field": "Reference layer fields",
+                "ref_layer_field": "Reference layer fields :",
                 "join_field": "Join field"
             },
             "grid": {

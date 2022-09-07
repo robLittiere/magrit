@@ -143,6 +143,11 @@
   text-decoration: none;
 }
 
+#sizes_div > p {
+  margin: 0px 0px 0px -13px;
+  word-spacing: 6.2em;
+}
+
 /* Styles for list of elements in categorical / picto panel */
 li.typo_class:first-child {
   border-top-left-radius: 4px;
