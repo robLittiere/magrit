@@ -220,7 +220,7 @@ export function getBreaks_userDefined(series, breaks) {
 
 export const prepare_ref_histo = (parent_node, series, formatCount) => {
   const svg_h = h / 7.25 > 80 ? h / 7.25 : 80,
-    svg_w = w / 4 > 320 ? 320 : w / 4,
+    svg_w = w / 4 > 320 ? 320 : 260,
     values = series.sorted(),
     nb_bins = (values.length / 3) > 51 ? 50 : Mceil(Msqrt(values.length)) + 1;
 

@@ -530,9 +530,11 @@ export const display_discretization = (layer_name, field_name, nb_class, options
 
   const make_summary = () => {
     const content_summary = make_content_summary(serie);
-    newBox.append('div').attr('id', 'summary')
-      .styles({ 'font-size': '11px', float: 'right', margin: '10px 10px 0px 10px' })
+    upper_part.append('div')
+      .attr('id', 'summary')
+      .styles({ 'font-size': '11px', margin: '10px 10px 0px 10px' })
       .insert('p')
+      .style('line-height', '1.4em')
       .html(['<b>', _tr('disc_box.summary'), '</b><br>', content_summary].join(''));
   };
 
@@ -811,7 +813,17 @@ export const display_discretization = (layer_name, field_name, nb_class, options
   }
   const precision_axis = get_precision_axis(min_serie, max_serie, serie.precision);
   const formatCount = d3.format(precision_axis);
-  const discretization_panel = newBox.append('div').attr('id', 'discretization_panel');
+
+  // The upper part of the discretisation panel
+  const upper_part = newBox.append('div')
+    .style('display', 'flex')
+    .style('justify-content', 'space-between');
+
+  // The left section, that allows the user to choose the number of classes and the type
+  // of discretisation
+  const discretization_panel = upper_part.append('div')
+    .attr('id', 'discretization_panel');
+
   const discretization = discretization_panel.insert('p')
     .insert('select')
     .attr('class', 'params')
@@ -955,12 +967,13 @@ export const display_discretization = (layer_name, field_name, nb_class, options
       });
     });
 
-  const ref_histo_box = newBox.append('div').attr('id', 'ref_histo_box');
-  ref_histo_box.append('div').attr('id', 'inner_ref_histo_box');
-
   discretization.node().value = type;
   make_summary();
-  const refDisplay = prepare_ref_histo(newBox, serie, formatCount);
+
+  const ref_histo_box = upper_part.append('div').attr('id', 'ref_histo_box');
+  ref_histo_box.append('div').attr('id', 'inner_ref_histo_box');
+
+  const refDisplay = prepare_ref_histo(upper_part, serie, formatCount);
   refDisplay('histogram');
 
   const svg_h = h / 5 > 100 ? h / 5 : 100,

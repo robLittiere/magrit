@@ -171,15 +171,11 @@ export const display_discretization_links_discont = function (layer_name, field_
 
   const make_summary = function () {
     const content_summary = make_content_summary(serie);
-    newBox.append('div')
+    upper_part.append('div')
       .attr('id', 'summary')
-      .styles({
-        'margin-left': '25px',
-        'margin-right': '50px',
-        'font-size': '10px',
-        float: 'right',
-      })
+      .styles({ 'font-size': '11px', margin: '10px 10px 0px 10px' })
       .insert('p')
+      .style('line-height', '1.4em')
       .html(['<b>', _tr('disc_box.summary'), '</b><br>', content_summary].join(''));
   };
 
@@ -323,11 +319,17 @@ export const display_discretization_links_discont = function (layer_name, field_
   const precisionAxis = get_precision_axis(serie.min(), serie.max(), serie.precision);
   const formatCount = d3.format(precisionAxis);
 
-  const discretization_panel = newBox.append('div')
+  // The upper part of the discretisation panel
+  const upper_part = newBox.append('div')
+    .style('display', 'flex')
+    .style('justify-content', 'space-between');
+
+  // The left section, that allows the user to choose the number of classes and the type
+  // of discretisation
+  const discretization_panel = upper_part.append('div')
     .attr('id', 'discretization_panel');
   const discretization_choice = discretization_panel
     .insert('p')
-    .html('Type ')
     .insert('select')
     .attr('class', 'params')
     .on('change', function () {
@@ -351,14 +353,14 @@ export const display_discretization_links_discont = function (layer_name, field_
     discretization_choice.append('option').text(func[0]).attr('value', func[1]);
   });
 
-  const ref_histo_box = newBox.append('div').attr('id', 'ref_histo_box');
-  ref_histo_box.append('div').attr('id', 'inner_ref_histo_box');
-
   discretization_choice.node().value = type;
 
   make_summary();
 
-  const refDisplay = prepare_ref_histo(newBox, serie, formatCount);
+  const ref_histo_box = upper_part.append('div').attr('id', 'ref_histo_box');
+  ref_histo_box.append('div').attr('id', 'inner_ref_histo_box');
+
+  const refDisplay = prepare_ref_histo(upper_part, serie, formatCount);
   refDisplay('histogram');
 
   if (values.length < 750) { // Only allow for beeswarm plot if there isn't too many values

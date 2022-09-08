@@ -1,7 +1,10 @@
 #discretization_panel {
-    float: left;
     font-size: 11px;
-    margin: 15px 0 0 27.5px;
+    margin: 10px 0 0 27.5px;
+}
+
+#discretization_panel select.params {
+  width: 185px;
 }
 
 #ref_histo_box {

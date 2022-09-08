@@ -299,16 +299,22 @@ export function getImgDataUrl(url) {
   });
 }
 
-export function make_content_summary(serie, precision = 6) {
+/**
+ *
+ * @param {geostats} series - Target geostats object
+ * @param {number} precision - Rounding precision for formatting the summary
+ * @returns {string} - The statistical summary formatted as a string in the current language
+ */
+export function make_content_summary(series, precision = 6) {
   return [
-    _tr('app_page.stat_summary.population'), ' : ', round_value(serie.pop(), precision), '<br>',
-    _tr('app_page.stat_summary.min'), ' : ', round_value(serie.min(), precision), ' | ',
-    _tr('app_page.stat_summary.max'), ' : ', round_value(serie.max(), precision), '<br>',
-    _tr('app_page.stat_summary.mean'), ' : ', round_value(serie.mean(), precision), '<br>',
-    _tr('app_page.stat_summary.median'), ' : ', round_value(serie.median(), precision), '<br>',
-    _tr('app_page.stat_summary.variance'), ' : ', round_value(serie.variance(), precision), '<br>',
-    _tr('app_page.stat_summary.stddev'), ' : ', round_value(serie.stddev(), precision), '<br>',
-    _tr('app_page.stat_summary.cov'), ' : ', round_value(serie.cov(), precision),
+    _tr('app_page.stat_summary.population'), ' : ', round_value(series.pop(), precision), '<br>',
+    _tr('app_page.stat_summary.min'), ' : ', round_value(series.min(), precision), '<br>',
+    _tr('app_page.stat_summary.max'), ' : ', round_value(series.max(), precision), '<br>',
+    _tr('app_page.stat_summary.mean'), ' : ', round_value(series.mean(), precision), '<br>',
+    _tr('app_page.stat_summary.median'), ' : ', round_value(series.median(), precision), '<br>',
+    _tr('app_page.stat_summary.variance'), ' : ', round_value(series.variance(), precision), '<br>',
+    _tr('app_page.stat_summary.stddev'), ' : ', round_value(series.stddev(), precision), '<br>',
+    _tr('app_page.stat_summary.cov'), ' : ', round_value(series.cov(), precision),
   ].join('');
 }
 
