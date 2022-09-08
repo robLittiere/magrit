@@ -1650,12 +1650,14 @@ export function displayInfoOnMove() {
 
     const id_top_layer = `#${global._app.layer_to_id.get(top_visible_layer)}`;
     const symbol = data_manager.current_layers[top_visible_layer].symbol || 'path';
-
-    map.select(id_top_layer).selectAll(symbol).on('mouseover', (event, d, i) => {
+    const selection = map.select(id_top_layer).selectAll(symbol);
+    selection.on('mouseover', (event, d) => {
+      const i = selection.nodes().indexOf(event.currentTarget);
       const txt_info = [
         '<h3>', top_visible_layer, '</h3><i>Feature ',
         i + 1, '/', data_manager.current_layers[top_visible_layer].n_features, '</i><p>'];
-      const properties = data_manager.result_data[top_visible_layer]
+
+      const properties = data_manager.result_data[top_visible_layer] && i
         ? data_manager.result_data[top_visible_layer][i]
         : d.properties;
       Object.getOwnPropertyNames(properties).forEach((el) => {
