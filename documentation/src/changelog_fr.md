@@ -1,5 +1,9 @@
 # Historique des versions et des changements effectués
 
+#### 0.9.2 (2022-09-08)
+
+- Corrige le positionnement des waffles (<a href="https://github.com/riatelab/magrit/issues/87">issue Github #87</a>)
+
 #### 0.9.1 (2022-08-31)
 
 - Corrige le positionnement des labels lors de la réouverture d'un fichier projet s'ils avaient été déplacés manuellement (<a href="https://github.com/riatelab/magrit/issues/86">issue Github #86</a>)
