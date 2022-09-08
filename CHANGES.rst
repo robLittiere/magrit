@@ -13,6 +13,12 @@ Current master (Not released yet)
 - Sort alphabetically categories of 'typo' and 'picto' by default.
 
 
+0.9.2 (2022-09-08)
+-----------------
+
+- Fix positioning of the waffles in Waffle Map (#87).
+
+
 0.9.1 (2022-08-31)
 -----------------
 

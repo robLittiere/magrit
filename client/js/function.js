@@ -2180,7 +2180,7 @@ function getCentroids(ref_layer_selection) {
     if (!geom) {
       centroids.push(null);
     } else {
-      centroids.push(geom);
+      centroids.push(coordsPointOnFeature(geom));
     }
   }
   return centroids;
