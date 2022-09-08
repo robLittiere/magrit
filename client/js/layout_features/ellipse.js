@@ -186,7 +186,6 @@ export default class UserEllipse {
       .attr('class', 'line_elem');
 
     s2.append('span')
-      .style('margin', 'auto')
       .html(_tr('app_page.ellipse_edit_box.stroke_color'));
 
     s2.append('input')
