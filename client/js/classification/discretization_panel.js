@@ -543,8 +543,8 @@ export const display_discretization = (layer_name, field_name, nb_class, options
       let tmp;
       breaks = [];
       return new Promise((resolve, reject) => {
-        if (values.length > 7500 && type === 'jenks') {
-          const jenks_worker = new Worker('static/js/webworker_jenks.js');
+        if (type === 'jenks') {
+          const jenks_worker = new Worker('../static/dist/webworker_jenks.js');
           _app.webworker_to_cancel = jenks_worker;
           _app.waitingOverlay.display({ zIndex: 5000 });
           jenks_worker.postMessage([values, nb_class]);
@@ -567,8 +567,8 @@ export const display_discretization = (layer_name, field_name, nb_class, options
             resolve(true);
             jenks_worker.terminate();
           };
+          return;
         }
-
         if (type === 'Q6') {
           tmp = getBreaksQ6(values, serie.precision);
           // stock_class = tmp.stock_class;
