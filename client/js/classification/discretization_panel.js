@@ -790,7 +790,7 @@ export const display_discretization = (layer_name, field_name, nb_class, options
     user_break_list = null,
     std_dev_params = options.extra_options && options.extra_options.role_mean ? options.extra_options : { role_mean: 'center', share: 1 };
 
-  serie.roundlength = serie.precision;
+  serie.roundlength = Math.max(2, serie.precision);
   serie.resetStatistics();
 
   const min_serie = serie.min();
@@ -938,7 +938,7 @@ export const display_discretization = (layer_name, field_name, nb_class, options
       max: max_nb_class,
       step: 1,
     })
-    .styles({ display: 'inline', width: '60px', 'vertical-align': 'middle', margin: '10px' })
+    .styles({ display: 'inline', width: '85px', 'vertical-align': 'middle', margin: '10px' })
     .property('value', nb_class)
     .on('change', function () {
       type = discretization.node().value;

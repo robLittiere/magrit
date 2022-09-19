@@ -409,7 +409,7 @@ export const display_discretization_links_discont = function (layer_name, field_
   let disc_nb_class = discretization_panel
     .insert('input')
     .styles({
-      display: 'inline', width: '60px', 'vertical-align': 'middle', margin: '10px',
+      display: 'inline', width: '85px', 'vertical-align': 'middle', margin: '10px',
     })
     .attrs({
       id: 'nb_class_range',
