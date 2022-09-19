@@ -769,7 +769,7 @@
     },
     "disc_box":{
         "title": "Discretization Panel",
-        "class": "class",
+        "class": "classes",
         "disp_mean": "Mean",
         "disp_median": "Median",
         "disp_sd": "Standard deviation",
