@@ -162,6 +162,9 @@ export function reproj_symbol_layer() {
       const selection = svg_map.querySelector(`#${global._app.layer_to_id.get(lyr_name)}`).querySelectorAll('g');
       const nbFt = selection.length;
       if (data_manager.current_layers[lyr_name].symbol === 'circle') {
+        const r = data_manager.current_layers[lyr_name].size;
+        const nCol = data_manager.current_layers[lyr_name].nCol;
+        const offset_centroid_x = ((r * 2) * nCol) / 2 - r;
         for (let i = 0; i < nbFt; i++) {
           const centroid = path.centroid({
             type: 'Point',
@@ -169,11 +172,15 @@ export function reproj_symbol_layer() {
           });
           const symbols = selection[i].querySelectorAll('circle');
           for (let j = 0, nb_symbol = symbols.length; j < nb_symbol; j++) {
-            symbols[j].setAttribute('cx', centroid[0]);
-            symbols[j].setAttribute('cy', centroid[1]);
+            symbols[j].setAttribute('cx', centroid[0] + offset_centroid_x);
+            symbols[j].setAttribute('cy', centroid[1] - r);
           }
         }
-      } else {
+      } else { // so symbol is 'rect'
+        const width = data_manager.current_layers[lyr_name].size;
+        const nCol = data_manager.current_layers[lyr_name].nCol;
+        const offset = width / 5;
+        const offset_centroid_x = (width + offset) * (nCol - 1) / 2 - width / 2;
         for (let i = 0; i < nbFt; i++) {
           const centroid = path.centroid({
             type: 'Point',
@@ -181,8 +188,8 @@ export function reproj_symbol_layer() {
           });
           const symbols = selection[i].querySelectorAll('rect');
           for (let j = 0, nb_symbol = symbols.length; j < nb_symbol; j++) {
-            symbols[j].setAttribute('x', centroid[0]);
-            symbols[j].setAttribute('y', centroid[1]);
+            symbols[j].setAttribute('x', centroid[0] + offset_centroid_x);
+            symbols[j].setAttribute('y', centroid[1] - width);
           }
         }
       }
