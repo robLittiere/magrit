@@ -767,7 +767,7 @@ export function render_twostocks_waffle(layer, rendering_params) {
 
   if (symbol_type === 'circle') {
     const r = rendering_params.size;
-    const offset_centroid_x = ((r * 2) * nCol) / 2 - r;
+    const offset_centroid_x = (2 * r * nCol) / 2 - r;
     for (let j = 0; j < data_manager.result_data[layer_to_add].length; j++) {
       const centroid = path.centroid({
         type: 'Point',
@@ -802,7 +802,7 @@ export function render_twostocks_waffle(layer, rendering_params) {
   } else if (symbol_type === 'rect') {
     const width = rendering_params.size;
     const offset = width / 5;
-    const offset_centroid_x = (width + offset) * (nCol - 1) / 2 - width / 2;
+    const offset_centroid_x = ((width + offset) * (nCol - 1) - width) / 2;
     for (let j = 0; j < data_manager.result_data[layer_to_add].length; j++) {
       const centroid = path.centroid({
         type: 'Point',

@@ -164,7 +164,7 @@ export function reproj_symbol_layer() {
       if (data_manager.current_layers[lyr_name].symbol === 'circle') {
         const r = data_manager.current_layers[lyr_name].size;
         const nCol = data_manager.current_layers[lyr_name].nCol;
-        const offset_centroid_x = ((r * 2) * nCol) / 2 - r;
+        const offset_centroid_x = (2 * r * nCol) / 2 - r;
         for (let i = 0; i < nbFt; i++) {
           const centroid = path.centroid({
             type: 'Point',
@@ -180,7 +180,7 @@ export function reproj_symbol_layer() {
         const width = data_manager.current_layers[lyr_name].size;
         const nCol = data_manager.current_layers[lyr_name].nCol;
         const offset = width / 5;
-        const offset_centroid_x = (width + offset) * (nCol - 1) / 2 - width / 2;
+        const offset_centroid_x = ((width + offset) * (nCol - 1) - width) / 2;
         for (let i = 0; i < nbFt; i++) {
           const centroid = path.centroid({
             type: 'Point',
