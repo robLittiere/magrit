@@ -764,6 +764,7 @@ export function render_twostocks_waffle(layer, rendering_params) {
 
   if (symbol_type === 'circle') {
     const r = rendering_params.size;
+    const offset_centroid_x = (2 * r * nCol) / 2 - r;
     for (let j = 0; j < data_manager.result_data[layer_to_add].length; j++) {
       const centroid = path.centroid({
         type: 'Point',
@@ -778,8 +779,8 @@ export function render_twostocks_waffle(layer, rendering_params) {
         group.append('circle')
           .attrs({
             transform: `translate(-${t_x}, -${t_y})`,
-            cx: centroid[0],
-            cy: centroid[1],
+            cx: centroid[0] + offset_centroid_x,
+            cy: centroid[1] - r,
             r: r,
             id: ['waffle_', i, ' feature_', data_manager.result_data[layer_to_add][j].id].join(''),
             fill: _colors[i],
@@ -798,6 +799,7 @@ export function render_twostocks_waffle(layer, rendering_params) {
   } else if (symbol_type === 'rect') {
     const width = rendering_params.size;
     const offset = width / 5;
+    const offset_centroid_x = ((width + offset) * (nCol - 1) - width) / 2;
     for (let j = 0; j < data_manager.result_data[layer_to_add].length; j++) {
       const centroid = path.centroid({
         type: 'Point',
@@ -812,8 +814,8 @@ export function render_twostocks_waffle(layer, rendering_params) {
         group.append('rect')
           .attrs({
             transform: `translate(-${t_x}, -${t_y})`,
-            x: centroid[0],
-            y: centroid[1],
+            x: centroid[0] + offset_centroid_x,
+            y: centroid[1] - width,
             width: width,
             height: width,
             id: ['waffle_', i, ' feature_', data_manager.result_data[layer_to_add][j].id].join(''),

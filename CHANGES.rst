@@ -12,6 +12,8 @@ Current master (Not released yet)
 
 - Sort alphabetically categories of 'typo' and 'picto' by default.
 
+- Improve positioning of the waffles in Waffle Map (so that the center of the waffle block falls on the x-center, instead of the behavior until now where it was the lower right corner).
+
 
 0.9.2 (2022-09-08)
 -----------------
