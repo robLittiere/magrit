@@ -1,3 +1,4 @@
+import geostats from 'geostats';
 import { getColorBrewerArray } from './../colors_helpers';
 import { isNumber } from './../helpers';
 import { has_negative, round_value } from './../helpers_calc';
@@ -8,23 +9,21 @@ const log10 = Math.log10;
 
 // Shortcut to the name of the methods offered by geostats library:
 export const discretiz_geostats_switch = new Map([
-  ['jenks', 'getJenks'],
+  ['jenks', 'getJenks2'],
   ['equal_interval', 'getEqInterval'],
-  // ['std_dev', 'getStdDeviation'],
   ['quantiles', 'getQuantile'],
-  ['Q6', 'getBreaksQ6'],
   ['geometric_progression', 'getGeometricProgression'],
 ]);
 
 /**
-* Compute the "optimal" (cf. xxx) number of class according to the number
-* of features in serie of values.
+* Compute the "optimal" (according to Sturges rule) number of class given the number
+* of entries in series of values.
 *
-* @param {Integer} len_serie - The length of the serie of values.
-* @return {Integer} - The "optimal" number of classes to be used to discretize the serie.
+* @param {Number} len_series - The length of the series of values.
+* @return {Number} - The "optimal" number of classes to be used to classify the series.
 */
-export function getOptNbClass(len_serie) {
-  return floor(1 + 3.3 * log10(len_serie));
+export function getOptNbClass(len_series) {
+  return floor(1 + 3.3 * log10(len_series));
 }
 
 
@@ -32,20 +31,20 @@ export function getOptNbClass(len_serie) {
 * Compute breaks according to "Q6" method
 * and compute the number of item in each bin.
 *
-* @param {Array} serie - An array of ordered values.
-* @param {Number} precision - An integer value decribing the precision of the serie.
+* @param {Array} series - An array of ordered values.
+* @param {Number} precision - An integer value describing the precision of the series.
 * @return {Object} - Object containing the breaks and the stock in each class.
 */
-export function getBreaksQ6(serie, precision = null) {
-  const len_serie = serie.length;
+export function getBreaksQ6(series, precision = null) {
+  const len_series = series.length;
   const q6_class = [
     1,
-    0.05 * len_serie,
-    0.275 * len_serie,
-    0.5 * len_serie,
-    0.725 * len_serie,
-    0.95 * len_serie,
-    len_serie,
+    0.05 * len_series,
+    0.275 * len_series,
+    0.5 * len_series,
+    0.725 * len_series,
+    0.95 * len_series,
+    len_series,
   ];
   let breaks = [];
   let tmp = 0;
@@ -53,17 +52,17 @@ export function getBreaksQ6(serie, precision = null) {
   const stock_class = [];
   for (let i = 0; i < 7; ++i) {
     j = Mround(q6_class[i]) - 1;
-    breaks.push(+serie[j]);
+    breaks.push(+series[j]);
     stock_class.push(j - tmp);
     tmp = j;
   }
   stock_class.shift();
   if (breaks[0] === breaks[1]) {
     // breaks[1] = breaks[0] + (breaks[2] - breaks[1]) / 2;
-    breaks[1] = (+serie[1] + breaks[0]) / 2;
+    breaks[1] = (+series[1] + breaks[0]) / 2;
   }
   if (breaks[6] === breaks[5]) {
-    breaks[5] = serie[len_serie - 2];
+    breaks[5] = series[len_series - 2];
     // breaks[5] = breaks[4] + (breaks[5] - breaks[4]) / 2;
   }
   if (precision != null) {
@@ -79,23 +78,23 @@ export function getBreaksQ6(serie, precision = null) {
 * Compute breaks according to our "mean and standard deviation" method
 * and compute the number of item in each bin.
 *
-* @param {Array} serie - An array of ordered values.
+* @param {geostats} series - An instance of a geostats object.
 * @param {Number} share - The ratio of stddev to be used a size for each class.
 * @param {String} mean_position - The position of the mean value.
-* @param {Number} precision - An integer value decribing the precision of the serie.
+* @param {Number} precision - An integer value describing the precision of the series.
 * @return {Object} - Object containing the breaks and the stock in each class.
 */
-export function getBreaksStdDev(serie, share, mean_position = 'center', precision) {
-  const min = serie.min(),
-    max = serie.max(),
-    mean = serie.mean(),
-    std_dev = serie.stddev(),
+export function getBreaksStdDev(series, share, mean_position = 'center', precision) {
+  const min = series.min(),
+    max = series.max(),
+    mean = series.mean(),
+    std_dev = series.stddev(),
     class_size = std_dev * share;
   const breaks = mean_position === 'center'
     ? [mean - (class_size / 2), mean + (class_size / 2)]
     : [mean - class_size, mean, mean + class_size];
 
-  const _precision = precision || serie.precision;
+  const _precision = precision || series.precision;
 
   while (breaks[0] > min) {
     breaks.unshift(breaks[0] - class_size);
@@ -119,33 +118,33 @@ export function getBreaksStdDev(serie, share, mean_position = 'center', precisio
   }
   return {
     nb_class,
-    breaks: breaks.map(v => round_value(v, _precision)),
+    breaks: breaks.map((v) => round_value(v, _precision)),
   };
 }
 
 function getBreaks(values, type, n_class) {
   // const _values = values.filter(v => v === 0 || (v && !Number.isNaN(+v))),
-  const _values = values.filter(v => isNumber(v)),
+  const _values = values.filter((v) => isNumber(v)),
     no_data = values.length - _values.length,
     nb_class = +n_class || getOptNbClass(_values.length);
-  const serie = new geostats(_values); // eslint-disable-line new-cap
+  const series = new geostats(_values); // eslint-disable-line new-cap
   let breaks;
   if (type === 'Q6') {
-    const tmp = getBreaksQ6(serie.sorted(), serie.precision);
+    const tmp = getBreaksQ6(series.sorted(), series.precision);
     breaks = tmp.breaks;
-    breaks[0] = serie.min();
-    breaks[nb_class] = serie.max();
-    serie.setClassManually(breaks);
+    breaks[0] = series.min();
+    breaks[nb_class] = series.max();
+    series.setClassManually(breaks);
   } else {
     const _func = discretiz_geostats_switch.get(type);
-    breaks = serie[_func](nb_class);
-    if (serie.precision) breaks = breaks.map(val => round_value(val, serie.precision));
+    breaks = series[_func](nb_class);
+    if (series.precision) breaks = breaks.map((val) => round_value(val, series.precision));
   }
-  return [serie, breaks, nb_class, no_data];
+  return [series, breaks, nb_class, no_data];
 }
 
 export function discretize_to_size(values, type, nb_class, min_size, max_size) {
-  const [serie, breaks, n_class] = getBreaks(values, type, nb_class);
+  const [series, breaks, n_class] = getBreaks(values, type, nb_class);
   const step = (max_size - min_size) / (n_class - 1),
     class_size = Array(n_class).fill(0).map((d, i) => min_size + (i * step)),
     breaks_prop = [];
@@ -153,18 +152,18 @@ export function discretize_to_size(values, type, nb_class, min_size, max_size) {
   for (let i = 0; i < breaks.length - 1; ++i) {
     breaks_prop.push([[breaks[i], breaks[i + 1]], class_size[i]]);
   }
-  return [n_class, type, breaks_prop, serie];
+  return [n_class, type, breaks_prop, series];
 }
 
 export function discretize_to_colors(values, type, nb_class, col_ramp_name) {
   const name_col_ramp = col_ramp_name || 'Reds';
-  const [serie, breaks, n_class, nb_no_data] = getBreaks(values, type, nb_class),
+  const [series, breaks, n_class, nb_no_data] = getBreaks(values, type, nb_class),
     color_array = getColorBrewerArray(n_class, name_col_ramp),
     no_data_color = nb_no_data > 0 ? '#e7e7e7' : null,
     colors_map = [];
   for (let j = 0; j < values.length; ++j) {
     if (isNumber(values[j])) {
-      const idx = serie.getClass(values[j]);
+      const idx = series.getClass(values[j]);
       colors_map.push(color_array[idx]);
     } else {
       colors_map.push(no_data_color);
@@ -176,31 +175,31 @@ export function discretize_to_colors(values, type, nb_class, col_ramp_name) {
 /**
 * Parse a string of comma separated break values
 * to an actual Array of break values.
-* The serie is used to defined if there may be negative values
+* The series is used to define if there may be negative values
 * in the defined break values.
 *
-* @param {Array} serie - The serie of values to be discretised with `breaks_list`.
+* @param {Array} series - The series of values to be classified with `breaks_list`.
 * @param {String} breaks_list - The user_defined break values as String.
 * @return {Array} - The actual Array of break values.
 */
-function parseUserDefinedBreaks(serie, breaks_list) {
-  const separator = has_negative(serie) ? '- ' : '-';
-  return breaks_list.split(separator).map(el => +el.trim());
+function parseUserDefinedBreaks(series, breaks_list) {
+  const separator = has_negative(series) ? '- ' : '-';
+  return breaks_list.split(separator).map((el) => +el.trim());
 }
 
 /**
 * Returns the break values and the stock of each class given
 * a list of breaks defined by the user.
 *
-* @param {Array} serie - The serie of values to be discretised
+* @param {Array} series - The series of values to be classified
 * @param {Array} breaks - The list of breaks, whether as a String (a typed by the user)
 *                    or as an Array.
 * @return {Object} - An Object with the stock (number of feature) in each class
 *                    and the break values (should be unchanged if provided as an Array)
 */
-export function getBreaks_userDefined(serie, breaks) {
+export function getBreaks_userDefined(series, breaks) {
   const break_values = (typeof breaks === 'string')
-    ? parseUserDefinedBreaks(serie, breaks)
+    ? parseUserDefinedBreaks(series, breaks)
     : breaks;
   const len_break_val = break_values.length,
     stock_class = new Array(len_break_val - 1);
@@ -208,7 +207,7 @@ export function getBreaks_userDefined(serie, breaks) {
   for (let i = 1; i < len_break_val; ++i) {
     const class_max = break_values[i];
     stock_class[i - 1] = 0;
-    while (serie[j] <= class_max) {
+    while (series[j] <= class_max) {
       stock_class[i - 1] += 1;
       j += 1;
     }
@@ -219,13 +218,13 @@ export function getBreaks_userDefined(serie, breaks) {
   };
 }
 
-export const prepare_ref_histo = (parent_node, serie, formatCount) => {
+export const prepare_ref_histo = (parent_node, series, formatCount) => {
   const svg_h = h / 7.25 > 80 ? h / 7.25 : 80,
-    svg_w = w / 4 > 320 ? 320 : w / 4,
-    values = serie.sorted(),
+    svg_w = w / 4 > 320 ? 320 : 260,
+    values = series.sorted(),
     nb_bins = (values.length / 3) > 51 ? 50 : Mceil(Msqrt(values.length)) + 1;
 
-  const q5 = serie.getQuantile(4).map(v => +v);
+  const q5 = series.getQuantile(4).map((v) => +v);
 
   const m_margin = { top: 10, right: 20, bottom: 10, left: 20 },
     m_width = svg_w - m_margin.right - m_margin.left,
@@ -246,8 +245,8 @@ export const prepare_ref_histo = (parent_node, serie, formatCount) => {
     });
 
   const x = d3.scaleLinear()
-    .domain([serie.min(), serie.max()])
-    .rangeRound([0, m_width]);
+    .domain([series.min(), series.max()])
+    .range([0, m_width]);
 
   let svg_ref_histo = c.append('g')
     .attr('transform', `translate(${m_margin.left + m_margin.right}, ${m_margin.top})`);
@@ -269,14 +268,14 @@ export const prepare_ref_histo = (parent_node, serie, formatCount) => {
         .data(data)
         .enter()
         .append('rect')
-        .attrs(d => ({
+        .attrs((d) => ({
           class: 'bar',
-          width: Mabs(x(d.x1)) - Mabs(x(d.x0)),
+          width: Mabs(x(d.x1)) - Mabs(x(d.x0)) - 1,
           height: m_height - y(d.length),
           x: 0,
           transform: `translate(${x(d.x0)},${y(d.length)})`,
         }))
-        .styles({ fill: 'beige', stroke: 'black', 'stroke-width': '0.4px' });
+        .styles({ fill: '#87c5d9' }); // 'rgb(105, 179, 162)'
 
       svg_ref_histo.append('g')
         .style('font-size', '10px')
@@ -328,7 +327,7 @@ export const prepare_ref_histo = (parent_node, serie, formatCount) => {
       svg_ref_histo.append('g')
         .insert('rect')
         .attrs({ x: x(q5[1]), y: m_margin.top, width: x(q5[2]) - x(q5[1]), height: m_height - m_margin.bottom - m_margin.top })
-        .styles({ 'stroke-width': 1, stroke: 'black', fill: 'lightblue' });
+        .styles({ 'stroke-width': 1, stroke: 'black', fill: '#87c5d9' });
 
       svg_ref_histo.append('g')
         .insert('line')
@@ -338,7 +337,7 @@ export const prepare_ref_histo = (parent_node, serie, formatCount) => {
       svg_ref_histo.append('g')
         .insert('rect')
         .attrs({ x: x(q5[2]), y: m_margin.top, width: x(q5[3]) - x(q5[2]), height: m_height - m_margin.bottom - m_margin.top })
-        .styles({ 'stroke-width': 1, stroke: 'black', fill: 'lightblue' });
+        .styles({ 'stroke-width': 1, stroke: 'black', fill: '#87c5d9' });
 
       svg_ref_histo.append('g')
         .insert('line')
@@ -407,8 +406,8 @@ export const prepare_ref_histo = (parent_node, serie, formatCount) => {
         .selectAll('g')
         .data(d3.voronoi()
           .extent([[0, 0], [m_width, m_height]])
-          .x(d => d.x)
-          .y(d => d.y)
+          .x((d) => d.x)
+          .y((d) => d.y)
           .polygons(data))
         .enter()
         .append('g');
@@ -417,7 +416,7 @@ export const prepare_ref_histo = (parent_node, serie, formatCount) => {
         .attrs((d) => {
           if (d) {
             return {
-              r: data.lenght < 250 ? 2.5 : data.lenght < 500 ? 1.5 : 1,
+              r: data.length < 250 ? 2.5 : data.length < 500 ? 1.5 : 1,
               transform: `translate(${d.data.x},${d.data.y})`,
             };
           }

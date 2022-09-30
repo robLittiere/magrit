@@ -440,8 +440,8 @@
             "id": "Identifiant"
         },
         "palette_box": {
-            "button": "Palette personnalisée ?",
-            "title": "Palette personnalisée",
+            "button": "Créer une nouvelle palette ?",
+            "title": "Palette personnalisée ({{nb_classes}} classes)",
             "error_name_existing": "Nom de palette déjà utilisé",
             "error_name_invalid": "Nom de palette invalide",
             "new_name": "Nom de la palette :"
@@ -690,13 +690,13 @@
                 "discretization_choice": "Choix de la discrétisation ..."
             },
             "flow": {
-                "subtitle1": "Choix des champs à utiliser",
+                "subtitle1": "Choix des champs à utiliser :",
                 "discretization": "Type de discrétisation ",
                 "nb_class": "Nombre de classes ",
                 "origin_field": "Champ Origine",
                 "destination_field": "Champ Destination",
                 "intensity_field": "Champ Intensité",
-                "ref_layer_field": "Couche géographique de référence",
+                "ref_layer_field": "Couche géographique de référence :",
                 "join_field": "Champ de jointure"
             },
             "grid": {
@@ -787,6 +787,7 @@
         "line_size": "<b>Taille des segments :</b>",
         "sequential": "Séquentiel",
         "diverging": "Divergent",
+        "custom": "Palette personnalisée",
         "reverse_palette": "Inverser l'ordre des couleurs",
         "withnodata": "{{ count }} entité sans valeur",
         "withnodata_plural": "{{ count }} entités sans valeur",

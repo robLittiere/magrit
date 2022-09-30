@@ -1,12 +1,23 @@
 # Historique des versions et des changements effectués
 
+#### Current master (Not released yet)
+
+- Modifie la façon dont est proposée l'option "palette personnalisée" dans le panneau de classification (<a href="https://github.com/riatelab/magrit/issues/78">issue Github #78</a>).
+
+- Améliorer le CSS du panneau de classification.
+
+- Améliorer le rendu de l'histogramme dans le panneau de classification.
+
+- Tri alphabétique des catégories 'typo' et 'picto' par défaut.
+
+
 #### 0.9.2 (2022-09-08)
 
 - Corrige le positionnement des waffles (<a href="https://github.com/riatelab/magrit/issues/87">issue Github #87</a>)
 
 #### 0.9.1 (2022-08-31)
 
-- Corrige le positionnement des labels lors de la réouverture d'un fichier projet s'ils avaient été déplacés manuellement (<a href="https://github.com/riatelab/magrit/issues/86">issue Github #86</a>)
+- Corrige le positionnement des labels lors de la réouverture d'un fichier projet s'ils avaient été déplacés manuellement (<a href="https://github.com/riatelab/magrit/issues/86">issue Github #86</a>).
 
 
 #### 0.9.0 (2022-08-31)

@@ -1,3 +1,4 @@
+import geostats from 'geostats';
 import { make_dialog_container, overlay_under_modal, reOpenParent } from './../dialogs';
 import { fetch_min_max_table_value, make_min_max_tableau } from './../function';
 import { make_content_summary } from './../helpers';
@@ -170,15 +171,11 @@ export const display_discretization_links_discont = function (layer_name, field_
 
   const make_summary = function () {
     const content_summary = make_content_summary(serie);
-    newBox.append('div')
+    upper_part.append('div')
       .attr('id', 'summary')
-      .styles({
-        'margin-left': '25px',
-        'margin-right': '50px',
-        'font-size': '10px',
-        float: 'right',
-      })
+      .styles({ 'font-size': '11px', margin: '10px 10px 0px 10px' })
       .insert('p')
+      .style('line-height', '1.4em')
       .html(['<b>', _tr('disc_box.summary'), '</b><br>', content_summary].join(''));
   };
 
@@ -225,10 +222,12 @@ export const display_discretization_links_discont = function (layer_name, field_
       return true;
     },
     draw() {
-            // Clean-up previously made histogram :
+      // Clean-up previously made histogram :
       d3.select('#svg_discretization').selectAll('.bar').remove();
 
-      for (let i = 0, len = bins.length; i < len; ++i) { bins[i].color = array_color[i]; }
+      for (let i = 0, len = bins.length; i < len; ++i) {
+        bins[i].color = array_color[i % array_color.length];
+      }
 
       const x = d3.scaleLinear()
         .domain([serie.min(), serie.max()])
@@ -272,8 +271,6 @@ export const display_discretization_links_discont = function (layer_name, field_
     db_data = data_manager.user_data[layer_name];
   }
 
-  const color_array = [];
-  const indexes = [];
   let nb_values = db_data.length;
   let values = [];
   let no_data;
@@ -281,7 +278,6 @@ export const display_discretization_links_discont = function (layer_name, field_
   for (let i = 0; i < nb_values; i++) {
     if (db_data[i][field_name] != null) {
       values.push(+db_data[i][field_name]);
-      indexes.push(i);
     }
   }
 
@@ -302,19 +298,17 @@ export const display_discretization_links_discont = function (layer_name, field_
     last_max = max_fast(sizes),
     array_color = d3.schemeSet3.slice();
 
+  serie.roundlength = serie.precision;
+  serie.resetStatistics();
+
   breaks_info.forEach((elem) => { breaks.push(elem[0][1]); });
 
-  if (serie.variance() === 0 && serie.stddev() === 0) {
-    serie = new geostats(values);
-  }
-
   values = serie.sorted();
-//    serie.setPrecision(6);
+
   const available_functions = [
     [_tr('app_page.common.equal_interval'), 'equal_interval'],
     [_tr('app_page.common.quantiles'), 'quantiles'],
     [_tr('app_page.common.user_defined'), 'user_defined'],
-//     [_tr("app_page.common.std_dev"), "std_dev"],
     [_tr('app_page.common.Q6'), 'Q6'],
     [_tr('app_page.common.jenks'), 'jenks'],
   ];
@@ -325,11 +319,17 @@ export const display_discretization_links_discont = function (layer_name, field_
   const precisionAxis = get_precision_axis(serie.min(), serie.max(), serie.precision);
   const formatCount = d3.format(precisionAxis);
 
-  const discretization_panel = newBox.append('div')
+  // The upper part of the discretisation panel
+  const upper_part = newBox.append('div')
+    .style('display', 'flex')
+    .style('justify-content', 'space-between');
+
+  // The left section, that allows the user to choose the number of classes and the type
+  // of discretisation
+  const discretization_panel = upper_part.append('div')
     .attr('id', 'discretization_panel');
   const discretization_choice = discretization_panel
     .insert('p')
-    .html('Type ')
     .insert('select')
     .attr('class', 'params')
     .on('change', function () {
@@ -353,14 +353,14 @@ export const display_discretization_links_discont = function (layer_name, field_
     discretization_choice.append('option').text(func[0]).attr('value', func[1]);
   });
 
-  const ref_histo_box = newBox.append('div').attr('id', 'ref_histo_box');
-  ref_histo_box.append('div').attr('id', 'inner_ref_histo_box');
-
   discretization_choice.node().value = type;
 
   make_summary();
 
-  const refDisplay = prepare_ref_histo(newBox, serie, formatCount);
+  const ref_histo_box = upper_part.append('div').attr('id', 'ref_histo_box');
+  ref_histo_box.append('div').attr('id', 'inner_ref_histo_box');
+
+  const refDisplay = prepare_ref_histo(upper_part, serie, formatCount);
   refDisplay('histogram');
 
   if (values.length < 750) { // Only allow for beeswarm plot if there isn't too many values
@@ -409,7 +409,7 @@ export const display_discretization_links_discont = function (layer_name, field_
   let disc_nb_class = discretization_panel
     .insert('input')
     .styles({
-      display: 'inline', width: '60px', 'vertical-align': 'middle', margin: '10px',
+      display: 'inline', width: '85px', 'vertical-align': 'middle', margin: '10px',
     })
     .attrs({
       id: 'nb_class_range',
@@ -436,12 +436,13 @@ export const display_discretization_links_discont = function (layer_name, field_
       redisplay.draw();
     });
 
-  const svg_h = h / 5 > 90 ? h / 5 : 90,
-    svg_w = w - (w / 8),
+  const svg_h = h / 5 > 100 ? h / 5 : 100,
+    svg_w = (window.innerWidth - 40) > 760 ? 760 : (window.innerWidth - 40),
     margin = { top: 17.5, right: 30, bottom: 7.5, left: 30 },
     height = svg_h - margin.top - margin.bottom;
 
-  d3.select('#discretiz_charts').select('.modal-dialog')
+  d3.select('#discretiz_charts')
+    .select('.modal-dialog')
     .styles({
       width: `${svg_w + margin.top + margin.bottom + 90}px`,
       height: `${window.innerHeight - 60}px`,
@@ -487,19 +488,28 @@ export const display_discretization_links_discont = function (layer_name, field_
       .scale(x)
       .tickFormat(formatCount));
 
-  const box_content = newBox.append('div').attr('id', 'box_content');
+  const box_content = newBox.append('div')
+    .attr('id', 'box_content')
+    .style('text-align', 'center')
+    .style('margin-top', '20px');
+
   box_content.append('h3')
     .style('margin', '0')
     .html(_tr('disc_box.line_size'));
+
   box_content
     .append('div')
     .attr('id', 'sizes_div');
+
+  // What to do when the min - max - size table changes
   const callback = function () {
     discretization_choice.node().value = type;
     update_breaks(true);
     redisplay.compute();
     redisplay.draw();
   };
+
+  // Make and fill the min - max - size table
   make_min_max_tableau(null, nb_class, type, null, null, 'sizes_div', breaks_info, callback);
 
   redisplay.compute();

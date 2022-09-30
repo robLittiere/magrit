@@ -37,21 +37,21 @@ export default class UserEllipse {
           map_locked: !!map_div.select('#hand_button').classed('locked'),
         };
       })
-      .on('start', () => {
-        d3.event.sourceEvent.stopPropagation();
+      .on('start', (event) => {
+        event.sourceEvent.stopPropagation();
         handle_click_hand('lock');
       })
-      .on('end', () => {
-        if (d3.event.subject && !d3.event.subject.map_locked) {
+      .on('end', (event) => {
+        if (event.subject && !event.subject.map_locked) {
           handle_click_hand('unlock');
         }
       })
-      .on('drag', function () {
-        d3.event.sourceEvent.preventDefault();
+      .on('drag', function (event) {
+        event.sourceEvent.preventDefault();
         const _t = this.querySelector('ellipse'),
-          subject = d3.event.subject,
-          tx = (+d3.event.x - +subject.x) / svg_map.__zoom.k,
-          ty = (+d3.event.y - +subject.y) / svg_map.__zoom.k;
+          subject = event.subject,
+          tx = (+event.x - +subject.x) / svg_map.__zoom.k,
+          ty = (+event.y - +subject.y) / svg_map.__zoom.k;
         self.pt1 = [+subject.x + tx, +subject.y + ty];
         _t.cx.baseVal.value = self.pt1[0];
         _t.cy.baseVal.value = self.pt1[1];
@@ -88,12 +88,12 @@ export default class UserEllipse {
       });
 
     this.ellipse
-      .on('contextmenu', () => {
-        context_menu.showMenu(d3.event, document.body, getItems());
+      .on('contextmenu', (event) => {
+        context_menu.showMenu(event, document.body, getItems());
       })
-      .on('dblclick', () => {
-        d3.event.preventDefault();
-        d3.event.stopPropagation();
+      .on('dblclick', (event) => {
+        event.preventDefault();
+        event.stopPropagation();
         this.handle_ctrl_pt();
       })
       .call(this.drag_behavior);
@@ -186,7 +186,6 @@ export default class UserEllipse {
       .attr('class', 'line_elem');
 
     s2.append('span')
-      .style('margin', 'auto')
       .html(_tr('app_page.ellipse_edit_box.stroke_color'));
 
     s2.append('input')
@@ -234,9 +233,9 @@ export default class UserEllipse {
       edit_layer.remove();
       msg.dismiss();
       self.ellipse.call(self.drag_behavior);
-      self.ellipse.on('dblclick', () => {
-        d3.event.preventDefault();
-        d3.event.stopPropagation();
+      self.ellipse.on('dblclick', (event) => {
+        event.preventDefault();
+        event.stopPropagation();
         self.handle_ctrl_pt();
       });
       if (!map_locked) {
@@ -259,9 +258,9 @@ export default class UserEllipse {
     edit_layer.append('rect')
       .attrs({ x: 0, y: 0, width: w, height: h, class: 'edit_rect' })
       .style('fill', 'transparent')
-      .on('dblclick', () => {
-        d3.event.stopPropagation();
-        d3.event.preventDefault();
+      .on('dblclick', (event) => {
+        event.stopPropagation();
+        event.preventDefault();
         cleanup_edit_state();
       });
 
@@ -275,10 +274,10 @@ export default class UserEllipse {
         x: (self.pt1[0] - ellipse_elem.rx.baseVal.value) * zoom_param.k + zoom_param.x - 4,
         y: self.pt1[1] * zoom_param.k + zoom_param.y - 4,
       })
-      .call(d3.drag().on('drag', function () {
+      .call(d3.drag().on('drag', function (event) {
         const t = d3.select(this);
-        t.attr('x', d3.event.x - 4);
-        const dist = self.pt1[0] - (d3.event.x - zoom_param.x) / zoom_param.k;
+        t.attr('x', event.x - 4);
+        const dist = self.pt1[0] - (event.x - zoom_param.x) / zoom_param.k;
         ellipse_elem.rx.baseVal.value = dist;
       }));
 
@@ -290,16 +289,16 @@ export default class UserEllipse {
         id: 'pt2',
         x: self.pt1[0] * zoom_param.k + zoom_param.x - 4,
         y: (self.pt1[1] - ellipse_elem.ry.baseVal.value) * zoom_param.k + zoom_param.y - 4 })
-      .call(d3.drag().on('drag', function () {
+      .call(d3.drag().on('drag', function (event) {
         const t = d3.select(this);
-        t.attr('y', d3.event.y - 4);
-        const dist = self.pt1[1] - (d3.event.y - zoom_param.y) / zoom_param.k;
+        t.attr('y', event.y - 4);
+        const dist = self.pt1[1] - (event.y - zoom_param.y) / zoom_param.k;
         ellipse_elem.ry.baseVal.value = dist;
       }));
 
-    self.ellipse.on('dblclick', () => {
-      d3.event.stopPropagation();
-      d3.event.preventDefault();
+    self.ellipse.on('dblclick', (event) => {
+      event.stopPropagation();
+      event.preventDefault();
       cleanup_edit_state();
     });
   }

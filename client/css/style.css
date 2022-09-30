@@ -218,6 +218,11 @@ p.params_section2 > select {
   max-width: 280px;
 }
 
+.func-options #FlowMap_discTable > p {
+  margin: 0px 0px 0px 3px;
+  word-spacing: 5.5em;
+}
+
 #section3 {
   padding: 0.8em 0.5em 0.8em 0.5em;
 }

@@ -4,6 +4,14 @@ Changes
 Current master (Not released yet)
 ---------------------------------
 
+- Change how is proposed the 'custom palette' option in the classification panel (#78).
+
+- Improve CSS of the classification panel.
+
+- Improve the rendering of the histogram in the classification panel.
+
+- Sort alphabetically categories of 'typo' and 'picto' by default.
+
 - Improve positioning of the waffles in Waffle Map (so that the center of the waffle block falls on the x-center, instead of the behavior until now where it was the lower right corner).
 
 

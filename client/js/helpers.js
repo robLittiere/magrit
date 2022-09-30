@@ -10,9 +10,7 @@ import { area, booleanPointInPolygon, nearestPoint, pointOnFeature, } from '@tur
 import * as polylabel from 'polylabel';
 
 
-export const isNumber = (value) => {
- return value != null && value !== '' && isFinite(value) && !Number.isNaN(+value);
-};
+export const isNumber = (value) => value != null && value !== '' && isFinite(value);
 
 export const createWaitingOverlay = () => {
   const bg = document.createElement('div');
@@ -77,16 +75,16 @@ export const drag_elem_geo = d3.drag()
       map_locked: !!map_div.select('#hand_button').classed('locked'),
     };
   })
-  .on('start', () => {
-    d3.event.sourceEvent.stopPropagation();
-    d3.event.sourceEvent.preventDefault();
+  .on('start', (event) => {
+    event.sourceEvent.stopPropagation();
+    event.sourceEvent.preventDefault();
     handle_click_hand('lock');
   })
-  .on('end', () => {
-    if (d3.event.subject && !d3.event.subject.map_locked) { handle_click_hand('unlock'); }
+  .on('end', (event) => {
+    if (event.subject && !event.subject.map_locked) { handle_click_hand('unlock'); }
   })
-  .on('drag', function () {
-    d3.select(this).attr('x', d3.event.x).attr('y', d3.event.y);
+  .on('drag', function (event) {
+    d3.select(this).attr('x', event.x).attr('y', event.y);
   });
 
 export const drag_elem_geo2 = d3.drag()
@@ -113,9 +111,9 @@ export const drag_elem_geo2 = d3.drag()
       };
     }
   })
-  .on('start', function () {
-    d3.event.sourceEvent.stopPropagation();
-    d3.event.sourceEvent.preventDefault();
+  .on('start', function (event) {
+    event.sourceEvent.stopPropagation();
+    event.sourceEvent.preventDefault();
     handle_click_hand('lock');
     const zoom = svg_map.__zoom;
     const centroid = path.centroid(this.__data__.geometry);
@@ -131,17 +129,17 @@ export const drag_elem_geo2 = d3.drag()
       })
       .style('fill', 'red');
   })
-  .on('end', () => {
-    if (d3.event.subject && !d3.event.subject.map_locked) {
+  .on('end', (event) => {
+    if (event.subject && !event.subject.map_locked) {
       handle_click_hand('unlock');
     }
     map.selectAll('#ref_symbol_location').remove();
   })
-  .on('drag', function () {
-    if (d3.event.subject.symbol === 'rect') {
-      d3.select(this).attr('x', d3.event.x).attr('y', d3.event.y);
-    } else if (d3.event.subject.symbol === 'circle') {
-      d3.select(this).attr('cx', d3.event.x).attr('cy', d3.event.y);
+  .on('drag', function (event) {
+    if (event.subject.symbol === 'rect') {
+      d3.select(this).attr('x', event.x).attr('y', event.y);
+    } else if (event.subject.symbol === 'circle') {
+      d3.select(this).attr('cx', event.x).attr('cy', event.y);
     }
   });
 
@@ -159,20 +157,20 @@ export const drag_waffle = d3.drag()
       map_locked: !!map_div.select('#hand_button').classed('locked'),
     };
   })
-  .on('start', () => {
-    d3.event.sourceEvent.stopPropagation();
-    d3.event.sourceEvent.preventDefault();
+  .on('start', (event) => {
+    event.sourceEvent.stopPropagation();
+    event.sourceEvent.preventDefault();
     handle_click_hand('lock');
   })
-  .on('end', function () {
-    if (d3.event.subject && !d3.event.subject.map_locked) {
+  .on('end', function (event) {
+    if (event.subject && !event.subject.map_locked) {
       handle_click_hand('unlock');
     }
     d3.select(this).style('cursor', 'grab');
   })
-  .on('drag', function () {
+  .on('drag', function (event) {
     d3.select(this)
-      .attr('transform', `translate(${[d3.event.x, d3.event.y]})`)
+      .attr('transform', `translate(${[event.x, event.y]})`)
       .style('cursor', 'grabbing');
   });
 
@@ -301,16 +299,22 @@ export function getImgDataUrl(url) {
   });
 }
 
-export function make_content_summary(serie, precision = 6) {
+/**
+ *
+ * @param {geostats} series - Target geostats object
+ * @param {number} precision - Rounding precision for formatting the summary
+ * @returns {string} - The statistical summary formatted as a string in the current language
+ */
+export function make_content_summary(series, precision = 6) {
   return [
-    _tr('app_page.stat_summary.population'), ' : ', round_value(serie.pop(), precision), '<br>',
-    _tr('app_page.stat_summary.min'), ' : ', round_value(serie.min(), precision), ' | ',
-    _tr('app_page.stat_summary.max'), ' : ', round_value(serie.max(), precision), '<br>',
-    _tr('app_page.stat_summary.mean'), ' : ', round_value(serie.mean(), precision), '<br>',
-    _tr('app_page.stat_summary.median'), ' : ', round_value(serie.median(), precision), '<br>',
-    _tr('app_page.stat_summary.variance'), ' : ', round_value(serie.variance(), precision), '<br>',
-    _tr('app_page.stat_summary.stddev'), ' : ', round_value(serie.stddev(), precision), '<br>',
-    _tr('app_page.stat_summary.cov'), ' : ', round_value(serie.cov(), precision),
+    _tr('app_page.stat_summary.population'), ' : ', round_value(series.pop(), precision), '<br>',
+    _tr('app_page.stat_summary.min'), ' : ', round_value(series.min(), precision), '<br>',
+    _tr('app_page.stat_summary.max'), ' : ', round_value(series.max(), precision), '<br>',
+    _tr('app_page.stat_summary.mean'), ' : ', round_value(series.mean(), precision), '<br>',
+    _tr('app_page.stat_summary.median'), ' : ', round_value(series.median(), precision), '<br>',
+    _tr('app_page.stat_summary.variance'), ' : ', round_value(series.variance(), precision), '<br>',
+    _tr('app_page.stat_summary.stddev'), ' : ', round_value(series.stddev(), precision), '<br>',
+    _tr('app_page.stat_summary.cov'), ' : ', round_value(series.cov(), precision),
   ].join('');
 }
 

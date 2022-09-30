@@ -1,8 +1,9 @@
+import geostats from 'geostats';
 import { addNewCustomPalette, getColorBrewerArray, randomColor } from './../colors_helpers';
 import { make_dialog_container, overlay_under_modal, reOpenParent } from './../dialogs';
 import { isNumber, make_content_summary, setSelected } from './../helpers';
 import { accordionize } from './../interface';
-import { get_precision_axis } from './../helpers_calc';
+import { get_precision_axis, round_value } from './../helpers_calc';
 import { Mmax, Mround } from './../helpers_math';
 import {
   discretiz_geostats_switch, getBreaksQ6,
@@ -10,17 +11,17 @@ import {
   prepare_ref_histo,
 } from './common';
 
-function make_box_custom_palette(nb_class, existing_colors) {
+function make_box_custom_palette(nb_classes, existing_colors) {
   const is_hex_color = new RegExp(/^#([0-9a-f]{6}|[0-9a-f]{3})$/i);
   const is_ok_name = new RegExp(/^[a-zA-Z0-9_]*$/);
   const existing_palette = Array.from(_app.custom_palettes.keys());
   let pal_name;
   let ref_colors;
-  if (existing_colors && existing_colors.length === nb_class) {
+  if (existing_colors && existing_colors.length === nb_classes) {
     ref_colors = existing_colors.slice();
   } else {
     ref_colors = [];
-    for (let i = 0; i < nb_class; i++) {
+    for (let i = 0; i < nb_classes; i++) {
       ref_colors.push(randomColor());
     }
   }
@@ -46,14 +47,16 @@ function make_box_custom_palette(nb_class, existing_colors) {
   };
 
   return swal({
-    title: _tr('app_page.palette_box.title'),
+    title: _tr('app_page.palette_box.title', { nb_classes }),
     html: '<div id="palette_box_content" style="display: inline-flex;"></div><div id="palette_box_name"></div>',
-    showCancelButton: true,
+    allowOutsideClick: false,
+    allowEscapeKey: false,
+    showCancelButton: false,
     showConfirmButton: true,
-    cancelButtonText: _tr('app_page.common.close'),
+    // cancelButtonText: _tr('app_page.common.close'),
     animation: 'slide-from-top',
     onOpen: () => {
-      document.querySelector('.swal2-modal').style.width = `${nb_class * 85}px`;
+      document.querySelector('.swal2-modal').style.width = `${nb_classes * 85}px`;
       const colors = d3.select('#palette_box_content');
       const g = colors.selectAll('p')
         .data(ref_colors)
@@ -106,7 +109,7 @@ export const display_discretization = (layer_name, field_name, nb_class, options
     const section = d3.select('#color_div')
       .append('div')
       .attr('id', 'no_data_section')
-      .append('p')
+      // .append('p')
       .html(_tr('disc_box.withnodata', { count: +no_data }));
 
     section.append('input')
@@ -115,15 +118,103 @@ export const display_discretization = (layer_name, field_name, nb_class, options
       .property('value', '#ebebcd');
   };
 
-  const make_sequ_button = () => {
+  const make_custom_palette_box = () => {
+    palette_box_opened = true;
+    make_box_custom_palette(nb_class)
+      .then((result) => {
+        palette_box_opened = false;
+        if (result) {
+          const [colors, palette_name] = result;
+          const select_palette = document.querySelector('.color_params');
+          addNewCustomPalette(palette_name, colors);
+          if (select_palette) {
+            d3.select(select_palette)
+              .append('option')
+              .text(`${palette_name} (${colors.length})`)
+              .attrs({
+                value: `user_${palette_name}`,
+                title: palette_name,
+                nb_colors: colors.length,
+              });
+            setSelected(select_palette, `user_${palette_name}`);
+          }
+        }
+      });
+  };
+
+  const make_custom_palette_section = () => {
     const col_div = d3.select('#color_div');
-    col_div.selectAll('.color_params').remove();
-    col_div.selectAll('.color_txt').remove();
-    col_div.selectAll('.color_txt2').remove();
-    col_div.selectAll('.central_class').remove();
-    col_div.selectAll('.central_color').remove();
-    col_div.selectAll('#reverse_pal_btn').remove();
-    document.getElementById('button_palette_box').style.display = '';
+    col_div.selectAll('p').remove();
+    const custom_palette_select = col_div.append('p')
+      .append('select')
+      .attr('class', 'color_params')
+      .styles({
+        width: '116px',
+      })
+      .on('change', function() {
+        redisplay.draw();
+      });
+
+    // All the custom palettes
+    const additional_colors = Array.from(_app.custom_palettes.entries());
+
+    // Custom palette for the current number of classes
+    const candidates = [];
+
+    // Fill the select with the custom palettes
+    // and disable all the custom palettes with a different number of classes
+    for (let ixp = 0; ixp < additional_colors.length; ixp++) {
+      const disabled = additional_colors[ixp][1].length !== nb_class;
+      custom_palette_select.append('option')
+        .text(`${additional_colors[ixp][0]} (${additional_colors[ixp][1].length})`)
+        .attrs({ value: `user_${additional_colors[ixp][0]}`, title: additional_colors[ixp][0], nb_colors: additional_colors[ixp][1].length })
+        .property('disabled', disabled);
+      if (!disabled) {
+        candidates.push(ixp);
+      }
+    }
+
+    // Button allowing the reverse a color palette:
+    col_div.append('p')
+      .style('text-align', 'center')
+      .insert('button')
+      .style('margin-top', '8px')
+      .attrs({ class: 'button_st3', id: 'reverse_pal_btn' })
+      .html(_tr('disc_box.reverse_palette'))
+      .on('click', () => {
+        to_reverse = true;
+        redisplay.draw();
+      });
+
+    // Button that allows the user to create a new custom palette
+    col_div
+      .append('p')
+      .attr('id', 'button_palette_box')
+      .styles({
+        margin: '5px',
+        cursor: 'pointer',
+        'font-style': 'italic',
+      })
+      .html(_tr('app_page.palette_box.button'))
+      .on('click', () => {
+        make_custom_palette_box();
+      });
+
+    if (additional_colors.length === 0 || candidates.length === 0) {
+      // If there is no custom palette for the current number of classes
+      // we ask the user right away to create one
+      make_custom_palette_box();
+    } else {
+      // Otherwise, select the first custom palette with the right number of classes
+      setSelected(custom_palette_select.node(), `user_${additional_colors[candidates[0]][0]}`);
+    }
+  };
+
+  const make_sequential_section = () => {
+    const col_div = d3.select('#color_div');
+
+    col_div.selectAll('p').remove();
+
     const sequential_color_select = col_div.insert('p')
       .attr('class', 'color_txt')
       .style('margin-left', '10px')
@@ -150,17 +241,6 @@ export const display_discretization = (layer_name, field_name, nb_class, options
         .style('background-image', `url(static/img/palettes/${name}.png)`);
     });
 
-    if (_app.custom_palettes) {
-      const additional_colors = Array.from(_app.custom_palettes.entries());
-
-      for (let ixp = 0; ixp < additional_colors.length; ixp++) {
-        sequential_color_select.append('option')
-          .text(additional_colors[ixp][0])
-          .attrs({ value: `user_${additional_colors[ixp][0]}`, title: additional_colors[ixp][0], nb_colors: additional_colors[ixp][1].length })
-          .property('disabled', additional_colors[ixp][1].length !== nb_class);
-      }
-    }
-
     // Button allowing the reverse a color palette:
     d3.select('.color_txt')
       .insert('p')
@@ -175,13 +255,11 @@ export const display_discretization = (layer_name, field_name, nb_class, options
       });
   };
 
-  const make_diverg_button = () => {
+  const make_diverging_section = () => {
     const col_div = d3.select('#color_div');
-    col_div.selectAll('.color_params').remove();
-    col_div.selectAll('.color_txt').remove();
-    col_div.selectAll('.color_txt2').remove();
-    col_div.selectAll('#reverse_pal_btn').remove();
-    document.getElementById('button_palette_box').style.display = 'none';
+
+    col_div.selectAll('p').remove();
+
     col_div.insert('p')
       .attr('class', 'central_class')
       .html(_tr('disc_box.break_on'))
@@ -233,21 +311,6 @@ export const display_discretization = (layer_name, field_name, nb_class, options
         .styles({ 'background-image': `url(static/img/palettes/${name}.png)` })
         .text(name);
     });
-
-    // if (_app.custom_palettes) {
-    //   const additional_colors = Array.from(
-    //     _app.custom_palettes.entries());
-    //   for (let ixp = 0; ixp < additional_colors.length; ixp++) {
-    //     left_color_select.append('option')
-    //       .text(additional_colors[ixp][0])
-    //       .attrs({ value: `user_${additional_colors[ixp][0]}`, title: additional_colors[ixp][0], nb_colors: additional_colors[ixp][1].length })
-    //       .property('disabled', additional_colors[ixp][1].length !== nb_class);
-    //     right_color_select.append('option')
-    //       .text(additional_colors[ixp][0])
-    //       .attrs({ value: `user_${additional_colors[ixp][0]}`, title: additional_colors[ixp][0], nb_colors: additional_colors[ixp][1].length })
-    //       .property('disabled', additional_colors[ixp][1].length !== nb_class);
-    //   }
-    // }
 
     document.getElementsByClassName('color_params_right')[0].selectedIndex = 14;
 
@@ -357,48 +420,31 @@ export const display_discretization = (layer_name, field_name, nb_class, options
     document.getElementById('nb_class_range').value = value;
     nb_class = value;
     const color_select = document.querySelector('.color_params');
-    // Only do stuff related to custom palettes if we are using a "sequential" scheme:
-    if (!color_select) return;
-    const selected_index = color_select.selectedIndex;
+    // Only do stuff related to custom palettes if we are using a "custom" scheme:
+    if (current_scheme !== 'custom') return;
+    // const selected_index = color_select.selectedIndex;
     const select_options = color_select.querySelectorAll('option');
+    const candidates = [];
     for (let ixc = 0; ixc < select_options.length; ixc++) {
       if (select_options[ixc].value.startsWith('user_')) {
-        select_options[ixc].disabled = (nb_class !== +select_options[ixc].getAttribute('nb_colors'));
+        const disabled = (nb_class !== +select_options[ixc].getAttribute('nb_colors'))
+        select_options[ixc].disabled = disabled;
+        if (!disabled) {
+          candidates.push(ixc);
+        }
       }
     }
-    if (select_options[selected_index].value.startsWith('user_') && select_options[selected_index].getAttribute('nb_colors') !== nb_class) {
-      setSelected(color_select, 'Blues');
+    if (candidates.length === 0) {
+      make_custom_palette_box();
+    } else { // if (select_options[selected_index].getAttribute('nb_colors') !== nb_class) {
+      color_select.selectedIndex = candidates[0];
     }
-    // const color_select_left = document.querySelectorAll('.color_params_left > option');
-    // const color_select_right = document.querySelectorAll('.color_params_right > option');
-    // for (let ixc = 0; ixc < color_select_left.length; ixc++) {
-    //   if (color_select_left[ixc].value.startsWith('user_')) {
-    //     const is_disabled = (nb_class === +color_select_left[ixc].getAttribute('nb_colors'))
-    //        ? false : true;
-    //     color_select_left[ixc].disabled = is_disabled;
-    //     color_select_right[ixc].disabled = is_disabled;
-    //   }
-    // }
   };
 
   const update_axis = (group) => {
     group.call(d3.axisBottom()
       .scale(x)
       .tickFormat(formatCount));
-  };
-
-  const update_overlay_elements = () => {
-    const x_mean = x(mean_serie),
-      x_med = x(serie.median()),
-      x_std_left = x(mean_serie - stddev_serie),
-      x_std_right = x(mean_serie + stddev_serie);
-    line_mean.transition().attrs({ x1: x_mean, x2: x_mean });
-    txt_mean.transition().attr('x', x_mean);
-    line_median.transition().attrs({ x1: x_med, x2: x_med });
-    txt_median.transition().attr('x', x_med);
-    line_std_left.transition().attrs({ x1: x_std_left, x2: x_std_left });
-    line_std_right.transition().attrs({ x1: x_std_right, x2: x_std_right });
-    rug_plot.selectAll('.indiv').attrs(d => ({ x1: x(d.value), x2: x(d.value) }));
   };
 
   const make_overlay_elements = () => {
@@ -484,22 +530,21 @@ export const display_discretization = (layer_name, field_name, nb_class, options
 
   const make_summary = () => {
     const content_summary = make_content_summary(serie);
-    newBox.append('div').attr('id', 'summary')
-      .styles({ 'font-size': '11px', float: 'right', margin: '10px 10px 0px 10px' })
+    upper_part.append('div')
+      .attr('id', 'summary')
+      .styles({ 'font-size': '11px', margin: '10px 10px 0px 10px' })
       .insert('p')
+      .style('line-height', '1.4em')
       .html(['<b>', _tr('disc_box.summary'), '</b><br>', content_summary].join(''));
   };
 
   const redisplay = {
     compute() {
       let tmp;
-      serie = new geostats(values);
       breaks = [];
-      values = serie.sorted();
-      const deferred = Promise.pending();
       return new Promise((resolve, reject) => {
-        if (values.length > 7500 && type === 'jenks') {
-          const jenks_worker = new Worker('static/js/webworker_jenks.js');
+        if (type === 'jenks') {
+          const jenks_worker = new Worker('../static/dist/webworker_jenks.js');
           _app.webworker_to_cancel = jenks_worker;
           _app.waitingOverlay.display({ zIndex: 5000 });
           jenks_worker.postMessage([values, nb_class]);
@@ -522,8 +567,8 @@ export const display_discretization = (layer_name, field_name, nb_class, options
             resolve(true);
             jenks_worker.terminate();
           };
+          return;
         }
-
         if (type === 'Q6') {
           tmp = getBreaksQ6(values, serie.precision);
           // stock_class = tmp.stock_class;
@@ -592,21 +637,18 @@ export const display_discretization = (layer_name, field_name, nb_class, options
       newBox.select('#svg_discretization').selectAll('.text_bar').remove();
 
       if (!provided_colors) {
-        const col_scheme = newBox.select('.color_params_left').node() ? 'diverging' : 'sequential';
-        if (col_scheme === 'sequential') {
-          if (to_reverse) {
-            color_array = color_array.reverse();
-            to_reverse = false;
-          } else {
-            const selected_palette = document.querySelector('.color_params').value;
-            if (selected_palette.startsWith('user_')) {
-              color_array = _app.custom_palettes.get(selected_palette.slice(5));
-            } else {
-              color_array = getColorBrewerArray(nb_class, selected_palette);
-              color_array = color_array.slice(0, nb_class);
-            }
-          }
-        } else if (col_scheme === 'diverging') {
+        if (to_reverse) {
+          // Do we just want to redraw with reversed palette ?
+          color_array = color_array.reverse();
+          to_reverse = false;
+        } else if (current_scheme === 'sequential') {
+          // Prepare the color array for the requested sequential scheme
+          const selected_palette = document.querySelector('.color_params').value;
+          color_array = getColorBrewerArray(nb_class, selected_palette);
+          color_array = color_array.slice(0, nb_class);
+        } else if (current_scheme === 'diverging') {
+          // Prepare the color array for the diverging scheme
+          // It is made of two palettes and an optional middle color
           const left_palette = document.querySelector('.color_params_left').value,
             right_palette = document.querySelector('.color_params_right').value,
             ctl_class_value = +document.getElementById('centr_class').value,
@@ -620,23 +662,15 @@ export const display_discretization = (layer_name, field_name, nb_class, options
           let right_pal = getColorBrewerArray(max_col_nb, right_palette);
           let left_pal = getColorBrewerArray(max_col_nb, left_palette);
 
-          // Below is for the case if we have displayed the custom palette also
-          // for a diverging scheme:
-          // let right_pal,
-          //   left_pal;
-          // if (right_palette.startsWith('user_')) {
-          //   right_pal = _app.custom_palettes.get(right_palette.slice(5));
-          // } else {
-          //   right_pal = getColorBrewerArray(max_col_nb, right_palette);
-          // }
-          // if (left_palette.startsWith('user_')) {
-          //   left_pal = _app.custom_palettes.get(left_palette.slice(5));
-          // } else {
-          //   left_pal = getColorBrewerArray(max_col_nb, left_palette);
-          // }
           right_pal = right_pal.slice(0, class_right);
           left_pal = left_pal.slice(0, class_left).reverse();
           color_array = [].concat(left_pal, ctl_class_color, right_pal);
+        } else { // current_scheme is 'custom'
+          // Prepare the color array for 'custom palette' (user defined) scheme
+          const selected_palette = document.querySelector('.color_params').value;
+          // Trim the 'user_' part of the palette name:
+          const custom_pal_name = selected_palette.slice(5);
+          color_array = _app.custom_palettes.get(custom_pal_name);
         }
       } else {
         color_array = provided_colors.slice();
@@ -644,13 +678,19 @@ export const display_discretization = (layer_name, field_name, nb_class, options
       for (let i = 0, len = bins.length; i < len; ++i) {
         bins[i].color = color_array[i];
       }
-      x.domain([breaks[0], breaks[breaks.length - 1]]);
+
       y.domain([0, d3.max(bins.map(d => d.height + d.height / 3))]);
+
+      // This could be removed because
+      // we (or at least we should) ensure that
+      // breaks[0] = min_serie and breaks[breaks.length - 1] = max_serie
+      x.domain([breaks[0], breaks[breaks.length - 1]]);
 
       svg_histo.select('.x_axis')
         .transition()
         .call(update_axis);
-      update_overlay_elements();
+
+      // update_overlay_elements();
 
       const xx = d3.scaleLinear()
         .range([0, svg_w])
@@ -669,7 +709,7 @@ export const display_discretization = (layer_name, field_name, nb_class, options
           width: xx(d.width),
           height: svg_h - y(d.height),
         }))
-        .styles(d => ({
+        .styles((d) => ({
           fill: d.color,
           opacity: 0.95,
           'stroke-opacity': 1,
@@ -693,7 +733,7 @@ export const display_discretization = (layer_name, field_name, nb_class, options
           y: y(d.height) - margin.top * 2 - margin.bottom - 1.5,
         }))
         .styles({ color: 'black', cursor: 'default', display: 'none' })
-        .text(d => formatCount(d.val));
+        .text((d) => formatCount(d.val));
 
       document.getElementById('user_breaks_area').value = breaks.join(' - ');
       return true;
@@ -716,7 +756,7 @@ export const display_discretization = (layer_name, field_name, nb_class, options
     const layer = svg_map.querySelector(`#${_app.idLayer.get(layer_name)}`);
     db_data = Array.prototype.map.call(layer.children, d => d.__data__.properties);
   }
-  const indexes = [];
+
   let color_array = [],
     nb_values = db_data.length,
     values = [],
@@ -724,12 +764,14 @@ export const display_discretization = (layer_name, field_name, nb_class, options
 
   let type = options.type;
 
+  let current_scheme = options.scheme;
+
+  let palette_box_opened = false;
+
   for (let i = 0; i < nb_values; i++) {
     const value = db_data[i][field_name];
-    // if (value != null && value !== '' && isFinite(value) && !isNaN(+value)) {
-    if (isNumber(value)) {
-      values.push(+db_data[i][field_name]);
-      indexes.push(i);
+    if (isNumber(value)) { // eslint-disable-line no-restricted-globals
+      values.push(+value);
     }
   }
 
@@ -748,14 +790,13 @@ export const display_discretization = (layer_name, field_name, nb_class, options
     user_break_list = null,
     std_dev_params = options.extra_options && options.extra_options.role_mean ? options.extra_options : { role_mean: 'center', share: 1 };
 
-  if (serie.variance() === 0 && serie.stddev() === 0) {
-    serie = new geostats(values);
-  }
+  serie.roundlength = Math.max(2, serie.precision);
+  serie.resetStatistics();
 
   const min_serie = serie.min();
   const max_serie = serie.max();
-  const mean_serie = serie.mean();
-  const stddev_serie = serie.stddev();
+  const mean_serie = round_value(serie.mean(), 2);
+  const stddev_serie = round_value(serie.stddev(), 2);
 
   values = serie.sorted();
 
@@ -772,7 +813,17 @@ export const display_discretization = (layer_name, field_name, nb_class, options
   }
   const precision_axis = get_precision_axis(min_serie, max_serie, serie.precision);
   const formatCount = d3.format(precision_axis);
-  const discretization_panel = newBox.append('div').attr('id', 'discretization_panel');
+
+  // The upper part of the discretisation panel
+  const upper_part = newBox.append('div')
+    .style('display', 'flex')
+    .style('justify-content', 'space-between');
+
+  // The left section, that allows the user to choose the number of classes and the type
+  // of discretisation
+  const discretization_panel = upper_part.append('div')
+    .attr('id', 'discretization_panel');
+
   const discretization = discretization_panel.insert('p')
     .insert('select')
     .attr('class', 'params')
@@ -887,7 +938,7 @@ export const display_discretization = (layer_name, field_name, nb_class, options
       max: max_nb_class,
       step: 1,
     })
-    .styles({ display: 'inline', width: '60px', 'vertical-align': 'middle', margin: '10px' })
+    .styles({ display: 'inline', width: '85px', 'vertical-align': 'middle', margin: '10px' })
     .property('value', nb_class)
     .on('change', function () {
       type = discretization.node().value;
@@ -916,12 +967,13 @@ export const display_discretization = (layer_name, field_name, nb_class, options
       });
     });
 
-  const ref_histo_box = newBox.append('div').attr('id', 'ref_histo_box');
-  ref_histo_box.append('div').attr('id', 'inner_ref_histo_box');
-
   discretization.node().value = type;
   make_summary();
-  const refDisplay = prepare_ref_histo(newBox, serie, formatCount);
+
+  const ref_histo_box = upper_part.append('div').attr('id', 'ref_histo_box');
+  ref_histo_box.append('div').attr('id', 'inner_ref_histo_box');
+
+  const refDisplay = prepare_ref_histo(upper_part, serie, formatCount);
   refDisplay('histogram');
 
   const svg_h = h / 5 > 100 ? h / 5 : 100,
@@ -994,8 +1046,6 @@ export const display_discretization = (layer_name, field_name, nb_class, options
     txt_mean,
     rug_plot;
 
-  make_overlay_elements();
-
   svg_histo.append('g')
     .attrs({ class: 'x_axis', transform: `translate(0,${height})` })
     .call(d3.axisBottom()
@@ -1017,6 +1067,7 @@ export const display_discretization = (layer_name, field_name, nb_class, options
   [
     [_tr('disc_box.sequential'), 'sequential'],
     [_tr('disc_box.diverging'), 'diverging'],
+    [_tr('disc_box.custom'), 'custom'],
   ].forEach((el) => {
     color_scheme.insert('label').style('margin', '20px').html(el[0])
       .insert('input')
@@ -1024,52 +1075,20 @@ export const display_discretization = (layer_name, field_name, nb_class, options
       .property('value', el[1])
       .on('change', function () {
         if (this.value === 'sequential') {
-          make_sequ_button();
+          current_scheme = 'sequential';
+          make_sequential_section();
+        } else if (this.value === 'diverging') {
+          current_scheme = 'diverging';
+          make_diverging_section();
         } else {
-          make_diverg_button();
+          current_scheme = 'custom';
+          make_custom_palette_section();
         }
         redisplay.draw();
       });
   });
   let to_reverse = false;
   document.getElementById('button_sequential').checked = true;
-  accordion_colors
-    .append('span')
-    .attr('id', 'button_palette_box')
-    .styles({
-      margin: '5px',
-      float: 'right',
-      cursor: 'pointer',
-      'font-style': 'italic',
-    })
-    .html(_tr('app_page.palette_box.button'))
-    .on('click', () => {
-      make_box_custom_palette(nb_class)
-        .then((result) => {
-          if (result) {
-            const [colors, palette_name] = result;
-            const select_palette = document.querySelector('.color_params');
-            addNewCustomPalette(palette_name, colors);
-            if (select_palette) {
-              d3.select(select_palette)
-                .append('option')
-                .text(palette_name)
-                .attrs({ value: `user_${palette_name}`, title: palette_name, nb_colors: colors.length });
-              setSelected(select_palette, `user_${palette_name}`);
-            }
-            // else {
-            //   d3.select('.color_params_right')
-            //     .append('option')
-            //     .text(palette_name)
-            //     .attrs({ value: `user_${palette_name}`, title: palette_name, nb_colors: colors.length });
-            //   d3.select('.color_params_left')
-            //     .append('option')
-            //     .text(palette_name)
-            //     .attrs({ value: `user_${palette_name}`, title: palette_name, nb_colors: colors.length });
-            // }
-          }
-        });
-    });
 
   newBox.append('button')
     .attrs({ class: 'accordion_disc', id: 'btn_acc_disc_break' })
@@ -1105,6 +1124,8 @@ export const display_discretization = (layer_name, field_name, nb_class, options
 
   accordionize('.accordion_disc', container);
 
+  make_overlay_elements();
+
   if (no_data > 0) {
     make_no_data_section();
     if (options.no_data) {
@@ -1113,13 +1134,15 @@ export const display_discretization = (layer_name, field_name, nb_class, options
   }
 
   if (!options.schema) {
-    make_sequ_button();
-  } else if (options.schema.length === 1) {
-    make_sequ_button();
+    make_sequential_section();
+  } else if (options.schema.length === 1 && !options.schema[0].startsWith('user_')) {
+    current_scheme = 'sequential';
+    make_sequential_section();
     document.querySelector('.color_params').value = options.schema[0];
     document.querySelector('.color_params').style.backgroundImage = `url(static/img/palettes/${options.schema[0]}.png)`;
   } else if (options.schema.length > 1) {
-    make_diverg_button();
+    current_scheme = 'diverging';
+    make_diverging_section();
     document.getElementById('button_diverging').checked = true;
     let tmp = 0;
     setSelected(document.querySelector('.color_params_left'), options.schema[0]);
@@ -1134,7 +1157,11 @@ export const display_discretization = (layer_name, field_name, nb_class, options
       document.querySelector('.central_color').querySelector('input').checked = false;
     }
     setSelected(document.querySelector('.color_params_right'), options.schema[1 + tmp]);
-    // document.querySelector(".color_params_right").value = options.schema[1 + tmp];
+  } else if (options.schema.length === 1 && options.schema[0].startsWith('user_')) {
+    current_scheme = 'custom';
+    document.getElementById('button_custom').checked = true;
+    make_custom_palette_section();
+    document.querySelector('.color_params').value = options.schema[0];
   }
 
   if (options.type && options.type === 'user_defined') {
@@ -1144,6 +1171,8 @@ export const display_discretization = (layer_name, field_name, nb_class, options
   redisplay.compute().then((v) => {
     if (v) redisplay.draw(options.colors);
   });
+
+  // update_overlay_elements();
 
   return new Promise((resolve, reject) => {
     container.querySelector('.btn_ok').onclick = function () {
@@ -1205,6 +1234,7 @@ export const display_discretization = (layer_name, field_name, nb_class, options
         : (_event.keyCode === 27);
       if (isEscape) {
         _event.stopPropagation();
+        if (palette_box_opened) return;
         _onclose();
       }
     };

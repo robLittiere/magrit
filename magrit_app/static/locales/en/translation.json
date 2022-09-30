@@ -441,8 +441,8 @@
             "id": "Id"
         },
         "palette_box": {
-            "button": "Custom palette?",
-            "title": "Custom palette",
+            "button": "Create a new palette?",
+            "title": "Custom palette ({{nb_classes}} classes)",
             "error_name_existing": "Palette name already in use",
             "error_name_invalid": "Invalid palette name",
             "new_name": "Palette name:"
@@ -696,7 +696,7 @@
                 "origin_field": "Origin field",
                 "destination_field": "Destination field",
                 "intensity_field": "Intensity field",
-                "ref_layer_field": "Reference layer fields",
+                "ref_layer_field": "Reference layer fields :",
                 "join_field": "Join field"
             },
             "grid": {
@@ -769,7 +769,7 @@
     },
     "disc_box":{
         "title": "Discretization Panel",
-        "class": "class",
+        "class": "classes",
         "disp_mean": "Mean",
         "disp_median": "Median",
         "disp_sd": "Standard deviation",
@@ -787,6 +787,7 @@
         "line_size": "<b>Line size :</b>",
         "sequential": "Sequential",
         "diverging": "Diverging",
+        "custom": "Custom palette",
         "reverse_palette": "Reverse palette",
         "withnodata": "{{ count }} feature without data",
         "withnodata_plural": "{{ count }} features without data",

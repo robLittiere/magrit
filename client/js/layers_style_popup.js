@@ -2654,7 +2654,9 @@ function createStyleBox_ProbSymbol(layer_name) {
     ].forEach((d) => {
       fill_method.append('option').text(d[0]).attr('value', d[1]);
     });
-    popup.append('div').attr('id', 'fill_color_section');
+    popup.append('div')
+      .attr('class', 'line_elem')
+      .attr('id', 'fill_color_section');
     fill_method.on('change', function () {
       popup.select('#fill_color_section').html('').on('click', null);
       if (this.value === 'single') {

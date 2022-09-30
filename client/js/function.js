@@ -1,3 +1,4 @@
+import geostats from 'geostats';
 import ContextMenu from './context-menu';
 import { getColorBrewerArray, ColorsSelected, randomColor } from './colors_helpers';
 import { display_discretization } from './classification/discretization_panel';
@@ -392,11 +393,7 @@ export function make_min_max_tableau(values, nb_class, discontinuity_type, min_s
   parent_nd.style.marginBottom = '3px';
 
   const title = document.createElement('p');
-  // title.style = "margin: 1px; word-spacing: 1.8em;";
-  title.style.margin = '1px';
-  title.style.wordSpacing = '1.8em';
-  title.style.paddingLeft = '22px';
-  title.innerHTML = 'Min - Max - Size';
+  title.innerHTML = 'Min Max Size';
   parent_nd.appendChild(title);
 
   const div_table = document.createElement('div');
@@ -2650,7 +2647,7 @@ function fillMenu_PropSymbolTypo() {
     .styles({ width: '100px', 'margin-left': '10px' })
     .attrs({
       type: 'number', class: 'params', id: 'PropSymbolTypo_ref_value', min: 0.1, step: 0.1,
-     });
+    });
 
   // Other symbols could probably easily be proposed :
   const d = dv2.append('p').attr('class', 'params_section2');
@@ -2685,9 +2682,19 @@ function fillMenu_PropSymbolTypo() {
   section2.selectAll('.params').attr('disabled', true);
 }
 
+
+/**
+ *
+ * @param {string} layer_name - The name of the targeted layer
+ * @param {string} selected_field - The name of the targeted field
+ * @param {Map} col_map - Existing color map if any, optional
+ * @returns {(*[]|Map<any, any>)[]} - An array containing the category array (used in categorical panel)
+ *                                    in first position and the color map in second position.
+ */
 export function prepare_categories_array(layer_name, selected_field, col_map) {
   const cats = [];
   if (!col_map) {
+    // This is the first time we are preparing the categories array for this field on this layer
     let _col_map = new Map();
     for (let i = 0, data_layer = data_manager.user_data[layer_name]; i < data_layer.length; ++i) {
       const value = data_layer[i][selected_field],
@@ -2697,15 +2704,25 @@ export function prepare_categories_array(layer_name, selected_field, col_map) {
     _col_map.forEach((v, k) => {
       cats.push({ name: k, display_name: k, nb_elem: v[0], color: randomColor() });
     });
+
+    // Sort categories by name for the first time the categorical panel
+    // will be displayed
+    cats.sort((a, b) => a.name.localeCompare(b.name));
+
     _col_map = new Map();
     for (let i = 0; i < cats.length; i++) {
       _col_map.set(cats[i].name, [cats[i].color, cats[i].name, cats[i].nb_elem]);
     }
+
     return [cats, _col_map];
   }
+
+  // We already have the color map for this field on this layer
+  // so we just rebuild the categories array
   col_map.forEach((v, k) => {
     cats.push({ name: k, display_name: v[1], nb_elem: v[2], color: v[0] });
   });
+
   return [cats, col_map];
 }
 
@@ -3515,8 +3532,8 @@ function render_TypoSymbols(rendering_params, new_name) {
     })
     .on('mouseover', function () { this.style.cursor = 'pointer'; })
     .on('mouseout', function () { this.style.cursor = 'initial'; })
-    .on('contextmenu dblclick', function () {
-      context_menu.showMenu(d3.event, document.querySelector('body'), getItems(this));
+    .on('contextmenu dblclick', function (event) {
+      context_menu.showMenu(event, document.querySelector('body'), getItems(this));
     })
     .call(drag_elem_geo);
 
@@ -4078,6 +4095,7 @@ function fillMenu_FlowMap() {
     .attr('class', 'params_section2');
   subtitle.append('span')
     .attrs({ class: 'i18n', 'data-i18n': '[html]app_page.func_options.flow.subtitle1' })
+    .style('font-style', 'italic')
     .html(_tr('app_page.func_options.flow.subtitle1'));
 
   const origin_section = dv2.append('p')
@@ -4172,9 +4190,12 @@ function fillMenu_FlowMap() {
 
   with_discretisation.append('p')
     .attrs({ class: 'params', id: 'FlowMap_discTable' });
-  with_discretisation.append('p').attr('class', 'params_section2')
+
+  dv2.append('p')
+    .attr('class', 'params_section2')
     .insert('span')
     .attrs({ class: 'i18n', 'data-i18n': '[html]app_page.func_options.flow.ref_layer_field' })
+    .style('font-style', 'italic')
     .html(_tr('app_page.func_options.flow.ref_layer_field'));
 
   const join_field_section = dv2.append('p')
@@ -4570,8 +4591,8 @@ export const render_label = function render_label(layer, rendering_params, optio
   selection
     .on('mouseover', function () { this.style.cursor = 'pointer'; })
     .on('mouseout', function () { this.style.cursor = 'initial'; })
-    .on('dblclick contextmenu', function () {
-      context_menu.showMenu(d3.event, document.querySelector('body'), getItems(this));
+    .on('dblclick contextmenu', function (event) {
+      context_menu.showMenu(event, document.querySelector('body'), getItems(this));
     })
     .call(drag_elem_geo);
 
@@ -4664,9 +4685,9 @@ export const render_label_graticule = function render_label_graticule(layer, ren
     .text(d => d.properties.label)
     .on('mouseover', function () { this.style.cursor = 'pointer'; })
     .on('mouseout', function () { this.style.cursor = 'initial'; })
-    .on('dblclick contextmenu', function () {
+    .on('dblclick contextmenu', function (event) {
       context_menu.showMenu(
-        d3.event,
+        event,
         document.querySelector('body'),
         getItems(this),
       );

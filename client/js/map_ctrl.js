@@ -23,7 +23,7 @@ export function makeSvgMap() {
     .append('svg')
     .attrs({ id: 'svg_map', width: w, height: h })
     .styles({ position: 'absolute', 'background-color': 'rgba(255, 255, 255, 0)' })
-    .on('contextmenu', () => { d3.event.preventDefault(); })
+    .on('contextmenu', (event) => { event.preventDefault(); })
     .call(zoom);
 
   const svg_map = map.node();
@@ -33,11 +33,11 @@ export function makeSvgMap() {
   };
 }
 
-export function zoom_without_redraw() {
+export function zoom_without_redraw(event) {
   const rot_val = canvas_rotation_value || '';
   let transform;
   let t_val;
-  if (!d3.event || !d3.event.transform || !d3.event.sourceEvent) {
+  if (!event || !event.transform || !event.sourceEvent) {
     transform = d3.zoomTransform(svg_map);
     t_val = transform.toString() + rot_val;
     map.selectAll('.layer')
@@ -55,7 +55,7 @@ export function zoom_without_redraw() {
       .duration(50)
       .attr('transform', t_val);
   } else {
-    t_val = d3.event.transform.toString() + rot_val;
+    t_val = event.transform.toString() + rot_val;
     map.selectAll('.layer')
       .transition()
       .duration(50)
@@ -63,7 +63,7 @@ export function zoom_without_redraw() {
         const lyr_name = global._app.id_to_layer.get(this.id);
         return data_manager.current_layers[lyr_name].fixed_stroke
           ? this.style.strokeWidth
-          : `${data_manager.current_layers[lyr_name]['stroke-width-const'] / d3.event.transform.k}px`;
+          : `${data_manager.current_layers[lyr_name]['stroke-width-const'] / event.transform.k}px`;
       })
       .attr('transform', t_val);
     map.selectAll('.scalable-legend')
@@ -346,7 +346,7 @@ function interpolateZoom(translate, scale) {
   });
 }
 
-export function zoomClick() {
+export function zoomClick(event) {
   if (map_div.select('#hand_button').classed('locked')) return;
   const direction = (this.id === 'zoom_in') ? 1 : -1,
     factor = 0.1,
@@ -357,7 +357,7 @@ export function zoomClick() {
   let target_zoom = 1,
     translate0 = [],
     l = [];
-  d3.event.preventDefault();
+  event.preventDefault();
   target_zoom = transform.k * (1 + factor * direction);
   translate0 = [(center[0] - view.x) / view.k, (center[1] - view.y) / view.k];
   view.k = target_zoom;

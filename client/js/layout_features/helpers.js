@@ -86,8 +86,8 @@ function handleClickAddRectangle() {
     document.body.style.cursor = '';
     document.removeEventListener('keydown', esc_cancel);
   };
-  function rectbrushended() {
-    if (!d3.event.selection) {
+  function rectbrushended(event) {
+    if (!event.selection) {
       map.select('.brush_rect_draw').remove();
       document.body.style.cursor = '';
       msg.dismiss();
@@ -97,9 +97,9 @@ function handleClickAddRectangle() {
     }
     msg.dismiss();
     const k = svg_map.__zoom.k;
-    const wi = (d3.event.selection[1][0] - d3.event.selection[0][0]) / k;
-    const he = (d3.event.selection[1][1] - d3.event.selection[0][1]) / k;
-    new UserRectangle(`user_rectangle_${rectangle_id}`, d3.event.selection[0], svg_map, false, wi, he);
+    const wi = (event.selection[1][0] - event.selection[0][0]) / k;
+    const he = (event.selection[1][1] - event.selection[0][1]) / k;
+    new UserRectangle(`user_rectangle_${rectangle_id}`, event.selection[0], svg_map, false, wi, he);
     map.select('.brush_rect_draw').remove();
     document.removeEventListener('keydown', esc_cancel);
     document.body.style.cursor = '';
@@ -133,15 +133,15 @@ function handleClickAddOther(type) {
   document.addEventListener('keydown', esc_cancel);
   document.body.style.cursor = 'not-allowed';
   map.style('cursor', 'crosshair')
-    .on('click', () => {
+    .on('click', (event) => {
       msg.dismiss();
       document.removeEventListener('keydown', esc_cancel);
       map.style('cursor', '').on('click', null);
       document.body.style.cursor = '';
       if (type === 'north_arrow') {
-        northArrow.display(d3.event.layerX, d3.event.layerY);
+        northArrow.display(event.layerX, event.layerY);
       } else if (type === 'scalebar') {
-        scaleBar.create(d3.event.layerX, d3.event.layerY);
+        scaleBar.create(event.layerX, event.layerY);
       }
     });
 }
@@ -168,10 +168,10 @@ function handleClickAddEllipse() {
   const msg = alertify.notify(_tr('app_page.notification.instruction_click_map'), 'warning', 0);
   document.addEventListener('keydown', esc_cancel);
   map.style('cursor', 'crosshair')
-    .on('click', () => {
+    .on('click', (event) => {
       msg.dismiss();
       document.removeEventListener('keydown', esc_cancel);
-      start_point = [d3.event.layerX, d3.event.layerY];
+      start_point = [event.layerX, event.layerY];
       tmp_start_point = map.append('rect')
         .attrs({ x: start_point[0] - 2, y: start_point[1] - 2, height: 4, width: 4 })
         .style('fill', 'red');
@@ -197,12 +197,12 @@ function handleClickTextBox(text_box_id) {
   const msg = alertify.notify(_tr('app_page.notification.instruction_click_map'), 'warning', 0);
   document.body.style.cursor = 'not-allowed';
   map.style('cursor', 'crosshair')
-    .on('click', () => {
+    .on('click', (event) => {
       msg.dismiss();
       document.removeEventListener('keydown', esc_cancel);
       map.style('cursor', '').on('click', null);
       document.body.style.cursor = '';
-      const text_box = new Textbox(svg_map, text_box_id, [d3.event.layerX, d3.event.layerY]);
+      const text_box = new Textbox(svg_map, text_box_id, [event.layerX, event.layerY]);
       setTimeout(() => { text_box.editStyle(); }, 350);
     });
   document.addEventListener('keydown', esc_cancel);
@@ -258,10 +258,10 @@ function handleClickAddPicto() {
 
   document.body.style.cursor = 'not-allowed';
   map.style('cursor', 'crosshair')
-    .on('click', () => {
+    .on('click', (event) => {
       msg.dismiss();
       document.removeEventListener('keydown', esc_cancel);
-      click_pt = [d3.event.layerX, d3.event.layerY];
+      click_pt = [event.layerX, event.layerY];
       map_point = map.append('rect')
         .attrs({ x: click_pt[0] - 2, y: click_pt[1] - 2, height: 4, width: 4 })
         .style('fill', 'red');
@@ -337,16 +337,16 @@ function handleClickAddArrow() {
   let msg = alertify.notify(_tr('app_page.notification.instruction_click_map_arrow1'), 'warning', 0);
   document.addEventListener('keydown', esc_cancel);
   map.style('cursor', 'crosshair')
-    .on('click', () => {
+    .on('click', (event) => {
       if (!start_point) {
-        start_point = [d3.event.layerX, d3.event.layerY];
+        start_point = [event.layerX, event.layerY];
         tmp_start_point = map.append('rect')
           .attrs({ x: start_point[0] - 2, y: start_point[1] - 2, height: 4, width: 4 })
           .style('fill', 'red');
         msg.dismiss();
         msg = alertify.notify(_tr('app_page.notification.instruction_click_map_arrow2'), 'warning', 0);
       } else {
-        end_point = [d3.event.layerX, d3.event.layerY];
+        end_point = [event.layerX, event.layerY];
         tmp_end_point = map.append('rect')
           .attrs({ x: end_point[0] - 2, y: end_point[1] - 2, height: 4, width: 4 })
           .style('fill', 'red');
@@ -577,8 +577,8 @@ export function add_single_symbol(symbol_dataurl, x, y, width = '30', height = '
     })
     .on('mouseover', function () { this.style.cursor = 'pointer'; })
     .on('mouseout', function () { this.style.cursor = 'initial'; })
-    .on('dblclick contextmenu', function () {
-      context_menu.showMenu(d3.event, document.querySelector('body'), getItems(this));
+    .on('dblclick contextmenu', function (event) {
+      context_menu.showMenu(event, document.querySelector('body'), getItems(this));
     })
     .call(drag_elem_geo);
 }

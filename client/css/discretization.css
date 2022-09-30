@@ -1,7 +1,10 @@
 #discretization_panel {
-    float: left;
     font-size: 11px;
-    margin: 15px 0 0 27.5px;
+    margin: 10px 0 0 27.5px;
+}
+
+#discretization_panel select.params {
+  width: 185px;
 }
 
 #ref_histo_box {
@@ -10,13 +13,13 @@
     font-size: 10.5px;
 }
 
-label_it_inline {
-    font-size: 10px;
-    display: inline;
-}
-
 #svg_discretization .y_axis, #svg_discretization .x_axis {
     stroke-width: 0.2;
+}
+
+.modal-content #color_div input[name="color_scheme"] {
+  vertical-align: bottom;
+  margin: 0 0 0 5px
 }
 
 .btn_mean {
@@ -141,6 +144,15 @@ label_it_inline {
   background-image: -o-linear-gradient(top, #edfa3c, #d6d934);
   background-image: linear-gradient(to bottom, #edfa3c, #d6d934);
   text-decoration: none;
+}
+
+#sizes_div > p {
+  margin: 0px 0px 0px -13px;
+  word-spacing: 6.2em;
+}
+
+#no_data_section {
+  margin: 0 0 12px;
 }
 
 /* Styles for list of elements in categorical / picto panel */
