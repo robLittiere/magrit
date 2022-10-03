@@ -546,14 +546,14 @@ export const display_discretization = (layer_name, field_name, nb_class, options
         if (type === 'jenks') {
           const jenks_worker = new Worker('../static/dist/webworker_jenks.js');
           _app.webworker_to_cancel = jenks_worker;
-          _app.waitingOverlay.display({ zIndex: 5000 });
+          if (values.length > 5000) _app.waitingOverlay.display({ zIndex: 5000 });
           jenks_worker.postMessage([values, nb_class]);
           jenks_worker.onmessage = function (e) {
             breaks = e.data;
             serie.setClassManually(breaks);
             serie.doCount();
             stock_class = Array.prototype.slice.call(serie.counter);
-            _app.waitingOverlay.hide();
+            if (values.length > 5000) _app.waitingOverlay.hide();
             _app.webworker_to_cancel = undefined;
             bins = [];
             for (let i = 0, len = stock_class.length; i < len; i++) {
