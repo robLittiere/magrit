@@ -17,6 +17,7 @@ import {
 } from './legend';
 import { redraw_legends_symbols, zoom_without_redraw } from './map_ctrl';
 import { make_table } from './tables';
+
 /**
 * Function to dispatch the click on the "open style box" icon
 * to the actual appropriate function according to the type of the layer.
@@ -2272,22 +2273,30 @@ function createStyleBoxWaffle(layer_name) {
       const val = +this.value;
       const nCol = data_manager.current_layers[layer_name].nCol;
       data_manager.current_layers[layer_name].size = val;
+
       selection
         .selectAll('g')
         .selectAll(symbol)
         .each(function (_, i) {
+          const _centroid = path.centroid(this.parentElement.__data__.geometry);
           if (symbol === 'circle') {
+            const offset_centroid_x = (2 * val * nCol) / 2 - val;
             const t_x = round((i % nCol) * 2 * val);
             const t_y = floor(floor(i / nCol) * 2 * val);
             this.setAttribute('r', val);
             this.setAttribute('transform', `translate(-${t_x}, -${t_y})`);
+            this.setAttribute('cx', _centroid[0] + offset_centroid_x);
+            this.setAttribute('cy', _centroid[1] - val);
           } else {
             const offset = val / 5;
+            const offset_centroid_x = ((val + offset) * (nCol - 1) - val) / 2;
             const t_x = round((i % nCol) * val) + (offset * round(i % nCol));
             const t_y = floor(floor(i / nCol) * val) + (offset * floor(i / nCol));
             this.setAttribute('width', val);
             this.setAttribute('height', val);
             this.setAttribute('transform', `translate(-${t_x}, -${t_y})`);
+            this.setAttribute('x', _centroid[0] + offset_centroid_x);
+            this.setAttribute('y', _centroid[1] - val);
           }
         });
       size_section.select('#size_section_txt').html(`${this.value} px`);
@@ -2318,19 +2327,27 @@ function createStyleBoxWaffle(layer_name) {
       const val = +this.value;
       const size = data_manager.current_layers[layer_name].size;
       data_manager.current_layers[layer_name].nCol = val;
+
       selection
         .selectAll('g')
         .selectAll(symbol)
         .each(function (d, i) {
+          const _centroid = path.centroid(this.parentElement.__data__.geometry);
           if (symbol === 'circle') {
+            const offset_centroid_x = (2 * size * val) / 2 - size;
             const t_x = round((i % val) * 2 * size);
             const t_y = floor(floor(i / val) * 2 * size);
             this.setAttribute('transform', `translate(-${t_x}, -${t_y})`);
+            this.setAttribute('cx', _centroid[0] + offset_centroid_x);
+            this.setAttribute('cy', _centroid[1] - size);
           } else {
             const offset = size / 5;
+            const offset_centroid_x = (size + offset) * (val - 1) / 2 - size / 2;
             const t_x = round((i % val) * size) + (offset * round(i % val));
             const t_y = floor(floor(i / val) * size) + (offset * floor(i / val));
             this.setAttribute('transform', `translate(-${t_x}, -${t_y})`);
+            this.setAttribute('x', _centroid[0] + offset_centroid_x);
+            this.setAttribute('y', _centroid[1] - size);
           }
         });
       width_row_section.select('#width_row_text').html(this.value);
