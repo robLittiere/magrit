@@ -1589,15 +1589,28 @@ async def init(loop, addr='0.0.0.0', port=None, watch_change=False, use_redis=Tr
             webpack_logger,
             'cd ../client && ./node_modules/webpack/bin/webpack.js --watch'))
 
+    # Set GML_FIELDTYPES environment variable to define strategy for parsing GML files.
+    # We are parsing everything as string because we only read the GML file
+    # (and don't take into account the schema/.xsd file), so value like 01, 02, etc. will be converted
+    # to integer without this option (which is not what we want because it can contain a leading zero due to
+    # being the code of a country, a region, etc... like 01 - not 1 - is the code for the department AIN).
+    # We are doing this only for GML because 01 isn't a valid number in JSON so it can only be stored as a string.
+    os.environ['GML_FIELDTYPES'] = 'ALWAYS_STRING'
+
+    # What to do when the application exits
     app.on_shutdown.append(on_shutdown)
+
+    # Read the symbols contained in the static/img/svg_symbols/ folder
+    # and list them in a JSON file that will be fetched by the client
     prepare_list_svg_symbols()
-    # If port is None the application is started for unittests or by Gunicorn:
+
+    # Returns the application instance :
+    # - If port is None the application is started for unittests or by Gunicorn
     if not port:
         return app
-    # If a port is specified the application is started "directly" and
-    # we need to create the server :
+    # - If a port is specified the application is started "directly" and
+    #   we need to create the server
     else:
-        # handler = app.make_handler()
         handler = web.AppRunner(app)
         await handler.setup()
         srv = await loop.create_server(handler.server, addr, port)
