@@ -1,14 +1,22 @@
 # Historique des versions et des changements effectués
 
-#### Current master (Not released yet)
+#### 0.10.0 (Current master - Not released yet)
 
 - Modifie la façon dont est proposée l'option "palette personnalisée" dans le panneau de classification (<a href="https://github.com/riatelab/magrit/issues/78">issue Github #78</a>).
 
-- Améliorer le CSS du panneau de classification.
+- Améliore le CSS du panneau de classification.
 
-- Améliorer le rendu de l'histogramme dans le panneau de classification.
+- Améliore le rendu de l'histogramme dans le panneau de classification.
 
 - Tri alphabétique des catégories 'typo' et 'picto' par défaut.
+
+- Améliore le positionnement des *waffles* dans la carte en gaufres (de sorte que le centre du bloc de gaufres tombe sur le centroid sur l'axe X, au lieu du comportement jusqu'à présent le coin inférieur droit tombait sur le centroid).
+
+- Lit les champs en tant que chaîne de caractères lors de l'import de fichier GML (suite à un rapport de bug par email).
+
+- Lit le CRS du fichier GML pour le transférer à l'UI et demande à l'utilisateur s'il doit être utilisé.
+
+- Correction de l'ordre des coordonnées (en utilisant l'option OAMS_TRADITIONAL_GIS_ORDER de OSR) lors de l'export vers ESRI Shapefile et GML.
 
 
 #### 0.9.2 (2022-09-08)

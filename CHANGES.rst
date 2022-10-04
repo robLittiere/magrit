@@ -1,8 +1,8 @@
 Changes
 =======
 
-Current master (Not released yet)
----------------------------------
+0.10.0 (Current master - Not released yet)
+------------------------------------------
 
 - Change how is proposed the 'custom palette' option in the classification panel (#78).
 
@@ -13,6 +13,12 @@ Current master (Not released yet)
 - Sort alphabetically categories of 'typo' and 'picto' by default.
 
 - Improve positioning of the waffles in Waffle Map (so that the center of the waffle block falls on the x-center, instead of the behavior until now where it was the lower right corner).
+
+- Enforce parsing fields as string in GML file (following bug report by email).
+
+- Read the CRS of the GML file to transfer it to the UI and ask the user if it should be used.
+
+- Fix coordinates order (using OAMS_TRADITIONAL_GIS_ORDER option of OSR) when exporting to Shapefile and GML.
 
 
 0.9.2 (2022-09-08)
