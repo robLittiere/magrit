@@ -6,8 +6,8 @@ import ujson as json
 import cchardet as chardet
 import tempfile
 from fiona import _err as fiona_err
-from osgeo.ogr import GetDriverByName, Feature as OgrFeature
-from osgeo.osr import SpatialReference, CoordinateTransformation
+from osgeo.ogr import Open, GetDriverByName, Feature as OgrFeature
+from osgeo.osr import SpatialReference, CoordinateTransformation, OAMS_TRADITIONAL_GIS_ORDER
 from osgeo.gdal import VectorTranslate, OpenEx, UseExceptions as gdal_UseExceptions
 from pyproj import Proj as pyproj_Proj
 from shapely.geos import TopologicalError
@@ -52,17 +52,39 @@ def read_shp_crs(path):
     Parameters
     ----------
     path: str
-        Path to the .prj file to be readed.
+        Path to the .prj file to be read.
 
     Returns
     -------
-    esriwktproj: str
+    str
         The projection in ESRI WKT format.
     """
     with open(path, 'r') as f:
         proj_info_str = f.read()
     return proj_info_str
 
+
+def read_gml_crs(path):
+    """
+    Read the CRS of the features in a GML file.
+
+    Parameters
+    ----------
+    path: str
+        Path to the .prj file to be read.
+
+    Returns
+    -------
+    str
+        The projection in Proj4 format.
+    """
+    try:
+        src_ds = Open(path)
+        spref = src_ds.GetLayer().GetSpatialRef()
+        return spref.ExportToProj4()
+    except Exception as err:
+        print('Unable to read CRS from GML file: {}'.format(err))
+        return None
 
 def get_field_names(srcDS):
     """
@@ -465,7 +487,6 @@ def reproj_convert_layer(geojson_path, output_path, file_format, output_crs):
         Should return 0 if everything went fine..
     """
     ## TODO : Use VectorTranslate to make the conversion?
-    input_crs = "epsg:4326"
     layer_name = output_path.split('/')
     layer_name = layer_name[len(layer_name) - 1].split('.')[0]
 
@@ -473,7 +494,8 @@ def reproj_convert_layer(geojson_path, output_path, file_format, output_crs):
     out_driver = GetDriverByName(file_format)
 
     inSpRef = SpatialReference()
-    inSpRef.ImportFromEPSG(int(input_crs.split("epsg:")[1]))
+    inSpRef.ImportFromEPSG(4326)
+    inSpRef.SetAxisMappingStrategy(OAMS_TRADITIONAL_GIS_ORDER)
 
     outSpRef = SpatialReference()
     ret_val = outSpRef.ImportFromProj4(output_crs)

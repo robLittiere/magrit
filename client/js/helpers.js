@@ -1090,3 +1090,39 @@ export const parseStyleToObject = (styleString) => {
 export const makeStyleString = (o) => Object.entries(o)
   .map(([k, v]) => `${k}: ${v}`)
   .join('; ');
+
+
+const proj4stringToObj = (proj4string) => {
+  // The resulting obj
+  const o = {};
+  // Split the string into an array of strings and sort by the future key
+  // (will allow fast comparison)
+  const a = proj4string.trim().split(' ')
+    .map((el) => el.replace('+', '')).sort();
+  // Loop over the array and split each element into a key/value pair
+  a.forEach((el) => {
+    if (el.includes('=')) {
+      const [k, v] = el.split('=');
+      if (!(k === 'towgs84' && v === '0,0,0,0,0,0,0')) {
+        o[k] = v;
+      }
+    } else {
+      const k = el;
+      o[k] = true;
+    }
+  });
+  return o;
+};
+
+/**
+ * Parse two proj4 strings and compare if they are equivalent.
+ *
+ * @param {string} proj1
+ * @param {string} proj2
+ */
+export const projEquals = (proj1, proj2) => {
+  const p1 = proj4stringToObj(proj1);
+  const p2 = proj4stringToObj(proj2);
+  // Fast comparison between the objects, given the fact the key were sorted
+  return JSON.stringify(p1) == JSON.stringify(p2)
+};

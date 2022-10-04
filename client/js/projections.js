@@ -1,6 +1,6 @@
 import proj4 from 'proj4';
 import { make_dialog_container, overlay_under_modal } from './dialogs';
-import { accordionize2, getTargetLayerProps } from './helpers';
+import { accordionize2, getTargetLayerProps, projEquals } from './helpers';
 import { scale_to_bbox } from './helpers_calc';
 import { scale_to_lyr, remove_layer_cleanup, fitLayer, center_map } from './interface';
 import { reproj_symbol_layer, zoom_without_redraw } from './map_ctrl';
@@ -666,7 +666,7 @@ const createBoxCustomProjection = function createBoxCustomProjection() {
       change_projection_4(proj4(_app.last_projection));
       let custom_name = Object.keys(_app.epsg_projections)
         .map(d => [d, _app.epsg_projections[d]])
-        .filter(ft => ft[1].proj4 === _app.last_projection);
+        .filter(ft => projEquals(ft[1].proj4, _app.last_projection));
       custom_name = custom_name && custom_name.length > 0 && custom_name[0].length > 1
         ? custom_name[0][1].name : undefined;
       addLastProjectionSelect(_app.current_proj_name, _app.last_projection, custom_name);
@@ -726,7 +726,8 @@ export const getD3ProjFromProj4 = function getD3ProjFromProj4(_proj) {
 
 export const tryFindNameProj = (proj_str) => {
   const o = Object.entries(_app.epsg_projections)
-    .filter(proj => proj[1].proj4.indexOf(proj_str) > -1
+    .filter((proj) => projEquals(proj[1].proj4, proj_str)
+      || proj[1].proj4.indexOf(proj_str) > -1
       || proj[1].proj4.replace('+towgs84=0,0,0,0,0,0,0 ', '').indexOf(proj_str) > -1);
   if (o.length > 0) return o[0][1].name;
   return undefined;

@@ -79,7 +79,7 @@ try:
     from helpers.geo import (
         reproj_convert_layer_kml, reproj_convert_layer, make_carto_doug,
         check_projection, olson_transform, get_proj4_string,
-        make_geojson_links, TopologicalError, ogr_to_geojson, read_shp_crs)
+        make_geojson_links, TopologicalError, ogr_to_geojson, read_gml_crs, read_shp_crs)
     from helpers.stewart_smoomapy import quick_stewart_mod
     from helpers.grid_layer import get_grid_layer
     from helpers.grid_layer_pt import get_grid_layer_pt
@@ -93,7 +93,7 @@ except:
     from .helpers.geo import (
         reproj_convert_layer_kml, reproj_convert_layer, make_carto_doug,
         check_projection, olson_transform, get_proj4_string,
-        make_geojson_links, TopologicalError, ogr_to_geojson, read_shp_crs)
+        make_geojson_links, TopologicalError, ogr_to_geojson, read_gml_crs, read_shp_crs)
     from .helpers.stewart_smoomapy import quick_stewart_mod
     from .helpers.grid_layer import get_grid_layer
     from .helpers.grid_layer_pt import get_grid_layer_pt
@@ -441,10 +441,36 @@ async def _convert_from_single_file(app, posted_data, user_id, tmp_dir):
         asyncio.ensure_future(
             app['redis_conn'].pexpire(f_name, 14400000))
 
+        # Read the file to get the projection if any
+        # (even if we use the converted file stored in cache)
+        if '.gml' in name.lower():
+            fname, ext = filepath.rsplit('.', 1)
+            filepath = ''.join([clean_name(fname), 'gml'])
+            tmp_path = path_join(tmp_dir, filepath)
+            with open(tmp_path, 'wb') as f:
+                f.write(data)
+            proj_info_str = read_gml_crs(tmp_path)
+
+        elif '.zip' in name.lower():
+            dataZip = BytesIO(data)
+
+            with ZipFile(dataZip) as myzip:
+                list_files = myzip.namelist()
+                slots = {"prj": None}
+                try:
+                    for f in list_files:
+                        name, ext = f.rsplit('.', 1)
+                        if 'prj' in ext.lower():
+                            slots['prj'] = f
+                    slots = extractShpZip(myzip, slots, tmp_dir)
+                    proj_info_str = get_proj4_string(read_shp_crs(slots['prj']))
+                except:
+                    proj_info_str = None
+
         return web.Response(text=''.join(
             ['{"key":', str(hashed_input),
              ',"file":', result.decode(),
-             ',"proj":', json.dumps(get_proj4_string(proj_info_str)),
+             ',"proj":', json.dumps(proj_info_str),
              '}']))
 
     if datatype in ('application/x-zip-compressed', 'application/zip'):
@@ -495,7 +521,7 @@ async def _convert_from_single_file(app, posted_data, user_id, tmp_dir):
                     return convert_error()
 
                 # Read the original projection to propose it later:
-                proj_info_str = read_shp_crs(slots['prj'])
+                proj_info_str = get_proj4_string(read_shp_crs(slots['prj']))
 
                 asyncio.ensure_future(
                     app['redis_conn'].set(
@@ -541,6 +567,10 @@ async def _convert_from_single_file(app, posted_data, user_id, tmp_dir):
             return convert_error(
                 'Error reading the input file ({} format)'.format(new_ext))
 
+        # Try to read the CRS of the layer in case of GML
+        if 'gml' in new_ext:
+            proj_info_str = read_gml_crs(tmp_path)
+
         # Convert the file to a TopoJSON:
         result = await geojson_to_topojson(res, layer_name)
         if not result:
@@ -562,7 +592,7 @@ async def _convert_from_single_file(app, posted_data, user_id, tmp_dir):
     return web.Response(text=''.join(
         ['{"key":', str(hashed_input),
          ',"file":', result,
-         ',"proj":', json.dumps(get_proj4_string(proj_info_str)),
+         ',"proj":', json.dumps(proj_info_str),
          '}']))
 
 

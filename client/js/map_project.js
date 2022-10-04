@@ -15,6 +15,7 @@ import {
 import {
   clickLinkFromDataUrl, create_li_layer_elem, drag_elem_geo,
   getAvailablesFunctionnalities, isValidJSON, makeStyleString, parseStyleToObject,
+  projEquals,
 } from './helpers';
 import { createDropShadow, handleEdgeShapeRendering } from './layers_style_popup';
 import {
@@ -970,7 +971,8 @@ export function apply_user_preferences(json_pref) {
     _app.last_projection = map_config.custom_projection;
     let custom_name = Object.keys(_app.epsg_projections)
       .map(d => [d, _app.epsg_projections[d]])
-      .filter(ft => ft[1].proj4 === _app.last_projection);
+      .filter((ft) => projEquals(ft[1].proj4, _app.last_projection));
+
     custom_name = custom_name
       && custom_name.length > 0
       && custom_name[0].length > 1 ? custom_name[0][1].name : undefined;
