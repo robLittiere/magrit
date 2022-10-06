@@ -20,6 +20,9 @@ Changes
 
 - Fix coordinates order (using OAMS_TRADITIONAL_GIS_ORDER option of OSR) when exporting to Shapefile and GML.
 
+- In PropSymbolTypo, do not show in the legend the categories that do not appear on the map because of empty or 0 values in the field used to draw the proportional symbol (#93).
+
+- Update some country names in "World countries" example dataset (PR #92 by @rCarto).
 
 0.9.2 (2022-09-08)
 -----------------

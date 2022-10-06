@@ -29,7 +29,12 @@ export const display_box_symbol_typo = function (layer, field, categories) {
   if (!categories) {
     categories = new Map();
     for (let i = 0; i < nb_features; ++i) {
-      const value = data_layer[i][field];
+      let value = data_layer[i][field];
+      // Replace the entry in the color map by 'Undefined category'
+      // when the field value is null
+      if (value === null || value === '' || value === undefined) {
+        value = 'Undefined category';
+      }
       const ret_val = categories.get(value);
       if (ret_val) {
         categories.set(value, [ret_val[0] + 1, [i].concat(ret_val[1])]);
@@ -37,10 +42,12 @@ export const display_box_symbol_typo = function (layer, field, categories) {
         categories.set(value, [1, [i]]);
       }
     }
+    let n_cat = 0;
     categories.forEach((v, k) => {
       cats.push({
-        name: k, new_name: k, nb_elem: v[0], img: default_d_url,
+        name: k, new_name: k, nb_elem: v[0], img: `url(${res_symbols[n_cat][1]})`,
       });
+      n_cat += 1;
     });
     // Sort categories by name for the first time the picto panel
     // will be displayed

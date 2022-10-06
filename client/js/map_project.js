@@ -1304,7 +1304,13 @@ export function apply_user_preferences(json_pref) {
           .enter()
           .insert('image')
           .attrs((d, j) => {
-            const symb = symbols_map.get(d.properties.symbol_field),
+            let field_value = d.properties.symbol_field;
+            // Entry in the symbol map was replaced by 'Undefined category'
+            // when the field value was null :
+            if (field_value === null || field_value === '' || field_value === undefined) {
+              field_value = 'Undefined category';
+            }
+            const symb = symbols_map.get(field_value),
               prop = _layer.current_state[j],
               coords = prop.pos;
             return {

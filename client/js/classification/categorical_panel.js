@@ -171,7 +171,17 @@ export function display_categorical_box(data_layer, layer_name, field, cats) {
 
     container.querySelector('.btn_ok').onclick = () => {
       const color_map = fetch_categorical_colors();
-      const colorByFeature = data_layer.map(ft => color_map.get(ft[field])[0]);
+      const colorByFeature = data_layer.map((ft) => {
+        let val = ft[field];
+        // Entry in the color map was replaced by 'Undefined category'
+        // when the field value was null :
+        if (val === null || val === '' || val === undefined) {
+          val = 'Undefined category';
+        }
+        const r = color_map.get(val);
+        if (r) return r[0];
+        return null;
+      });
       resolve([nb_class, color_map, colorByFeature]);
       document.removeEventListener('keydown', helper_esc_key_twbs);
       container.remove();

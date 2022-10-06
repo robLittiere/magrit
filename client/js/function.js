@@ -12,7 +12,7 @@ import {
   drag_waffle, getFieldsType,
   get_other_layer_names,
   send_layer_server,
-  setSelected, xhrequest,
+  setSelected, xhrequest, isNumber,
 } from './helpers';
 import {
   getBinsCount, get_nb_decimals, has_negative,
@@ -1312,7 +1312,15 @@ const fields_Typo = {
     const prepare_colors = (field) => {
       const [, col_map] = prepare_categories_array(layer, field, null);
       const nb_class = col_map.size;
-      const colorByFeature = data_manager.user_data[layer].map(ft => col_map.get(ft[field])[0]);
+      const colorByFeature = data_manager.user_data[layer].map((ft) => {
+        let val = ft[field];
+        // Entry in the color map was replaced by 'Undefined category'
+        // when the field value was null :
+        if (val === null || val === '' || val === undefined) {
+          val = 'Undefined category';
+        }
+        return col_map.get(val)[0];
+      });
       self.rendering_params[field] = {
         nb_class: nb_class,
         color_map: col_map,
@@ -2691,14 +2699,28 @@ function fillMenu_PropSymbolTypo() {
  * @returns {(*[]|Map<any, any>)[]} - An array containing the category array (used in categorical panel)
  *                                    in first position and the color map in second position.
  */
-export function prepare_categories_array(layer_name, selected_field, col_map) {
+export function prepare_categories_array(layer_name, selected_field, col_map, filterIfFieldEmpty) {
   const cats = [];
   if (!col_map) {
     // This is the first time we are preparing the categories array for this field on this layer
     let _col_map = new Map();
     for (let i = 0, data_layer = data_manager.user_data[layer_name]; i < data_layer.length; ++i) {
-      const value = data_layer[i][selected_field],
-        ret_val = _col_map.get(value);
+      let value = data_layer[i][selected_field];
+
+      // Filter out entries for which some numerical field is empty or lower or equal to 0
+      if (filterIfFieldEmpty) {
+        const test_value = data_layer[i][filterIfFieldEmpty];
+        if (!isNumber(test_value) || +test_value <= 0) {
+          continue;
+        }
+      }
+
+      // Replace the entry in the color map by 'Undefined category'
+      // when the category name is null or empty
+      if (value === null || value === '' || value === undefined) {
+        value = 'Undefined category';
+      }
+      const ret_val = _col_map.get(value);
       _col_map.set(value, ret_val ? [ret_val[0] + 1, [i].concat(ret_val[1])] : [1, [i]]);
     }
     _col_map.forEach((v, k) => {
@@ -2756,10 +2778,20 @@ const fields_PropSymbolTypo = {
       btn_typo_class = section2.select('#Typo_class'),
       ok_button = section2.select('#propTypo_yes');
 
-    const prepare_colors = (field) => {
-      const [_, col_map] = prepare_categories_array(layer, field, null);
+    const prepare_colors = (field, fieldSize) => {
+      const [_, col_map] = prepare_categories_array(layer, field, null, fieldSize);
       const nb_class = col_map.size;
-      const colorByFeature = data_manager.user_data[layer].map(ft => col_map.get(ft[field])[0]);
+      const colorByFeature = data_manager.user_data[layer].map((ft) => {
+        let val = ft[field];
+        // Entry in the color map was replaced by 'Undefined category'
+        // when the field value was null :
+        if (val === null || val === '' || val === undefined) {
+          val = 'Undefined category';
+        }
+        const r = col_map.get(val);
+        if (r) return r[0];
+        return null;
+      });
       self.rendering_params[field] = {
         nb_class: nb_class,
         color_map: col_map,
@@ -2809,7 +2841,7 @@ const fields_PropSymbolTypo = {
     // Set some default colors in order to not force to open the box for selecting them :
     {
       const first_field = fields_categ[0];
-      prepare_colors(first_field);
+      prepare_colors(first_field, fields_num[0]);
       ok_button.attr('disabled', self.rendering_params[first_field] ? null : true);
     }
 
@@ -2817,12 +2849,13 @@ const fields_PropSymbolTypo = {
       const field_name = this.value,
         max_val_field = max_fast(data_manager.user_data[layer].map(obj => +obj[field_name]));
       ref_value_field.attrs({ max: max_val_field, value: max_val_field });
+      prepare_colors(field2_selec.node().value, field_name);
       uo_layer_name.attr('value', ['Typo', field_name, field2_selec.node().value, layer].join('_'));
     });
 
     field2_selec.on('change', function () {
       const field_name = this.value;
-      prepare_colors(field_name);
+      prepare_colors(field_name, field1_selec.node().value);
       // ok_button.attr("disabled", self.rendering_params[field_name] ? null : true);
       uo_layer_name.attr('value', ['Typo', field1_selec.node().value, field_name, layer].join('_'));
     });
@@ -3414,7 +3447,7 @@ function discard_rendering_empty_val() {
 const fields_TypoSymbol = {
   fill (layer) {
     if (!layer) return;
-    const fields_all = Object.getOwnPropertyNames(data_manager.user_data[layer][0]),
+    const fields_all = getFieldsType('category', layer),
       field_to_use = section2.select('#field_Symbol'),
       selec_symbol = section2.select('#selec_Symbol'),
       uo_layer_name = section2.select('#TypoSymbols_output_name'),
@@ -3520,7 +3553,13 @@ function render_TypoSymbols(rendering_params, new_name) {
     .enter()
     .insert('image')
     .attrs((d) => {
-      const symb = rendering_params.symbols_map.get(d.properties.symbol_field),
+      let field_value = d.properties.symbol_field;
+      // Entry in the symbol map was replaced by 'Undefined category'
+      // when the field value was null :
+      if (field_value === null || field_value === '' || field_value === undefined) {
+        field_value = 'Undefined category';
+      }
+      const symb = rendering_params.symbols_map.get(field_value),
         coords = path.centroid(d.geometry);
       return {
         x: coords[0] - symb[1] / 2,
