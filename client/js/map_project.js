@@ -1298,16 +1298,19 @@ export function apply_user_preferences(json_pref) {
         _app.layer_to_id.set(layer_name, layer_id);
         _app.id_to_layer.set(layer_id, layer_name);
         // Add the features at their original positions :
-        map.append('g').attrs({ id: layer_id, class: 'layer' })
+        map.append('g').attrs({ id: layer_id, class: 'layer no_clip' })
           .selectAll('image')
           .data(new_layer_data.features)
           .enter()
           .insert('image')
           .attrs((d, j) => {
             let field_value = d.properties.symbol_field;
-            // Entry in the symbol map was replaced by 'Undefined category'
+            // Entry in the symbol map was replaced by 'Undefined category' in 0.10.0
             // when the field value was null :
-            if (field_value === null || field_value === '' || field_value === undefined) {
+            if (
+              p_version.major < 1 && p_version.minor >= 10
+              && field_value === null || field_value === '' || field_value === undefined
+            ) {
               field_value = 'Undefined category';
             }
             const symb = symbols_map.get(field_value),
