@@ -748,9 +748,10 @@ export function render_twostocks_waffle(layer, rendering_params) {
     let color;
     for (let j = 0; j < nbVar; j++) {
       const val = data_manager.result_data[layer_to_add][i][fields[j]] / ratio;
-      sum += val;
+      const roundedValue = Mround(val);
+      sum += roundedValue;
       color = ref_colors[j];
-      for (let ix = 0; ix < val; ix++) {
+      for (let ix = 0; ix < roundedValue; ix++) {
         c.push(color);
       }
     }
