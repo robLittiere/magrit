@@ -498,7 +498,13 @@ def reproj_convert_layer(geojson_path, output_path, file_format, output_crs):
     inSpRef.SetAxisMappingStrategy(OAMS_TRADITIONAL_GIS_ORDER)
 
     outSpRef = SpatialReference()
-    ret_val = outSpRef.ImportFromProj4(output_crs)
+    if output_crs['type'] == 'epsg':
+        ret_val = outSpRef.ImportFromEPSG(output_crs['value'])
+        if output_crs['value'] == 4326:
+            outSpRef.SetAxisMappingStrategy(OAMS_TRADITIONAL_GIS_ORDER)
+    else:
+        ret_val = outSpRef.ImportFromProj4(output_crs['value'])
+
     if not ret_val == 0:
         raise ValueError("Error when importing the output crs")
 
@@ -547,19 +553,36 @@ def check_projection(proj4string):
     """Check if a proj4string is valid."""
     if not isinstance(proj4string, str):
         return False
+
     if proj4string[0] == '"' and proj4string[len(proj4string) - 1] == '"':
         proj4string = proj4string[1:len(proj4string) - 1]
+
     if "epsg:" in proj4string[:5]:
-        proj4string = "".join(["+init=", proj4string])
-    try:
-        pyproj_Proj(proj4string)
-        outSpRef = SpatialReference()
-        ret_val = outSpRef.ImportFromProj4(proj4string)
-        if not ret_val == 0:
+        epsg_number = int(proj4string[5:])
+        try:
+            outSpRef = SpatialReference()
+            ret_val = outSpRef.ImportFromEPSG(epsg_number)
+            if not ret_val == 0:
+                return False
+            return {
+                "type": "epsg",
+                "value": epsg_number,
+            }
+        except:
             return False
-        return proj4string
-    except:
-        return False
+    else:
+        try:
+            pyproj_Proj(proj4string)
+            outSpRef = SpatialReference()
+            ret_val = outSpRef.ImportFromProj4(proj4string)
+            if not ret_val == 0:
+                return False
+            return {
+                "type": "proj4",
+                "value": proj4string,
+            }
+        except:
+            return False
 
 
 def on_geom(geom):
