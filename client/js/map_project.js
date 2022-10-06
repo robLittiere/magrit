@@ -1305,13 +1305,13 @@ export function apply_user_preferences(json_pref) {
           .insert('image')
           .attrs((d, j) => {
             let field_value = d.properties.symbol_field;
-            // Entry in the symbol map was replaced by 'Undefined category' in 0.10.0
+            // Entry in the symbol map was replaced by 'undefined_category' in 0.10.0
             // when the field value was null :
             if (
               p_version.major < 1 && p_version.minor >= 10
               && field_value === null || field_value === '' || field_value === undefined
             ) {
-              field_value = 'Undefined category';
+              field_value = 'undefined_category';
             }
             const symb = symbols_map.get(field_value),
               prop = _layer.current_state[j],

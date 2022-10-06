@@ -173,10 +173,10 @@ export function display_categorical_box(data_layer, layer_name, field, cats) {
       const color_map = fetch_categorical_colors();
       const colorByFeature = data_layer.map((ft) => {
         let val = ft[field];
-        // Entry in the color map was replaced by 'Undefined category'
+        // Entry in the color map was replaced by 'undefined_category'
         // when the field value was null :
         if (val === null || val === '' || val === undefined) {
-          val = 'Undefined category';
+          val = 'undefined_category';
         }
         const r = color_map.get(val);
         if (r) return r[0];

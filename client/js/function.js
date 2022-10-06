@@ -1314,10 +1314,10 @@ const fields_Typo = {
       const nb_class = col_map.size;
       const colorByFeature = data_manager.user_data[layer].map((ft) => {
         let val = ft[field];
-        // Entry in the color map was replaced by 'Undefined category'
+        // Entry in the color map was replaced by 'undefined_category'
         // when the field value was null :
         if (val === null || val === '' || val === undefined) {
-          val = 'Undefined category';
+          val = 'undefined_category';
         }
         return col_map.get(val)[0];
       });
@@ -2715,16 +2715,23 @@ export function prepare_categories_array(layer_name, selected_field, col_map, fi
         }
       }
 
-      // Replace the entry in the color map by 'Undefined category'
+      // Replace the entry in the color map by 'undefined_category'
       // when the category name is null or empty
       if (value === null || value === '' || value === undefined) {
-        value = 'Undefined category';
+        value = 'undefined_category';
       }
       const ret_val = _col_map.get(value);
       _col_map.set(value, ret_val ? [ret_val[0] + 1, [i].concat(ret_val[1])] : [1, [i]]);
     }
     _col_map.forEach((v, k) => {
-      cats.push({ name: k, display_name: k, nb_elem: v[0], color: randomColor() });
+      // The default name of the category is value contained in the category field
+      const name = k;
+      // But if it's an undefined category we use the sentence
+      // "undefined category" in the current language
+      const display_name = k === 'undefined_category'
+        ? _tr('app_page.common.undefined_category')
+        : k;
+      cats.push({ name, display_name, nb_elem: v[0], color: randomColor() });
     });
 
     // Sort categories by name for the first time the categorical panel
@@ -2733,7 +2740,7 @@ export function prepare_categories_array(layer_name, selected_field, col_map, fi
 
     _col_map = new Map();
     for (let i = 0; i < cats.length; i++) {
-      _col_map.set(cats[i].name, [cats[i].color, cats[i].name, cats[i].nb_elem]);
+      _col_map.set(cats[i].name, [cats[i].color, cats[i].display_name, cats[i].nb_elem]);
     }
 
     return [cats, _col_map];
@@ -2783,10 +2790,10 @@ const fields_PropSymbolTypo = {
       const nb_class = col_map.size;
       const colorByFeature = data_manager.user_data[layer].map((ft) => {
         let val = ft[field];
-        // Entry in the color map was replaced by 'Undefined category'
+        // Entry in the color map was replaced by 'undefined_category'
         // when the field value was null :
         if (val === null || val === '' || val === undefined) {
-          val = 'Undefined category';
+          val = 'undefined_category';
         }
         const r = col_map.get(val);
         if (r) return r[0];
@@ -3554,10 +3561,10 @@ function render_TypoSymbols(rendering_params, new_name) {
     .insert('image')
     .attrs((d) => {
       let field_value = d.properties.symbol_field;
-      // Entry in the symbol map was replaced by 'Undefined category'
+      // Entry in the symbol map was replaced by 'undefined_category'
       // when the field value was null :
       if (field_value === null || field_value === '' || field_value === undefined) {
-        field_value = 'Undefined category';
+        field_value = 'undefined_category';
       }
       const symb = rendering_params.symbols_map.get(field_value),
         coords = path.centroid(d.geometry);

@@ -23,17 +23,16 @@ export const display_box_symbol_typo = function (layer, field, categories) {
   const nb_features = data_manager.current_layers[layer].n_features,
     data_layer = data_manager.user_data[layer],
     cats = [],
-    res_symbols = _app.default_symbols,
-    default_d_url = 'url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIwAAACMCAYAAACuwEE+AAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAADVwAAA1cBPbpBvAAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAATySURBVHic7dxNiFVlHIDxZ5z8yvKjMgOTFLI0IrQMSg2jIFpESYSbyCGICqKINu6Kdm1KihZtomgRURRI9EH0YQXWLqJFqG1KIsiKQog+MFu8M1R3mo//nXPO+75znh+czVy55/+eeZy59753LkiSJEmSpCGN5B6gQRuAbQNfOwkcAc4GPux8IhXtLuDUwPErsAP4Dbg132jzx4LcA3RgFFgMvAzcmXmW6vUhmIk1jgLPAg9lnKV6fQoG0mO2x4HHMs1Svb4FM2Ef8PQUt2kafbhgU63xPuAFYGGHs1Svz8EA3A68BiztaJbq9SGY0Rluvwl4C1jewSzV60Mws1njLuB9YHXLs1TPYP5xBfARsK7FWapnMP+1CfgYuKilWapnMJNdQIpmawuzVM9g/t+5wAfAzoZnqV4fgpnpWdJUVgDvArsbnKV6fQhmLmtcDLwCjDU0S/UMZmanAc8BDzYwS/UMZnZGgP24aWkwQfuApxq+z6r0YeFNr/F+4HnSr6re6UMwwz5Lms4dwKvAkhbuu2h9CKatNd5M2rQ8s6X7L5LBzM21pE3Lc1o8R1EMZu62kTYtz2/5PEUwmGZsJu0/bezgXFkZTHPWk6LZ0tH5sjCYZq0hbVru6PCcnepDMG08rZ7OSuAd4MaOz9uJPgSTY42nAweAPRnO3SqDac8i4EXg7kznb4XBtGsUeIa0BzUvGEz7Rki73E8yDz5eJffF7EIpa3yAebBpWcrFbFNJa9xLegdftZuWJV3MtpS2xt3AG1S6aVnaxWxDiWu8DniP9FFqVSnxYjat1DVeSdq0XJt7kIhSL2aTSl7jJaT9pwtzDzJbJV/MpnS9NRC1gRTNZbkHmY0+BFPDGs8DDgLbM88xoxou5lzVssZVpE3LG3IPMp1aLuZc1LTGZcDrwG25B5lKTRdzWLWtcRHwEumDqotT9cvUs/Qo6a8WJ6wauH2UyR9XthA4Y+BrS5j8WXjLSN/gf1vO5Afag+dcQPpj/+nOuQc4THpAXIw+BPPD+KEG1PbjWpkZjEIMRiEGoxCDUYjBKMRgFGIwCjEYhRiMQgxGIQajEINRiMEoxGAUYjAKMRiFGIxCDEYhBqMQg1GIwSjEYBRiMAoxGIUYjEIMRiEGoxCDUYjBKMRgFGIwCjEYhRiMQgxGIQajEINRiMEoxGAUYjAKMRiFGIxCDEYhBqMQg1GIwSjEYBRiMAoxGIUYjEIMRiEGoxCDUYjBKMRgFGIwCjEYhRiMQgxGIQajEINRiMEoZCT3AENaDewErgEuBtYDG4ClA//uFHAUOAIcBj4BDgI/djSnMloJ3AscAv4ixTDMcRL4FLgHWN7pCtSJZcDDwAmGj2Sq4wTwyPg5NA9sB47RfCiDxzFgR0drUkvGgD9oP5aJ43dgbycrU+N2kb6BXcUycfwJXN/B+tSgRcDXdB/LxPHN+AyqxBj5Ypk4xlpfZaVKfOHuqtwDAFfnHqBUJQazLvcAlDFDkUoM5rvcAwDf5h6gVCUG82buAShjBs3SKPA5+R7wfjY+gyqyGThO97F8D2zqYH1qweV0G81xYGsnK1Nr1gAHaD+Wt4G1Ha1JLRsBbiG9raHpUA6N33et7wvSDLYD+4GvGD6Sr4An8MW5odT8P2sjsAW4lPQg+SzSm6xWjN/+C/Az8BPwJfAF6dnX0c4nlSRJkiRJgr8BhBGnmRww0QYAAAAASUVORK5CYII=")';
+    res_symbols = _app.default_symbols;
 
   if (!categories) {
     categories = new Map();
     for (let i = 0; i < nb_features; ++i) {
       let value = data_layer[i][field];
-      // Replace the entry in the color map by 'Undefined category'
+      // Replace the entry in the color map by 'undefined_category'
       // when the field value is null
       if (value === null || value === '' || value === undefined) {
-        value = 'Undefined category';
+        value = 'undefined_category';
       }
       const ret_val = categories.get(value);
       if (ret_val) {
@@ -44,8 +43,15 @@ export const display_box_symbol_typo = function (layer, field, categories) {
     }
     let n_cat = 0;
     categories.forEach((v, k) => {
+      // The default name of the category is value contained in the category field
+      const name = k;
+      // But if it's an undefined category we use the sentence
+      // "Undefined category" in the current language
+      const new_name = k === 'undefined_category'
+        ? _tr('app_page.common.undefined_category')
+        : k;
       cats.push({
-        name: k, new_name: k, nb_elem: v[0], img: `url(${res_symbols[n_cat][1]})`,
+        name, new_name, nb_elem: v[0], img: `url(${res_symbols[n_cat][1]})`,
       });
       n_cat += 1;
     });
