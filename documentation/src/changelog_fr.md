@@ -1,6 +1,6 @@
 # Historique des versions et des changements effectués
 
-#### 0.10.0 (Current master - Not released yet)
+#### 0.10.0 (2022-10-07)
 
 - Modifie la façon dont est proposée l'option "palette personnalisée" dans le panneau de classification (<a href="https://github.com/riatelab/magrit/issues/78">issue Github #78</a>).
 

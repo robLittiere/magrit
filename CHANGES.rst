@@ -1,8 +1,8 @@
 Changes
 =======
 
-0.10.0 (Current master - Not released yet)
-------------------------------------------
+0.10.0 (2022-10-07)
+-------------------
 
 - Change how is proposed the 'custom palette' option in the classification panel (#78).
 
