@@ -8,8 +8,8 @@ struct Point;
 typedef struct Point Point;
 
 /* "magrit_app/helpers/transform.pyx":5
- * #cython: boundscheck=False
- * #cython: cdivision=True
+ * #cython: boundscheck = False
+ * #cython: cdivision = True
  * ctypedef public struct Point:             # <<<<<<<<<<<<<<
  *     double x
  *     double y

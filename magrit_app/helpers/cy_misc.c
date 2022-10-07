@@ -11,7 +11,7 @@
 #else
 #define CYTHON_ABI "0_29_32"
 #define CYTHON_HEX_VERSION 0x001D20F0
-#define CYTHON_FUTURE_DIVISION 0
+#define CYTHON_FUTURE_DIVISION 1
 #include <stddef.h>
 #ifndef offsetof
   #define offsetof(type, member) ( (size_t) & ((type*)0) -> member )
@@ -967,7 +967,7 @@ typedef struct arrayobject arrayobject;
 #endif
 struct __pyx_opt_args_10magrit_app_7helpers_7cy_misc_get_name;
 
-/* "magrit_app/helpers/cy_misc.pyx":5
+/* "magrit_app/helpers/cy_misc.pyx":6
  * from random import choice
  * 
  * cpdef get_name(unsigned int length=25):             # <<<<<<<<<<<<<<
@@ -1622,7 +1622,7 @@ static PyObject *__pyx_n_s_choice;
 static PyObject *__pyx_n_s_chr;
 static PyObject *__pyx_n_s_cline_in_traceback;
 static PyObject *__pyx_n_s_enumerate;
-static PyObject *__pyx_n_s_geometries;
+static PyObject *__pyx_n_u_geometries;
 static PyObject *__pyx_n_s_import;
 static PyObject *__pyx_n_s_keys;
 static PyObject *__pyx_n_s_length;
@@ -1630,14 +1630,14 @@ static PyObject *__pyx_n_s_main;
 static PyObject *__pyx_n_s_name;
 static PyObject *__pyx_n_s_new_field;
 static PyObject *__pyx_n_s_new_field_name;
-static PyObject *__pyx_n_s_objects;
-static PyObject *__pyx_n_s_properties;
+static PyObject *__pyx_n_u_objects;
+static PyObject *__pyx_n_u_properties;
 static PyObject *__pyx_n_s_random;
 static PyObject *__pyx_n_s_range;
 static PyObject *__pyx_n_s_test;
 static PyObject *__pyx_n_s_topojson;
 static PyObject *__pyx_n_s_tounicode;
-static PyObject *__pyx_n_s_u;
+static PyObject *__pyx_n_u_u;
 static PyObject *__pyx_pf_10magrit_app_7helpers_7cy_misc_get_name(CYTHON_UNUSED PyObject *__pyx_self, unsigned int __pyx_v_length); /* proto */
 static PyObject *__pyx_pf_10magrit_app_7helpers_7cy_misc_2join_field_topojson(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_topojson, PyObject *__pyx_v_new_field, PyObject *__pyx_v_new_field_name); /* proto */
 static int __pyx_pf_7cpython_5array_5array___getbuffer__(arrayobject *__pyx_v_self, Py_buffer *__pyx_v_info, CYTHON_UNUSED int __pyx_v_flags); /* proto */
@@ -1706,7 +1706,7 @@ static PyObject *__pyx_int_121;
 static PyObject *__pyx_int_122;
 /* Late includes */
 
-/* "magrit_app/helpers/cy_misc.pyx":5
+/* "magrit_app/helpers/cy_misc.pyx":6
  * from random import choice
  * 
  * cpdef get_name(unsigned int length=25):             # <<<<<<<<<<<<<<
@@ -1738,14 +1738,14 @@ static PyObject *__pyx_f_10magrit_app_7helpers_7cy_misc_get_name(CYTHON_UNUSED i
     }
   }
 
-  /* "magrit_app/helpers/cy_misc.pyx":12
+  /* "magrit_app/helpers/cy_misc.pyx":13
  *     """
  *     cdef:
  *         array.array arr = array.array('u', [u'0']* length)             # <<<<<<<<<<<<<<
  *         unsigned int i = 0
  *         list choice_list = [48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 65, 66, 67, 68,
  */
-  __pyx_t_1 = PyList_New(1 * (__pyx_v_length)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 12, __pyx_L1_error)
+  __pyx_t_1 = PyList_New(1 * (__pyx_v_length)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 13, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   { Py_ssize_t __pyx_temp;
     for (__pyx_temp=0; __pyx_temp < __pyx_v_length; __pyx_temp++) {
@@ -1754,21 +1754,21 @@ static PyObject *__pyx_f_10magrit_app_7helpers_7cy_misc_get_name(CYTHON_UNUSED i
       PyList_SET_ITEM(__pyx_t_1, __pyx_temp, __pyx_kp_u_0);
     }
   }
-  __pyx_t_2 = PyTuple_New(2); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 12, __pyx_L1_error)
+  __pyx_t_2 = PyTuple_New(2); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 13, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __Pyx_INCREF(__pyx_n_s_u);
-  __Pyx_GIVEREF(__pyx_n_s_u);
-  PyTuple_SET_ITEM(__pyx_t_2, 0, __pyx_n_s_u);
+  __Pyx_INCREF(__pyx_n_u_u);
+  __Pyx_GIVEREF(__pyx_n_u_u);
+  PyTuple_SET_ITEM(__pyx_t_2, 0, __pyx_n_u_u);
   __Pyx_GIVEREF(__pyx_t_1);
   PyTuple_SET_ITEM(__pyx_t_2, 1, __pyx_t_1);
   __pyx_t_1 = 0;
-  __pyx_t_1 = __Pyx_PyObject_Call(((PyObject *)__pyx_ptype_7cpython_5array_array), __pyx_t_2, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 12, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_Call(((PyObject *)__pyx_ptype_7cpython_5array_array), __pyx_t_2, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 13, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __pyx_v_arr = ((arrayobject *)__pyx_t_1);
   __pyx_t_1 = 0;
 
-  /* "magrit_app/helpers/cy_misc.pyx":13
+  /* "magrit_app/helpers/cy_misc.pyx":14
  *     cdef:
  *         array.array arr = array.array('u', [u'0']* length)
  *         unsigned int i = 0             # <<<<<<<<<<<<<<
@@ -1777,14 +1777,14 @@ static PyObject *__pyx_f_10magrit_app_7helpers_7cy_misc_get_name(CYTHON_UNUSED i
  */
   __pyx_v_i = 0;
 
-  /* "magrit_app/helpers/cy_misc.pyx":14
+  /* "magrit_app/helpers/cy_misc.pyx":15
  *         array.array arr = array.array('u', [u'0']* length)
  *         unsigned int i = 0
  *         list choice_list = [48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 65, 66, 67, 68,             # <<<<<<<<<<<<<<
  *                    69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82,
  *                    83, 84, 85, 86, 87, 88, 89, 90, 97, 98, 99, 100, 101, 102,
  */
-  __pyx_t_1 = PyList_New(62); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 14, __pyx_L1_error)
+  __pyx_t_1 = PyList_New(62); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 15, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_INCREF(__pyx_int_48);
   __Pyx_GIVEREF(__pyx_int_48);
@@ -1975,7 +1975,7 @@ static PyObject *__pyx_f_10magrit_app_7helpers_7cy_misc_get_name(CYTHON_UNUSED i
   __pyx_v_choice_list = ((PyObject*)__pyx_t_1);
   __pyx_t_1 = 0;
 
-  /* "magrit_app/helpers/cy_misc.pyx":20
+  /* "magrit_app/helpers/cy_misc.pyx":21
  *                    115, 116, 117, 118, 119, 120, 121, 122]
  * 
  *     for i in range(length):             # <<<<<<<<<<<<<<
@@ -1987,14 +1987,14 @@ static PyObject *__pyx_f_10magrit_app_7helpers_7cy_misc_get_name(CYTHON_UNUSED i
   for (__pyx_t_5 = 0; __pyx_t_5 < __pyx_t_4; __pyx_t_5+=1) {
     __pyx_v_i = __pyx_t_5;
 
-    /* "magrit_app/helpers/cy_misc.pyx":21
+    /* "magrit_app/helpers/cy_misc.pyx":22
  * 
  *     for i in range(length):
  *         arr[i] = chr(choice(choice_list))             # <<<<<<<<<<<<<<
  *     return arr.tounicode()
  * 
  */
-    __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_choice); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 21, __pyx_L1_error)
+    __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_choice); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 22, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __pyx_t_6 = NULL;
     if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_2))) {
@@ -2008,17 +2008,17 @@ static PyObject *__pyx_f_10magrit_app_7helpers_7cy_misc_get_name(CYTHON_UNUSED i
     }
     __pyx_t_1 = (__pyx_t_6) ? __Pyx_PyObject_Call2Args(__pyx_t_2, __pyx_t_6, __pyx_v_choice_list) : __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_v_choice_list);
     __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
-    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 21, __pyx_L1_error)
+    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 22, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    __pyx_t_2 = __Pyx_PyObject_CallOneArg(__pyx_builtin_chr, __pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 21, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyObject_CallOneArg(__pyx_builtin_chr, __pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 22, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-    if (unlikely(__Pyx_SetItemInt(((PyObject *)__pyx_v_arr), __pyx_v_i, __pyx_t_2, unsigned int, 0, __Pyx_PyInt_From_unsigned_int, 0, 0, 1) < 0)) __PYX_ERR(0, 21, __pyx_L1_error)
+    if (unlikely(__Pyx_SetItemInt(((PyObject *)__pyx_v_arr), __pyx_v_i, __pyx_t_2, unsigned int, 0, __Pyx_PyInt_From_unsigned_int, 0, 0, 1) < 0)) __PYX_ERR(0, 22, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   }
 
-  /* "magrit_app/helpers/cy_misc.pyx":22
+  /* "magrit_app/helpers/cy_misc.pyx":23
  *     for i in range(length):
  *         arr[i] = chr(choice(choice_list))
  *     return arr.tounicode()             # <<<<<<<<<<<<<<
@@ -2026,7 +2026,7 @@ static PyObject *__pyx_f_10magrit_app_7helpers_7cy_misc_get_name(CYTHON_UNUSED i
  * cpdef join_field_topojson(dict topojson, list new_field, str new_field_name):
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_arr), __pyx_n_s_tounicode); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 22, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_arr), __pyx_n_s_tounicode); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 23, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_t_6 = NULL;
   if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_1))) {
@@ -2040,14 +2040,14 @@ static PyObject *__pyx_f_10magrit_app_7helpers_7cy_misc_get_name(CYTHON_UNUSED i
   }
   __pyx_t_2 = (__pyx_t_6) ? __Pyx_PyObject_CallOneArg(__pyx_t_1, __pyx_t_6) : __Pyx_PyObject_CallNoArg(__pyx_t_1);
   __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
-  if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 22, __pyx_L1_error)
+  if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 23, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __pyx_r = __pyx_t_2;
   __pyx_t_2 = 0;
   goto __pyx_L0;
 
-  /* "magrit_app/helpers/cy_misc.pyx":5
+  /* "magrit_app/helpers/cy_misc.pyx":6
  * from random import choice
  * 
  * cpdef get_name(unsigned int length=25):             # <<<<<<<<<<<<<<
@@ -2072,7 +2072,7 @@ static PyObject *__pyx_f_10magrit_app_7helpers_7cy_misc_get_name(CYTHON_UNUSED i
 
 /* Python wrapper */
 static PyObject *__pyx_pw_10magrit_app_7helpers_7cy_misc_1get_name(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static char __pyx_doc_10magrit_app_7helpers_7cy_misc_get_name[] = "\n    Find a temporary random name to share object\n    with some external soft used (ogr2ogr / topojson / etc.)\n    Aimed to be remplaced by something better\n    ";
+static char __pyx_doc_10magrit_app_7helpers_7cy_misc_get_name[] = "\n    Find a temporary random name to share object\n    with some external soft used (ogr2ogr / topojson / etc.).\n    Aimed to be replaced by something better.\n    ";
 static PyObject *__pyx_pw_10magrit_app_7helpers_7cy_misc_1get_name(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   unsigned int __pyx_v_length;
   int __pyx_lineno = 0;
@@ -2102,7 +2102,7 @@ static PyObject *__pyx_pw_10magrit_app_7helpers_7cy_misc_1get_name(PyObject *__p
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "get_name") < 0)) __PYX_ERR(0, 5, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "get_name") < 0)) __PYX_ERR(0, 6, __pyx_L3_error)
       }
     } else {
       switch (PyTuple_GET_SIZE(__pyx_args)) {
@@ -2113,14 +2113,14 @@ static PyObject *__pyx_pw_10magrit_app_7helpers_7cy_misc_1get_name(PyObject *__p
       }
     }
     if (values[0]) {
-      __pyx_v_length = __Pyx_PyInt_As_unsigned_int(values[0]); if (unlikely((__pyx_v_length == (unsigned int)-1) && PyErr_Occurred())) __PYX_ERR(0, 5, __pyx_L3_error)
+      __pyx_v_length = __Pyx_PyInt_As_unsigned_int(values[0]); if (unlikely((__pyx_v_length == (unsigned int)-1) && PyErr_Occurred())) __PYX_ERR(0, 6, __pyx_L3_error)
     } else {
       __pyx_v_length = ((unsigned int)25);
     }
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("get_name", 0, 0, 1, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 5, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("get_name", 0, 0, 1, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 6, __pyx_L3_error)
   __pyx_L3_error:;
   __Pyx_AddTraceback("magrit_app.helpers.cy_misc.get_name", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
@@ -2145,7 +2145,7 @@ static PyObject *__pyx_pf_10magrit_app_7helpers_7cy_misc_get_name(CYTHON_UNUSED 
   __Pyx_XDECREF(__pyx_r);
   __pyx_t_2.__pyx_n = 1;
   __pyx_t_2.length = __pyx_v_length;
-  __pyx_t_1 = __pyx_f_10magrit_app_7helpers_7cy_misc_get_name(0, &__pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 5, __pyx_L1_error)
+  __pyx_t_1 = __pyx_f_10magrit_app_7helpers_7cy_misc_get_name(0, &__pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 6, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
@@ -2162,7 +2162,7 @@ static PyObject *__pyx_pf_10magrit_app_7helpers_7cy_misc_get_name(CYTHON_UNUSED 
   return __pyx_r;
 }
 
-/* "magrit_app/helpers/cy_misc.pyx":24
+/* "magrit_app/helpers/cy_misc.pyx":25
  *     return arr.tounicode()
  * 
  * cpdef join_field_topojson(dict topojson, list new_field, str new_field_name):             # <<<<<<<<<<<<<<
@@ -2195,7 +2195,7 @@ static PyObject *__pyx_f_10magrit_app_7helpers_7cy_misc_join_field_topojson(PyOb
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("join_field_topojson", 0);
 
-  /* "magrit_app/helpers/cy_misc.pyx":26
+  /* "magrit_app/helpers/cy_misc.pyx":27
  * cpdef join_field_topojson(dict topojson, list new_field, str new_field_name):
  *     cdef:
  *         unsigned int ix = 0             # <<<<<<<<<<<<<<
@@ -2204,7 +2204,7 @@ static PyObject *__pyx_f_10magrit_app_7helpers_7cy_misc_join_field_topojson(PyOb
  */
   __pyx_v_ix = 0;
 
-  /* "magrit_app/helpers/cy_misc.pyx":28
+  /* "magrit_app/helpers/cy_misc.pyx":29
  *         unsigned int ix = 0
  *         dict geom
  *         str layer_name = list(topojson['objects'].keys())[0]             # <<<<<<<<<<<<<<
@@ -2213,11 +2213,11 @@ static PyObject *__pyx_f_10magrit_app_7helpers_7cy_misc_join_field_topojson(PyOb
  */
   if (unlikely(__pyx_v_topojson == Py_None)) {
     PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-    __PYX_ERR(0, 28, __pyx_L1_error)
+    __PYX_ERR(0, 29, __pyx_L1_error)
   }
-  __pyx_t_2 = __Pyx_PyDict_GetItem(__pyx_v_topojson, __pyx_n_s_objects); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 28, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyDict_GetItem(__pyx_v_topojson, __pyx_n_u_objects); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 29, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_keys); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 28, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_keys); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 29, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __pyx_t_2 = NULL;
@@ -2232,20 +2232,20 @@ static PyObject *__pyx_f_10magrit_app_7helpers_7cy_misc_join_field_topojson(PyOb
   }
   __pyx_t_1 = (__pyx_t_2) ? __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_t_2) : __Pyx_PyObject_CallNoArg(__pyx_t_3);
   __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
-  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 28, __pyx_L1_error)
+  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 29, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  __pyx_t_3 = PySequence_List(__pyx_t_1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 28, __pyx_L1_error)
+  __pyx_t_3 = PySequence_List(__pyx_t_1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 29, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_1 = __Pyx_GetItemInt_List(__pyx_t_3, 0, long, 1, __Pyx_PyInt_From_long, 1, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 28, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_GetItemInt_List(__pyx_t_3, 0, long, 1, __Pyx_PyInt_From_long, 1, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 29, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  if (!(likely(PyString_CheckExact(__pyx_t_1))||((__pyx_t_1) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "str", Py_TYPE(__pyx_t_1)->tp_name), 0))) __PYX_ERR(0, 28, __pyx_L1_error)
+  if (!(likely(PyUnicode_CheckExact(__pyx_t_1))||((__pyx_t_1) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "unicode", Py_TYPE(__pyx_t_1)->tp_name), 0))) __PYX_ERR(0, 29, __pyx_L1_error)
   __pyx_v_layer_name = ((PyObject*)__pyx_t_1);
   __pyx_t_1 = 0;
 
-  /* "magrit_app/helpers/cy_misc.pyx":30
+  /* "magrit_app/helpers/cy_misc.pyx":31
  *         str layer_name = list(topojson['objects'].keys())[0]
  * 
  *     for ix, geom in enumerate(topojson['objects'][layer_name]['geometries']):             # <<<<<<<<<<<<<<
@@ -2255,23 +2255,23 @@ static PyObject *__pyx_f_10magrit_app_7helpers_7cy_misc_join_field_topojson(PyOb
   __pyx_t_4 = 0;
   if (unlikely(__pyx_v_topojson == Py_None)) {
     PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-    __PYX_ERR(0, 30, __pyx_L1_error)
+    __PYX_ERR(0, 31, __pyx_L1_error)
   }
-  __pyx_t_1 = __Pyx_PyDict_GetItem(__pyx_v_topojson, __pyx_n_s_objects); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 30, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyDict_GetItem(__pyx_v_topojson, __pyx_n_u_objects); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 31, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_3 = __Pyx_PyObject_Dict_GetItem(__pyx_t_1, __pyx_v_layer_name); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 30, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyObject_Dict_GetItem(__pyx_t_1, __pyx_v_layer_name); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 31, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_1 = __Pyx_PyObject_Dict_GetItem(__pyx_t_3, __pyx_n_s_geometries); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 30, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_Dict_GetItem(__pyx_t_3, __pyx_n_u_geometries); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 31, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   if (likely(PyList_CheckExact(__pyx_t_1)) || PyTuple_CheckExact(__pyx_t_1)) {
     __pyx_t_3 = __pyx_t_1; __Pyx_INCREF(__pyx_t_3); __pyx_t_5 = 0;
     __pyx_t_6 = NULL;
   } else {
-    __pyx_t_5 = -1; __pyx_t_3 = PyObject_GetIter(__pyx_t_1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 30, __pyx_L1_error)
+    __pyx_t_5 = -1; __pyx_t_3 = PyObject_GetIter(__pyx_t_1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 31, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
-    __pyx_t_6 = Py_TYPE(__pyx_t_3)->tp_iternext; if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 30, __pyx_L1_error)
+    __pyx_t_6 = Py_TYPE(__pyx_t_3)->tp_iternext; if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 31, __pyx_L1_error)
   }
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   for (;;) {
@@ -2279,17 +2279,17 @@ static PyObject *__pyx_f_10magrit_app_7helpers_7cy_misc_join_field_topojson(PyOb
       if (likely(PyList_CheckExact(__pyx_t_3))) {
         if (__pyx_t_5 >= PyList_GET_SIZE(__pyx_t_3)) break;
         #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-        __pyx_t_1 = PyList_GET_ITEM(__pyx_t_3, __pyx_t_5); __Pyx_INCREF(__pyx_t_1); __pyx_t_5++; if (unlikely(0 < 0)) __PYX_ERR(0, 30, __pyx_L1_error)
+        __pyx_t_1 = PyList_GET_ITEM(__pyx_t_3, __pyx_t_5); __Pyx_INCREF(__pyx_t_1); __pyx_t_5++; if (unlikely(0 < 0)) __PYX_ERR(0, 31, __pyx_L1_error)
         #else
-        __pyx_t_1 = PySequence_ITEM(__pyx_t_3, __pyx_t_5); __pyx_t_5++; if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 30, __pyx_L1_error)
+        __pyx_t_1 = PySequence_ITEM(__pyx_t_3, __pyx_t_5); __pyx_t_5++; if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 31, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_1);
         #endif
       } else {
         if (__pyx_t_5 >= PyTuple_GET_SIZE(__pyx_t_3)) break;
         #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-        __pyx_t_1 = PyTuple_GET_ITEM(__pyx_t_3, __pyx_t_5); __Pyx_INCREF(__pyx_t_1); __pyx_t_5++; if (unlikely(0 < 0)) __PYX_ERR(0, 30, __pyx_L1_error)
+        __pyx_t_1 = PyTuple_GET_ITEM(__pyx_t_3, __pyx_t_5); __Pyx_INCREF(__pyx_t_1); __pyx_t_5++; if (unlikely(0 < 0)) __PYX_ERR(0, 31, __pyx_L1_error)
         #else
-        __pyx_t_1 = PySequence_ITEM(__pyx_t_3, __pyx_t_5); __pyx_t_5++; if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 30, __pyx_L1_error)
+        __pyx_t_1 = PySequence_ITEM(__pyx_t_3, __pyx_t_5); __pyx_t_5++; if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 31, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_1);
         #endif
       }
@@ -2299,19 +2299,19 @@ static PyObject *__pyx_f_10magrit_app_7helpers_7cy_misc_join_field_topojson(PyOb
         PyObject* exc_type = PyErr_Occurred();
         if (exc_type) {
           if (likely(__Pyx_PyErr_GivenExceptionMatches(exc_type, PyExc_StopIteration))) PyErr_Clear();
-          else __PYX_ERR(0, 30, __pyx_L1_error)
+          else __PYX_ERR(0, 31, __pyx_L1_error)
         }
         break;
       }
       __Pyx_GOTREF(__pyx_t_1);
     }
-    if (!(likely(PyDict_CheckExact(__pyx_t_1))||((__pyx_t_1) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "dict", Py_TYPE(__pyx_t_1)->tp_name), 0))) __PYX_ERR(0, 30, __pyx_L1_error)
+    if (!(likely(PyDict_CheckExact(__pyx_t_1))||((__pyx_t_1) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "dict", Py_TYPE(__pyx_t_1)->tp_name), 0))) __PYX_ERR(0, 31, __pyx_L1_error)
     __Pyx_XDECREF_SET(__pyx_v_geom, ((PyObject*)__pyx_t_1));
     __pyx_t_1 = 0;
     __pyx_v_ix = __pyx_t_4;
     __pyx_t_4 = (__pyx_t_4 + 1);
 
-    /* "magrit_app/helpers/cy_misc.pyx":31
+    /* "magrit_app/helpers/cy_misc.pyx":32
  * 
  *     for ix, geom in enumerate(topojson['objects'][layer_name]['geometries']):
  *         try:             # <<<<<<<<<<<<<<
@@ -2327,7 +2327,7 @@ static PyObject *__pyx_f_10magrit_app_7helpers_7cy_misc_join_field_topojson(PyOb
       __Pyx_XGOTREF(__pyx_t_9);
       /*try:*/ {
 
-        /* "magrit_app/helpers/cy_misc.pyx":32
+        /* "magrit_app/helpers/cy_misc.pyx":33
  *     for ix, geom in enumerate(topojson['objects'][layer_name]['geometries']):
  *         try:
  *             geom['properties'][new_field_name] = new_field[ix]             # <<<<<<<<<<<<<<
@@ -2336,21 +2336,21 @@ static PyObject *__pyx_f_10magrit_app_7helpers_7cy_misc_join_field_topojson(PyOb
  */
         if (unlikely(__pyx_v_new_field == Py_None)) {
           PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-          __PYX_ERR(0, 32, __pyx_L5_error)
+          __PYX_ERR(0, 33, __pyx_L5_error)
         }
-        __pyx_t_1 = __Pyx_GetItemInt_List(__pyx_v_new_field, __pyx_v_ix, unsigned int, 0, __Pyx_PyInt_From_unsigned_int, 1, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 32, __pyx_L5_error)
+        __pyx_t_1 = __Pyx_GetItemInt_List(__pyx_v_new_field, __pyx_v_ix, unsigned int, 0, __Pyx_PyInt_From_unsigned_int, 1, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 33, __pyx_L5_error)
         __Pyx_GOTREF(__pyx_t_1);
         if (unlikely(__pyx_v_geom == Py_None)) {
           PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-          __PYX_ERR(0, 32, __pyx_L5_error)
+          __PYX_ERR(0, 33, __pyx_L5_error)
         }
-        __pyx_t_2 = __Pyx_PyDict_GetItem(__pyx_v_geom, __pyx_n_s_properties); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 32, __pyx_L5_error)
+        __pyx_t_2 = __Pyx_PyDict_GetItem(__pyx_v_geom, __pyx_n_u_properties); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 33, __pyx_L5_error)
         __Pyx_GOTREF(__pyx_t_2);
-        if (unlikely(PyObject_SetItem(__pyx_t_2, __pyx_v_new_field_name, __pyx_t_1) < 0)) __PYX_ERR(0, 32, __pyx_L5_error)
+        if (unlikely(PyObject_SetItem(__pyx_t_2, __pyx_v_new_field_name, __pyx_t_1) < 0)) __PYX_ERR(0, 33, __pyx_L5_error)
         __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
         __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-        /* "magrit_app/helpers/cy_misc.pyx":31
+        /* "magrit_app/helpers/cy_misc.pyx":32
  * 
  *     for ix, geom in enumerate(topojson['objects'][layer_name]['geometries']):
  *         try:             # <<<<<<<<<<<<<<
@@ -2366,43 +2366,40 @@ static PyObject *__pyx_f_10magrit_app_7helpers_7cy_misc_join_field_topojson(PyOb
       __Pyx_XDECREF(__pyx_t_1); __pyx_t_1 = 0;
       __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-      /* "magrit_app/helpers/cy_misc.pyx":33
+      /* "magrit_app/helpers/cy_misc.pyx":34
  *         try:
  *             geom['properties'][new_field_name] = new_field[ix]
  *         except KeyError:             # <<<<<<<<<<<<<<
  *             geom['properties'] = {new_field_name: new_field[ix]}
- * 
  */
       __pyx_t_10 = __Pyx_PyErr_ExceptionMatches(__pyx_builtin_KeyError);
       if (__pyx_t_10) {
         __Pyx_AddTraceback("magrit_app.helpers.cy_misc.join_field_topojson", __pyx_clineno, __pyx_lineno, __pyx_filename);
-        if (__Pyx_GetException(&__pyx_t_1, &__pyx_t_2, &__pyx_t_11) < 0) __PYX_ERR(0, 33, __pyx_L7_except_error)
+        if (__Pyx_GetException(&__pyx_t_1, &__pyx_t_2, &__pyx_t_11) < 0) __PYX_ERR(0, 34, __pyx_L7_except_error)
         __Pyx_GOTREF(__pyx_t_1);
         __Pyx_GOTREF(__pyx_t_2);
         __Pyx_GOTREF(__pyx_t_11);
 
-        /* "magrit_app/helpers/cy_misc.pyx":34
+        /* "magrit_app/helpers/cy_misc.pyx":35
  *             geom['properties'][new_field_name] = new_field[ix]
  *         except KeyError:
  *             geom['properties'] = {new_field_name: new_field[ix]}             # <<<<<<<<<<<<<<
- * 
- * #cdef list get_comm(list arc_a, list arc_b):
  */
-        __pyx_t_12 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 34, __pyx_L7_except_error)
+        __pyx_t_12 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 35, __pyx_L7_except_error)
         __Pyx_GOTREF(__pyx_t_12);
         if (unlikely(__pyx_v_new_field == Py_None)) {
           PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-          __PYX_ERR(0, 34, __pyx_L7_except_error)
+          __PYX_ERR(0, 35, __pyx_L7_except_error)
         }
-        __pyx_t_13 = __Pyx_GetItemInt_List(__pyx_v_new_field, __pyx_v_ix, unsigned int, 0, __Pyx_PyInt_From_unsigned_int, 1, 0, 1); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 34, __pyx_L7_except_error)
+        __pyx_t_13 = __Pyx_GetItemInt_List(__pyx_v_new_field, __pyx_v_ix, unsigned int, 0, __Pyx_PyInt_From_unsigned_int, 1, 0, 1); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 35, __pyx_L7_except_error)
         __Pyx_GOTREF(__pyx_t_13);
-        if (PyDict_SetItem(__pyx_t_12, __pyx_v_new_field_name, __pyx_t_13) < 0) __PYX_ERR(0, 34, __pyx_L7_except_error)
+        if (PyDict_SetItem(__pyx_t_12, __pyx_v_new_field_name, __pyx_t_13) < 0) __PYX_ERR(0, 35, __pyx_L7_except_error)
         __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
         if (unlikely(__pyx_v_geom == Py_None)) {
           PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-          __PYX_ERR(0, 34, __pyx_L7_except_error)
+          __PYX_ERR(0, 35, __pyx_L7_except_error)
         }
-        if (unlikely(PyDict_SetItem(__pyx_v_geom, __pyx_n_s_properties, __pyx_t_12) < 0)) __PYX_ERR(0, 34, __pyx_L7_except_error)
+        if (unlikely(PyDict_SetItem(__pyx_v_geom, __pyx_n_u_properties, __pyx_t_12) < 0)) __PYX_ERR(0, 35, __pyx_L7_except_error)
         __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
         __Pyx_XDECREF(__pyx_t_1); __pyx_t_1 = 0;
         __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
@@ -2412,7 +2409,7 @@ static PyObject *__pyx_f_10magrit_app_7helpers_7cy_misc_join_field_topojson(PyOb
       goto __pyx_L7_except_error;
       __pyx_L7_except_error:;
 
-      /* "magrit_app/helpers/cy_misc.pyx":31
+      /* "magrit_app/helpers/cy_misc.pyx":32
  * 
  *     for ix, geom in enumerate(topojson['objects'][layer_name]['geometries']):
  *         try:             # <<<<<<<<<<<<<<
@@ -2432,7 +2429,7 @@ static PyObject *__pyx_f_10magrit_app_7helpers_7cy_misc_join_field_topojson(PyOb
       __pyx_L12_try_end:;
     }
 
-    /* "magrit_app/helpers/cy_misc.pyx":30
+    /* "magrit_app/helpers/cy_misc.pyx":31
  *         str layer_name = list(topojson['objects'].keys())[0]
  * 
  *     for ix, geom in enumerate(topojson['objects'][layer_name]['geometries']):             # <<<<<<<<<<<<<<
@@ -2442,7 +2439,7 @@ static PyObject *__pyx_f_10magrit_app_7helpers_7cy_misc_join_field_topojson(PyOb
   }
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
-  /* "magrit_app/helpers/cy_misc.pyx":24
+  /* "magrit_app/helpers/cy_misc.pyx":25
  *     return arr.tounicode()
  * 
  * cpdef join_field_topojson(dict topojson, list new_field, str new_field_name):             # <<<<<<<<<<<<<<
@@ -2507,17 +2504,17 @@ static PyObject *__pyx_pw_10magrit_app_7helpers_7cy_misc_3join_field_topojson(Py
         case  1:
         if (likely((values[1] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_new_field)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("join_field_topojson", 1, 3, 3, 1); __PYX_ERR(0, 24, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("join_field_topojson", 1, 3, 3, 1); __PYX_ERR(0, 25, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  2:
         if (likely((values[2] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_new_field_name)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("join_field_topojson", 1, 3, 3, 2); __PYX_ERR(0, 24, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("join_field_topojson", 1, 3, 3, 2); __PYX_ERR(0, 25, __pyx_L3_error)
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "join_field_topojson") < 0)) __PYX_ERR(0, 24, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "join_field_topojson") < 0)) __PYX_ERR(0, 25, __pyx_L3_error)
       }
     } else if (PyTuple_GET_SIZE(__pyx_args) != 3) {
       goto __pyx_L5_argtuple_error;
@@ -2532,15 +2529,15 @@ static PyObject *__pyx_pw_10magrit_app_7helpers_7cy_misc_3join_field_topojson(Py
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("join_field_topojson", 1, 3, 3, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 24, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("join_field_topojson", 1, 3, 3, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 25, __pyx_L3_error)
   __pyx_L3_error:;
   __Pyx_AddTraceback("magrit_app.helpers.cy_misc.join_field_topojson", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_topojson), (&PyDict_Type), 1, "topojson", 1))) __PYX_ERR(0, 24, __pyx_L1_error)
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_new_field), (&PyList_Type), 1, "new_field", 1))) __PYX_ERR(0, 24, __pyx_L1_error)
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_new_field_name), (&PyString_Type), 1, "new_field_name", 1))) __PYX_ERR(0, 24, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_topojson), (&PyDict_Type), 1, "topojson", 1))) __PYX_ERR(0, 25, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_new_field), (&PyList_Type), 1, "new_field", 1))) __PYX_ERR(0, 25, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_new_field_name), (&PyUnicode_Type), 1, "new_field_name", 1))) __PYX_ERR(0, 25, __pyx_L1_error)
   __pyx_r = __pyx_pf_10magrit_app_7helpers_7cy_misc_2join_field_topojson(__pyx_self, __pyx_v_topojson, __pyx_v_new_field, __pyx_v_new_field_name);
 
   /* function exit code */
@@ -2561,7 +2558,7 @@ static PyObject *__pyx_pf_10magrit_app_7helpers_7cy_misc_2join_field_topojson(CY
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("join_field_topojson", 0);
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __pyx_f_10magrit_app_7helpers_7cy_misc_join_field_topojson(__pyx_v_topojson, __pyx_v_new_field, __pyx_v_new_field_name, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 24, __pyx_L1_error)
+  __pyx_t_1 = __pyx_f_10magrit_app_7helpers_7cy_misc_join_field_topojson(__pyx_v_topojson, __pyx_v_new_field, __pyx_v_new_field_name, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 25, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
@@ -3285,7 +3282,7 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_chr, __pyx_k_chr, sizeof(__pyx_k_chr), 0, 0, 1, 1},
   {&__pyx_n_s_cline_in_traceback, __pyx_k_cline_in_traceback, sizeof(__pyx_k_cline_in_traceback), 0, 0, 1, 1},
   {&__pyx_n_s_enumerate, __pyx_k_enumerate, sizeof(__pyx_k_enumerate), 0, 0, 1, 1},
-  {&__pyx_n_s_geometries, __pyx_k_geometries, sizeof(__pyx_k_geometries), 0, 0, 1, 1},
+  {&__pyx_n_u_geometries, __pyx_k_geometries, sizeof(__pyx_k_geometries), 0, 1, 0, 1},
   {&__pyx_n_s_import, __pyx_k_import, sizeof(__pyx_k_import), 0, 0, 1, 1},
   {&__pyx_n_s_keys, __pyx_k_keys, sizeof(__pyx_k_keys), 0, 0, 1, 1},
   {&__pyx_n_s_length, __pyx_k_length, sizeof(__pyx_k_length), 0, 0, 1, 1},
@@ -3293,21 +3290,21 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_name, __pyx_k_name, sizeof(__pyx_k_name), 0, 0, 1, 1},
   {&__pyx_n_s_new_field, __pyx_k_new_field, sizeof(__pyx_k_new_field), 0, 0, 1, 1},
   {&__pyx_n_s_new_field_name, __pyx_k_new_field_name, sizeof(__pyx_k_new_field_name), 0, 0, 1, 1},
-  {&__pyx_n_s_objects, __pyx_k_objects, sizeof(__pyx_k_objects), 0, 0, 1, 1},
-  {&__pyx_n_s_properties, __pyx_k_properties, sizeof(__pyx_k_properties), 0, 0, 1, 1},
+  {&__pyx_n_u_objects, __pyx_k_objects, sizeof(__pyx_k_objects), 0, 1, 0, 1},
+  {&__pyx_n_u_properties, __pyx_k_properties, sizeof(__pyx_k_properties), 0, 1, 0, 1},
   {&__pyx_n_s_random, __pyx_k_random, sizeof(__pyx_k_random), 0, 0, 1, 1},
   {&__pyx_n_s_range, __pyx_k_range, sizeof(__pyx_k_range), 0, 0, 1, 1},
   {&__pyx_n_s_test, __pyx_k_test, sizeof(__pyx_k_test), 0, 0, 1, 1},
   {&__pyx_n_s_topojson, __pyx_k_topojson, sizeof(__pyx_k_topojson), 0, 0, 1, 1},
   {&__pyx_n_s_tounicode, __pyx_k_tounicode, sizeof(__pyx_k_tounicode), 0, 0, 1, 1},
-  {&__pyx_n_s_u, __pyx_k_u, sizeof(__pyx_k_u), 0, 0, 1, 1},
+  {&__pyx_n_u_u, __pyx_k_u, sizeof(__pyx_k_u), 0, 1, 0, 1},
   {0, 0, 0, 0, 0, 0, 0}
 };
 static CYTHON_SMALL_CODE int __Pyx_InitCachedBuiltins(void) {
-  __pyx_builtin_range = __Pyx_GetBuiltinName(__pyx_n_s_range); if (!__pyx_builtin_range) __PYX_ERR(0, 20, __pyx_L1_error)
-  __pyx_builtin_chr = __Pyx_GetBuiltinName(__pyx_n_s_chr); if (!__pyx_builtin_chr) __PYX_ERR(0, 21, __pyx_L1_error)
-  __pyx_builtin_enumerate = __Pyx_GetBuiltinName(__pyx_n_s_enumerate); if (!__pyx_builtin_enumerate) __PYX_ERR(0, 30, __pyx_L1_error)
-  __pyx_builtin_KeyError = __Pyx_GetBuiltinName(__pyx_n_s_KeyError); if (!__pyx_builtin_KeyError) __PYX_ERR(0, 33, __pyx_L1_error)
+  __pyx_builtin_range = __Pyx_GetBuiltinName(__pyx_n_s_range); if (!__pyx_builtin_range) __PYX_ERR(0, 21, __pyx_L1_error)
+  __pyx_builtin_chr = __Pyx_GetBuiltinName(__pyx_n_s_chr); if (!__pyx_builtin_chr) __PYX_ERR(0, 22, __pyx_L1_error)
+  __pyx_builtin_enumerate = __Pyx_GetBuiltinName(__pyx_n_s_enumerate); if (!__pyx_builtin_enumerate) __PYX_ERR(0, 31, __pyx_L1_error)
+  __pyx_builtin_KeyError = __Pyx_GetBuiltinName(__pyx_n_s_KeyError); if (!__pyx_builtin_KeyError) __PYX_ERR(0, 34, __pyx_L1_error)
   __pyx_builtin_MemoryError = __Pyx_GetBuiltinName(__pyx_n_s_MemoryError); if (!__pyx_builtin_MemoryError) __PYX_ERR(1, 109, __pyx_L1_error)
   return 0;
   __pyx_L1_error:;
@@ -3689,31 +3686,31 @@ if (!__Pyx_RefNanny) {
   if (__Pyx_patch_abc() < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   #endif
 
-  /* "magrit_app/helpers/cy_misc.pyx":3
- * # -*- coding: utf-8 -*-
+  /* "magrit_app/helpers/cy_misc.pyx":4
+ * #cython: language_level = 3
  * from cpython cimport array
  * from random import choice             # <<<<<<<<<<<<<<
  * 
  * cpdef get_name(unsigned int length=25):
  */
-  __pyx_t_1 = PyList_New(1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 3, __pyx_L1_error)
+  __pyx_t_1 = PyList_New(1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 4, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_INCREF(__pyx_n_s_choice);
   __Pyx_GIVEREF(__pyx_n_s_choice);
   PyList_SET_ITEM(__pyx_t_1, 0, __pyx_n_s_choice);
-  __pyx_t_2 = __Pyx_Import(__pyx_n_s_random, __pyx_t_1, -1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 3, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_Import(__pyx_n_s_random, __pyx_t_1, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 4, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_1 = __Pyx_ImportFrom(__pyx_t_2, __pyx_n_s_choice); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 3, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_ImportFrom(__pyx_t_2, __pyx_n_s_choice); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 4, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_choice, __pyx_t_1) < 0) __PYX_ERR(0, 3, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_choice, __pyx_t_1) < 0) __PYX_ERR(0, 4, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
   /* "magrit_app/helpers/cy_misc.pyx":1
  * # -*- coding: utf-8 -*-             # <<<<<<<<<<<<<<
+ * #cython: language_level = 3
  * from cpython cimport array
- * from random import choice
  */
   __pyx_t_2 = __Pyx_PyDict_NewPresized(0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);

@@ -1,4 +1,4 @@
-#!/usr/bin/env python3.6
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
 magrit
@@ -119,13 +119,11 @@ async def index_handler(request):
     Index page visitors (new/already known) are also counted in this function.
     """
     asyncio.ensure_future(
-        request.app['redis_conn'].incr('view_onepage'),
-        loop=request.app.loop)
+        request.app['redis_conn'].incr('view_onepage'))
     session = await get_session(request)
     if 'already_seen' not in session:
         asyncio.ensure_future(
-            request.app['redis_conn'].incr('single_view_onepage'),
-            loop=request.app.loop)
+            request.app['redis_conn'].incr('single_view_onepage'))
     session['already_seen'] = True
     return web.FileResponse('./static/index.html')
 

@@ -962,8 +962,8 @@ struct Point;
 typedef struct Point Point;
 
 /* "magrit_app/helpers/transform.pyx":5
- * #cython: boundscheck=False
- * #cython: cdivision=True
+ * #cython: boundscheck = False
+ * #cython: cdivision = True
  * ctypedef public struct Point:             # <<<<<<<<<<<<<<
  *     double x
  *     double y
@@ -8523,8 +8523,8 @@ if (!__Pyx_RefNanny) {
 
   /* "magrit_app/helpers/transform.pyx":1
  * # -*- coding: utf-8 -*-             # <<<<<<<<<<<<<<
- * # cython: language_level=3
- * #cython: boundscheck=False
+ * #cython: language_level = 3
+ * #cython: boundscheck = False
  */
   __pyx_t_1 = __Pyx_PyDict_NewPresized(0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
