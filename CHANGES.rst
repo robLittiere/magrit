@@ -24,6 +24,8 @@ Changes
 
 - Update some country names in "World countries" example dataset (PR #92 by @rCarto).
 
+- Update the whole `d3.js` stack.
+
 0.9.2 (2022-09-08)
 -----------------
 

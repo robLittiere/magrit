@@ -18,9 +18,11 @@
 
 - Correction de l'ordre des coordonnées (en utilisant l'option OAMS_TRADITIONAL_GIS_ORDER de OSR) lors de l'export vers ESRI Shapefile et GML.
 
-- Dans PropSymbolTypo, ne pas faire apparaître dans la légende les catégories qui n'apparaissent pas sur la carte en raison de valeurs nulles ou égales à 0 dans le champs utilisé pour dessiner le symbole proportionnel (<a href="https://github.com/riatelab/magrit/issues/93">issue Github #93</a>).
+- Dans PropSymbolTypo, ne pas faire apparaître dans la légende les catégories qui n'apparaissent pas sur la carte en raison de valeurs nulles ou égales à 0 dans le champ utilisé pour dessiner le symbole proportionnel (<a href="https://github.com/riatelab/magrit/issues/93">issue Github #93</a>).
 
 - Mise à jour de quelques noms de pays dans le fichier d'exemple "Pays du monde".
+
+- Mise à jour de toutes les dépendances `d3.js`.
 
 #### 0.9.2 (2022-09-08)
 
