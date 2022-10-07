@@ -1,4 +1,4 @@
-#!/usr/bin/env python3.5
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
 @author: mthh
@@ -33,15 +33,16 @@ def read_csv():
     return data_csv
 
 @pytest.fixture
-def cli(loop, test_client):
-    app = loop.run_until_complete(_init(loop))
+def cli(event_loop, aiohttp_client):
+    app = event_loop.run_until_complete(_init(event_loop))
     app.on_shutdown.pop()
-    return loop.run_until_complete(test_client(app))
+    return event_loop.run_until_complete(aiohttp_client(app))
 
+@pytest.mark.asyncio
 async def test_convert_csv_to_geo(read_csv):
     logger = logging.getLogger()
     res = await rawcsv_to_geo(read_csv, logger)
-    "FeatureCollection" in res
+    assert "FeatureCollection" in res
 
 # FIXME: precision errors are making this test fail...
 # def test_convert_from_topo(read_topo, read_verif_topo):
@@ -50,9 +51,10 @@ async def test_convert_csv_to_geo(read_csv):
 
 def test_check_proj4_string():
     assert check_projection("foobar") is False
-    assert check_projection("epsg:3035") == '+init=epsg:3035'
+    assert check_projection("epsg:3035") == {'type': 'epsg', 'value': 3035}
     assert check_projection("epsg:12345") is False
 
+@pytest.mark.asyncio
 async def test_calc_helper_float(cli):
     data = {
         "var1": "[1.32,2.36,3.36,4.78,5.45,6.98]",
@@ -64,6 +66,7 @@ async def test_calc_helper_float(cli):
     assert await resp.text() \
         == '[0.21639344262295085,0.4538461538461538,0.7813953488372093,1.4058823529411766,2.18,4.3625]'
 
+@pytest.mark.asyncio
 async def test_calc_helper_int(cli):
     data = {
        "var1": "[1, 2, 3, 4, 5, 6]",
@@ -83,6 +86,7 @@ async def test_calc_helper_int(cli):
     assert resp.status == 200
     assert await resp.text() == '[1,32,81,64,25,6]'
 
+@pytest.mark.asyncio
 async def test_get_pages(cli):
     resp = await cli.get('/')
     assert resp.status == 200
