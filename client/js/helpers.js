@@ -87,6 +87,10 @@ export const drag_elem_geo = d3.drag()
     d3.select(this).attr('x', event.x).attr('y', event.y);
   });
 
+/**
+ * Function called when the user moves proportional symbols (circle or square) on the map.
+ *
+ */
 export const drag_elem_geo2 = d3.drag()
   .filter(function () {
     return data_manager.current_layers[_app.id_to_layer.get(this.parentElement.id)].draggable;
@@ -1124,5 +1128,115 @@ export const projEquals = (proj1, proj2) => {
   const p1 = proj4stringToObj(proj1);
   const p2 = proj4stringToObj(proj2);
   // Fast comparison between the objects, given the fact the key were sorted
-  return JSON.stringify(p1) == JSON.stringify(p2)
+  return JSON.stringify(p1) === JSON.stringify(p2);
 };
+
+export const makeDorlingSimulation = (features, iterations, t_field_name, zs) => {
+  const featuresCopyForSimulation = features.slice();
+  const simulation = d3
+    .forceSimulation(featuresCopyForSimulation)
+    .force(
+      'x',
+      d3.forceX((d) => global.proj(d.geometry.coordinates)[0]),
+    )
+    .force(
+      'y',
+      d3.forceY((d) => global.proj(d.geometry.coordinates)[1]),
+    )
+    .force(
+      'collide',
+      d3.forceCollide((d) => d.properties[t_field_name] + 1 / zs),
+    );
+
+  for (let i = 0; i < iterations; i++) {
+    simulation.tick();
+  }
+  return featuresCopyForSimulation;
+};
+
+export const makeDemersSimulation = (features, iterations, t_field_name, zs) => {
+  const featuresCopyForSimulation = features
+    .map((d) => ({
+      _x: global.proj(d.geometry.coordinates)[0],
+      _y: global.proj(d.geometry.coordinates)[1],
+      _size: d.properties[t_field_name],
+      _padding: 1 / zs,
+    }));
+  const simulation = d3
+    .forceSimulation(featuresCopyForSimulation)
+    .force(
+      'x',
+      d3.forceX((d) => d._x),
+    )
+    .force(
+      'y',
+      d3.forceY((d) => d._y),
+    )
+    .force(
+      'collide',
+      squareForceCollide(),
+    );
+
+  for (let i = 0; i < iterations; i++) {
+    simulation.tick();
+  }
+
+  return featuresCopyForSimulation;
+};
+
+/**
+ *
+ * @returns {force}
+ */
+function squareForceCollide() {
+  let nodes;
+
+  function force(alpha) {
+    const quad = d3.quadtree(
+      nodes,
+      (d) => d._x,
+      (d) => d._y,
+    );
+    for (const d of nodes) {
+      quad.visit((q, x1, y1, x2, y2) => {
+        let updated = false;
+        if (q.data && q.data !== d) {
+          let x = d._x - q.data._x,
+            y = d._y - q.data._y;
+          const xSpacing = d._padding + (q.data._size + d._size) / 2,
+            ySpacing = d._padding + (q.data._size + d._size) / 2,
+            absX = Math.abs(x),
+            absY = Math.abs(y);
+          let l,
+            lx,
+            ly;
+
+          if (absX < xSpacing && absY < ySpacing) {
+            l = Math.sqrt(x * x + y * y);
+
+            lx = (absX - xSpacing) / l;
+            ly = (absY - ySpacing) / l;
+
+            // the one that's barely within the bounds probably triggered the collision
+            if (Math.abs(lx) > Math.abs(ly)) {
+              lx = 0;
+            } else {
+              ly = 0;
+            }
+            d._x -= x *= lx;
+            d._y -= y *= ly;
+            q.data.x += x;
+            q.data.y += y;
+
+            updated = true;
+          }
+        }
+        return updated;
+      });
+    }
+  }
+
+  force.initialize = (_) => (nodes = _);
+
+  return force;
+}

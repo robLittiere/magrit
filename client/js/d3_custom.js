@@ -223,6 +223,10 @@ export {
 } from 'd3-force';
 
 export {
+  quadtree,
+} from 'd3-quadtree';
+
+export {
   drag,
 } from 'd3-drag';
 

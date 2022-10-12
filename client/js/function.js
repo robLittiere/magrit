@@ -12,7 +12,7 @@ import {
   drag_waffle, getFieldsType,
   get_other_layer_names,
   send_layer_server,
-  setSelected, xhrequest, isNumber,
+  setSelected, xhrequest, isNumber, makeDorlingSimulation, makeDemersSimulation,
 } from './helpers';
 import {
   getBinsCount, get_nb_decimals, has_negative,
@@ -767,10 +767,11 @@ export function render_twostocks_waffle(layer, rendering_params) {
     const r = rendering_params.size;
     const offset_centroid_x = (2 * r * nCol) / 2 - r;
     for (let j = 0; j < data_manager.result_data[layer_to_add].length; j++) {
-      const centroid = path.centroid({
-        type: 'Point',
-        coordinates: data_manager.result_data[layer_to_add][j].centroid,
-      });
+      // const centroid = path.centroid({
+      //   type: 'Point',
+      //   coordinates: data_manager.result_data[layer_to_add][j].centroid,
+      // });
+      const centroid = global.proj(data_manager.result_data[layer_to_add][j].centroid);
       const group = new_layer.append('g');
       const sum = sums[j];
       const _colors = colors[j];
@@ -802,10 +803,11 @@ export function render_twostocks_waffle(layer, rendering_params) {
     const offset = width / 5;
     const offset_centroid_x = ((width + offset) * (nCol - 1) - width) / 2;
     for (let j = 0; j < data_manager.result_data[layer_to_add].length; j++) {
-      const centroid = path.centroid({
-        type: 'Point',
-        coordinates: data_manager.result_data[layer_to_add][j].centroid,
-      });
+      // const centroid = path.centroid({
+      //   type: 'Point',
+      //   coordinates: data_manager.result_data[layer_to_add][j].centroid,
+      // });
+      const centroid = global.proj(data_manager.result_data[layer_to_add][j].centroid);
       const group = new_layer.append('g');
       const sum = sums[j];
       const _colors = colors[j];
@@ -2325,6 +2327,9 @@ export function make_prop_symbols(rendering_params, _pt_layer) {
     warn_empty_features = [];
   let geojson_pt_layer;
 
+  rendering_params.dorlingDemers = true;
+  rendering_params.dorlingDemersIterations = 150;
+
   if (!_pt_layer) {
     const make_geojson_pt_layer = () => {
       const ref_layer_selection = document.getElementById(_app.layer_to_id.get(layer)).getElementsByTagName('path');
@@ -2382,11 +2387,25 @@ export function make_prop_symbols(rendering_params, _pt_layer) {
     geojson_pt_layer = _pt_layer;
   }
 
+
+  let featuresCopyForSimulation;
+
   const layer_id = encodeId(layer_to_add);
   _app.layer_to_id.set(layer_to_add, layer_id);
   _app.id_to_layer.set(layer_id, layer_to_add);
   data_manager.result_data[layer_to_add] = [];
   if (symbol_type === 'circle') {
+    let featuresWithChangedPositions;
+    // Move the symbols to avoid superposition if user asked for it
+    if (rendering_params.dorlingDemers) {
+      featuresWithChangedPositions = makeDorlingSimulation(
+        geojson_pt_layer.features,
+        rendering_params.dorlingDemersIterations,
+        t_field_name,
+        zs,
+      );
+    }
+
     map.insert('g', '.legend')
       .attrs({ id: layer_id, class: 'layer no_clip' })
       .selectAll('circle')
@@ -2395,20 +2414,33 @@ export function make_prop_symbols(rendering_params, _pt_layer) {
       .append('circle')
       .attrs((d, i) => {
         data_manager.result_data[layer_to_add].push(d.properties);
+        const pt = featuresWithChangedPositions !== undefined
+          ? [featuresWithChangedPositions[i].x, featuresWithChangedPositions[i].y]
+          : global.proj(d.geometry.coordinates);
         return {
           id: ['PropSymbol_', i, ' feature_', d.id].join(''),
           r: d.properties[t_field_name],
-          cx: path.centroid(d)[0],
-          cy: path.centroid(d)[1],
+          cx: pt[0],
+          cy: pt[1],
         };
       })
-      .styles(d => ({
+      .styles((d) => ({
         fill: d.properties.color,
         stroke: 'black',
         'stroke-width': 1 / zs,
       }))
       .call(drag_elem_geo2);
   } else if (symbol_type === 'rect') {
+    let featuresWithChangedPositions;
+    if (rendering_params.dorlingDemers) {
+      // Move the symbols to avoid superposition if user asked for it
+      featuresWithChangedPositions = makeDemersSimulation(
+        geojson_pt_layer.features,
+        rendering_params.dorlingDemersIterations,
+        t_field_name,
+        zs,
+      );
+    }
     map.insert('g', '.legend')
       .attrs({ id: layer_id, class: 'layer no_clip' })
       .selectAll('circle')
@@ -2418,15 +2450,18 @@ export function make_prop_symbols(rendering_params, _pt_layer) {
       .attrs((d, i) => {
         const size = d.properties[t_field_name];
         data_manager.result_data[layer_to_add].push(d.properties);
+        const pt = featuresWithChangedPositions !== undefined
+          ? [featuresWithChangedPositions[i]._x, featuresWithChangedPositions[i]._y]
+          : global.proj(d.geometry.coordinates);
         return {
           id: ['PropSymbol_', i, ' feature_', d.id].join(''),
           height: size,
           width: size,
-          x: path.centroid(d)[0] - size / 2,
-          y: path.centroid(d)[1] - size / 2,
+          x: pt[0] - size / 2,
+          y: pt[1] - size / 2,
         };
       })
-      .styles(d => ({
+      .styles((d) => ({
         fill: d.properties.color,
         stroke: 'black',
         'stroke-width': 1 / zs,
@@ -2444,6 +2479,8 @@ export function make_prop_symbols(rendering_params, _pt_layer) {
     is_result: true,
     ref_layer_name: layer,
     draggable: false,
+    dorlingDemers: rendering_params.dorlingDemers,
+    dorlingDemersIterations: rendering_params.dorlingDemersIterations,
   };
 
   if (rendering_params.fill_color.two !== undefined) {
@@ -3568,7 +3605,7 @@ function render_TypoSymbols(rendering_params, new_name) {
         field_value = 'undefined_category';
       }
       const symb = rendering_params.symbols_map.get(field_value),
-        coords = path.centroid(d.geometry);
+        coords = global.proj(d.geometry.coordinates);
       return {
         x: coords[0] - symb[1] / 2,
         y: coords[1] - symb[1] / 2,
@@ -4615,7 +4652,7 @@ export const render_label = function render_label(layer, rendering_params, optio
   } else {
     selection
       .attrs((d, i) => {
-        const pt = path.centroid(d.geometry);
+        const pt = global.proj(d.geometry.coordinates);
         return {
           id: `Feature_${i}`,
           x: pt[0],
@@ -4719,7 +4756,7 @@ export const render_label_graticule = function render_label_graticule(layer, ren
     .enter()
     .insert('text')
     .attrs((d, i) => {
-      const pt = path.centroid(d.geometry);
+      const pt = global.proj(d.geometry.coordinates);
       return {
         id: `Feature_${i}`,
         x: pt[0],

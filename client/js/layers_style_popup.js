@@ -228,7 +228,7 @@ function createStyleBoxTypoSymbols(layer_name) {
     .on('click', () => {
       selection.transition()
         .attrs((d) => {
-          const centroid = path.centroid(d.geometry),
+          const centroid = global.proj(d.geometry.coordinates),
             size_symbol = symbols_map.get(d.properties.symbol_field)[1] / 2;
           return { x: centroid[0] - size_symbol, y: centroid[1] - size_symbol };
         });
@@ -378,7 +378,7 @@ function createStyleBoxLabel(layer_name) {
     .on('click', () => {
       selection.transition()
         .attrs((d) => {
-          const coords = path.centroid(d.geometry);
+          const coords = global.proj(d.geometry.coordinates);
           return { x: coords[0], y: coords[1] };
         });
     });
@@ -2278,7 +2278,7 @@ function createStyleBoxWaffle(layer_name) {
         .selectAll('g')
         .selectAll(symbol)
         .each(function (_, i) {
-          const _centroid = path.centroid(this.parentElement.__data__.geometry);
+          const _centroid = global.proj(this.parentElement.__data__.geometry.coordinates);
           if (symbol === 'circle') {
             const offset_centroid_x = (2 * val * nCol) / 2 - val;
             const t_x = round((i % nCol) * 2 * val);
@@ -2332,7 +2332,7 @@ function createStyleBoxWaffle(layer_name) {
         .selectAll('g')
         .selectAll(symbol)
         .each(function (d, i) {
-          const _centroid = path.centroid(this.parentElement.__data__.geometry);
+          const _centroid = global.proj(this.parentElement.__data__.geometry.coordinates);
           if (symbol === 'circle') {
             const offset_centroid_x = (2 * size * val) / 2 - size;
             const t_x = round((i % val) * 2 * size);
@@ -2851,7 +2851,7 @@ function createStyleBox_ProbSymbol(layer_name) {
     .on('click', () => {
       selection.transition()
         .attrs((d) => {
-          const centroid = path.centroid(d.geometry);
+          const centroid = global.proj(d.geometry.coordinates);
           if (type_symbol === 'circle') {
             return {
               cx: centroid[0],
