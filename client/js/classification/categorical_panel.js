@@ -178,7 +178,8 @@ export function display_categorical_box(data_layer, layer_name, field, cats) {
         if (val === null || val === '' || val === undefined) {
           val = 'undefined_category';
         }
-        const r = color_map.get(val);
+        // Values are stored as strings in our color map
+        const r = color_map.get(`${val}`);
         if (r) return r[0];
         return null;
       });

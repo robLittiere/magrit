@@ -1322,7 +1322,8 @@ const fields_Typo = {
         if (val === null || val === '' || val === undefined) {
           val = 'undefined_category';
         }
-        return col_map.get(val)[0];
+        // Values are stored as strings in our color map
+        return col_map.get(`${val}`)[0];
       });
       self.rendering_params[field] = {
         nb_class: nb_class,
@@ -2763,7 +2764,8 @@ export function prepare_categories_array(layer_name, selected_field, col_map, fi
     }
     _col_map.forEach((v, k) => {
       // The default name of the category is value contained in the category field
-      const name = k;
+      // (we store all the values as strings)
+      const name = `${k}`;
       // But if it's an undefined category we use the sentence
       // "undefined category" in the current language
       const display_name = k === 'undefined_category'
@@ -2833,7 +2835,8 @@ const fields_PropSymbolTypo = {
         if (val === null || val === '' || val === undefined) {
           val = 'undefined_category';
         }
-        const r = col_map.get(val);
+        // Values are stored as strings in our color map
+        const r = col_map.get(`${val}`);
         if (r) return r[0];
         return null;
       });
@@ -3604,7 +3607,8 @@ function render_TypoSymbols(rendering_params, new_name) {
       if (field_value === null || field_value === '' || field_value === undefined) {
         field_value = 'undefined_category';
       }
-      const symb = rendering_params.symbols_map.get(field_value),
+      // Values are stored as strings in our symbol map
+      const symb = rendering_params.symbols_map.get(`${field_value}`),
         coords = global.proj(d.geometry.coordinates);
       return {
         x: coords[0] - symb[1] / 2,

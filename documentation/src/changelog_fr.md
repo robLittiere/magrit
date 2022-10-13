@@ -1,5 +1,9 @@
 # Historique des versions et des changements effectués
 
+#### 0.10.1 (2022-10-13)
+
+- Correction d'un bug qui empêchait de créer carte de typologie (Typo, PropSymbolTypo et TypoPicto) avec des données de type 'Number' (erreur introduite dans la version 0.10.0).
+
 #### 0.10.0 (2022-10-07)
 
 - Modifie la façon dont est proposée l'option "palette personnalisée" dans le panneau de classification (<a href="https://github.com/riatelab/magrit/issues/78">issue Github #78</a>).
