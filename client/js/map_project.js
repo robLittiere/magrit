@@ -1312,6 +1312,10 @@ export function apply_user_preferences(json_pref) {
               && field_value === null || field_value === '' || field_value === undefined
             ) {
               field_value = 'undefined_category';
+            } else if (
+              p_version.major < 1 && p_version.minor >= 10 && p_version.patch >= 1
+            ) { // Entry in the symbol map is always stored as string since 0.10.1 :
+              field_value = `${field_value}`;
             }
             const symb = symbols_map.get(field_value),
               prop = _layer.current_state[j],

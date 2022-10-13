@@ -44,7 +44,8 @@ export const display_box_symbol_typo = function (layer, field, categories) {
     let n_cat = 0;
     categories.forEach((v, k) => {
       // The default name of the category is value contained in the category field
-      const name = k;
+      // (stored as strings)
+      const name = `${k}`;
       // But if it's an undefined category we use the sentence
       // "Undefined category" in the current language
       const new_name = k === 'undefined_category'
