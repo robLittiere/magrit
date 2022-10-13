@@ -1,6 +1,12 @@
 Changes
 =======
 
+0.10.1 (2022-10-13)
+-------------------
+
+- Fixed a bug that prevented to create typology maps (Typo, PropSymbolTypo and TypoPicto) with data of type 'Number' (error introduced in version 0.10.0).
+
+
 0.10.0 (2022-10-07)
 -------------------
 
