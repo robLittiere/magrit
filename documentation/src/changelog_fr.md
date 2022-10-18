@@ -1,5 +1,9 @@
 # Historique des versions et des changements effectués
 
+#### 0.11.0 (xxxx-xx-xx)
+
+- Ajout d'une option pour éviter le chevauchement des symboles proportionnels.
+
 #### 0.10.1 (2022-10-13)
 
 - Correction d'un bug qui empêchait de créer carte de typologie (Typo, PropSymbolTypo et TypoPicto) avec des données de type 'Number' (erreur introduite dans la version 0.10.0).
