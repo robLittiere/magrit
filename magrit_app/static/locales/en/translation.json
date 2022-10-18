@@ -675,7 +675,8 @@
                 "symbol_color": "Symbol color ",
                 "options_one_color": "One color",
                 "options_two_colors": "Two colors",
-                "options_break_two_colors": "Break value "
+                "options_break_two_colors": "Break value ",
+                "avoid_overlap": "Avoid overlapping symbols"
             },
             "typo": {
                 "field": "Field",

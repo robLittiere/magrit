@@ -926,6 +926,24 @@ function fillMenu_PropSymbolChoro() {
   //     .styles({"font-size": "0.8em", "text-align": "center"})
   //     .html(_tr("app_page.func_options.common.discretization_choice"));
 
+  const f = dv2.insert('p')
+    .attr('class', 'params_section2');
+
+  f.append('label')
+    .attrs({
+      class: 'i18n',
+      'data-i18n': '[html]app_page.func_options.prop.avoid_overlap',
+      for: 'PropSymbolChoro_avoid_overlap',
+    })
+    .html(_tr('app_page.func_options.prop.avoid_overlap'));
+
+  f.append('input')
+    .attrs({
+      id: 'PropSymbolChoro_avoid_overlap',
+      type: 'checkbox',
+    })
+    .style('vertical-align', 'bottom');
+
   make_layer_name_input(dv2, 'PropSymbolChoro_output_name');
   make_ok_button(dv2, 'propChoro_yes');
   dv2.selectAll('.params').attr('disabled', true);
@@ -951,6 +969,7 @@ const fields_PropSymbolChoro = {
       symb_selec = section2.select('#PropSymbolChoro_symbol_type'),
       ref_size = section2.select('#PropSymbolChoro_ref_size'),
       choro_mini_choice_disc = section2.select('#choro_mini_choice_disc'),
+      avoid_overlap_checkbox = section2.select('#PropSymbolChoro_avoid_overlap'),
       img_valid_disc = section2.select('#img_choice_disc'),
       ok_button = section2.select('#propChoro_yes');
 
@@ -1212,6 +1231,7 @@ const fields_PropSymbolChoro = {
           rd_params = {},
           color_field = field_color.node().value;
         let new_layer_name = uo_layer_name.node().value;
+        const avoid_overlap = avoid_overlap_checkbox.node().checked;
 
         new_layer_name = check_layer_name(new_layer_name.length > 0 ? new_layer_name : `${layer}_PropSymbolsChoro`);
 
@@ -1224,6 +1244,8 @@ const fields_PropSymbolChoro = {
         rd_params.ref_size = +ref_size.node().value;
         rd_params.fill_color = rendering_params[color_field].colorsByFeature;
         rd_params.color_field = color_field;
+        rd_params.dorlingDemers = avoid_overlap;
+        rd_params.dorlingDemersIterations = 100;
 
         if (symbol_to_use === 'line') {
           make_prop_line(rd_params);
@@ -2328,9 +2350,6 @@ export function make_prop_symbols(rendering_params, _pt_layer) {
     warn_empty_features = [];
   let geojson_pt_layer;
 
-  rendering_params.dorlingDemers = true;
-  rendering_params.dorlingDemersIterations = 150;
-
   if (!_pt_layer) {
     const make_geojson_pt_layer = () => {
       const ref_layer_selection = document.getElementById(_app.layer_to_id.get(layer)).getElementsByTagName('path');
@@ -2724,6 +2743,24 @@ function fillMenu_PropSymbolTypo() {
     .styles({ 'font-size': '0.8em', 'text-align': 'center' })
     .html(_tr('app_page.func_options.typo.color_choice'));
 
+  const g = dv2.insert('p')
+    .attr('class', 'params_section2');
+
+  g.append('label')
+    .attrs({
+      class: 'i18n',
+      'data-i18n': '[html]app_page.func_options.prop.avoid_overlap',
+      for: 'PropSymbolTypo_avoid_overlap',
+    })
+    .html(_tr('app_page.func_options.prop.avoid_overlap'));
+
+  g.append('input')
+    .attrs({
+      id: 'PropSymbolTypo_avoid_overlap',
+      type: 'checkbox',
+    })
+    .style('vertical-align', 'bottom');
+
   make_layer_name_input(dv2, 'PropSymbolTypo_output_name');
   make_ok_button(dv2, 'propTypo_yes');
   section2.selectAll('.params').attr('disabled', true);
@@ -2821,6 +2858,7 @@ const fields_PropSymbolTypo = {
       ref_value_field = section2.select('#PropSymbolTypo_ref_value'),
       ref_size = section2.select('#PropSymbolTypo_ref_size'),
       symb_selec = section2.select('#PropSymbolTypo_symbol_type'),
+      avoid_overlap_checkbox = section2.select('#PropSymbolTypo_avoid_overlap'),
       uo_layer_name = section2.select('#PropSymbolTypo_output_name'),
       btn_typo_class = section2.select('#Typo_class'),
       ok_button = section2.select('#propTypo_yes');
@@ -2949,6 +2987,7 @@ const fields_PropSymbolTypo = {
           ref_value_field.node().value,
           section2.select('#PropSymbolTypo_ref_size').node().value,
           section2.select('#PropSymbolTypo_symbol_type').node().value,
+          section2.select('#PropSymbolTypo_avoid_overlap').node().checked,
         );
       };
       const field_color = field2_selec.node().value;
@@ -2973,7 +3012,7 @@ const fields_PropSymbolTypo = {
 };
 
 
-function render_PropSymbolTypo(field1, color_field, n_layer_name, ref_value, ref_size, symb_selec) {
+function render_PropSymbolTypo(field1, color_field, n_layer_name, ref_value, ref_size, symb_selec, avoid_overlap) {
   if (!ref_value || !color_field || !fields_PropSymbolTypo.rendering_params[color_field]) {
     return;
   }
@@ -2995,6 +3034,8 @@ function render_PropSymbolTypo(field1, color_field, n_layer_name, ref_value, ref
   rd_params.color_field = color_field;
   rd_params.ref_size = +ref_size;
   rd_params.fill_color = rendering_params.colorByFeature;
+  rd_params.dorlingDemers = avoid_overlap;
+  rd_params.dorlingDemersIterations = 100;
 
   if (symb_selec === 'line') {
     make_prop_line(rd_params);
@@ -3335,6 +3376,25 @@ function fillMenu_PropSymbol() {
     .attrs({ id: 'PropSymbol_break_val', type: 'number', class: 'params' })
     .styles({ display: 'none', width: '75px' });
 
+  const e = dialog_content.insert('p')
+    .attr('class', 'params_section2');
+
+  e.append('label')
+    .attrs({
+      class: 'i18n',
+      'data-i18n': '[html]app_page.func_options.prop.avoid_overlap',
+      for: 'PropSymbol_avoid_overlap',
+    })
+    .html(_tr('app_page.func_options.prop.avoid_overlap'));
+
+  e.append('input')
+    .attrs({
+      id: 'PropSymbol_avoid_overlap',
+      type: 'checkbox',
+    })
+    .style('vertical-align', 'bottom');
+
+
   make_layer_name_input(dialog_content, 'PropSymbol_output_name');
   make_ok_button(dialog_content, 'PropSymbol_yes', false);
   dialog_content.selectAll('.params').attr('disabled', true);
@@ -3356,7 +3416,8 @@ const fields_PropSymbol = {
       fill_color = section2.select('#PropSymbol_color1'),
       fill_color2 = section2.select('#PropSymbol_color2'),
       fill_color_opt = section2.select('#PropSymbol_break_val'),
-      fill_color_text = section2.select('#PropSymbol_color_txt');
+      fill_color_text = section2.select('#PropSymbol_color_txt'),
+      avoid_overlap_checkbox = section2.select('#PropSymbol_avoid_overlap');
 
     if (data_manager.current_layers[layer].type === 'Line') {
       ref_size.attr('value', 10.0);
@@ -3428,6 +3489,8 @@ const fields_PropSymbol = {
         ref_size: +ref_size.node().value,
         ref_value: +ref_value_field.node().value,
         fill_color: fill_color.node().value,
+        dorlingDemers: avoid_overlap_checkbox.node().checked,
+        dorlingDemersIterations: 100,
       };
 
       if (+nb_color.node().value === 2) {

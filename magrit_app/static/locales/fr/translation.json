@@ -676,7 +676,8 @@
                 "symbol_color": "Couleur du symbole ",
                 "options_one_color": "Une couleur",
                 "options_two_colors": "Deux couleurs",
-                "options_break_two_colors": "Valeur limite "
+                "options_break_two_colors": "Valeur limite ",
+                "avoid_overlap": "Éviter le chevauchement des symboles"
             },
             "typo": {
                 "field": "Champ",

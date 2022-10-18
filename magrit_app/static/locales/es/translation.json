@@ -670,7 +670,8 @@
                 "symbol_color": "Color del símbolo ",
                 "options_one_color": "Un color",
                 "options_two_colors": "Dos colores",
-                "options_break_two_colors": "Valor límite "
+                "options_break_two_colors": "Valor límite ",
+                "avoid_overlap": "Evitar la superposición de símbolos"
             },
             "typo": {
                 "field": "Campo",
