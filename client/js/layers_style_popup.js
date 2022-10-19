@@ -7,7 +7,14 @@ import { available_fonts } from './fonts';
 import {
   check_layer_name, prepare_categories_array, render_label, render_label_graticule,
 } from './function';
-import { cloneObj, get_display_name_on_layer_list, type_col2, getFieldsType, setSelected } from './helpers';
+import {
+  cloneObj,
+  get_display_name_on_layer_list,
+  type_col2,
+  getFieldsType,
+  setSelected,
+  makeDorlingSimulation, makeDemersSimulation
+} from './helpers';
 import { prop_sizer3_e, round_value } from './helpers_calc';
 import { binds_layers_buttons, displayInfoOnMove } from './interface';
 import {
@@ -2377,10 +2384,12 @@ function createStyleBox_ProbSymbol(layer_name) {
   check_remove_existing_box('.styleBox');
   const layer_id = _app.layer_to_id.get(layer_name),
     g_lyr_name = `#${layer_id}`,
-    ref_layer_name = data_manager.current_layers[layer_name].ref_layer_name,
+    // ref_layer_name = data_manager.current_layers[layer_name].ref_layer_name,
     type_method = data_manager.current_layers[layer_name].renderer,
     type_symbol = data_manager.current_layers[layer_name].symbol,
     field_used = data_manager.current_layers[layer_name].rendered_field,
+    avoid_overlap = data_manager.current_layers[layer_name].dorling_demers,
+    avoid_overlap_iterations = data_manager.current_layers[layer_name].dorling_demers_iterations,
     selection = map.select(g_lyr_name).selectAll(type_symbol),
     old_size = [
       data_manager.current_layers[layer_name].size[0],
@@ -2397,15 +2406,19 @@ function createStyleBox_ProbSymbol(layer_name) {
   const fill_prev = cloneObj(data_manager.current_layers[layer_name].fill_color);
   const d_values = data_manager.result_data[layer_name].map(v => +v[field_used]);
   let prev_col_breaks;
+
   const redraw_prop_val = (prop_values) => {
     const selec = selection._groups[0];
 
+    // First we redraw symbols in place with the new size
     if (type_symbol === 'circle') {
       for (let i = 0, len = prop_values.length; i < len; i++) {
         selec[i].setAttribute('r', prop_values[i]);
+        selec[i].__data__.properties.prop_value = prop_values[i];
       }
     } else if (type_symbol === 'rect') {
       for (let i = 0, len = prop_values.length; i < len; i++) {
+        selec[i].__data__.properties.prop_value = prop_values[i];
         const old_rect_size = +selec[i].getAttribute('height');
         const centr = [
           +selec[i].getAttribute('x') + (old_rect_size / 2) - (prop_values[i] / 2),
@@ -2417,6 +2430,9 @@ function createStyleBox_ProbSymbol(layer_name) {
         selec[i].setAttribute('width', prop_values[i]);
       }
     }
+    // Then we recompute the location of the symbols, given the new size
+    // and given the current state of the "avoid overlap" checkbox
+    redrawWithSimulation(checkboxAvoidOverlap.property('checked'), inputIterations.property('value'));
   };
 
   if (data_manager.current_layers[layer_name].colors_breaks
@@ -2527,10 +2543,19 @@ function createStyleBox_ProbSymbol(layer_name) {
           );
         }
         data_manager.current_layers[layer_name].fill_color = fill_prev;
+
+        // Reset symbol size
         if (data_manager.current_layers[layer_name].size[1] !== old_size[1]) {
           const prop_values = prop_sizer3_e(d_values, old_size[0], old_size[1], type_symbol);
           redraw_prop_val(prop_values);
           data_manager.current_layers[layer_name].size = [old_size[0], old_size[1]];
+        }
+
+        // Reset symbol position
+        data_manager.current_layers[layer_name].dorling_demers_iterations = avoid_overlap_iterations;
+        if (data_manager.current_layers[layer_name].dorling_demers !== avoid_overlap) {
+          data_manager.current_layers[layer_name].dorling_demers = avoid_overlap;
+          redrawWithSimulation(avoid_overlap, avoid_overlap_iterations);
         }
       }
       zoom_without_redraw();
@@ -2768,6 +2793,7 @@ function createStyleBox_ProbSymbol(layer_name) {
     .on('change', function () {
       selection.style('stroke-width', `${this.value}px`);
       data_manager.current_layers[layer_name]['stroke-width-const'] = +this.value;
+      redrawWithSimulation(checkboxAvoidOverlap.property('checked'), inputIterations.property('value'));
     });
 
   popup.append('div')
@@ -2865,6 +2891,104 @@ function createStyleBox_ProbSymbol(layer_name) {
           }
         });
     });
+
+  const sectionAvoidOverlap = popup.append('div')
+    .attr('class', 'line_elem');
+
+  sectionAvoidOverlap.append('label')
+    .attr('for', 'checkbox_move_symbol')
+    .html(_tr('app_page.layer_style_popup.avoid_overlap'));
+
+  const checkboxAvoidOverlap = sectionAvoidOverlap.append('input')
+    .style('margin', '0')
+    .property('checked', avoid_overlap)
+    .attrs({
+      type: 'checkbox',
+      id: 'checkbox_avoid_overlap',
+    });
+
+  const sectionAvoidOverlapIteration = popup.append('div')
+    .attr('class', 'line_elem');
+
+  sectionAvoidOverlapIteration.append('span')
+    .styles({ flex: '0.9' })
+    .html(_tr('app_page.layer_style_popup.avoid_overlap_iterations'));
+
+  const inputIterations = sectionAvoidOverlapIteration.insert('input')
+    .attrs({
+      type: 'number',
+      min: 0,
+      step: 5,
+      max: 1000,
+      disabled: avoid_overlap ? null : true,
+    })
+    .property('value', avoid_overlap_iterations || 100);
+
+  const redrawWithSimulation = (checked, iterations) => {
+    if (type_symbol === 'circle') {
+      let featuresWithChangedPositions;
+      if (checked) {
+        const features = Array.from(selection._groups[0]).map((el) => el.__data__);
+        featuresWithChangedPositions = makeDorlingSimulation(
+          features,
+          iterations,
+          'prop_value',
+          data_manager.current_layers[layer_name]['stroke-width-const'] / 2,
+        );
+      }
+      selection
+        .style('display', (d) => (isNaN(global.proj(d.geometry.coordinates)[0]) ? 'none' : undefined))
+        .attrs((d, i) => {
+          const centroid = featuresWithChangedPositions !== undefined
+            ? [featuresWithChangedPositions[i].x, featuresWithChangedPositions[i].y]
+            : global.proj(d.geometry.coordinates);
+          return {
+            r: d.properties.prop_value,
+            cx: centroid[0],
+            cy: centroid[1],
+          };
+        });
+    } else if (type_symbol === 'rect') {
+      let featuresWithChangedPositions;
+      if (checked) {
+        const features = Array.from(selection._groups[0]).map((el) => el.__data__);
+        featuresWithChangedPositions = makeDemersSimulation(
+          features,
+          iterations,
+          'prop_value',
+          data_manager.current_layers[layer_name]['stroke-width-const'] / 2,
+        );
+      }
+      selection
+        .style('display', (d) => (isNaN(global.proj(d.geometry.coordinates)[0]) ? 'none' : undefined))
+        .attrs((d, i) => {
+          const centroid = featuresWithChangedPositions !== undefined
+            ? [featuresWithChangedPositions[i]._x, featuresWithChangedPositions[i]._y]
+            : global.proj(d.geometry.coordinates);
+          const size = d.properties.prop_value;
+          return {
+            height: size,
+            width: size,
+            x: centroid[0] - size / 2,
+            y: centroid[1] - size / 2,
+          };
+        });
+    }
+  };
+
+  checkboxAvoidOverlap.on('change', function () {
+    const checked = this.checked;
+    inputIterations.attr('disabled', checked ? null : true);
+    redrawWithSimulation(checked, inputIterations.property('value'));
+    data_manager.current_layers[layer_name].dorling_demers = checked;
+  });
+
+  inputIterations.on('change', function () {
+    const nIterations = +this.value;
+    data_manager.current_layers[layer_name].dorling_demers_iterations = nIterations;
+    redrawWithSimulation(checkboxAvoidOverlap.property('checked'), nIterations);
+  });
+
   make_generate_labels_section(popup, layer_name);
 }
 

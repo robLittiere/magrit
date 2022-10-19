@@ -626,7 +626,9 @@
             "ref_colors": "Colores:",
             "ref_size": "Tamaño del símbolo",
             "filter_label": "Filtrar las etiquetas de acuerdo con el valor de un campo?",
-            "layout_legend": "Crea una leyenda para esta capa de diseño"
+            "layout_legend": "Crea una leyenda para esta capa de diseño",
+            "avoid_overlap": "Evitar la superposición de símbolos",
+            "avoid_overlap_iterations": "Número de iteraciones"
           },
         "lm_buttons":{
             "zoom+": "Acercar",

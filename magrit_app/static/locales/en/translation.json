@@ -633,7 +633,9 @@
             "ref_colors": "Colors:",
             "ref_size": "Symbol size",
             "filter_label": "Filter labels according to the value of a field?",
-            "layout_legend": "Create a legend for this layout layer"
+            "layout_legend": "Create a legend for this layout layer",
+            "avoid_overlap": "Avoid overlapping symbols",
+            "avoid_overlap_iterations": "Number of iterations"
           },
         "lm_buttons":{
             "zoom+": "Zoom in",

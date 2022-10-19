@@ -130,7 +130,7 @@ export function reproj_symbol_layer() {
             return { x: coords[0] - size, y: coords[1] - size };
           });
       } else if (symbol === 'circle') { // Reproject Prop Symbol :
-        const isDorling = !!data_manager.current_layers[lyr_name].dorlingDemers;
+        const isDorling = !!data_manager.current_layers[lyr_name].dorling_demers;
         let featuresWithChangedPositions;
         if (isDorling) {
           const features = Array.from(
@@ -138,7 +138,7 @@ export function reproj_symbol_layer() {
           ).map((el) => el.__data__);
           featuresWithChangedPositions = makeDorlingSimulation(
             features,
-            data_manager.current_layers[lyr_name].dorlingDemersIterations,
+            data_manager.current_layers[lyr_name].dorling_demers_iterations,
             'prop_value',
             zs,
           );
@@ -157,7 +157,7 @@ export function reproj_symbol_layer() {
             };
           });
       } else if (symbol === 'rect') { // Reproject Prop Symbol :
-        const isDemers = !!data_manager.current_layers[lyr_name].dorlingDemers;
+        const isDemers = !!data_manager.current_layers[lyr_name].dorling_demers;
         let featuresWithChangedPositions;
         if (isDemers) {
           const features = Array.from(
@@ -165,7 +165,7 @@ export function reproj_symbol_layer() {
           ).map((el) => el.__data__);
           featuresWithChangedPositions = makeDemersSimulation(
             features,
-            data_manager.current_layers[lyr_name].dorlingDemersIterations,
+            data_manager.current_layers[lyr_name].dorling_demers_iterations,
             'prop_value',
             zs,
           );

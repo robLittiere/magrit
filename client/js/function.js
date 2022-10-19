@@ -927,7 +927,8 @@ function fillMenu_PropSymbolChoro() {
   //     .html(_tr("app_page.func_options.common.discretization_choice"));
 
   const f = dv2.insert('p')
-    .attr('class', 'params_section2');
+    .attr('class', 'params_section2')
+    .style('margin-top', '20px');
 
   f.append('label')
     .attrs({
@@ -942,7 +943,13 @@ function fillMenu_PropSymbolChoro() {
       id: 'PropSymbolChoro_avoid_overlap',
       type: 'checkbox',
     })
-    .style('vertical-align', 'bottom');
+    .styles({
+      'vertical-align': 'bottom',
+      'margin-bottom': '0',
+      position: 'relative',
+      float: 'right',
+      right: '20px',
+    });
 
   make_layer_name_input(dv2, 'PropSymbolChoro_output_name');
   make_ok_button(dv2, 'propChoro_yes');
@@ -1244,8 +1251,8 @@ const fields_PropSymbolChoro = {
         rd_params.ref_size = +ref_size.node().value;
         rd_params.fill_color = rendering_params[color_field].colorsByFeature;
         rd_params.color_field = color_field;
-        rd_params.dorlingDemers = avoid_overlap;
-        rd_params.dorlingDemersIterations = 100;
+        rd_params.dorling_demers = avoid_overlap;
+        rd_params.dorling_demers_iterations = 100;
 
         if (symbol_to_use === 'line') {
           make_prop_line(rd_params);
@@ -2417,12 +2424,12 @@ export function make_prop_symbols(rendering_params, _pt_layer) {
   if (symbol_type === 'circle') {
     let featuresWithChangedPositions;
     // Move the symbols to avoid superposition if user asked for it
-    if (rendering_params.dorlingDemers) {
+    if (rendering_params.dorling_demers) {
       featuresWithChangedPositions = makeDorlingSimulation(
         geojson_pt_layer.features,
-        rendering_params.dorlingDemersIterations,
+        rendering_params.dorling_demers_iterations,
         t_field_name,
-        zs,
+        1 / zs,
       );
     }
 
@@ -2452,13 +2459,13 @@ export function make_prop_symbols(rendering_params, _pt_layer) {
       .call(drag_elem_geo2);
   } else if (symbol_type === 'rect') {
     let featuresWithChangedPositions;
-    if (rendering_params.dorlingDemers) {
+    if (rendering_params.dorling_demers) {
       // Move the symbols to avoid superposition if user asked for it
       featuresWithChangedPositions = makeDemersSimulation(
         geojson_pt_layer.features,
-        rendering_params.dorlingDemersIterations,
+        rendering_params.dorling_demers_iterations,
         t_field_name,
-        zs,
+        1 / zs,
       );
     }
     map.insert('g', '.legend')
@@ -2499,8 +2506,8 @@ export function make_prop_symbols(rendering_params, _pt_layer) {
     is_result: true,
     ref_layer_name: layer,
     draggable: false,
-    dorlingDemers: rendering_params.dorlingDemers,
-    dorlingDemersIterations: rendering_params.dorlingDemersIterations,
+    dorling_demers: rendering_params.dorling_demers,
+    dorling_demers_iterations: rendering_params.dorling_demers_iterations,
   };
 
   if (rendering_params.fill_color.two !== undefined) {
@@ -2744,7 +2751,8 @@ function fillMenu_PropSymbolTypo() {
     .html(_tr('app_page.func_options.typo.color_choice'));
 
   const g = dv2.insert('p')
-    .attr('class', 'params_section2');
+    .attr('class', 'params_section2')
+    .style('margin-top', '20px');
 
   g.append('label')
     .attrs({
@@ -2759,7 +2767,13 @@ function fillMenu_PropSymbolTypo() {
       id: 'PropSymbolTypo_avoid_overlap',
       type: 'checkbox',
     })
-    .style('vertical-align', 'bottom');
+    .styles({
+      'vertical-align': 'bottom',
+      'margin-bottom': '0',
+      position: 'relative',
+      float: 'right',
+      right: '20px',
+    });
 
   make_layer_name_input(dv2, 'PropSymbolTypo_output_name');
   make_ok_button(dv2, 'propTypo_yes');
@@ -3034,8 +3048,8 @@ function render_PropSymbolTypo(field1, color_field, n_layer_name, ref_value, ref
   rd_params.color_field = color_field;
   rd_params.ref_size = +ref_size;
   rd_params.fill_color = rendering_params.colorByFeature;
-  rd_params.dorlingDemers = avoid_overlap;
-  rd_params.dorlingDemersIterations = 100;
+  rd_params.dorling_demers = avoid_overlap;
+  rd_params.dorling_demers_iterations = 100;
 
   if (symb_selec === 'line') {
     make_prop_line(rd_params);
@@ -3377,7 +3391,8 @@ function fillMenu_PropSymbol() {
     .styles({ display: 'none', width: '75px' });
 
   const e = dialog_content.insert('p')
-    .attr('class', 'params_section2');
+    .attr('class', 'params_section2')
+    .style('margin-top', '20px');
 
   e.append('label')
     .attrs({
@@ -3392,7 +3407,13 @@ function fillMenu_PropSymbol() {
       id: 'PropSymbol_avoid_overlap',
       type: 'checkbox',
     })
-    .style('vertical-align', 'bottom');
+    .styles({
+      'vertical-align': 'bottom',
+      'margin-bottom': '0',
+      position: 'relative',
+      float: 'right',
+      right: '20px',
+    });
 
 
   make_layer_name_input(dialog_content, 'PropSymbol_output_name');
@@ -3489,8 +3510,8 @@ const fields_PropSymbol = {
         ref_size: +ref_size.node().value,
         ref_value: +ref_value_field.node().value,
         fill_color: fill_color.node().value,
-        dorlingDemers: avoid_overlap_checkbox.node().checked,
-        dorlingDemersIterations: 100,
+        dorling_demers: avoid_overlap_checkbox.node().checked,
+        dorling_demers_iterations: 100,
       };
 
       if (+nb_color.node().value === 2) {

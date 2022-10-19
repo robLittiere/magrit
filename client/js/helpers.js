@@ -1134,24 +1134,24 @@ export const projEquals = (proj1, proj2) => {
 export const makeDorlingSimulation = (features, iterations, t_field_name, zs) => {
   const featuresCopyForSimulation = features
     .map((d) => ({
-      _x: global.proj(d.geometry.coordinates)[0],
-      _y: global.proj(d.geometry.coordinates)[1],
+      x: global.proj(d.geometry.coordinates)[0],
+      y: global.proj(d.geometry.coordinates)[1],
       _size: d.properties[t_field_name],
-      _padding: 1 / zs,
+      _padding: zs,
     }));
   const simulation = d3
     .forceSimulation(featuresCopyForSimulation)
     .force(
       'x',
-      d3.forceX((d) => d._x),
+      d3.forceX((d) => d.x),
     )
     .force(
       'y',
-      d3.forceY((d) => d._y),
+      d3.forceY((d) => d.y),
     )
     .force(
       'collide',
-      d3.forceCollide((d) => d._size),
+      d3.forceCollide((d) => d._size + d._padding),
     );
 
   for (let i = 0; i < iterations; i++) {
@@ -1166,7 +1166,7 @@ export const makeDemersSimulation = (features, iterations, t_field_name, zs) => 
       _x: global.proj(d.geometry.coordinates)[0],
       _y: global.proj(d.geometry.coordinates)[1],
       _size: d.properties[t_field_name],
-      _padding: 1 / zs,
+      _padding: zs,
     }));
   const simulation = d3
     .forceSimulation(featuresCopyForSimulation)

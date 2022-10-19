@@ -632,7 +632,9 @@
             "ref_colors": "Couleurs:",
             "ref_size": "Taille du symbole",
             "filter_label": "Filtrer les labels selon la valeur d'un champ ?",
-            "layout_legend": "Créer une légende pour cette couche d'habillage"
+            "layout_legend": "Créer une légende pour cette couche d'habillage",
+            "avoid_overlap": "Éviter le chevauchement des symboles",
+            "avoid_overlap_iterations": "Nombre d'itérations"
         },
         "lm_buttons":{
             "zoom+": "Zoom positif",
