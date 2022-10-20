@@ -902,6 +902,30 @@ function fillMenu_PropSymbolChoro() {
   d.insert('select')
     .attrs({ class: 'params i18n', id: 'PropSymbolChoro_symbol_type' });
 
+  const f = dv2.insert('p')
+    .attr('class', 'params_section2');
+
+  f.append('label')
+    .attrs({
+      class: 'i18n',
+      'data-i18n': '[html]app_page.func_options.prop.avoid_overlap',
+      for: 'PropSymbolChoro_avoid_overlap',
+    })
+    .html(_tr('app_page.func_options.prop.avoid_overlap'));
+
+  f.append('input')
+    .attrs({
+      id: 'PropSymbolChoro_avoid_overlap',
+      type: 'checkbox',
+    })
+    .styles({
+      'vertical-align': 'bottom',
+      'margin-bottom': '0',
+      position: 'relative',
+      float: 'right',
+      right: '20px',
+    });
+
   const e = dv2.append('p')
     .attr('class', 'params_section2');
   e.append('p')
@@ -925,31 +949,6 @@ function fillMenu_PropSymbolChoro() {
   //             'data-i18n': '[html]app_page.func_options.common.discretization_choice'})
   //     .styles({"font-size": "0.8em", "text-align": "center"})
   //     .html(_tr("app_page.func_options.common.discretization_choice"));
-
-  const f = dv2.insert('p')
-    .attr('class', 'params_section2')
-    .style('margin-top', '20px');
-
-  f.append('label')
-    .attrs({
-      class: 'i18n',
-      'data-i18n': '[html]app_page.func_options.prop.avoid_overlap',
-      for: 'PropSymbolChoro_avoid_overlap',
-    })
-    .html(_tr('app_page.func_options.prop.avoid_overlap'));
-
-  f.append('input')
-    .attrs({
-      id: 'PropSymbolChoro_avoid_overlap',
-      type: 'checkbox',
-    })
-    .styles({
-      'vertical-align': 'bottom',
-      'margin-bottom': '0',
-      position: 'relative',
-      float: 'right',
-      right: '20px',
-    });
 
   make_layer_name_input(dv2, 'PropSymbolChoro_output_name');
   make_ok_button(dv2, 'propChoro_yes');
@@ -1009,6 +1008,15 @@ const fields_PropSymbolChoro = {
           .attrs({ value: symb[1], 'data-i18n': `[text]${symb[0]}` });
       });
     }
+
+    symb_selec.on('change', function () {
+      const symbol_type = this.value;
+      if (symbol_type === 'line') {
+        document.getElementById('PropSymbolChoro_avoid_overlap').parentElement.style.display = 'none';
+      } else { // so, circle or rect
+        document.getElementById('PropSymbolChoro_avoid_overlap').parentElement.style.display = null;
+      }
+    });
 
     const prepare_disc_quantiles = (field) => {
       const _values = data_manager.user_data[layer].map(v => v[field]);
@@ -1289,6 +1297,7 @@ const fields_PropSymbolChoro = {
     });
     setSelected(field_size.node(), fields_stock[0]);
     setSelected(field_color.node(), fields_ratio[0]);
+    setSelected(symb_selec.node(), data_manager.current_layers[layer].type === 'Line' ? 'line' : 'circle');
   },
 
   unfill() {
@@ -2727,29 +2736,8 @@ function fillMenu_PropSymbolTypo() {
   d.insert('select')
     .attrs({ class: 'params', id: 'PropSymbolTypo_symbol_type' });
 
-  const e = dv2.append('p')
-    .attr('class', 'params_section2');
-  e.append('p')
-    .attrs({ class: 'i18n', 'data-i18n': '[html]app_page.func_options.proptypo.field2' })
-    .html(_tr('app_page.func_options.proptypo.field2'));
-  e.insert('select')
-    .attrs({ class: 'params', id: 'PropSymbolTypo_field_2' });
-
-  const f = dv2.insert('p')
-    .attr('class', 'params_section2')
-    .styles({ margin: 'auto', 'text-align': 'center' });
-  f.append('button')
-    .attrs({
-      id: 'Typo_class',
-      class: 'button_disc params i18n',
-      'data-i18n': '[html]app_page.func_options.typo.color_choice',
-    })
-    .styles({ 'font-size': '0.8em', 'text-align': 'center' })
-    .html(_tr('app_page.func_options.typo.color_choice'));
-
   const g = dv2.insert('p')
-    .attr('class', 'params_section2')
-    .style('margin-top', '20px');
+    .attr('class', 'params_section2');
 
   g.append('label')
     .attrs({
@@ -2771,6 +2759,26 @@ function fillMenu_PropSymbolTypo() {
       float: 'right',
       right: '20px',
     });
+
+  const e = dv2.append('p')
+    .attr('class', 'params_section2');
+  e.append('p')
+    .attrs({ class: 'i18n', 'data-i18n': '[html]app_page.func_options.proptypo.field2' })
+    .html(_tr('app_page.func_options.proptypo.field2'));
+  e.insert('select')
+    .attrs({ class: 'params', id: 'PropSymbolTypo_field_2' });
+
+  const f = dv2.insert('p')
+    .attr('class', 'params_section2')
+    .styles({ margin: 'auto', 'text-align': 'center' });
+  f.append('button')
+    .attrs({
+      id: 'Typo_class',
+      class: 'button_disc params i18n',
+      'data-i18n': '[html]app_page.func_options.typo.color_choice',
+    })
+    .styles({ 'font-size': '0.8em', 'text-align': 'center' })
+    .html(_tr('app_page.func_options.typo.color_choice'));
 
   make_layer_name_input(dv2, 'PropSymbolTypo_output_name');
   make_ok_button(dv2, 'propTypo_yes');
@@ -2927,6 +2935,15 @@ const fields_PropSymbolTypo = {
       });
     }
 
+    symb_selec.on('change', function () {
+      const symbol_type = this.value;
+      if (symbol_type === 'line') {
+        document.getElementById('PropSymbolTypo_avoid_overlap').parentElement.style.display = 'none';
+      } else { // so, circle or rect
+        document.getElementById('PropSymbolTypo_avoid_overlap').parentElement.style.display = null;
+      }
+    });
+
     fields_num.forEach((field) => {
       field1_selec.append('option').text(field).attr('value', field);
     });
@@ -3011,6 +3028,7 @@ const fields_PropSymbolTypo = {
     });
     setSelected(field1_selec.node(), fields_num[0]);
     setSelected(field2_selec.node(), fields_categ[0]);
+    setSelected(symb_selec.node(), data_manager.current_layers[layer].type === 'Line' ? 'line' : 'circle');
   },
 
   unfill() {
@@ -3347,6 +3365,30 @@ function fillMenu_PropSymbol() {
   d.insert('select')
     .attrs({ class: 'params i18n', id: 'PropSymbol_symbol' });
 
+  const e = dialog_content.insert('p')
+    .attr('class', 'params_section2');
+
+  e.append('label')
+    .attrs({
+      class: 'i18n',
+      'data-i18n': '[html]app_page.func_options.prop.avoid_overlap',
+      for: 'PropSymbol_avoid_overlap',
+    })
+    .html(_tr('app_page.func_options.prop.avoid_overlap'));
+
+  e.append('input')
+    .attrs({
+      id: 'PropSymbol_avoid_overlap',
+      type: 'checkbox',
+    })
+    .styles({
+      'vertical-align': 'bottom',
+      'margin-bottom': '0',
+      position: 'relative',
+      float: 'right',
+      right: '20px',
+    });
+
   // [['app_page.func_options.common.symbol_circle', 'circle'],
   //  ['app_page.func_options.common.symbol_square', 'rect']
   // ].forEach(function(symb) {
@@ -3386,32 +3428,6 @@ function fillMenu_PropSymbol() {
   col_b.insert('input')
     .attrs({ id: 'PropSymbol_break_val', type: 'number', class: 'params' })
     .styles({ display: 'none', width: '75px' });
-
-  const e = dialog_content.insert('p')
-    .attr('class', 'params_section2')
-    .style('margin-top', '20px');
-
-  e.append('label')
-    .attrs({
-      class: 'i18n',
-      'data-i18n': '[html]app_page.func_options.prop.avoid_overlap',
-      for: 'PropSymbol_avoid_overlap',
-    })
-    .html(_tr('app_page.func_options.prop.avoid_overlap'));
-
-  e.append('input')
-    .attrs({
-      id: 'PropSymbol_avoid_overlap',
-      type: 'checkbox',
-    })
-    .styles({
-      'vertical-align': 'bottom',
-      'margin-bottom': '0',
-      position: 'relative',
-      float: 'right',
-      right: '20px',
-    });
-
 
   make_layer_name_input(dialog_content, 'PropSymbol_output_name');
   make_ok_button(dialog_content, 'PropSymbol_yes', false);
@@ -3459,6 +3475,15 @@ const fields_PropSymbol = {
           .attrs({ value: symb[1], 'data-i18n': `[text]${symb[0]}` });
       });
     }
+
+    symb_selec.on('change', function () {
+      const symbol_type = this.value;
+      if (symbol_type === 'line') {
+        document.getElementById('PropSymbol_avoid_overlap').parentElement.style.display = 'none';
+      } else { // so, circle or rect
+        document.getElementById('PropSymbol_avoid_overlap').parentElement.style.display = null;
+      }
+    });
 
     fields.forEach((field) => {
       field_selec.append('option')
@@ -3526,6 +3551,7 @@ const fields_PropSymbol = {
     });
     uo_layer_name.attr('value', ['PropSymbols', layer].join('_'));
     setSelected(field_selec.node(), fields[0]);
+    setSelected(symb_selec.node(), data_manager.current_layers[layer].type === 'Line' ? 'line' : 'circle');
   },
 
   unfill() {
