@@ -2432,7 +2432,7 @@ function createStyleBox_ProbSymbol(layer_name) {
     }
     // Then we recompute the location of the symbols, given the new size
     // and given the current state of the "avoid overlap" checkbox
-    redrawWithSimulation(checkboxAvoidOverlap.property('checked'), inputIterations.property('value'));
+    redrawWithSimulation(checkboxAvoidOverlap.property('checked'), +inputIterations.property('value'));
   };
 
   if (data_manager.current_layers[layer_name].colors_breaks
@@ -2598,7 +2598,7 @@ function createStyleBox_ProbSymbol(layer_name) {
           field_color,
           _opts.breaks.length - 1,
           _opts,
-          )
+        )
           .then((confirmed) => {
             container.modal.show();
             if (confirmed) {
@@ -2793,7 +2793,7 @@ function createStyleBox_ProbSymbol(layer_name) {
     .on('change', function () {
       selection.style('stroke-width', `${this.value}px`);
       data_manager.current_layers[layer_name]['stroke-width-const'] = +this.value;
-      redrawWithSimulation(checkboxAvoidOverlap.property('checked'), inputIterations.property('value'));
+      redrawWithSimulation(checkboxAvoidOverlap.property('checked'), +inputIterations.property('value'));
     });
 
   popup.append('div')
@@ -2883,13 +2883,19 @@ function createStyleBox_ProbSymbol(layer_name) {
               cx: centroid[0],
               cy: centroid[1],
             };
-          } else {
+          } else if (type_symbol === 'rect') {
             return {
               x: centroid[0] - +d.properties.prop_value / 2,
               y: centroid[1] - +d.properties.prop_value / 2,
             };
           }
         });
+
+      // Set state of avoid overlap section to 'disabled'
+      if (checkboxAvoidOverlap.property('checked')) {
+        checkboxAvoidOverlap.property('checked', false);
+        inputIterations.attr('disabled', true);
+      }
     });
 
   const sectionAvoidOverlap = popup.append('div')
@@ -2937,6 +2943,7 @@ function createStyleBox_ProbSymbol(layer_name) {
         );
       }
       selection
+        .transition()
         .style('display', (d) => (isNaN(global.proj(d.geometry.coordinates)[0]) ? 'none' : undefined))
         .attrs((d, i) => {
           const centroid = featuresWithChangedPositions !== undefined
@@ -2960,6 +2967,7 @@ function createStyleBox_ProbSymbol(layer_name) {
         );
       }
       selection
+        .transition()
         .style('display', (d) => (isNaN(global.proj(d.geometry.coordinates)[0]) ? 'none' : undefined))
         .attrs((d, i) => {
           const centroid = featuresWithChangedPositions !== undefined
@@ -2979,7 +2987,7 @@ function createStyleBox_ProbSymbol(layer_name) {
   checkboxAvoidOverlap.on('change', function () {
     const checked = this.checked;
     inputIterations.attr('disabled', checked ? null : true);
-    redrawWithSimulation(checked, inputIterations.property('value'));
+    redrawWithSimulation(checked, +inputIterations.property('value'));
     data_manager.current_layers[layer_name].dorling_demers = checked;
   });
 

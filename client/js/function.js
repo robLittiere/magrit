@@ -2414,9 +2414,6 @@ export function make_prop_symbols(rendering_params, _pt_layer) {
     geojson_pt_layer = _pt_layer;
   }
 
-
-  let featuresCopyForSimulation;
-
   const layer_id = encodeId(layer_to_add);
   _app.layer_to_id.set(layer_to_add, layer_id);
   _app.id_to_layer.set(layer_id, layer_to_add);

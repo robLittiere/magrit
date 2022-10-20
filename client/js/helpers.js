@@ -1131,13 +1131,13 @@ export const projEquals = (proj1, proj2) => {
   return JSON.stringify(p1) === JSON.stringify(p2);
 };
 
-export const makeDorlingSimulation = (features, iterations, t_field_name, zs) => {
+export const makeDorlingSimulation = (features, iterations, t_field_name, stroke_width) => {
   const featuresCopyForSimulation = features
     .map((d) => ({
       x: global.proj(d.geometry.coordinates)[0],
       y: global.proj(d.geometry.coordinates)[1],
-      _size: d.properties[t_field_name],
-      _padding: zs,
+      _size: +d.properties[t_field_name],
+      _padding: stroke_width,
     }));
   const simulation = d3
     .forceSimulation(featuresCopyForSimulation)
@@ -1160,13 +1160,13 @@ export const makeDorlingSimulation = (features, iterations, t_field_name, zs) =>
   return featuresCopyForSimulation;
 };
 
-export const makeDemersSimulation = (features, iterations, t_field_name, zs) => {
+export const makeDemersSimulation = (features, iterations, t_field_name, stroke_width) => {
   const featuresCopyForSimulation = features
     .map((d) => ({
       _x: global.proj(d.geometry.coordinates)[0],
       _y: global.proj(d.geometry.coordinates)[1],
-      _size: d.properties[t_field_name],
-      _padding: zs,
+      _size: +d.properties[t_field_name],
+      _padding: stroke_width,
     }));
   const simulation = d3
     .forceSimulation(featuresCopyForSimulation)

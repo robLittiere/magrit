@@ -140,14 +140,14 @@ export function reproj_symbol_layer() {
             features,
             data_manager.current_layers[lyr_name].dorling_demers_iterations,
             'prop_value',
-            zs,
+            data_manager.current_layers[lyr_name]['stroke-width-const'] / 2,
           );
         }
         map.select(`#${global._app.layer_to_id.get(lyr_name)}`)
           .selectAll(symbol)
           .style('display', d => (isNaN(global.proj(d.geometry.coordinates)[0]) ? 'none' : undefined))
           .attrs((d, i) => {
-            const centroid = featuresWithChangedPositions !== undefined
+            const centroid = isDorling
               ? [featuresWithChangedPositions[i].x, featuresWithChangedPositions[i].y]
               : global.proj(d.geometry.coordinates);
             return {
@@ -167,14 +167,14 @@ export function reproj_symbol_layer() {
             features,
             data_manager.current_layers[lyr_name].dorling_demers_iterations,
             'prop_value',
-            zs,
+            data_manager.current_layers[lyr_name]['stroke-width-const'] / 2,
           );
         }
         map.select(`#${global._app.layer_to_id.get(lyr_name)}`)
           .selectAll(symbol)
           .style('display', d => (isNaN(global.proj(d.geometry.coordinates)[0]) ? 'none' : undefined))
           .attrs((d, i) => {
-            const centroid = featuresWithChangedPositions !== undefined
+            const centroid = isDemers
               ? [featuresWithChangedPositions[i]._x, featuresWithChangedPositions[i]._y]
               : global.proj(d.geometry.coordinates);
             const size = d.properties.prop_value;
