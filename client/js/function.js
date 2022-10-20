@@ -767,10 +767,6 @@ export function render_twostocks_waffle(layer, rendering_params) {
     const r = rendering_params.size;
     const offset_centroid_x = (2 * r * nCol) / 2 - r;
     for (let j = 0; j < data_manager.result_data[layer_to_add].length; j++) {
-      // const centroid = path.centroid({
-      //   type: 'Point',
-      //   coordinates: data_manager.result_data[layer_to_add][j].centroid,
-      // });
       const centroid = global.proj(data_manager.result_data[layer_to_add][j].centroid);
       const group = new_layer.append('g');
       const sum = sums[j];
@@ -803,10 +799,6 @@ export function render_twostocks_waffle(layer, rendering_params) {
     const offset = width / 5;
     const offset_centroid_x = ((width + offset) * (nCol - 1) - width) / 2;
     for (let j = 0; j < data_manager.result_data[layer_to_add].length; j++) {
-      // const centroid = path.centroid({
-      //   type: 'Point',
-      //   coordinates: data_manager.result_data[layer_to_add][j].centroid,
-      // });
       const centroid = global.proj(data_manager.result_data[layer_to_add][j].centroid);
       const group = new_layer.append('g');
       const sum = sums[j];

@@ -198,10 +198,6 @@ export function reproj_symbol_layer() {
         const nCol = data_manager.current_layers[lyr_name].nCol;
         const offset_centroid_x = (2 * r * nCol) / 2 - r;
         for (let i = 0; i < nbFt; i++) {
-          // const centroid = path.centroid({
-          //   type: 'Point',
-          //   coordinates: selection[i].__data__.properties.centroid,
-          // });
           const centroid = global.proj(selection[i].__data__.properties.centroid);
           const symbols = selection[i].querySelectorAll('circle');
           for (let j = 0, nb_symbol = symbols.length; j < nb_symbol; j++) {
@@ -215,10 +211,6 @@ export function reproj_symbol_layer() {
         const offset = width / 5;
         const offset_centroid_x = ((width + offset) * (nCol - 1) - width) / 2;
         for (let i = 0; i < nbFt; i++) {
-          // const centroid = path.centroid({
-          //   type: 'Point',
-          //   coordinates: selection[i].__data__.properties.centroid,
-          // });
           const centroid = global.proj(selection[i].__data__.properties.centroid);
           const symbols = selection[i].querySelectorAll('rect');
           for (let j = 0, nb_symbol = symbols.length; j < nb_symbol; j++) {
