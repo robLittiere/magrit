@@ -26,6 +26,7 @@ import { handle_legend } from './legend';
 import { zoom_without_redraw } from './map_ctrl';
 import { isInterrupted } from './projections';
 import { display_box_symbol_typo, make_style_box_indiv_symbol } from './symbols_picto';
+import { bindTooltips } from './tooltips';
 
 const section2 = d3.select('#menu').select('#section2');
 
@@ -905,8 +906,25 @@ function fillMenu_PropSymbolChoro() {
     })
     .html(_tr('app_page.func_options.prop.avoid_overlap'));
 
+  f.append('img')
+    .attrs({
+      id: 'avoid_overlap_tooltip',
+      class: 'tt i18n',
+      src: 'static/img/Information.png',
+      'data-i18n': '[data-ot]app_page.tooltips.avoid_overlap_defn2',
+      'data-ot-fixed': true,
+      'data-ot-remove-elements-on-hide': true,
+      'data-ot-target': true,
+    })
+    .styles({
+      width: '17px',
+      position: 'absolute',
+      margin: '0 5px',
+    });
+
   f.append('input')
     .attrs({
+      class: 'params',
       id: 'PropSymbolChoro_avoid_overlap',
       type: 'checkbox',
     })
@@ -944,6 +962,8 @@ function fillMenu_PropSymbolChoro() {
 
   make_layer_name_input(dv2, 'PropSymbolChoro_output_name');
   make_ok_button(dv2, 'propChoro_yes');
+  localize('#avoid_overlap_tooltip');
+  bindTooltips();
   dv2.selectAll('.params').attr('disabled', true);
 }
 
@@ -2739,8 +2759,25 @@ function fillMenu_PropSymbolTypo() {
     })
     .html(_tr('app_page.func_options.prop.avoid_overlap'));
 
+  g.append('img')
+    .attrs({
+      id: 'avoid_overlap_tooltip',
+      class: 'tt i18n',
+      src: 'static/img/Information.png',
+      'data-i18n': '[data-ot]app_page.tooltips.avoid_overlap_defn2',
+      'data-ot-fixed': true,
+      'data-ot-remove-elements-on-hide': true,
+      'data-ot-target': true,
+    })
+    .styles({
+      width: '17px',
+      position: 'absolute',
+      margin: '0 5px',
+    });
+
   g.append('input')
     .attrs({
+      class: 'params',
       id: 'PropSymbolTypo_avoid_overlap',
       type: 'checkbox',
     })
@@ -2774,6 +2811,8 @@ function fillMenu_PropSymbolTypo() {
 
   make_layer_name_input(dv2, 'PropSymbolTypo_output_name');
   make_ok_button(dv2, 'propTypo_yes');
+  localize('#avoid_overlap_tooltip');
+  bindTooltips();
   section2.selectAll('.params').attr('disabled', true);
 }
 
@@ -3368,8 +3407,25 @@ function fillMenu_PropSymbol() {
     })
     .html(_tr('app_page.func_options.prop.avoid_overlap'));
 
+  e.append('img')
+    .attrs({
+      id: 'avoid_overlap_tooltip',
+      class: 'tt i18n',
+      src: 'static/img/Information.png',
+      'data-i18n': '[data-ot]app_page.tooltips.avoid_overlap_defn2',
+      'data-ot-fixed': true,
+      'data-ot-remove-elements-on-hide': true,
+      'data-ot-target': true,
+    })
+    .styles({
+      width: '17px',
+      position: 'absolute',
+      margin: '0 5px',
+    });
+
   e.append('input')
     .attrs({
+      class: 'params',
       id: 'PropSymbol_avoid_overlap',
       type: 'checkbox',
     })
@@ -3423,6 +3479,8 @@ function fillMenu_PropSymbol() {
 
   make_layer_name_input(dialog_content, 'PropSymbol_output_name');
   make_ok_button(dialog_content, 'PropSymbol_yes', false);
+  localize('#avoid_overlap_tooltip');
+  bindTooltips();
   dialog_content.selectAll('.params').attr('disabled', true);
 }
 

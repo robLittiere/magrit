@@ -281,7 +281,10 @@
             "load_project_file": "Cargar un proyecto",
             "save_file": "Guardar el proyecto",
             "new_project": "Crear un proyecto",
-            "documentation": "Documentación"
+            "documentation": "Documentación",
+            "avoid_overlap_defn1": "Este método también se denomina \"cartograma de Dorling\" para los círculos o \"cartograma de Dermers\" para los cuadrados. Reduce la superposición moviendo los círculos o cuadrados para que no se superpongan.",
+            "avoid_overlap_defn2": "Este método también se denomina \"cartograma de Dorling\" para los círculos o \"cartograma de Dermers\" para los cuadrados. Reduce la superposición moviendo los círculos o cuadrados para que no se superpongan. Es posible configurar este método después de la creación de la capa si quedan superposiciones.",
+            "avoid_overlap_iterations": "Cuanto mayor sea el número de iteraciones del algoritmo, menor será el riesgo de superposición. Ten cuidado, un número demasiado alto de iteraciones puede requerir un tiempo de cálculo importante."
         },
         "func_description" : {
             "smooth": "Generar un mapa de potenciales (modelo de Stewart)",
