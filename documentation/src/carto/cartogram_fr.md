@@ -26,5 +26,9 @@ Deux méthodes de création de cartogrammes sont disponibles dans Magrit :
 - Champ utilisé : **pop2008**
 - **5 itérations**
 
-(1) Dougenik, James A.; Chrisman, Nicholas R.; Niemeyer, Duane R. (1985), "An Algorithm to Construct Continuous Area Cartograms", The Professional Geographer, n°37.  
+#### Références
+
+(1) Dougenik, James A.; Chrisman, Nicholas R.; Niemeyer, Duane R. (1985), "An Algorithm to Construct Continuous Area Cartograms", The Professional Geographer, n°37.
+
 (2) Olson, Judy M. (1976). Noncontiguous Area Cartograms. Professional Geographer, n°28.
+
