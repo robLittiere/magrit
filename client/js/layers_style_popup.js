@@ -2928,7 +2928,7 @@ function createStyleBox_ProbSymbol(layer_name) {
       max: 1000,
       disabled: avoid_overlap ? null : true,
     })
-    .property('value', avoid_overlap_iterations || 100);
+    .property('value', avoid_overlap_iterations || 75);
 
   const redrawWithSimulation = (checked, iterations) => {
     if (type_symbol === 'circle') {

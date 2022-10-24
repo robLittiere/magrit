@@ -1272,7 +1272,7 @@ const fields_PropSymbolChoro = {
         rd_params.fill_color = rendering_params[color_field].colorsByFeature;
         rd_params.color_field = color_field;
         rd_params.dorling_demers = avoid_overlap;
-        rd_params.dorling_demers_iterations = 100;
+        rd_params.dorling_demers_iterations = 75;
 
         if (symbol_to_use === 'line') {
           make_prop_line(rd_params);
@@ -3095,7 +3095,7 @@ function render_PropSymbolTypo(field1, color_field, n_layer_name, ref_value, ref
   rd_params.ref_size = +ref_size;
   rd_params.fill_color = rendering_params.colorByFeature;
   rd_params.dorling_demers = avoid_overlap;
-  rd_params.dorling_demers_iterations = 100;
+  rd_params.dorling_demers_iterations = 75;
 
   if (symb_selec === 'line') {
     make_prop_line(rd_params);
@@ -3583,7 +3583,7 @@ const fields_PropSymbol = {
         ref_value: +ref_value_field.node().value,
         fill_color: fill_color.node().value,
         dorling_demers: avoid_overlap_checkbox.node().checked,
-        dorling_demers_iterations: 100,
+        dorling_demers_iterations: 75,
       };
 
       if (+nb_color.node().value === 2) {
