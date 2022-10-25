@@ -438,6 +438,10 @@ export function prepare_drop_section() {
           e.preventDefault(); e.stopPropagation();
           if (document.body.classList.contains('no-drop')) return;
           if (
+            e.dataTransfer.types
+            && !e.dataTransfer.types.some((el) => el === 'Files')
+          ) return;
+          if (
             e.relatedTarget
             && e.relatedTarget.nodeType
           ) return;

@@ -281,7 +281,10 @@
             "load_project_file": "Cargar un proyecto",
             "save_file": "Guardar el proyecto",
             "new_project": "Crear un proyecto",
-            "documentation": "Documentación"
+            "documentation": "Documentación",
+            "avoid_overlap_defn1": "Este método también se denomina \"cartograma de Dorling\" para los círculos o \"cartograma de Dermers\" para los cuadrados. Reduce la superposición moviendo los círculos o cuadrados para que no se superpongan.",
+            "avoid_overlap_defn2": "Este método también se denomina \"cartograma de Dorling\" para los círculos o \"cartograma de Dermers\" para los cuadrados. Reduce la superposición moviendo los círculos o cuadrados para que no se superpongan. Es posible configurar este método después de la creación de la capa si quedan superposiciones.",
+            "avoid_overlap_iterations": "Cuanto mayor sea el número de iteraciones del algoritmo, menor será el riesgo de superposición. Ten cuidado, un número demasiado alto de iteraciones puede requerir un tiempo de cálculo importante."
         },
         "func_description" : {
             "smooth": "Generar un mapa de potenciales (modelo de Stewart)",
@@ -626,7 +629,9 @@
             "ref_colors": "Colores:",
             "ref_size": "Tamaño del símbolo",
             "filter_label": "Filtrar las etiquetas de acuerdo con el valor de un campo?",
-            "layout_legend": "Crea una leyenda para esta capa de diseño"
+            "layout_legend": "Crea una leyenda para esta capa de diseño",
+            "avoid_overlap": "Evitar la superposición de símbolos",
+            "avoid_overlap_iterations": "Número de iteraciones"
           },
         "lm_buttons":{
             "zoom+": "Acercar",
@@ -670,7 +675,8 @@
                 "symbol_color": "Color del símbolo ",
                 "options_one_color": "Un color",
                 "options_two_colors": "Dos colores",
-                "options_break_two_colors": "Valor límite "
+                "options_break_two_colors": "Valor límite ",
+                "avoid_overlap": "Evitar la superposición de símbolos"
             },
             "typo": {
                 "field": "Campo",

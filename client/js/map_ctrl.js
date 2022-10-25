@@ -6,6 +6,7 @@ import {
 } from './legend';
 import { scaleBar } from './layout_features/scalebar';
 import { northArrow } from './layout_features/north_arrow';
+import { makeDemersSimulation, makeDorlingSimulation } from './helpers';
 
 
 export const zoom = d3.zoom().on('zoom', zoom_without_redraw);
@@ -103,6 +104,7 @@ export function reproj_symbol_layer() {
   /* eslint-disable no-loop-func */
   const layers = Object.keys(data_manager.current_layers);
   const n_layers = layers.length;
+  const zs = d3.zoomTransform(svg_map).k;
   let lyr_name;
   for (let ix = 0; ix < n_layers; ix++) {
     lyr_name = layers[ix];
@@ -116,23 +118,38 @@ export function reproj_symbol_layer() {
         map.select(`#${global._app.layer_to_id.get(lyr_name)}`)
           .selectAll(symbol)
           .attrs((d) => {
-            const pt = path.centroid(d.geometry);
+            const pt = global.proj(d.geometry.coordinates);
             return { x: pt[0], y: pt[1] };
           });
       } else if (symbol === 'image') { // Reproject pictograms :
         map.select(`#${global._app.layer_to_id.get(lyr_name)}`)
           .selectAll(symbol)
           .attrs(function (d) {
-            const coords = path.centroid(d.geometry),
+            const coords = global.proj(d.geometry.coordinates),
               size = +this.getAttribute('width').replace('px', '') / 2;
             return { x: coords[0] - size, y: coords[1] - size };
           });
       } else if (symbol === 'circle') { // Reproject Prop Symbol :
+        const isDorling = !!data_manager.current_layers[lyr_name].dorling_demers;
+        let featuresWithChangedPositions;
+        if (isDorling) {
+          const features = Array.from(
+            document.querySelectorAll(`#${global._app.layer_to_id.get(lyr_name)} ${symbol}`)
+          ).map((el) => el.__data__);
+          featuresWithChangedPositions = makeDorlingSimulation(
+            features,
+            data_manager.current_layers[lyr_name].dorling_demers_iterations,
+            'prop_value',
+            data_manager.current_layers[lyr_name]['stroke-width-const'] / 2,
+          );
+        }
         map.select(`#${global._app.layer_to_id.get(lyr_name)}`)
           .selectAll(symbol)
-          .style('display', d => (isNaN(+path.centroid(d)[0]) ? 'none' : undefined))
-          .attrs((d) => {
-            const centroid = path.centroid(d);
+          .style('display', d => (isNaN(global.proj(d.geometry.coordinates)[0]) ? 'none' : undefined))
+          .attrs((d, i) => {
+            const centroid = isDorling
+              ? [featuresWithChangedPositions[i].x, featuresWithChangedPositions[i].y]
+              : global.proj(d.geometry.coordinates);
             return {
               r: d.properties.prop_value,
               cx: centroid[0],
@@ -140,12 +157,27 @@ export function reproj_symbol_layer() {
             };
           });
       } else if (symbol === 'rect') { // Reproject Prop Symbol :
+        const isDemers = !!data_manager.current_layers[lyr_name].dorling_demers;
+        let featuresWithChangedPositions;
+        if (isDemers) {
+          const features = Array.from(
+            document.querySelectorAll(`#${global._app.layer_to_id.get(lyr_name)} ${symbol}`)
+          ).map((el) => el.__data__);
+          featuresWithChangedPositions = makeDemersSimulation(
+            features,
+            data_manager.current_layers[lyr_name].dorling_demers_iterations,
+            'prop_value',
+            data_manager.current_layers[lyr_name]['stroke-width-const'] / 2,
+          );
+        }
         map.select(`#${global._app.layer_to_id.get(lyr_name)}`)
           .selectAll(symbol)
-          .style('display', d => (isNaN(+path.centroid(d)[0]) ? 'none' : undefined))
-          .attrs((d) => {
-            const centroid = path.centroid(d),
-              size = d.properties.prop_value;
+          .style('display', d => (isNaN(global.proj(d.geometry.coordinates)[0]) ? 'none' : undefined))
+          .attrs((d, i) => {
+            const centroid = isDemers
+              ? [featuresWithChangedPositions[i]._x, featuresWithChangedPositions[i]._y]
+              : global.proj(d.geometry.coordinates);
+            const size = d.properties.prop_value;
             return {
               height: size,
               width: size,
@@ -166,10 +198,7 @@ export function reproj_symbol_layer() {
         const nCol = data_manager.current_layers[lyr_name].nCol;
         const offset_centroid_x = (2 * r * nCol) / 2 - r;
         for (let i = 0; i < nbFt; i++) {
-          const centroid = path.centroid({
-            type: 'Point',
-            coordinates: selection[i].__data__.properties.centroid,
-          });
+          const centroid = global.proj(selection[i].__data__.properties.centroid);
           const symbols = selection[i].querySelectorAll('circle');
           for (let j = 0, nb_symbol = symbols.length; j < nb_symbol; j++) {
             symbols[j].setAttribute('cx', centroid[0] + offset_centroid_x);
@@ -182,10 +211,7 @@ export function reproj_symbol_layer() {
         const offset = width / 5;
         const offset_centroid_x = ((width + offset) * (nCol - 1) - width) / 2;
         for (let i = 0; i < nbFt; i++) {
-          const centroid = path.centroid({
-            type: 'Point',
-            coordinates: selection[i].__data__.properties.centroid,
-          });
+          const centroid = global.proj(selection[i].__data__.properties.centroid);
           const symbols = selection[i].querySelectorAll('rect');
           for (let j = 0, nb_symbol = symbols.length; j < nb_symbol; j++) {
             symbols[j].setAttribute('x', centroid[0] + offset_centroid_x);

@@ -1,6 +1,12 @@
 Changes
 =======
 
+0.11.0 (xxxx-xx-xx)
+------------------
+
+- New: Add option to avoid overlapping of the circle / square symbols (in PropSymbol, PropSymbolChoro and PropSymbolTypo).
+
+
 0.10.1 (2022-10-13)
 -------------------
 

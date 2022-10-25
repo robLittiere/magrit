@@ -12,7 +12,7 @@ import {
   drag_waffle, getFieldsType,
   get_other_layer_names,
   send_layer_server,
-  setSelected, xhrequest, isNumber,
+  setSelected, xhrequest, isNumber, makeDorlingSimulation, makeDemersSimulation,
 } from './helpers';
 import {
   getBinsCount, get_nb_decimals, has_negative,
@@ -26,6 +26,7 @@ import { handle_legend } from './legend';
 import { zoom_without_redraw } from './map_ctrl';
 import { isInterrupted } from './projections';
 import { display_box_symbol_typo, make_style_box_indiv_symbol } from './symbols_picto';
+import { bindTooltips } from './tooltips';
 
 const section2 = d3.select('#menu').select('#section2');
 
@@ -767,10 +768,7 @@ export function render_twostocks_waffle(layer, rendering_params) {
     const r = rendering_params.size;
     const offset_centroid_x = (2 * r * nCol) / 2 - r;
     for (let j = 0; j < data_manager.result_data[layer_to_add].length; j++) {
-      const centroid = path.centroid({
-        type: 'Point',
-        coordinates: data_manager.result_data[layer_to_add][j].centroid,
-      });
+      const centroid = global.proj(data_manager.result_data[layer_to_add][j].centroid);
       const group = new_layer.append('g');
       const sum = sums[j];
       const _colors = colors[j];
@@ -802,10 +800,7 @@ export function render_twostocks_waffle(layer, rendering_params) {
     const offset = width / 5;
     const offset_centroid_x = ((width + offset) * (nCol - 1) - width) / 2;
     for (let j = 0; j < data_manager.result_data[layer_to_add].length; j++) {
-      const centroid = path.centroid({
-        type: 'Point',
-        coordinates: data_manager.result_data[layer_to_add][j].centroid,
-      });
+      const centroid = global.proj(data_manager.result_data[layer_to_add][j].centroid);
       const group = new_layer.append('g');
       const sum = sums[j];
       const _colors = colors[j];
@@ -900,6 +895,47 @@ function fillMenu_PropSymbolChoro() {
   d.insert('select')
     .attrs({ class: 'params i18n', id: 'PropSymbolChoro_symbol_type' });
 
+  const f = dv2.insert('p')
+    .attr('class', 'params_section2');
+
+  f.append('label')
+    .attrs({
+      class: 'i18n',
+      'data-i18n': '[html]app_page.func_options.prop.avoid_overlap',
+      for: 'PropSymbolChoro_avoid_overlap',
+    })
+    .html(_tr('app_page.func_options.prop.avoid_overlap'));
+
+  f.append('img')
+    .attrs({
+      id: 'avoid_overlap_tooltip',
+      class: 'tt i18n',
+      src: 'static/img/Information.png',
+      'data-i18n': '[data-ot]app_page.tooltips.avoid_overlap_defn2',
+      'data-ot-fixed': true,
+      'data-ot-remove-elements-on-hide': true,
+      'data-ot-target': true,
+    })
+    .styles({
+      width: '17px',
+      position: 'absolute',
+      margin: '0 5px',
+    });
+
+  f.append('input')
+    .attrs({
+      class: 'params',
+      id: 'PropSymbolChoro_avoid_overlap',
+      type: 'checkbox',
+    })
+    .styles({
+      'vertical-align': 'bottom',
+      'margin-bottom': '0',
+      position: 'relative',
+      float: 'right',
+      right: '20px',
+    });
+
   const e = dv2.append('p')
     .attr('class', 'params_section2');
   e.append('p')
@@ -926,6 +962,8 @@ function fillMenu_PropSymbolChoro() {
 
   make_layer_name_input(dv2, 'PropSymbolChoro_output_name');
   make_ok_button(dv2, 'propChoro_yes');
+  localize('#avoid_overlap_tooltip');
+  bindTooltips();
   dv2.selectAll('.params').attr('disabled', true);
 }
 
@@ -949,6 +987,7 @@ const fields_PropSymbolChoro = {
       symb_selec = section2.select('#PropSymbolChoro_symbol_type'),
       ref_size = section2.select('#PropSymbolChoro_ref_size'),
       choro_mini_choice_disc = section2.select('#choro_mini_choice_disc'),
+      avoid_overlap_checkbox = section2.select('#PropSymbolChoro_avoid_overlap'),
       img_valid_disc = section2.select('#img_choice_disc'),
       ok_button = section2.select('#propChoro_yes');
 
@@ -981,6 +1020,15 @@ const fields_PropSymbolChoro = {
           .attrs({ value: symb[1], 'data-i18n': `[text]${symb[0]}` });
       });
     }
+
+    symb_selec.on('change', function () {
+      const symbol_type = this.value;
+      if (symbol_type === 'line') {
+        document.getElementById('PropSymbolChoro_avoid_overlap').parentElement.style.display = 'none';
+      } else { // so, circle or rect
+        document.getElementById('PropSymbolChoro_avoid_overlap').parentElement.style.display = null;
+      }
+    });
 
     const prepare_disc_quantiles = (field) => {
       const _values = data_manager.user_data[layer].map(v => v[field]);
@@ -1034,14 +1082,14 @@ const fields_PropSymbolChoro = {
         max_val_field = max_fast(data_manager.user_data[layer].map(obj => +obj[field_name]));
 
       ref_value_field.attrs({ max: max_val_field, value: max_val_field });
-      uo_layer_name.attr('value', ['PropSymbols', field_name, field_color.node().value, layer].join('_'));
+      uo_layer_name.attr('value', ['PropSymbolsChoro', field_name, field_color.node().value, layer].join('_'));
     });
 
     field_color.on('change', function () {
       const field_name = this.value;
       const vals = data_manager.user_data[layer].map(a => +a[field_name]);
       render_mini_chart_serie(vals, document.getElementById('container_sparkline_propsymbolchoro'));
-      uo_layer_name.attr('value', ['PropSymbols', field_size.node().value, field_name, layer].join('_'));
+      uo_layer_name.attr('value', ['PropSymbolsChoro', field_size.node().value, field_name, layer].join('_'));
       if (self.rendering_params[field_name] !== undefined) {
         // ok_button.attr('disabled', null);
         img_valid_disc.attr('src', 'static/img/Light_green_check.png');
@@ -1210,6 +1258,7 @@ const fields_PropSymbolChoro = {
           rd_params = {},
           color_field = field_color.node().value;
         let new_layer_name = uo_layer_name.node().value;
+        const avoid_overlap = avoid_overlap_checkbox.node().checked;
 
         new_layer_name = check_layer_name(new_layer_name.length > 0 ? new_layer_name : `${layer}_PropSymbolsChoro`);
 
@@ -1222,6 +1271,8 @@ const fields_PropSymbolChoro = {
         rd_params.ref_size = +ref_size.node().value;
         rd_params.fill_color = rendering_params[color_field].colorsByFeature;
         rd_params.color_field = color_field;
+        rd_params.dorling_demers = avoid_overlap;
+        rd_params.dorling_demers_iterations = 75;
 
         if (symbol_to_use === 'line') {
           make_prop_line(rd_params);
@@ -1258,6 +1309,7 @@ const fields_PropSymbolChoro = {
     });
     setSelected(field_size.node(), fields_stock[0]);
     setSelected(field_color.node(), fields_ratio[0]);
+    setSelected(symb_selec.node(), data_manager.current_layers[layer].type === 'Line' ? 'line' : 'circle');
   },
 
   unfill() {
@@ -2388,6 +2440,17 @@ export function make_prop_symbols(rendering_params, _pt_layer) {
   _app.id_to_layer.set(layer_id, layer_to_add);
   data_manager.result_data[layer_to_add] = [];
   if (symbol_type === 'circle') {
+    let featuresWithChangedPositions;
+    // Move the symbols to avoid superposition if user asked for it
+    if (rendering_params.dorling_demers) {
+      featuresWithChangedPositions = makeDorlingSimulation(
+        geojson_pt_layer.features,
+        rendering_params.dorling_demers_iterations,
+        t_field_name,
+        1 / zs,
+      );
+    }
+
     map.insert('g', '.legend')
       .attrs({ id: layer_id, class: 'layer no_clip' })
       .selectAll('circle')
@@ -2396,20 +2459,33 @@ export function make_prop_symbols(rendering_params, _pt_layer) {
       .append('circle')
       .attrs((d, i) => {
         data_manager.result_data[layer_to_add].push(d.properties);
+        const pt = featuresWithChangedPositions !== undefined
+          ? [featuresWithChangedPositions[i].x, featuresWithChangedPositions[i].y]
+          : global.proj(d.geometry.coordinates);
         return {
           id: ['PropSymbol_', i, ' feature_', d.id].join(''),
           r: d.properties[t_field_name],
-          cx: path.centroid(d)[0],
-          cy: path.centroid(d)[1],
+          cx: pt[0],
+          cy: pt[1],
         };
       })
-      .styles(d => ({
+      .styles((d) => ({
         fill: d.properties.color,
         stroke: 'black',
         'stroke-width': 1 / zs,
       }))
       .call(drag_elem_geo2);
   } else if (symbol_type === 'rect') {
+    let featuresWithChangedPositions;
+    if (rendering_params.dorling_demers) {
+      // Move the symbols to avoid superposition if user asked for it
+      featuresWithChangedPositions = makeDemersSimulation(
+        geojson_pt_layer.features,
+        rendering_params.dorling_demers_iterations,
+        t_field_name,
+        1 / zs,
+      );
+    }
     map.insert('g', '.legend')
       .attrs({ id: layer_id, class: 'layer no_clip' })
       .selectAll('circle')
@@ -2419,15 +2495,18 @@ export function make_prop_symbols(rendering_params, _pt_layer) {
       .attrs((d, i) => {
         const size = d.properties[t_field_name];
         data_manager.result_data[layer_to_add].push(d.properties);
+        const pt = featuresWithChangedPositions !== undefined
+          ? [featuresWithChangedPositions[i]._x, featuresWithChangedPositions[i]._y]
+          : global.proj(d.geometry.coordinates);
         return {
           id: ['PropSymbol_', i, ' feature_', d.id].join(''),
           height: size,
           width: size,
-          x: path.centroid(d)[0] - size / 2,
-          y: path.centroid(d)[1] - size / 2,
+          x: pt[0] - size / 2,
+          y: pt[1] - size / 2,
         };
       })
-      .styles(d => ({
+      .styles((d) => ({
         fill: d.properties.color,
         stroke: 'black',
         'stroke-width': 1 / zs,
@@ -2445,6 +2524,8 @@ export function make_prop_symbols(rendering_params, _pt_layer) {
     is_result: true,
     ref_layer_name: layer,
     draggable: false,
+    dorling_demers: rendering_params.dorling_demers,
+    dorling_demers_iterations: rendering_params.dorling_demers_iterations,
   };
 
   if (rendering_params.fill_color.two !== undefined) {
@@ -2667,6 +2748,47 @@ function fillMenu_PropSymbolTypo() {
   d.insert('select')
     .attrs({ class: 'params', id: 'PropSymbolTypo_symbol_type' });
 
+  const g = dv2.insert('p')
+    .attr('class', 'params_section2');
+
+  g.append('label')
+    .attrs({
+      class: 'i18n',
+      'data-i18n': '[html]app_page.func_options.prop.avoid_overlap',
+      for: 'PropSymbolTypo_avoid_overlap',
+    })
+    .html(_tr('app_page.func_options.prop.avoid_overlap'));
+
+  g.append('img')
+    .attrs({
+      id: 'avoid_overlap_tooltip',
+      class: 'tt i18n',
+      src: 'static/img/Information.png',
+      'data-i18n': '[data-ot]app_page.tooltips.avoid_overlap_defn2',
+      'data-ot-fixed': true,
+      'data-ot-remove-elements-on-hide': true,
+      'data-ot-target': true,
+    })
+    .styles({
+      width: '17px',
+      position: 'absolute',
+      margin: '0 5px',
+    });
+
+  g.append('input')
+    .attrs({
+      class: 'params',
+      id: 'PropSymbolTypo_avoid_overlap',
+      type: 'checkbox',
+    })
+    .styles({
+      'vertical-align': 'bottom',
+      'margin-bottom': '0',
+      position: 'relative',
+      float: 'right',
+      right: '20px',
+    });
+
   const e = dv2.append('p')
     .attr('class', 'params_section2');
   e.append('p')
@@ -2689,6 +2811,8 @@ function fillMenu_PropSymbolTypo() {
 
   make_layer_name_input(dv2, 'PropSymbolTypo_output_name');
   make_ok_button(dv2, 'propTypo_yes');
+  localize('#avoid_overlap_tooltip');
+  bindTooltips();
   section2.selectAll('.params').attr('disabled', true);
 }
 
@@ -2784,6 +2908,7 @@ const fields_PropSymbolTypo = {
       ref_value_field = section2.select('#PropSymbolTypo_ref_value'),
       ref_size = section2.select('#PropSymbolTypo_ref_size'),
       symb_selec = section2.select('#PropSymbolTypo_symbol_type'),
+      avoid_overlap_checkbox = section2.select('#PropSymbolTypo_avoid_overlap'),
       uo_layer_name = section2.select('#PropSymbolTypo_output_name'),
       btn_typo_class = section2.select('#Typo_class'),
       ok_button = section2.select('#propTypo_yes');
@@ -2841,6 +2966,15 @@ const fields_PropSymbolTypo = {
       });
     }
 
+    symb_selec.on('change', function () {
+      const symbol_type = this.value;
+      if (symbol_type === 'line') {
+        document.getElementById('PropSymbolTypo_avoid_overlap').parentElement.style.display = 'none';
+      } else { // so, circle or rect
+        document.getElementById('PropSymbolTypo_avoid_overlap').parentElement.style.display = null;
+      }
+    });
+
     fields_num.forEach((field) => {
       field1_selec.append('option').text(field).attr('value', field);
     });
@@ -2861,14 +2995,14 @@ const fields_PropSymbolTypo = {
         max_val_field = max_fast(data_manager.user_data[layer].map(obj => +obj[field_name]));
       ref_value_field.attrs({ max: max_val_field, value: max_val_field });
       prepare_colors(field2_selec.node().value, field_name);
-      uo_layer_name.attr('value', ['Typo', field_name, field2_selec.node().value, layer].join('_'));
+      uo_layer_name.attr('value', ['PropSymbolsTypo', field_name, field2_selec.node().value, layer].join('_'));
     });
 
     field2_selec.on('change', function () {
       const field_name = this.value;
       prepare_colors(field_name, field1_selec.node().value);
       // ok_button.attr("disabled", self.rendering_params[field_name] ? null : true);
-      uo_layer_name.attr('value', ['Typo', field1_selec.node().value, field_name, layer].join('_'));
+      uo_layer_name.attr('value', ['PropSymbolsTypo', field1_selec.node().value, field_name, layer].join('_'));
     });
 
     btn_typo_class.on('click', () => {
@@ -2912,6 +3046,7 @@ const fields_PropSymbolTypo = {
           ref_value_field.node().value,
           section2.select('#PropSymbolTypo_ref_size').node().value,
           section2.select('#PropSymbolTypo_symbol_type').node().value,
+          section2.select('#PropSymbolTypo_avoid_overlap').node().checked,
         );
       };
       const field_color = field2_selec.node().value;
@@ -2924,6 +3059,7 @@ const fields_PropSymbolTypo = {
     });
     setSelected(field1_selec.node(), fields_num[0]);
     setSelected(field2_selec.node(), fields_categ[0]);
+    setSelected(symb_selec.node(), data_manager.current_layers[layer].type === 'Line' ? 'line' : 'circle');
   },
 
   unfill() {
@@ -2936,7 +3072,7 @@ const fields_PropSymbolTypo = {
 };
 
 
-function render_PropSymbolTypo(field1, color_field, n_layer_name, ref_value, ref_size, symb_selec) {
+function render_PropSymbolTypo(field1, color_field, n_layer_name, ref_value, ref_size, symb_selec, avoid_overlap) {
   if (!ref_value || !color_field || !fields_PropSymbolTypo.rendering_params[color_field]) {
     return;
   }
@@ -2958,6 +3094,8 @@ function render_PropSymbolTypo(field1, color_field, n_layer_name, ref_value, ref
   rd_params.color_field = color_field;
   rd_params.ref_size = +ref_size;
   rd_params.fill_color = rendering_params.colorByFeature;
+  rd_params.dorling_demers = avoid_overlap;
+  rd_params.dorling_demers_iterations = 75;
 
   if (symb_selec === 'line') {
     make_prop_line(rd_params);
@@ -3258,6 +3396,47 @@ function fillMenu_PropSymbol() {
   d.insert('select')
     .attrs({ class: 'params i18n', id: 'PropSymbol_symbol' });
 
+  const e = dialog_content.insert('p')
+    .attr('class', 'params_section2');
+
+  e.append('label')
+    .attrs({
+      class: 'i18n',
+      'data-i18n': '[html]app_page.func_options.prop.avoid_overlap',
+      for: 'PropSymbol_avoid_overlap',
+    })
+    .html(_tr('app_page.func_options.prop.avoid_overlap'));
+
+  e.append('img')
+    .attrs({
+      id: 'avoid_overlap_tooltip',
+      class: 'tt i18n',
+      src: 'static/img/Information.png',
+      'data-i18n': '[data-ot]app_page.tooltips.avoid_overlap_defn2',
+      'data-ot-fixed': true,
+      'data-ot-remove-elements-on-hide': true,
+      'data-ot-target': true,
+    })
+    .styles({
+      width: '17px',
+      position: 'absolute',
+      margin: '0 5px',
+    });
+
+  e.append('input')
+    .attrs({
+      class: 'params',
+      id: 'PropSymbol_avoid_overlap',
+      type: 'checkbox',
+    })
+    .styles({
+      'vertical-align': 'bottom',
+      'margin-bottom': '0',
+      position: 'relative',
+      float: 'right',
+      right: '20px',
+    });
+
   // [['app_page.func_options.common.symbol_circle', 'circle'],
   //  ['app_page.func_options.common.symbol_square', 'rect']
   // ].forEach(function(symb) {
@@ -3300,6 +3479,8 @@ function fillMenu_PropSymbol() {
 
   make_layer_name_input(dialog_content, 'PropSymbol_output_name');
   make_ok_button(dialog_content, 'PropSymbol_yes', false);
+  localize('#avoid_overlap_tooltip');
+  bindTooltips();
   dialog_content.selectAll('.params').attr('disabled', true);
 }
 
@@ -3319,7 +3500,8 @@ const fields_PropSymbol = {
       fill_color = section2.select('#PropSymbol_color1'),
       fill_color2 = section2.select('#PropSymbol_color2'),
       fill_color_opt = section2.select('#PropSymbol_break_val'),
-      fill_color_text = section2.select('#PropSymbol_color_txt');
+      fill_color_text = section2.select('#PropSymbol_color_txt'),
+      avoid_overlap_checkbox = section2.select('#PropSymbol_avoid_overlap');
 
     if (data_manager.current_layers[layer].type === 'Line') {
       ref_size.attr('value', 10.0);
@@ -3343,6 +3525,15 @@ const fields_PropSymbol = {
           .attrs({ value: symb[1], 'data-i18n': `[text]${symb[0]}` });
       });
     }
+
+    symb_selec.on('change', function () {
+      const symbol_type = this.value;
+      if (symbol_type === 'line') {
+        document.getElementById('PropSymbol_avoid_overlap').parentElement.style.display = 'none';
+      } else { // so, circle or rect
+        document.getElementById('PropSymbol_avoid_overlap').parentElement.style.display = null;
+      }
+    });
 
     fields.forEach((field) => {
       field_selec.append('option')
@@ -3391,6 +3582,8 @@ const fields_PropSymbol = {
         ref_size: +ref_size.node().value,
         ref_value: +ref_value_field.node().value,
         fill_color: fill_color.node().value,
+        dorling_demers: avoid_overlap_checkbox.node().checked,
+        dorling_demers_iterations: 75,
       };
 
       if (+nb_color.node().value === 2) {
@@ -3408,6 +3601,7 @@ const fields_PropSymbol = {
     });
     uo_layer_name.attr('value', ['PropSymbols', layer].join('_'));
     setSelected(field_selec.node(), fields[0]);
+    setSelected(symb_selec.node(), data_manager.current_layers[layer].type === 'Line' ? 'line' : 'circle');
   },
 
   unfill() {
@@ -3572,7 +3766,7 @@ function render_TypoSymbols(rendering_params, new_name) {
       }
       // Values are stored as strings in our symbol map
       const symb = rendering_params.symbols_map.get(`${field_value}`),
-        coords = path.centroid(d.geometry);
+        coords = global.proj(d.geometry.coordinates);
       return {
         x: coords[0] - symb[1] / 2,
         y: coords[1] - symb[1] / 2,
@@ -4619,7 +4813,7 @@ export const render_label = function render_label(layer, rendering_params, optio
   } else {
     selection
       .attrs((d, i) => {
-        const pt = path.centroid(d.geometry);
+        const pt = global.proj(d.geometry.coordinates);
         return {
           id: `Feature_${i}`,
           x: pt[0],
@@ -4723,7 +4917,7 @@ export const render_label_graticule = function render_label_graticule(layer, ren
     .enter()
     .insert('text')
     .attrs((d, i) => {
-      const pt = path.centroid(d.geometry);
+      const pt = global.proj(d.geometry.coordinates);
       return {
         id: `Feature_${i}`,
         x: pt[0],

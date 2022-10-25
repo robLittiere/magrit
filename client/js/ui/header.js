@@ -161,6 +161,7 @@ export default function makeHeader() {
       'font-size': '14px',
       'vertical-align': 'super',
       'font-weight': 'bold',
+      width: '35px',
     })
     .html(i18next.language)
     .on('click', () => {

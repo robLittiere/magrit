@@ -1273,3 +1273,8 @@ img#remove_target:hover, img#remove_dataset:hover {
   background-color: transparent;
 }
 /* End of style for left menu section 1 */
+
+.ot-visible,
+.ot-showing {
+  z-index: 1070 !important;
+}

@@ -341,6 +341,8 @@ export function get_map_project() {
       layer_style_i.fill_color = current_layer_prop.fill_color;
       layer_style_i.stroke_color = selection.style('stroke');
       layer_style_i.ref_layer_name = current_layer_prop.ref_layer_name;
+      layer_style_i.dorling_demers = current_layer_prop.dorling_demers;
+      layer_style_i.dorling_demers_iterations = current_layer_prop.dorling_demers_iterations;
       layer_style_i.geo_pt = {
         type: 'FeatureCollection',
         features: features,
@@ -1194,6 +1196,13 @@ export function apply_user_preferences(json_pref) {
         } else if (_layer.fill_color.two) {
           rendering_params.fill_color = _layer.fill_color;
           rendering_params.break_val = _layer.break_val;
+        }
+
+        if (_layer.dorling_demers) {
+          rendering_params.dorling_demers = _layer.dorling_demers;
+        }
+        if (_layer.dorling_demers_iterations) {
+          rendering_params.dorling_demers_iterations = _layer.dorling_demers_iterations;
         }
 
         if (_layer.symbol === 'line' || _layer.symbol === 'path') {

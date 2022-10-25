@@ -286,7 +286,10 @@
             "load_project_file": "Load a project file",
             "save_file": "Save project as a file",
             "new_project": "Create a new empty project",
-            "documentation": "Documentation"
+            "documentation": "Documentation",
+            "avoid_overlap_defn1": "This method is also called \"Dorling cartogram\" for circles or \"Dermers cartogram\" for squares. It reduces overlapping by moving the circles or squares so that they do not overlap.",
+            "avoid_overlap_defn2": "This method is also called \"Dorling cartogram\" for circles or \"Dermers cartogram\" for squares. It reduces overlapping by moving the circles or squares so that they do not overlap. It is possible to configure this method after the creation of the layer if overlaps remain.",
+            "avoid_overlap_iterations": "The higher the number of iterations of the algorithm, the lower the risk of overlapping. Be careful, a too high number of iterations may require a significant computation time."
         },
         "func_description" : {
             "smooth": "Display a smoothed map (using Stewart potentials algorithm)",
@@ -633,7 +636,9 @@
             "ref_colors": "Colors:",
             "ref_size": "Symbol size",
             "filter_label": "Filter labels according to the value of a field?",
-            "layout_legend": "Create a legend for this layout layer"
+            "layout_legend": "Create a legend for this layout layer",
+            "avoid_overlap": "Avoid overlapping symbols",
+            "avoid_overlap_iterations": "Number of iterations"
           },
         "lm_buttons":{
             "zoom+": "Zoom in",
@@ -675,7 +680,8 @@
                 "symbol_color": "Symbol color ",
                 "options_one_color": "One color",
                 "options_two_colors": "Two colors",
-                "options_break_two_colors": "Break value "
+                "options_break_two_colors": "Break value ",
+                "avoid_overlap": "Avoid overlapping symbols"
             },
             "typo": {
                 "field": "Field",
