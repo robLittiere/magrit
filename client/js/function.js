@@ -1082,14 +1082,14 @@ const fields_PropSymbolChoro = {
         max_val_field = max_fast(data_manager.user_data[layer].map(obj => +obj[field_name]));
 
       ref_value_field.attrs({ max: max_val_field, value: max_val_field });
-      uo_layer_name.attr('value', ['PropSymbols', field_name, field_color.node().value, layer].join('_'));
+      uo_layer_name.attr('value', ['PropSymbolsChoro', field_name, field_color.node().value, layer].join('_'));
     });
 
     field_color.on('change', function () {
       const field_name = this.value;
       const vals = data_manager.user_data[layer].map(a => +a[field_name]);
       render_mini_chart_serie(vals, document.getElementById('container_sparkline_propsymbolchoro'));
-      uo_layer_name.attr('value', ['PropSymbols', field_size.node().value, field_name, layer].join('_'));
+      uo_layer_name.attr('value', ['PropSymbolsChoro', field_size.node().value, field_name, layer].join('_'));
       if (self.rendering_params[field_name] !== undefined) {
         // ok_button.attr('disabled', null);
         img_valid_disc.attr('src', 'static/img/Light_green_check.png');
@@ -2995,14 +2995,14 @@ const fields_PropSymbolTypo = {
         max_val_field = max_fast(data_manager.user_data[layer].map(obj => +obj[field_name]));
       ref_value_field.attrs({ max: max_val_field, value: max_val_field });
       prepare_colors(field2_selec.node().value, field_name);
-      uo_layer_name.attr('value', ['Typo', field_name, field2_selec.node().value, layer].join('_'));
+      uo_layer_name.attr('value', ['PropSymbolsTypo', field_name, field2_selec.node().value, layer].join('_'));
     });
 
     field2_selec.on('change', function () {
       const field_name = this.value;
       prepare_colors(field_name, field1_selec.node().value);
       // ok_button.attr("disabled", self.rendering_params[field_name] ? null : true);
-      uo_layer_name.attr('value', ['Typo', field1_selec.node().value, field_name, layer].join('_'));
+      uo_layer_name.attr('value', ['PropSymbolsTypo', field1_selec.node().value, field_name, layer].join('_'));
     });
 
     btn_typo_class.on('click', () => {
