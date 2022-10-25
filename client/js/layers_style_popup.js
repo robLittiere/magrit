@@ -24,6 +24,7 @@ import {
 } from './legend';
 import { redraw_legends_symbols, zoom_without_redraw } from './map_ctrl';
 import { make_table } from './tables';
+import { bindTooltips } from './tooltips';
 
 /**
 * Function to dispatch the click on the "open style box" icon
@@ -2902,8 +2903,23 @@ function createStyleBox_ProbSymbol(layer_name) {
     .attr('class', 'line_elem');
 
   sectionAvoidOverlap.append('label')
-    .attr('for', 'checkbox_move_symbol')
+    .attr('for', 'checkbox_avoid_overlap')
     .html(_tr('app_page.layer_style_popup.avoid_overlap'));
+
+  sectionAvoidOverlap.append('img')
+    .attrs({
+      id: 'avoid_overlap_tooltip',
+      class: 'tt i18n',
+      src: 'static/img/Information.png',
+      'data-ot': _tr('app_page.tooltips.avoid_overlap_defn1'),
+      'data-ot-fixed': true,
+      'data-ot-remove-elements-on-hide': true,
+      'data-ot-target': true,
+    })
+    .styles({
+      width: '17px',
+      margin: '0 auto 0px 5px',
+    });
 
   const checkboxAvoidOverlap = sectionAvoidOverlap.append('input')
     .style('margin', '0')
@@ -2917,8 +2933,22 @@ function createStyleBox_ProbSymbol(layer_name) {
     .attr('class', 'line_elem');
 
   sectionAvoidOverlapIteration.append('span')
-    .styles({ flex: '0.9' })
     .html(_tr('app_page.layer_style_popup.avoid_overlap_iterations'));
+
+  sectionAvoidOverlapIteration.append('img')
+    .attrs({
+      id: 'avoid_overlap_tooltip',
+      class: 'tt i18n',
+      src: 'static/img/Information.png',
+      'data-ot': _tr('app_page.tooltips.avoid_overlap_iterations'),
+      'data-ot-fixed': true,
+      'data-ot-remove-elements-on-hide': true,
+      'data-ot-target': true,
+    })
+    .styles({
+      width: '17px',
+      margin: '0 auto 0px 5px',
+    });
 
   const inputIterations = sectionAvoidOverlapIteration.insert('input')
     .attrs({
@@ -2998,6 +3028,8 @@ function createStyleBox_ProbSymbol(layer_name) {
   });
 
   make_generate_labels_section(popup, layer_name);
+
+  bindTooltips();
 }
 
 /**
