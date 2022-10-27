@@ -288,8 +288,8 @@
             "save_file": "Sauvegarde d'un fichier-projet",
             "new_project": "Création d'un nouveau projet",
             "documentation": "Documentation",
-            "avoid_overlap_defn1": "Cette méthode est également appelée \"cartograme de Dorling\" pour les cercles ou \"cartograme de Dermers\" pour les carrées. Elle permet de réduire les superpositions en déplaçant les cercles ou les carrées de manière à ce qu'ils ne se chevauchent pas.",
-            "avoid_overlap_defn2": "Cette méthode est également appelée \"cartograme de Dorling\" pour les cercles ou \"cartograme de Dermers\" pour les carrées. Elle permet de réduire les superpositions en déplaçant les cercles ou les carrées de manière à ce qu'ils ne se chevauchent pas. Il est possible de paramétrer cette méthode après la création de la couche si des chevauchements subsistent.",
+            "avoid_overlap_defn1": "Cette méthode est également appelée \"cartogramme de Dorling\" pour les cercles ou \"cartogramme de Dermers\" pour les carrées. Elle permet de réduire les superpositions en déplaçant les cercles ou les carrées de manière à ce qu'ils ne se chevauchent pas.",
+            "avoid_overlap_defn2": "Cette méthode est également appelée \"cartogramme de Dorling\" pour les cercles ou \"cartogramme de Dermers\" pour les carrées. Elle permet de réduire les superpositions en déplaçant les cercles ou les carrées de manière à ce qu'ils ne se chevauchent pas. Il est possible de paramétrer cette méthode après la création de la couche si des chevauchements subsistent.",
             "avoid_overlap_iterations": "Plus le nombre d'itérations de l'algorithme est élevé plus le risque de chevauchements diminue. Attention, un nombre trop élevé peut nécessiter un temps de calcul important."
         },
         "func_description" : {
@@ -313,7 +313,7 @@
             "choroprop": "Carte de stocks et ratios",
             "proptypo": "Carte de stocks et qualitative",
             "choro": "Carte de ratios",
-            "cartogram": "Cartogram",
+            "cartogram": "Cartogramme",
             "grid": "Carroyage",
             "flow": "Carte des liens",
             "discont": "Carte des discontinuités",
