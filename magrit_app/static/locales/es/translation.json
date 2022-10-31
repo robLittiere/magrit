@@ -396,7 +396,15 @@
             "tissot": "Indicadores de Tissot <i>(Polígonos)</i>",
             "world_countries": "Tierras emergidas <i>(Polígonos)</i>",
             "world_capitals": "Ciudades de mayor población <i>(Puntos)</i>",
-            "disclamer_nuts": "<i>* sin Madeira (PT), Azores (PT), las Islas Canarias (ES) <br>ni las regiones francesas de ultramar</i>"
+            "disclamer_nuts": "<i>* sin Madeira (PT), Azores (PT), las Islas Canarias (ES) <br>ni las regiones francesas de ultramar</i>",
+            "category": {
+              "worldwide_extent": "Extensión mundial",
+              "france_metropolitan_extent": "Francia metropolitana",
+              "europe_extent": "Europa",
+              "world_other": "Otros - Países del mundo",
+              "france_other": "Otros - Francia",
+              "france_regional_extent": "Francia - Extensión regional"
+            }
         },
         "export_box": {
             "geo": "Exportar en un formato compatible para los SIG",

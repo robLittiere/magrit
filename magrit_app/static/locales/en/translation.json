@@ -401,7 +401,15 @@
             "tissot": "Tissot's indicatrices <i>(Polygons)</i>",
             "world_countries": "World land surface <i>(Polygons)</i>",
             "world_capitals": "Most populated cities in the world <i>(Points)</i>",
-            "disclamer_nuts": "<i>* without Madeira (PT), Azores (PT), Canarias (ES) islands<br>and French overseas departments</i>"
+            "disclamer_nuts": "<i>* without Madeira (PT), Azores (PT), Canarias (ES) islands<br>and French overseas departments</i>",
+            "category": {
+              "worldwide_extent": "Worldwide extent",
+              "france_metropolitan_extent": "Metropolitan France extent",
+              "europe_extent": "Europe extent",
+              "world_other": "Other - Countries",
+              "france_other": "Other - France",
+              "france_regional_extent": "France - Regional extent"
+            }
         },
         "export_box": {
             "geo": "Export layers to a geographic format",

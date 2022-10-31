@@ -21,7 +21,7 @@ import {
 } from './interface';
 
 /**
-* Function to display the dialog allowing the choose and add a sample target layer.
+* Function to display the dialog allowing to choose and add a sample target layer.
 *
 * @return {void}
 */
@@ -38,6 +38,7 @@ export function add_sample_layer() {
 
   let selec;
   let selec_url;
+  let t_layer_selec;
   let content;
 
   make_confirm_dialog2('sampleDialogBox', _tr('app_page.sample_layer_box.title'))
@@ -96,12 +97,15 @@ export function add_sample_layer() {
       .html(_tr('app_page.sample_layer_box.back_sample'))
       .on('click', () => {
         make_panel1();
+        setSelected(t_layer_selec.node(), '');
       });
     if (selec_url) {
       setSelected(select_extrabasemap.node(), selec_url[2]);
     } else {
       selec_url = [_app.list_extrabasemaps[0][0], _app.list_extrabasemaps[0][1], 0];
     }
+    d3.select('.sampleDialogBox .btn_ok')
+      .attr('disabled', null);
     content.select('#link1').on('click', () => {
       window.open(
         'http://www.naturalearthdata.com',
@@ -123,10 +127,11 @@ export function add_sample_layer() {
     content = box_body.append('div').attr('id', 'panel1');
     content.append('h3').html(_tr('app_page.sample_layer_box.subtitle1'));
 
-    const t_layer_selec = content.append('p')
+    t_layer_selec = content.append('p')
       .html('')
       .insert('select')
       .attr('class', 'sample_target')
+      .style('font-size', '1.1em')
       .on('change', function () {
         selec = this.value;
         if (selec.toLowerCase().indexOf('nuts') > -1) {
@@ -134,14 +139,34 @@ export function add_sample_layer() {
         } else {
           content.select('#nuts_info').style('display', 'none');
         }
+        d3.select('.sampleDialogBox .btn_ok')
+          .attr('disabled', selec ? null : true);
       });
 
     t_layer_selec.append('option')
       .attr('value', '')
       .html(_tr('app_page.sample_layer_box.layer'));
 
+    const categories = {
+      worldwide_extent: false,
+      france_metropolitan_extent: false,
+      europe_extent: false,
+      world_other: false,
+      france_other: false,
+      france_regional_extent: false,
+    };
+
     _app.sample_layers.forEach((layer_info) => {
-      const n = layer_info['name'];
+      const n = layer_info.name;
+      const c = layer_info.category;
+      if (!categories[c]) {
+        t_layer_selec.append('option')
+          .attr('disabled', true)
+          .attr('value', '')
+          .style('font-size', '1.1em')
+          .html(_tr(`app_page.sample_layer_box.category.${c}`));
+        categories[c] = true;
+      }
       t_layer_selec.append('option')
         .attr('value', n)
         .html(_tr(`app_page.sample_layer_box.${n}`));
@@ -169,11 +194,13 @@ export function add_sample_layer() {
   }
 
   const container = d3.select('.sampleDialogBox')
-    .styles({ width: '625px', display: 'flex' });
-  container.select('.modal-content').style('width', '625px');
+    .styles({ width: '740px', display: 'flex' });
+  container.select('.modal-content').style('width', '740px');
   const box_body = container.select('.modal-body');
   setTimeout(() => { document.querySelector('select.sample_target').focus(); }, 500);
   make_panel1();
+  d3.select('.sampleDialogBox .btn_ok')
+    .attr('disabled', true);
 }
 
 

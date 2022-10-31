@@ -402,7 +402,15 @@
             "tissot": "Indicatrices de Tissot <i>(Polygones)</i>",
             "world_countries": "Emprise des terres émergées <i>(Polygones)</i>",
             "world_capitals": "Villes les plus peuplées du monde <i>(Points)</i>",
-            "disclamer_nuts": "<i>* sans Madeire (PT), les Açores (PT), les îles Canaries (ES) <br>et les régions françaises d'outre-mer</i>"
+            "disclamer_nuts": "<i>* sans Madeire (PT), les Açores (PT), les îles Canaries (ES) <br>et les régions françaises d'outre-mer</i>",
+            "category": {
+              "worldwide_extent": "Emprise mondiale",
+              "france_metropolitan_extent": "Emprise de la France métropolitaine",
+              "europe_extent": "Emprise de l'Europe",
+              "world_other": "Autres - Pays du monde",
+              "france_other": "Autres - France",
+              "france_regional_extent": "France - Emprise régionale"
+            }
         },
         "export_box": {
             "geo": "Exporter vers un format compatible SIG",
