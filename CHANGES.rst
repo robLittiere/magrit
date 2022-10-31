@@ -8,6 +8,8 @@ Changes
 
 - Update NUTS datasets to 2020 version.
 
+- Update of datasets for Metropolitan France to a version based on voronoi polygons calculated from the centroids of the communes of the ADMIN-EXPRESS-COG 2022 version.
+
 
 0.10.1 (2022-10-13)
 -------------------

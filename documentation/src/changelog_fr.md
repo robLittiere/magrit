@@ -6,6 +6,7 @@
 
 - Mise à jour des jeux de données NUTS (version 2020).
 
+- Mise à jour des jeux de données de la France Métropolitaine (pour utiliser une version basée sur des polygones de voronoi calculés à partir des centroides des communes de la version ADMIN-EXPRESS-COG 2022).
 
 #### 0.10.1 (2022-10-13)
 

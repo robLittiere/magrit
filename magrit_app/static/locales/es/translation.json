@@ -361,11 +361,10 @@
             "grandparismunicipalities": "Comunas de la zona metropolitana de París <i>(Polígonos)</i>",
             "quartier_paris": "Distritos administrativos de París <i>(Polígonos)</i>",
             "martinique": "Comunas de Martinica (región francesa de ultramar) <i>(Polígonos)</i>",
-            "voronoi_communes_2016_2-2": "Comunas de Francia metropolitana (<i>Polígonos tipo voronoi</i> - basado en GEOFLA® 2016 v2.2)",
-            "departements_2016_2-2": "Departamentos de Francia metropolitana (GEOFLA® 2016 v2.2 - <i>Polígonos</i>)",
-            "departements_vor_2016_2-2": "Departamentos de Francia metropolitana (adaptados al fondo \"voronoi\" - basado en GEOFLA® 2016 v2.2)",
-            "regions_2016_2-2": "Regiones de Francia metropolitana (GEOFLA® 2016 v2.2 - <i>Polígonos</i>)",
-            "regions_vor_2016_2-2": "Regiones de Francia metropolitana (adaptados al fondo \"voronoi\" - GEOFLA® 2016 v2.2)",
+            "communes_voronoi_2022": "Comunas de Francia metropolitana (<i>Polígonos tipo voronoi</i> - basado en ADMIN-EXPRESS-COG 2022)",
+            "departements_2022": "Departamentos de Francia metropolitana (adaptados al fondo \"voronoi\" - basado en ADMIN-EXPRESS-COG 2022)",
+            "regions_2022": "Regiones de Francia metropolitana (adaptados al fondo \"voronoi\" - basado en ADMIN-EXPRESS-COG 2022)",
+            "france_contour_2022": "Contorno de la Francia metropolitana (adaptados al fondo \"voronoi\" - basado en ADMIN-EXPRESS-COG 2022)",
             "brazil": "Estados de Brasil",
             "world_countries_data": "Países del mundo <i>(Polígonos)</i>",
             "us_states": "Estados Unidos <i>(Polígonos)</i>",
@@ -397,8 +396,7 @@
             "tissot": "Indicadores de Tissot <i>(Polígonos)</i>",
             "world_countries": "Tierras emergidas <i>(Polígonos)</i>",
             "world_capitals": "Ciudades de mayor población <i>(Puntos)</i>",
-            "disclamer_nuts": "<i>* sin Madeira (PT), Azores (PT), las Islas Canarias (ES) <br>ni las regiones francesas de ultramar</i>",
-            "france_contour_2016_2-2": "Contorno de la Francia metropolitana (basado en GEOFLA® 2016 v2.2)"
+            "disclamer_nuts": "<i>* sin Madeira (PT), Azores (PT), las Islas Canarias (ES) <br>ni las regiones francesas de ultramar</i>"
         },
         "export_box": {
             "geo": "Exportar en un formato compatible para los SIG",

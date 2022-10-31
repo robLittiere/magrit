@@ -366,11 +366,10 @@
             "grandparismunicipalities": "Grand Paris municipalities <i>(Polygons)</i>",
             "quartier_paris": "Administrative districts of Paris <i>(Polygons)</i>",
             "martinique": "Martinique (FR overseas region) communes <i>(Polygons)</i>",
-            "voronoi_communes_2016_2-2": "Municipalities of metropolitan France (<i>Voronoi polygons</i> - based on GEOFLA® 2016 v2.2)",
-            "departements_2016_2-2": "Departments of metropolitan France (GEOFLA® 2016 v2.2 - <i>Polygons</i>)",
-            "departements_vor_2016_2-2": "Departments of Metropolitan France (adapted to the \"voronoi\" basemap - based on GEOFLA® 2016 v2.2)",
-            "regions_2016_2-2": "Regions of metropolitan France (GEOFLA® 2016 v2.2 - <i>Polygons</i>)",
-            "regions_vor_2016_2-2": "Regions of metropolitan France (adapted to the \"voronoi\" basemap - GEOFLA® 2016 v2.2)",
+            "communes_voronoi_2022": "Municipalities of metropolitan France (<i>Voronoi polygons</i> - based on ADMIN-EXPRESS-COG 2022)",
+            "departements_2022": "Departments of metropolitan France (adapted to the \"voronoi\" basemap - based on ADMIN-EXPRESS-COG 2022)",
+            "regions_2022": "Regions of metropolitan France (adapted to the \"voronoi\" basemap - based on ADMIN-EXPRESS-COG 2022)",
+            "france_contour_2022": "Contour of metropolitan France (adapted to the \"voronoi\" basemap - based on ADMIN-EXPRESS-COG 2022)",
             "brazil": "Brazilian federal states <i>(Polygons)</i>",
             "world_countries_data": "World countries <i>(Polygons)</i>",
             "us_states": "U.S.A states <i>(Polygons)</i>",
@@ -402,8 +401,7 @@
             "tissot": "Tissot's indicatrices <i>(Polygons)</i>",
             "world_countries": "World land surface <i>(Polygons)</i>",
             "world_capitals": "Most populated cities in the world <i>(Points)</i>",
-            "disclamer_nuts": "<i>* without Madeira (PT), Azores (PT), Canarias (ES) islands<br>and French overseas departments</i>",
-            "france_contour_2016_2-2": "Contour of metropolitan France (based on GEOFLA® 2016 v2.2)"
+            "disclamer_nuts": "<i>* without Madeira (PT), Azores (PT), Canarias (ES) islands<br>and French overseas departments</i>"
         },
         "export_box": {
             "geo": "Export layers to a geographic format",

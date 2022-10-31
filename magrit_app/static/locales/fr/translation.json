@@ -367,11 +367,10 @@
             "grandparismunicipalities": "Communes du Grand Paris <i>(Polygones)</i>",
             "quartier_paris": "Quartiers administratifs de Paris <i>(Polygones)</i>",
             "martinique": "Communes de Martinique (région française d'outre-mer) <i>(Polygones)</i>",
-            "voronoi_communes_2016_2-2": "Communes de France Métrop. (<i>Polygones de voronoi</i> - basé sur GEOFLA® 2016 v2.2)",
-            "departements_2016_2-2": "Départements de France Métrop. (GEOFLA® 2016 v2.2 - <i>Polygones</i>)",
-            "departements_vor_2016_2-2": "Départements de France Métrop. (adapté au fond \"voronoi\" 2016 des communes - basé sur GEOFLA® 2016 v2.2)",
-            "regions_2016_2-2": "Régions de France Métrop. (GEOFLA® 2016 v2.2 - <i>Polygones</i>)",
-            "regions_vor_2016_2-2": "Régions de France Métrop. (adapté au fond \"voronoi\" 2016 des communes - GEOFLA® 2016 v2.2)",
+            "communes_voronoi_2022": "Communes de France Métrop. (<i>Polygones de voronoi</i> - basé sur ADMIN-EXPRESS-COG 2022)",
+            "departements_2022": "Départements de France Métrop. (adapté au fond \"voronoi\" 2022 des communes - basé sur ADMIN-EXPRESS-COG 2022)",
+            "regions_2022": "Régions de France Métrop. (adapté au fond \"voronoi\" 2022 des communes - basé sur ADMIN-EXPRESS-COG 2022)",
+            "france_contour_2022": "Contour de la France Métropolitaine (adapté au fond \"voronoi\" 2022 des communes - basé sur ADMIN-EXPRESS-COG 2022)",
             "brazil": "États fédéraux du Brésil <i>(Polygones)</i>",
             "world_countries_data": "Pays du monde <i>(Polygones)</i>",
             "us_states": "États des USA <i>(Polygones)</i>",
@@ -403,8 +402,7 @@
             "tissot": "Indicatrices de Tissot <i>(Polygones)</i>",
             "world_countries": "Emprise des terres émergées <i>(Polygones)</i>",
             "world_capitals": "Villes les plus peuplées du monde <i>(Points)</i>",
-            "disclamer_nuts": "<i>* sans Madeire (PT), les Açores (PT), les îles Canaries (ES) <br>et les régions françaises d'outre-mer</i>",
-            "france_contour_2016_2-2": "Contour de la France Métropolitaine (basé sur GEOFLA® 2016 v2.2)"
+            "disclamer_nuts": "<i>* sans Madeire (PT), les Açores (PT), les îles Canaries (ES) <br>et les régions françaises d'outre-mer</i>"
         },
         "export_box": {
             "geo": "Exporter vers un format compatible SIG",
