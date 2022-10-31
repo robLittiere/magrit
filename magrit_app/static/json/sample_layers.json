@@ -63,19 +63,6 @@
     "name": "brazil"
   },
   {
-    "path": "static/data_sample/topo/nuts2-2013-data.topojson",
-    "fields_type": [
-      {"name": "id", "type": "id", "not_number": "true"},
-      {"name": "name", "type": "id", "not_number": "true"},
-      {"name": "POP", "type": "stock"},
-      {"name": "GDP", "type": "stock"},
-      {"name": "UNEMP", "type": "ratio"},
-      {"name": "COUNTRY", "type": "category", "has_duplicate": "true"}
-    ],
-    "suggested_projection": ["proj4", "EPSG:3035"],
-    "name": "nuts2_data"
-  },
-  {
     "path": "static/data_sample/topo/country.topojson",
     "fields_type": [
       {"name": "ISO2", "type": "id", "not_number": "true"},
@@ -128,19 +115,54 @@
     "name": "voronoi_communes_2016_2-2"
   },
   {
-    "path": "static/data_sample/topo/nuts0.topojson",
+    "path": "static/data_sample/topo/nuts0-without-outermost-regions-2020.topojson",
     "suggested_projection": ["proj4", "EPSG:3035"],
+    "fields_type": [
+      {"name": "NUTS_ID", "type": "id", "not_number": "true"},
+      {"name": "POP_2021", "type": "stock"},
+      {"name": "AREA_2021", "type": "stock"}
+    ],
     "name": "nuts0"
   },
   {
-    "path": "static/data_sample/topo/nuts1.topojson",
+    "path": "static/data_sample/topo/nuts1-without-outermost-regions-2020.topojson",
     "suggested_projection": ["proj4", "EPSG:3035"],
+    "fields_type": [
+      {"name": "NUTS_ID", "type": "id", "not_number": "true"},
+      {"name": "POP_2021", "type": "stock"},
+      {"name": "AREA_2021", "type": "stock"}
+    ],
     "name": "nuts1"
   },
   {
-    "path": "static/data_sample/topo/nuts2.topojson",
+    "path": "static/data_sample/topo/nuts2-without-outermost-regions-2020.topojson",
     "suggested_projection": ["proj4", "EPSG:3035"],
+    "fields_type": [
+      {"name": "NUTS_ID", "type": "id", "not_number": "true"},
+      {"name": "NAME_LATN", "type": "id", "not_number": "true"},
+      {"name": "URBN_TYPE", "type": "category", "has_duplicate": "true"},
+      {"name": "MOUNT_TYPE", "type": "category", "has_duplicate": "true"},
+      {"name": "COAST_TYPE", "type": "category", "has_duplicate": "true"},
+      {"name": "POP_2021", "type": "stock"},
+      {"name": "AREA_2021", "type": "stock"},
+      {"name": "DENS_2021", "type": "ratio"}
+    ],
     "name": "nuts2"
+  },
+  {
+    "path": "static/data_sample/topo/nuts3-without-outermost-regions-2020.topojson",
+    "suggested_projection": ["proj4", "EPSG:3035"],
+    "fields_type": [
+      {"name": "NUTS_ID", "type": "id", "not_number": "true"},
+      {"name": "NAME_LATN", "type": "id", "not_number": "true"},
+      {"name": "URBN_TYPE", "type": "category", "has_duplicate": "true"},
+      {"name": "MOUNT_TYPE", "type": "category", "has_duplicate": "true"},
+      {"name": "COAST_TYPE", "type": "category", "has_duplicate": "true"},
+      {"name": "POP_2021", "type": "stock"},
+      {"name": "AREA_2021", "type": "stock"},
+      {"name": "DENS_2021", "type": "ratio"}
+    ],
+    "name": "nuts3"
   },
   {
     "path": "static/data_sample/topo/world_cities_extract5000.topojson",

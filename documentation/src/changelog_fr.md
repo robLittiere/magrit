@@ -4,6 +4,9 @@
 
 - Nouvelle fonctionnalité : Ajout d'une option pour éviter le chevauchement des symboles proportionnels.
 
+- Mise à jour des jeux de données NUTS (version 2020).
+
+
 #### 0.10.1 (2022-10-13)
 
 - Correction d'un bug qui empêchait de créer carte de typologie (Typo, PropSymbolTypo et TypoPicto) avec des données de type 'Number' (erreur introduite dans la version 0.10.0).

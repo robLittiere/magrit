@@ -48,11 +48,11 @@ export function add_sample_layer() {
             const target_layer = _type_layer.indexOf('target') > -1;
             if (content.attr('id') === 'panel1') {
               if (selec) {
-                const layer_info = _app.sample_layers.find(_o => _o.name === selec);
+                const layer_info = _app.sample_layers.find((_o) => _o.name === selec);
                 add_sample_geojson(selec, {
                   target_layer_on_add: target_layer,
                   fields_type: layer_info['fields_type'], // Can be undefined
-                  default_projection: layer_info['suggested_projection'],  // Can be undefined
+                  default_projection: layer_info['suggested_projection'], // Can be undefined
                 });
               }
             } else if (content.attr('id') === 'panel2') {
@@ -127,7 +127,14 @@ export function add_sample_layer() {
       .html('')
       .insert('select')
       .attr('class', 'sample_target')
-      .on('change', function () { selec = this.value; });
+      .on('change', function () {
+        selec = this.value;
+        if (selec.toLowerCase().indexOf('nuts') > -1) {
+          content.select('#nuts_info').style('display', 'block');
+        } else {
+          content.select('#nuts_info').style('display', 'none');
+        }
+      });
 
     t_layer_selec.append('option')
       .attr('value', '')
@@ -139,6 +146,14 @@ export function add_sample_layer() {
         .attr('value', n)
         .html(_tr(`app_page.sample_layer_box.${n}`));
     });
+
+    content.append('p')
+      .attr('id', 'nuts_info')
+      .styles({
+        display: 'none',
+        'text-align': 'center',
+      })
+      .html(_tr('app_page.sample_layer_box.disclamer_nuts'));
 
     content.append('p')
       .styles({ margin: 'auto', 'text-align': 'right', cursor: 'pointer' })
