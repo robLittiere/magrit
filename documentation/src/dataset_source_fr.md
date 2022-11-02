@@ -55,25 +55,32 @@ Variables :
 (2) : INSEE 2013
 
 
-### Régions européennes Nuts 2 :
+### Régions européennes NUTS 2 et NUTS 3, version 2020 :
 
-Fond de carte : GREAT, NUTS 2 Version 2013, UMS RIATE 2017   
+Fond de carte : ©EuroGeographics
 Variable :  
-- ID : Code NUTS2
-- NAME : Nom
-- POP : Population au 1er janvier 2014 (1)
-- GDP : Produit intérieur brut régional en millions d'euros et en standards de pouvoir d'achat, en 2014 (2)
-- UNEMP : Taux de chômage en %, en 2014 (3)
-- COUNTRY : Code du pays d'appartenance
+- NUTS_ID : Code d'identification NUTS
+- NAME_LATN : Nom NUTS en langue locale, translittéré en caractères latins
+- URBN_TYPE : Typologie urbaine-rurale pour les régions NUTS3 (1 : région à prédominance urbaine ; 2 : région intermédiaire ; 3 : région à prédominance rurale).
+- MOUNT_TYPE : Typologie de la montagne pour les régions NUTS3 (1 : "dont plus de 50 % de la surface est couverte par des zones de montagne topographiques" ; 2 : "dont plus de 50 % de la population régionale vit dans des zones de montagne topographiques" ; 3 : "dont plus de 50 % de la surface est couverte par des zones de montagne topographiques et dont plus de 50 % de la population régionale vit dans ces zones de montagne", 4 : région non montagneuse / autre région, 0 : aucune classification fournie (par ex. 0 : aucune classification n'est fournie (par exemple, dans le cas des NUTS 1 et NUTS 2 et des pays non membres de l'UE).
+- COAST_TYPE : Typologie côtière pour les régions NUTS3 (1 : côtière (sur la côte), 2 : côtière (>= 50% de la population vivant à moins de 50km de la côte), 3 : région non côtière}, 0 : aucune classification fournie (par exemple dans le cas des régions NUTS 1 et NUTS 2).
+- AREA_2021 : Superficie totale en 2021 (ou 2019-2020 si valeurs manquantes, table Eurostat reg_area3)
+- POP_2021 : Population totale en 2021 (ou 2019-2020 si valeurs manquantes, table Eurostat demo_r_pjanaggr3)
+- DENS_2021 : Densité de population (hab. par km², POP_2021 / AREA_2021).
 
-(1) : Eurostat, Dernière mise à jour: 19.01.2017, Date d'extraction: 23 janv. 2017 16:34:48 CET, <a href="http://ec.europa.eu/eurostat/tgm/table.do?tab=table&init=1&plugin=1&language=fr&pcode=tgs00096">http://ec.europa.eu/eurostat/tgm/table.do?tab=table&init=1&plugin=1&language=fr&pcode=tgs00096</a>  
-(2) : Eurostat, Dernière mise à jour: 18.01.2017, Date d'extraction: 23 janv. 2017 16:38:34 CET, <a href="http://ec.europa.eu/eurostat/tgm/table.do?tab=table&init=1&plugin=1&language=fr&pcode=tgs00004">http://ec.europa.eu/eurostat/tgm/table.do?tab=table&init=1&plugin=1&language=fr&pcode=tgs00004</a>  
-(3) : Eurostat, Dernière mise à jour: 19.01.2017, Date d'extraction: 23 janv. 2017 16:56:02 CET, <a href="http://ec.europa.eu/eurostat/tgm/table.do?tab=table&init=1&plugin=1&language=fr&pcode=tgs00010">http://ec.europa.eu/eurostat/tgm/table.do?tab=table&init=1&plugin=1&language=fr&pcode=tgs00010</a>  
+
+### Régions européennes NUTS 0 et NUTS 1, version 2020 :
+
+Fond de carte : ©EuroGeographics
+Variable :  
+- NUTS_ID : Code d'identification NUTS
+- AREA_2021 : Superficie totale en 2021, calculé par aggrégation des NUTS2 enfants (ou 2019-2020 si valeurs manquantes, table Eurostat reg_area3)
+- POP_2021 : Population totale en 2021, calculé par aggrégation des NUTS2 enfants (ou 2019-2020 si valeurs manquantes, table Eurostat demo_r_pjanaggr3)
 
 
 ### Pays du monde :   
 
-Fond de carte : UMS RIATE, 2017  
+Fond de carte : UMS RIATE, 2022  
 Variables :   
 - ISO2 : Code ISO 3166-1 alpha-2
 - ISO3 : Code ISO 3166-1 alpha-3
@@ -91,29 +98,35 @@ Variables :
 (3) : UMS RIATE d'après Wikipedia, de Dr. No en 1962 à Spectre en 2015  
 
 
-### Communes de France métropolitaine (fond *voronoi*) :  
+### Communes de France métropolitaine 2022 - fond *voronoi* :  
 
 Localisation des centroides ayant permis la construction des polygones de voronoi : Institut national de l’information géographique et forestière (1)
 Trait de cote ayant servi au découpage des polygones : Institut national de l’information géographique et forestière (1)
 
 Variables :  
 - INSEE_COM : Code INSEE de la commune (1)
+- NOM : Nom de la commune (1)
+- POPULATION : Population de la commune (1)
+- SUPERFICIE : Superficie de la commune (1)
 
-(1) : IGN, <a href="http://professionnels.ign.fr/geofla">GEOFLA® 2016 v2.2 Communes France Métropolitaine</a>  
+(1) : IGN, <a href="https://geoservices.ign.fr/adminexpress"> ADMIN-EXPRESS-COG édition 2022 France entière</a>  
 
 
-### Départements de France métropolitaine :  
+### Départements 2022 et régions 2022 de France métropolitaine :  
 
-Fond de carte : Institut national de l’information géographique et forestière (1)  
+Fond de carte : Obtenu par aggrégation du jeu de données précédent (*Communes de France métropolitaine - fond voronoi*).
 Variables :  
-- CODE_DEPT : Code géographique du département (1)
-- NOM_DEPT : Nom du département (1)
-- CODE_CHF : Code géographique de la préfecture du département (1)
-- NOM_CHF : Nom de la préfecture du département (1)
-- CODE_REG : Code géographique de la région à laquelle appartient le département (1)
-- NOM_REG : Nom de la région à laquelle appartient le département (1)
+- CODEGEO : Code INSEE de l'entité (1)
+- LIBGEO : Nom de l'entité (1)
+- POPULATION : Population de la commune (1)
+- SUPERFICIE : Superficie de la commune (1)
 
-(1) : IGN, <a href="http://professionnels.ign.fr/geofla">GEOFLA® 2016 v2.2 Départements France Métropolitaine</a>  
+(1) : IGN, <a href="https://geoservices.ign.fr/adminexpress"> ADMIN-EXPRESS-COG édition 2022 France entière</a> 
+
+
+### Contour France métropolitaine :
+
+Fond de carte : Obtenu par aggrégation du jeu de données précédent (*Régions 2022 de France métropolitaine* lui-même basé sur *Communes de France métropolitaine - fond voronoi*).
 
 
 ### Communes de France Métropolitaine (par région) / Communes d'Outre-Mer (par département) :   
