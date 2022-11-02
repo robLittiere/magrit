@@ -10,6 +10,7 @@ Changes
 
 - Update of datasets for Metropolitan France to a version based on voronoi polygons calculated from the centroids of the communes of the ADMIN-EXPRESS-COG 2022 version.
 
+- Add new cartographic projections from d3-geo-projection : *Interrupted Quartic Authalic*, *Interrupted Mollweide Hemispheres*, *PolyHedral Butterfly*, *Polyhedral Collignon*, *Polyhedral Waterman*, *Hammer*, *Eckert-Greifendorff* (based on `d3.geoHammer`), *Quartic Authalic* (based on `d3.geoHammer`) and *Spilhaus* (based on `d3.geoStereographic`).
 
 0.10.1 (2022-10-13)
 -------------------

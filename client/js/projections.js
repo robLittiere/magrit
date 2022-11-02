@@ -53,6 +53,7 @@ export const available_projections = new Map([
   ['EckertIV', { name: 'geoEckert4', scale: '525', param_in: 'pseudocylindre', param_ex: 'equalarea' }],
   ['EckertV', { name: 'geoEckert5', scale: '400', param_in: 'pseudocylindre', param_ex: 'aphylactic' }],
   ['EckertVI', { name: 'geoEckert6', scale: '400', param_in: 'pseudocylindre', param_ex: 'equalarea' }],
+  ['Eckert-Greifendorff', { name: 'geoHammer', scale: '400', coefficient: 4, param_in: 'pseudoplan', param_ex: 'equalarea' }],
   ['Eisenlohr', { name: 'geoEisenlohr', scale: '400', param_in: 'other', param_ex: 'conformal' }],
   ['GallPeters', { name: 'geoCylindricalEqualArea', scale: '400', parallel: 45, param_in: 'cylindrical', param_ex: 'equalarea' }],
   ['GallStereographic', { name: 'geoCylindricalStereographic', scale: '400', parallel: 45, param_in: 'cylindrical', param_ex: 'aphylactic' }],
@@ -60,11 +61,13 @@ export const available_projections = new Map([
   ['Gnomonic', { name: 'geoGnomonic', scale: '400', param_in: 'plan', param_ex: 'aphylactic' }],
   ['Gringorten', { name: 'geoGringorten', scale: '400', param_in: 'other', param_ex: 'equalarea' }],
   ['GringortenQuincuncial', { name: 'geoGringortenQuincuncial', scale: '400', param_in: 'other', param_ex: 'equalarea' }],
+  ['Hammer', { name: 'geoHammer', scale: '400', coefficient: 2, param_in: 'pseudoplan', param_ex: 'equalarea' }],
   ['Hatano', { name: 'geoHatano', scale: '200', param_in: 'other', param_ex: 'equalarea' }],
   ['HEALPix', { name: 'geoHealpix', scale: '400', param_in: 'pseudocylindre', param_ex: 'equalarea' }],
   ['HoboDyer', { name: 'geoCylindricalEqualArea', scale: '400', parallel: 37.5, param_in: 'cylindrical', param_ex: 'equalarea' }],
   ['Homolosine', { name: 'geoHomolosine', scale: '400', param_in: 'pseudocylindre', param_ex: 'equalarea' }],
   ['InterruptedHomolosine', { name: 'geoInterruptedHomolosine', scale: '400', param_in: 'pseudocylindre', param_ex: 'equalarea' }],
+  ['InterruptedQuarticAuthalic', { name: 'geoInterruptedQuarticAuthalic', scale: '400', param_in: 'pseudocylindre', param_ex: 'equalarea' }],
   ['Loximuthal', { name: 'geoLoximuthal', scale: '400', param_in: 'pseudocylindre', param_ex: 'aphylactic' }],
   ['Mercator', { name: 'geoMercator', scale: '375', param_in: 'cylindrical', param_ex: 'conformal' }],
   ['Miller', { name: 'geoMiller', scale: '375', param_in: 'cylindrical', param_ex: 'aphylactic' }],
@@ -75,11 +78,17 @@ export const available_projections = new Map([
   ['Orthographic', { name: 'geoOrthographic', scale: '475', clipAngle: 90, param_in: 'plan', param_ex: 'aphylactic' }],
   ['Patterson', { name: 'geoPatterson', scale: '400', param_in: 'cylindrical', param_ex: 'aphylactic' }],
   ['Polyconic', { name: 'geoPolyconic', scale: '400', param_in: 'pseudocone', param_ex: 'aphylactic' }],
+  ['PolyhedralButterfly', { name: 'geoPolyhedralButterfly', scale: '400', param_in: 'plan', param_ex: 'aphylactic' }],
+  ['PolyhedralCollignon', { name: 'geoPolyhedralCollignon', scale: '400', param_in: 'pseudocylindre', param_ex: 'equalarea' }],
+  ['PolyhedralWaterman', { name: 'geoPolyhedralWaterman', scale: '400', param_in: 'other', param_ex: 'conformal' }],
   ['Peircequincuncial', { name: 'geoPeirceQuincuncial', scale: '400', param_in: 'other', param_ex: 'conformal' }],
+  ['QuarticAuthalic', { name: 'geoHammer', scale: '400', coefficient: Infinity, param_in: 'pseudocylindre', param_ex: 'equalarea' }],
   ['Robinson', { name: 'geoRobinson', scale: '400', param_in: 'pseudocylindre', param_ex: 'aphylactic' }],
   ['SinuMollweide', { name: 'geoSinuMollweide', scale: '400', param_in: 'pseudocylindre', param_ex: 'equalarea' }],
   ['InterruptedSinuMollweide', { name: 'geoInterruptedSinuMollweide', scale: '400', param_in: 'pseudocylindre', param_ex: 'equalarea' }],
+  ['InterruptedMollweideHemispheres', { name: 'geoInterruptedMollweideHemispheres', scale: '400', param_in: 'pseudocylindre', param_ex: 'equalarea' }],
   ['Sinusoidal', { name: 'geoSinusoidal', scale: '400', param_in: 'pseudocylindre', param_ex: 'equalarea' }],
+  ['Spilhaus', { name: 'geoStereographic', scale: '400', rotate: [95, 45], center: [30, -5], clipAngle: 166, param_in: 'cylindrical', param_ex: 'aphylactic' }],
   ['InterruptedSinusoidal', { name: 'geoInterruptedSinusoidal', scale: '400', param_in: 'pseudocylindre', param_ex: 'equalarea' }],
   ['Stereographic', { name: 'geoStereographic', scale: '400', param_in: 'cylindrical', param_ex: 'aphylactic' }],
   ['TransverseMercator', { name: 'geoTransverseMercator', scale: '400', param_in: 'cylindrical', param_ex: 'conformal' }],
@@ -736,6 +745,7 @@ export const tryFindNameProj = (proj_str) => {
 export function isInterrupted(proj_name) {
   return (
     proj_name.indexOf('interrupted') > -1
+    || proj_name.indexOf('polyhedral') > -1
     || proj_name.indexOf('armadillo') > -1
     || proj_name.indexOf('healpix') > -1);
 }
@@ -815,6 +825,7 @@ export function change_projection(new_proj_name) {
   if (def_proj.parallels) proj = proj.parallels(def_proj.parallels);
   else if (def_proj.parallel) proj = proj.parallel(def_proj.parallel);
   if (def_proj.clipAngle) proj = proj.clipAngle(def_proj.clipAngle);
+  if (def_proj.coefficient) proj = proj.coefficient(def_proj.coefficient);
   if (def_proj.rotate) prev_rotate = def_proj.rotate;
   if (proj.rotate) proj.rotate(prev_rotate);
 

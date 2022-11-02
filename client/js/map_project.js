@@ -135,6 +135,8 @@ export function get_map_project() {
   map_config.projection_rotation = proj.rotate !== undefined ? proj.rotate() : undefined;
   map_config.projection_parallels = proj.parallels !== undefined ? proj.parallels() : undefined;
   map_config.projection_parallel = proj.parallel !== undefined ? proj.parallel() : undefined;
+  map_config.projection_clipAngle = proj.clipAngle !== undefined ? proj.clipAngle() : undefined;
+  map_config.coefficient = proj.coefficient !== undefined ? proj.coefficient() : undefined;
   map_config.zoom_translate = [zoom_transform.x, zoom_transform.y];
   map_config.zoom_scale = zoom_transform.k;
   map_config.div_width = +w;
@@ -986,6 +988,7 @@ export function apply_user_preferences(json_pref) {
   if (map_config.projection_parallels) proj = proj.parallels(map_config.projection_parallels);
   if (map_config.projection_parallel) proj = proj.parallel(map_config.projection_parallel);
   if (map_config.projection_clipAngle) proj = proj.clipAngle(map_config.projection_clipAngle);
+  if (map_config.coefficient) proj = proj.coefficient(map_config.coefficient);
   s = map_config.projection_scale;
   t = map_config.projection_translate;
   proj.scale(s).translate(t);

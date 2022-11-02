@@ -8,6 +8,8 @@
 
 - Mise à jour des jeux de données de la France Métropolitaine (pour utiliser une version basée sur des polygones de voronoi calculés à partir des centroides des communes de la version ADMIN-EXPRESS-COG 2022).
 
+- Ajout de nouvelles projections cartographiques à partir de d3-geo-projection : *Interrupted Quartic Authalic*, *Interrupted Mollweide Hemispheres*, *PolyHedral Butterfly*, *Polyhedral Collignon*, *Polyhedral Waterman*, *Hammer*, *Eckert-Greifendorff* (basée sur `d3.geoHammer`), *Quartic Authalic* (basée sur `d3.geoHammer`) and *Spilhaus* (basée sur `d3.geoStereographic`).
+
 #### 0.10.1 (2022-10-13)
 
 - Correction d'un bug qui empêchait de créer carte de typologie (Typo, PropSymbolTypo et TypoPicto) avec des données de type 'Number' (erreur introduite dans la version 0.10.0).
