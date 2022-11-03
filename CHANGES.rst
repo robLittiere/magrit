@@ -1,16 +1,19 @@
 Changes
 =======
 
-0.11.0 (xxxx-xx-xx)
+0.11.0 (2022-11-03)
 ------------------
 
-- New: Add option to avoid overlapping of the circle / square symbols (in PropSymbol, PropSymbolChoro and PropSymbolTypo).
+- New: Add option to avoid overlapping of the circle / square symbols (in PropSymbol, PropSymbolChoro and PropSymbolTypo). Closes #77.
+
+- Update cartographic templates that are available on the landing page (thanks to @rysebaert for preparing the data and providing the templates).
 
 - Update NUTS datasets to 2020 version.
 
 - Update of datasets for Metropolitan France to a version based on voronoi polygons calculated from the centroids of the communes of the ADMIN-EXPRESS-COG 2022 version.
 
 - Add new cartographic projections from d3-geo-projection : *Interrupted Quartic Authalic*, *Interrupted Mollweide Hemispheres*, *PolyHedral Butterfly*, *Polyhedral Collignon*, *Polyhedral Waterman*, *Hammer*, *Eckert-Greifendorff* (based on `d3.geoHammer`), *Quartic Authalic* (based on `d3.geoHammer`) and *Spilhaus* (based on `d3.geoStereographic`).
+
 
 0.10.1 (2022-10-13)
 -------------------

@@ -1,8 +1,10 @@
 # Historique des versions et des changements effectués
 
-#### 0.11.0 (xxxx-xx-xx)
+#### 0.11.0 (2022-11-03)
 
-- Nouvelle fonctionnalité : Ajout d'une option pour éviter le chevauchement des symboles proportionnels.
+- Nouvelle fonctionnalité : Ajout d'une option pour éviter le chevauchement des symboles proportionnels (<a href="https://github.com/riatelab/magrit/issues/77">issue Github #77</a>)
+
+- Mise à jour des templates cartographiques disponibles sur la page d'accueil (merci à Ronan Ysebaert pour la préparation et la mise à disposition des données).
 
 - Mise à jour des jeux de données NUTS (version 2020).
 
