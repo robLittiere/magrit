@@ -35,7 +35,7 @@ EXPOSE 9999
 CMD gunicorn "magrit_app.app:create_app(redis_addr='redis')" \
     --bind 0.0.0.0:9999 \
     --worker-class aiohttp.worker.GunicornUVLoopWebWorker \
-    --max-requests 450 \
-    --max-requests-jitter 50 \
+    --max-requests 300 \
+    --max-requests-jitter 75 \
     --workers 3 \
     --chdir /home/app/magrit/
