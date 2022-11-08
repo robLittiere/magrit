@@ -3,8 +3,8 @@
 import re
 import numpy as np
 import ujson as json
-import cchardet as chardet
 import tempfile
+from charset_normalizer import detect
 from fiona import _err as fiona_err
 from osgeo.ogr import Open, GetDriverByName, Feature as OgrFeature
 from osgeo.osr import SpatialReference, CoordinateTransformation, OAMS_TRADITIONAL_GIS_ORDER
@@ -123,7 +123,7 @@ def get_encoding_dbf(file_path):
     with open(file_path, 'rb') as f:
         nb_records, len_header = unpack('<xxxxLH22x', f.read(32))
         f.seek(len_header)
-        encoding = chardet.detect(f.read())
+        encoding = detect(f.read())
     return encoding['encoding']
 
 
@@ -201,7 +201,7 @@ def ogr_to_geojson(file_path):
     elif file_format == "GeoJSON":
         with open(file_path, 'rb') as f:
             raw_content = f.read()
-        encoding = chardet.detect(raw_content)
+        encoding = detect(raw_content)
         if encoding['encoding'] != 'UTF-8':
             content = raw_content.decode(encoding['encoding'])
             with open(file_path, 'wb') as f:

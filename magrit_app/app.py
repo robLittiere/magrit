@@ -1522,13 +1522,9 @@ async def on_shutdown(app):
     await app["redis_conn"].quit()
     for task in asyncio.all_tasks():
         await asyncio.sleep(0)
-        info = task._repr_info()
-        if "RedisPool" in info[1] and "pending" in info[0]:
-            try:
-                await asyncio.wait_for(task, 2)
-            except asyncio.TimeoutError:
-                task.cancel()
-        elif "Application.shutdown()" not in info[1]:
+        try:
+            await asyncio.wait_for(task, 2)
+        except asyncio.TimeoutError:
             task.cancel()
 
 

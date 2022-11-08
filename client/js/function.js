@@ -251,7 +251,7 @@ function test_maxmin_resolution(cell_value) {
     [Mabs(bbox[2]) - Mabs(bbox[0]), bbox[1]], [Mabs(bbox[2]) - Mabs(bbox[0]), bbox[3]]);
   // const area = width_km * height_km;
   const bigger_side = Mmax(height_km, width_km);
-  if ((width_km * height_km) / (cell_value * cell_value) > 15000) {
+  if ((width_km * height_km) / (cell_value * cell_value) > 25000) {
     return 'higher';
   } else if (cell_value > bigger_side / 1.66) {
     return 'lower';
