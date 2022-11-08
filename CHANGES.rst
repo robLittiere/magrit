@@ -1,6 +1,11 @@
 Changes
 =======
 
+0.11.1 (2022-11-08)
+------------------
+
+- Fix missing i18n strings for projections added in 0.11.0.
+
 0.11.0 (2022-11-03)
 ------------------
 
