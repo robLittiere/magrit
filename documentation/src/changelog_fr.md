@@ -1,5 +1,9 @@
 # Historique des versions et des changements effectués
 
+#### 0.11.1 (2022-11-08)
+
+- Corrige l'absence de traduction pour les noms des projections ajoutées dans la v0.11.0.
+
 #### 0.11.0 (2022-11-03)
 
 - Nouvelle fonctionnalité : Ajout d'une option pour éviter le chevauchement des symboles proportionnels (<a href="https://github.com/riatelab/magrit/issues/77">issue Github #77</a>)
