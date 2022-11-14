@@ -1,5 +1,9 @@
 # Historique des versions et des changements effectués
 
+#### Pas de version publiée
+
+- Correction de l'ordre des coordonnées lors de l'export vers certains SRC / formats de fichier.
+
 #### 0.11.1 (2022-11-08)
 
 - Corrige l'absence de traduction pour les noms des projections ajoutées dans la v0.11.0.
