@@ -500,7 +500,7 @@ def reproj_convert_layer(geojson_path, output_path, file_format, output_crs):
     outSpRef = SpatialReference()
     if output_crs['type'] == 'epsg':
         ret_val = outSpRef.ImportFromEPSG(output_crs['value'])
-        if output_crs['value'] == 4326:
+        if output_crs['value'] == 4326 or outSpRef.GetAttrValue('AXIS', 0) == 'Northing':
             outSpRef.SetAxisMappingStrategy(OAMS_TRADITIONAL_GIS_ORDER)
     else:
         ret_val = outSpRef.ImportFromProj4(output_crs['value'])
