@@ -80,9 +80,10 @@ export default function makeSection1() {
   section1.append('p')
     .attrs({
       id: 'info_section1',
-      class: 'i18n',
+      class: 'i18n tt',
       'data-i18n': '[data-ot]app_page.tooltips.section1',
       'data-ot-remove-elements-on-hide': true,
+      'data-ot-target': true,
     })
     .styles({
       margin: 'auto',
