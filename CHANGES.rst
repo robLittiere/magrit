@@ -4,6 +4,8 @@ Changes
 Unreleased
 ----------
 
+- Fix missing HTML attribute that prevented re-translation of some tooltip.
+
 - Fix coordinate order when exporting to some CRS / file formats.
 
 0.11.1 (2022-11-08)

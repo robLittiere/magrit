@@ -2,6 +2,8 @@
 
 #### Pas de version publiée
 
+- Correction d'un attribut HTML manquant qui empêchait la retraduction d'une infobulle.
+
 - Correction de l'ordre des coordonnées lors de l'export vers certains SRC / formats de fichier.
 
 #### 0.11.1 (2022-11-08)
