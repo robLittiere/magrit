@@ -8,7 +8,7 @@ Fiona == 1.8.22
 gdal == 3.4.1
 geopandas == 0.12.1
 jenkspy == 0.3.2
-matplotlib == 3.5.2
+matplotlib == 3.6.2
 mmh3 == 2.5.1
 numpy == 1.23.4
 pandas == 1.5.1
