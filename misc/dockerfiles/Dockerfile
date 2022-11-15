@@ -1,8 +1,9 @@
 # All-in-one image to build and execute magrit in a single container.
 # See the other recipes (with docker compose) if you want to use magrit with nginx.
-# Building this image :
-#   docker build -t "magrit" .
-# Running this image :
+# To build this image you need to be in "magrit" folder and not in "magrit/misc/dockerfiles" folder,
+# then run:
+#   docker build -t "magrit" -f misc/dockerfiles/Dockerfile .
+# Then you can run the container with:
 #   docker run --publish "9999:9999" -it "magrit:latest"
 FROM ubuntu:22.04
 MAINTAINER Matthieu Viry <matthieu.viry@cnrs.fr>
@@ -22,9 +23,8 @@ RUN apt-get update \
 
 ENV LANG='fr_FR.UTF-8' LANGUAGE='fr_FR' LC_ALL='fr_FR.UTF-8' NODE_ENV='PRODUCTION'
 
-WORKDIR /home
-
-RUN mkdir /home/app && cd /home/app && wget https://github.com/riatelab/magrit/archive/master.zip && unzip master.zip && mv magrit-master magrit
+RUN mkdir /home/app && cd /home/app && mkdir magrit
+COPY . /home/app/magrit
 
 RUN cd /home/app/magrit/ \
     && python3.11 -m pip install --no-cache-dir -U setuptools numpy==1.23.4 \
@@ -36,7 +36,13 @@ RUN cd /home/app/magrit/ \
     && cd ../documentation \
     && ./mdbook build
 
+WORKDIR /home
+
 EXPOSE 9999
 
 CMD redis-server \
-    & gunicorn "magrit_app.app:create_app()" --bind 0.0.0.0:9999 --worker-class aiohttp.worker.GunicornUVLoopWebWorker --workers 1 --chdir /home/app/magrit/
+    & gunicorn "magrit_app.app:create_app()" \
+    --bind 0.0.0.0:9999
+    --worker-class aiohttp.worker.GunicornUVLoopWebWorker \
+    --workers 1 \
+    --chdir /home/app/magrit/
