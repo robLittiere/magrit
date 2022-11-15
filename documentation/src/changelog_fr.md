@@ -2,6 +2,8 @@
 
 #### Pas de version publiée
 
+- Mise à jour des dépendances pour permettre d'utiliser Python 3.11 et mise à jour des recettes Docker pour utiliser Python 3.11.
+
 - Correction de l'ordre des coordonnées lors de l'export vers certains SRC / formats de fichier.
 
 #### 0.11.1 (2022-11-08)

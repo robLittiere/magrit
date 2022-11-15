@@ -4,6 +4,8 @@ Changes
 Unreleased
 ----------
 
+- Update Python dependencies to enable Python 3.11 support and switch to Python 3.11 in all docker images (Python 3.11 is supposed to bring interesting performance improvements thanks to the specialization brought by its adaptive interpreter)
+
 - Fix coordinate order when exporting to some CRS / file formats.
 
 0.11.1 (2022-11-08)
