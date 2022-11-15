@@ -5,7 +5,7 @@ ENV DEBIAN_FRONTEND='noninteractive' TZ='Europe/Paris'
 
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
-        software-properties-common gcc g++ libpython3.10-dev python3.10 python3.10-dev python3-pip \
+        software-properties-common gcc g++ libpython3.11-dev python3.11 python3.11-dev python3-pip \
         libgeos-c1v5 libgeos-dev libgdal30 libgdal-dev libspatialindex-dev libffi-dev \
         nodejs npm libuv1 libuv1-dev unzip wget git \
         libxslt1.1 libxslt1-dev libxml2 libxml2-dev libkml-dev locales \
@@ -19,9 +19,9 @@ RUN mkdir /home/app && cd /home/app && mkdir magrit
 COPY . /home/app/magrit
 
 RUN cd /home/app/magrit/ \
-    && pip3.10 install --no-cache-dir -U setuptools numpy==1.23.1 \
-    && pip3.10 install --no-cache-dir -U -r requirements/prod.txt \
-    && python3.10 setup.py build_ext --inplace \
+    && python3.11 -m pip install --no-cache-dir -U setuptools numpy==1.23.4 \
+    && python3.11 -m pip install --no-cache-dir -U -r requirements/prod.txt \
+    && python3.11 setup.py build_ext --inplace \
     && cd client \
     && npm install \
     && node node_modules/webpack/bin/webpack.js \
