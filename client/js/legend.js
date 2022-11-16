@@ -634,9 +634,7 @@ export function createLegend_symbol(layer, field, title, subtitle, nested = 'fal
   const layer_prop = data_manager.current_layers[layer];
   const space_elem = 18;
   const boxgap = 4;
-  const xpos = 30;
-  const ypos = 30;
-  let y_pos2 = ypos + space_elem * 1.5;
+  let y_pos2 = space_elem * 1.5;
   const tmp_class_name = `legend legend_feature lgdf_${_app.layer_to_id.get(layer)}`;
   const symbol_type = layer_prop.symbol;
 
@@ -718,26 +716,6 @@ export function createLegend_symbol(layer, field, title, subtitle, nested = 'fal
     });
 
   const rect_under_legend = legend_root.insert('rect');
-  legend_root.insert('text')
-    .attrs(subtitle != ''
-      ? { 'id': 'legendtitle', x: xpos + space_elem, y: ypos }
-      : { 'id': 'legendtitle', x: xpos + space_elem, y: ypos + 15 }
-    )
-    .styles({
-      'font-size': '12px',
-      'font-family': 'verdana',
-      'font-weight': 'bold',
-    })
-    .text(title);
-
-  legend_root.insert('text')
-    .attrs({ id: 'legendsubtitle', x: xpos + space_elem, y: ypos + 15 })
-    .styles({
-      'font-size': '12px',
-      'font-family': 'verdana',
-      'font-style': 'italic',
-    })
-    .text(subtitle);
 
   const legend_elems = legend_root.selectAll('.legend')
     .append('g')
@@ -754,6 +732,7 @@ export function createLegend_symbol(layer, field, title, subtitle, nested = 'fal
   }
 
   let last_pos = y_pos2;
+  let max_dist = null;
 
   if (nested === 'false') {
     if (symbol_type === 'circle') {
@@ -763,20 +742,24 @@ export function createLegend_symbol(layer, field, title, subtitle, nested = 'fal
         .attrs((d, i) => {
           last_pos = (i * boxgap) + d.size + last_pos + last_size;
           last_size = d.size;
+          if (max_dist === null) {
+            max_dist = (space_elem + boxgap + max_size / 4) - d.size;
+          }
           return {
-            cx: xpos + space_elem + boxgap + max_size / 4,
+            cx: space_elem + boxgap + max_size / 4,
             cy: last_pos,
             r: d.size,
           };
         });
 
-      last_pos = y_pos2; last_size = 0;
+      last_pos = y_pos2;
+      last_size = 0;
       legend_elems.append('text')
         .attrs((d, i) => {
           last_pos = (i * boxgap) + d.size + last_pos + last_size;
           last_size = d.size;
           return {
-            x: xpos + space_elem + boxgap + max_size * 0.75 + 7,
+            x: space_elem + boxgap + max_size * 0.75 + 7,
             y: last_pos + (i * 2 / 3),
           };
         })
@@ -789,8 +772,11 @@ export function createLegend_symbol(layer, field, title, subtitle, nested = 'fal
         .attrs((d, i) => {
           last_pos = (i * boxgap) + (d.size / 2) + last_pos + last_size;
           last_size = d.size;
+          if (max_dist === null) {
+            max_dist = space_elem + boxgap + max_size / 4 - last_size / 2;
+          }
           return {
-            x: xpos + space_elem + boxgap + max_size / 4 - last_size / 2,
+            x: space_elem + boxgap + max_size / 4 - last_size / 2,
             y: last_pos,
             width: last_size,
             height: last_size,
@@ -798,7 +784,7 @@ export function createLegend_symbol(layer, field, title, subtitle, nested = 'fal
         });
 
       last_pos = y_pos2; last_size = 0;
-      const x_text_pos = xpos + space_elem + boxgap + max_size / 2 + 7;
+      const x_text_pos = space_elem + boxgap + max_size / 2 + 7;
       legend_elems.append('text')
         .attrs((d, i) => {
           last_pos = (i * boxgap) + (d.size / 2) + last_pos + last_size;
@@ -813,68 +799,86 @@ export function createLegend_symbol(layer, field, title, subtitle, nested = 'fal
     if (symbol_type === 'circle') {
       if (join_line === 'true') {
         legend_elems.append('line')
-          .attrs(d => ({
-            x1: xpos + space_elem + boxgap + max_size / 4 - d.size,
-            x2: xpos + space_elem + boxgap + max_size * 0.75 + 6.5,
-            y1: ypos + dist_to_title + max_size - d.size + 0.5,
-            y2: ypos + dist_to_title + max_size - d.size + 0.5,
+          .attrs((d) => ({
+            x1: space_elem + boxgap + max_size / 4 - d.size,
+            x2: space_elem + boxgap + max_size * 0.75 + 6.5,
+            y1: dist_to_title + max_size - d.size + 0.5,
+            y2: dist_to_title + max_size - d.size + 0.5,
             stroke: '#3f3f3f',
             'stroke-width': 0.8,
           }));
         legend_elems
           .append('circle')
-          .attrs(d => ({
-            cx: xpos + space_elem + boxgap + max_size / 4,
-            cy: ypos + dist_to_title + max_size - d.size,
-            r: d.size,
-          }))
+          .attrs((d) => {
+            if (max_dist === null) {
+              max_dist = (space_elem + boxgap + max_size / 4) - d.size;
+            }
+            return {
+              cx: space_elem + boxgap + max_size / 4,
+              cy: dist_to_title + max_size - d.size,
+              r: d.size,
+            };
+          })
           .styles({ fill: color_symb_lgd, stroke: stroke_color, 'fill-opacity': 1 });
-        last_pos = y_pos2; last_size = 0;
+        last_pos = y_pos2;
+        last_size = 0;
         legend_elems.append('text')
-          .attrs(d => ({
-            x: xpos + space_elem + boxgap + max_size * 0.75 + 7,
-            y: ypos + dist_to_title + 3 + max_size - d.size,
+          .attrs((d) => ({
+            x: space_elem + boxgap + max_size * 0.75 + 7,
+            y: dist_to_title + 3 + max_size - d.size,
           }))
           .styles({ 'alignment-baseline': 'middle', 'font-size': '10px' })
           .text(d => round_value(d.value, rounding_precision).toLocaleString());
       } else {
         legend_elems
           .append('circle')
-          .attrs(d => ({
-            cx: xpos + space_elem + boxgap + max_size / 4,
-            cy: ypos + dist_to_title + max_size - d.size,
-            r: d.size,
-          }))
+          .attrs((d) => {
+            if (max_dist === null) {
+              max_dist = (space_elem + boxgap + max_size / 4) - d.size;
+            }
+            return {
+              cx: space_elem + boxgap + max_size / 4,
+              cy: dist_to_title + max_size - d.size,
+              r: d.size,
+            };
+          })
           .styles({ fill: color_symb_lgd, stroke: stroke_color, 'fill-opacity': 1 });
-        last_pos = y_pos2; last_size = 0;
+        last_pos = y_pos2;
+        last_size = 0;
         legend_elems.append('text')
           .attrs(d => ({
-            x: xpos + space_elem + boxgap + max_size * 0.75 + 7,
-            y: ypos + dist_to_title + 1 + max_size - d.size * 2,
+            x: space_elem + boxgap + max_size * 0.75 + 7,
+            y: dist_to_title + 1 + max_size - d.size * 2,
           }))
           .styles({ 'alignment-baseline': 'middle', 'font-size': '10px' })
           .text(d => round_value(d.value, rounding_precision).toLocaleString());
       }
-      last_pos = ypos + 20 + max_size;
+      last_pos = 20 + max_size;
     } else if (symbol_type === 'rect') {
       legend_elems
         .append('rect')
-        .attrs(d => ({
-          x: xpos + space_elem + boxgap,
-          y: ypos + dist_to_title + max_size / 2 - d.size,
-          width: d.size,
-          height: d.size
-        }))
-        .styles({ fill: color_symb_lgd, stroke:  stroke_color, 'fill-opacity': 1 });
-      last_pos = y_pos2; last_size = 0;
+        .attrs((d) => {
+          if (max_dist === null) {
+            max_dist = space_elem + boxgap;
+          }
+          return {
+            x: space_elem + boxgap,
+            y: dist_to_title + max_size / 2 - d.size,
+            width: d.size,
+            height: d.size,
+          };
+        })
+        .styles({ fill: color_symb_lgd, stroke: stroke_color, 'fill-opacity': 1 });
+      last_pos = y_pos2;
+      last_size = 0;
       legend_elems.append('text')
         .attrs(d => ({
-          x: xpos + space_elem + boxgap + max_size / 2 + 7,
-          y: ypos + dist_to_title + 1 + max_size / 2 - d.size,
+          x: space_elem + boxgap + max_size / 2 + 7,
+          y: dist_to_title + 1 + max_size / 2 - d.size,
         }))
         .styles({ 'alignment-baseline': 'middle', 'font-size': '10px' })
         .text(d => round_value(d.value, rounding_precision).toLocaleString());
-      last_pos = ypos + 20 + max_size / 2;
+      last_pos = 20 + max_size / 2;
     }
   }
 
@@ -883,7 +887,7 @@ export function createLegend_symbol(layer, field, title, subtitle, nested = 'fal
     bottom_colors.insert('text')
       .attrs({
         id: 'col1_txt',
-        x: xpos + space_elem,
+        x: space_elem,
         y: last_pos + 1.75 * space_elem,
       })
       .styles({ 'alignment-baseline': 'middle', 'font-size': '10px' })
@@ -892,16 +896,16 @@ export function createLegend_symbol(layer, field, title, subtitle, nested = 'fal
       .insert('rect')
       .attrs({
         id: 'col1',
-        x: xpos + space_elem,
+        x: space_elem,
         y: last_pos + 2 * space_elem,
         width: space_elem,
-        height: space_elem
+        height: space_elem,
       })
       .style('fill', layer_prop.fill_color.two[0]);
     bottom_colors.insert('text')
       .attrs({
         id: 'col1_txt',
-        x: xpos + 3 * space_elem,
+        x: 3 * space_elem,
         y: last_pos + 1.75 * space_elem,
       })
       .styles({ 'alignment-baseline': 'middle', 'font-size': '10px' })
@@ -910,20 +914,44 @@ export function createLegend_symbol(layer, field, title, subtitle, nested = 'fal
       .insert('rect')
       .attrs({
         id: 'col2',
-        x: xpos + 3 * space_elem,
+        x: 3 * space_elem,
         y: last_pos + 2 * space_elem,
         width: space_elem,
-        height: space_elem
+        height: space_elem,
       })
       .style('fill', layer_prop.fill_color.two[1]);
     last_pos += 2.5 * space_elem;
   }
 
-  legend_root.append('g')
+  const legend_txt_items = legend_root.append('g')
+    .attr('class', 'lg texts');
+
+  legend_txt_items.insert('text')
+    .attrs(subtitle != ''
+      ? { 'id': 'legendtitle', x: max_dist, y: 0 }
+      : { 'id': 'legendtitle', x: max_dist, y: 15 }
+    )
+    .styles({
+      'font-size': '12px',
+      'font-family': 'verdana',
+      'font-weight': 'bold',
+    })
+    .text(title);
+
+  legend_txt_items.insert('text')
+    .attrs({ id: 'legendsubtitle', x: max_dist, y: 15 })
+    .styles({
+      'font-size': '12px',
+      'font-family': 'verdana',
+      'font-style': 'italic',
+    })
+    .text(subtitle);
+
+  legend_txt_items
     .insert('text')
     .attrs({
       id: 'legend_bottom_note',
-      x: xpos + space_elem,
+      x: max_dist,
       y: last_pos + 2 * space_elem
     })
     .styles({

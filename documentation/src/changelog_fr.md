@@ -8,6 +8,8 @@
 
 - Correction de l'ordre des coordonnées lors de l'export vers certains SRC / formats de fichier.
 
+- Améliore le positionnement des titres de légendes des symboles proportionnels.
+
 #### 0.11.1 (2022-11-08)
 
 - Corrige l'absence de traduction pour les noms des projections ajoutées dans la v0.11.0.
