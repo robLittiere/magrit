@@ -8,6 +8,9 @@ Unreleased
 
 - Fix coordinate order when exporting to some CRS / file formats.
 
+- Improves the positioning of the legend titles for proportional symbols.
+
+
 0.11.1 (2022-11-08)
 ------------------
 
