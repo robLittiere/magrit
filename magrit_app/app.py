@@ -23,6 +23,7 @@ Options:
 
 import os
 import re
+import shutil
 import sys
 import traceback
 
@@ -1417,9 +1418,7 @@ async def convert_geopackage(request):
     user_id = get_user_id(session_redis, request.app['app_users'])
     st = time.time()
 
-    print(posted_data)
     field = posted_data.get("file")
-    print(field)
 
     if field is not None:
         name = field.filename
@@ -1433,10 +1432,9 @@ async def convert_geopackage(request):
         savefile(filepath, data)
 
         list_layers = fiona.listlayers(filepath)
-        print(list_layers)
 
         # Store the path so that it can be retrieved later to actually read the gpkg
-        f_name = '-'.join([user_id, str(hashed_input)])
+        f_name = '_'.join([user_id, str(hashed_input)])
         asyncio.ensure_future(
             request.app['redis_conn'].set(f_name, filepath, pexpire=300000))
 
@@ -1447,17 +1445,49 @@ async def convert_geopackage(request):
         }))
     else:
         hash_input = posted_data.get('hash')
-        wanted_layers = posted_data.get('layers')
-        f_name = '-'.join([user_id, hash_input])
+        wanted_layers = json.loads(posted_data.get('layers'))
+        f_name = '_'.join([user_id, hash_input])
         path = await request.app['redis_conn'].get(f_name)
+        results = []
+
+        # Read each layer and store the topojson result in a list of topojson files
+        # (each one is hashed and stored in redis as for the other imported layers)
         for layer in wanted_layers:
-            gdf = gpd.read_file(path, layer=layer)
+            gdf = gpd.read_file(path.decode(), layer=layer)
             input_projection = gdf.crs.to_proj4()
             if input_projection is not None:
                 gdf.to_crs('EPSG:4326', inplace=True)
+            input_projection = input_projection \
+                if not input_projection == '+proj=longlat +datum=WGS84 +no_defs +type=crs' \
+                else None
             res = gdf.to_json()
             result = await geojson_to_topojson(res.encode(), layer_name=layer)
-        return web.Response(text='')
+
+            hash_layer = mmh3_hash(result)
+            f_name2 = '_'.join([user_id, str(hash_layer)])
+
+            # Store layer in redis
+            asyncio.ensure_future(
+                request.app['redis_conn'].set(
+                    f_name2, result, pexpire=14400000))
+
+            results.append({
+                "key": hash_layer,
+                "file": json.loads(result),
+                "proj": input_projection,
+            })
+
+        request.app['logger'].info(
+            'timing : geopackage ({} layers) -> geojson -> topojson : {:.4f}s'
+            .format(len(wanted_layers), time.time() - st))
+
+        # Remove the path to the temporary geopackage file from the redis database
+        asyncio.ensure_future(
+            request.app["redis_conn"].delete(f_name))
+        # Actually delete the folder
+        shutil.rmtree(os.path.dirname(path))
+
+        return web.Response(text=json.dumps(results))
 
 async def fetch_list_extrabasemaps():
     url = 'https://api.github.com/repos/riatelab/basemaps/contents/'

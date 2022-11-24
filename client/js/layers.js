@@ -221,7 +221,7 @@ function add_sample_geojson(name, options) {
 * Add a TopoJSON layer to the 'svg' element.
 *
 * @param {String} text - the text content to be parsed as a JS object.
-* @param {Object} url - options regarding the layer to be added (such as wether
+* @param {Object} options - options regarding the layer to be added (such as wether
 *   skipping the 'success' alert or not, which name to use for the layer, etc.).
 * @return {String} The actual name of the layer once added, or `undefined` if
 *     something went wrong.

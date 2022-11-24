@@ -181,13 +181,54 @@ export function setUpInterface(reload_project) {
   alertify.set('notifier', 'position', 'bottom-left');
 }
 
+
+export function askTypeMultipleLayers(list_layers) {
+  const user_selected_layers = [];
+  let target_layer;
+  const layers = list_layers.map((d) => `
+      <tr>
+        <td value="${d}">${d}</td>
+        <td><input class="layer-to-add" type="checkbox"/></td>
+        <td><input type="radio" name="target-layer"/></td>
+      </tr>`).join('');
+  return swal({
+    title: '',
+    html: `<h3>Import de plusieurs couches</h3>
+            <table class="gpkg-list-layers">${layers}</table>`,
+    type: 'info',
+    showCancelButton: true,
+    showCloseButton: false,
+    allowEscapeKey: true,
+    allowOutsideClick: false,
+    confirmButtonColor: '#DD6B55',
+    confirmButtonText: _tr('app_page.common.confirm'),
+    preConfirm: () => new Promise((resolve, reject) => {
+      document.querySelectorAll('.gpkg-list-layers tr input.layer-to-add')
+        .forEach((d) => {
+          if (d.checked) {
+            user_selected_layers.push(d.parentElement.parentElement.firstElementChild.getAttribute('value'));
+          }
+        });
+      const checked = document.querySelector('.gpkg-list-layers tr input[name="target-layer"]:checked');
+      if (checked) {
+        target_layer = checked.parentElement.parentElement.firstElementChild.getAttribute('value');
+      }
+      if (user_selected_layers.length > 0) {
+        resolve({ user_selected_layers, target_layer });
+      } else {
+        reject();
+      }
+    }),
+  });
+};
+
 /**
 *
-* @param
+* @return {Promise}
 *
 *
 */
-export function askTypeLayer () {
+export function askTypeLayer() {
   const opts = { target: _tr('app_page.common.target_l'), layout: _tr('app_page.common.layout_l') };
   const target_layer_added = Object.keys(data_manager.user_data).length > 0;
   let first_reject = false;
@@ -328,46 +369,33 @@ export function handle_upload_files(files) {
 }
 
 function handleGpkg(files) {
-  const data = new FormData();
-  data.append('file', files[0]);
+  const formData1 = new FormData();
+  formData1.append('file', files[0]);
 
-  const user_selected_layers = [];
   let hashFile;
-  xhrequest('POST', '/convert_geopackage', data, true)
+  xhrequest('POST', '/convert_geopackage', formData1, true)
     .then((rawData) => {
       const data = JSON.parse(rawData);
       hashFile = data.hash;
-      const list_layers = data.list_layers.map((d) => `<li value="${d}">${d}<input type="checkbox"/></li>`).join('');
-      swal({
-        title: '',
-        html: `<h3>GeoPackage import</h3>
-            <ul class="gpkg-list-layers">${list_layers}</ul>`,
-        type: 'info',
-        showCancelButton: true,
-        showCloseButton: false,
-        allowEscapeKey: true,
-        allowOutsideClick: false,
-        confirmButtonColor: '#DD6B55',
-        confirmButtonText: _tr('app_page.common.confirm'),
-        preConfirm: () => new Promise((resolve, reject) => {
-          document.querySelectorAll('.gpkg-list-layers > li > input')
-            .forEach((d) => {
-              if (d.checked) {
-                user_selected_layers.push(d.parentNode.getAttribute('value'));
-              }
+       askTypeMultipleLayers(data.list_layers)
+        .then(({ user_selected_layers, target_layer }) => {
+          console.log(hashFile, user_selected_layers, target_layer);
+          const formData2 = new FormData();
+          formData2.append('hash', hashFile);
+          formData2.append('layers', JSON.stringify(user_selected_layers));
+          xhrequest('POST', '/convert_geopackage', formData2, true)
+            .then((rawData2) => {
+              const data2 = JSON.parse(rawData2);
+              data2.forEach(({ key, file, proj }) => {
+                const layer_name = Object.keys(file.objects)[0];
+                const target_layer_on_add = layer_name === target_layer;
+                add_layer_topojson(
+                  JSON.stringify({ key, file, proj }),
+                  { target_layer_on_add },
+                );
+              });
             });
-          resolve();
-        }),
-      }).then(() => {
-        console.log(hashFile, user_selected_layers);
-        const dataToSend = new FormData();
-        dataToSend.append('hash', hashFile);
-        dataToSend.append('layers', user_selected_layers);
-        xhrequest('POST', '/convert_geopackage', dataToSend, true)
-          .then((rawData2) => {
-
           });
-      });
     }, () => {
       display_error_during_computation();
     });
@@ -686,7 +714,7 @@ function handle_TopoJSON_files(files) {
 
 /**
 * Function used to reload a TopoJSON layer from a project file.
-* The layer is send to the server (for eventual later usage) but
+* The layer is sent to the server (for eventual later usage) but
 * we are not waiting for its response to actually add the layer to the map.
 *
 * @param {String} text - The TopoJSON layer stringified in JSON.
