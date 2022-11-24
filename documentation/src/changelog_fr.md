@@ -2,13 +2,15 @@
 
 #### Pas de version publiée
 
-- Mise à jour des dépendances pour permettre d'utiliser Python 3.11 et mise à jour des recettes Docker pour utiliser Python 3.11.
+- Nouvelle fonctionnalité : Permet le chargement des couches vecteur contenues dans des fichiers GeoPackage.
 
 - Correction d'un attribut HTML manquant qui empêchait la retraduction d'une infobulle.
 
 - Correction de l'ordre des coordonnées lors de l'export vers certains SRC / formats de fichier.
 
 - Améliore le positionnement des titres de légendes des symboles proportionnels.
+
+- Mise à jour des dépendances pour permettre d'utiliser Python 3.11 et mise à jour des recettes Docker pour utiliser Python 3.11.
 
 #### 0.11.1 (2022-11-08)
 

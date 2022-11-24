@@ -4,7 +4,7 @@ Changes
 Unreleased
 ----------
 
-- Update Python dependencies to enable Python 3.11 support and switch to Python 3.11 in all docker images (Python 3.11 is supposed to bring interesting performance improvements thanks to the specialization brought by its adaptive interpreter)
+- New: Enable the import of vector layers contained in geopackages.
 
 - Fix missing HTML attribute that prevented re-translation of some tooltip.
 
@@ -12,6 +12,7 @@ Unreleased
 
 - Improves the positioning of the legend titles for proportional symbols.
 
+- Update Python dependencies to enable Python 3.11 support and switch to Python 3.11 in all docker images (Python 3.11 is supposed to bring interesting performance improvements thanks to the specialization brought by its adaptive interpreter)
 
 0.11.1 (2022-11-08)
 ------------------
