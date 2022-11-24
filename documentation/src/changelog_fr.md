@@ -10,6 +10,8 @@
 
 - Améliore le positionnement des titres de légendes des symboles proportionnels.
 
+- Améliore le positionnement des différents éléments dans la boite d'édition des légendes.
+
 - Mise à jour des dépendances pour permettre d'utiliser Python 3.11 et mise à jour des recettes Docker pour utiliser Python 3.11.
 
 #### 0.11.1 (2022-11-08)

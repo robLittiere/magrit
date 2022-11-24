@@ -12,6 +12,8 @@ Unreleased
 
 - Improves the positioning of the legend titles for proportional symbols.
 
+- Improve the alignment of the items in the legend edition box.
+
 - Update Python dependencies to enable Python 3.11 support and switch to Python 3.11 in all docker images (Python 3.11 is supposed to bring interesting performance improvements thanks to the specialization brought by its adaptive interpreter)
 
 0.11.1 (2022-11-08)
