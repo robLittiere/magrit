@@ -42,7 +42,7 @@ EXPOSE 9999
 
 CMD redis-server \
     & gunicorn "magrit_app.app:create_app()" \
-    --bind 0.0.0.0:9999
+    --bind 0.0.0.0:9999 \
     --worker-class aiohttp.worker.GunicornUVLoopWebWorker \
     --workers 1 \
     --chdir /home/app/magrit/
