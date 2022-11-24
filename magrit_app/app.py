@@ -25,6 +25,8 @@ import os
 import re
 import sys
 import traceback
+
+import fiona
 import ujson as json
 import time
 import docopt
@@ -38,6 +40,7 @@ except ModuleNotFoundError:
     uvloop = None
 import pandas as pd
 import numpy as np
+import geopandas as gpd
 import xlrd
 import matplotlib
 
@@ -45,7 +48,7 @@ matplotlib.use('Agg')
 xlrd.xlsx.ensure_elementtree_imported(False, None)
 xlrd.xlsx.Element_has_iter = True
 
-from tempfile import TemporaryDirectory
+from tempfile import TemporaryDirectory, mkdtemp
 from base64 import b64encode, urlsafe_b64decode
 from contextlib import closing
 from zipfile import ZipFile
@@ -1407,6 +1410,54 @@ async def convert_tabular(request):
     return web.Response(text=json.dumps(
         {"file": result, "name": name, "message": message}))
 
+async def convert_geopackage(request):
+    posted_data, session_redis = \
+        await asyncio.gather(*[request.post(), get_session(request)])
+
+    user_id = get_user_id(session_redis, request.app['app_users'])
+    st = time.time()
+
+    print(posted_data)
+    field = posted_data.get("file")
+    print(field)
+
+    if field is not None:
+        name = field.filename
+        data = field.file.read()
+        datatype = field.content_type
+
+        hashed_input = mmh3_hash(data)
+        tmp_dir = mkdtemp()
+
+        filepath = path_join(tmp_dir, '{}_{}'.format(user_id, name))
+        savefile(filepath, data)
+
+        list_layers = fiona.listlayers(filepath)
+        print(list_layers)
+
+        # Store the path so that it can be retrieved later to actually read the gpkg
+        f_name = '-'.join([user_id, str(hashed_input)])
+        asyncio.ensure_future(
+            request.app['redis_conn'].set(f_name, filepath, pexpire=300000))
+
+        # Return the list of layers and the hash of the file to the interface
+        return web.Response(text=json.dumps({
+            'hash': hashed_input,
+            'list_layers': list_layers,
+        }))
+    else:
+        hash_input = posted_data.get('hash')
+        wanted_layers = posted_data.get('layers')
+        f_name = '-'.join([user_id, hash_input])
+        path = await request.app['redis_conn'].get(f_name)
+        for layer in wanted_layers:
+            gdf = gpd.read_file(path, layer=layer)
+            input_projection = gdf.crs.to_proj4()
+            if input_projection is not None:
+                gdf.to_crs('EPSG:4326', inplace=True)
+            res = gdf.to_json()
+            result = await geojson_to_topojson(res.encode(), layer_name=layer)
+        return web.Response(text='')
 
 async def fetch_list_extrabasemaps():
     url = 'https://api.github.com/repos/riatelab/basemaps/contents/'
@@ -1587,6 +1638,7 @@ async def init(loop, addr='0.0.0.0', port=None, watch_change=False, use_redis=Tr
     add_route('POST', '/convert_topojson', convert_topo)
     add_route('POST', '/convert_csv_geo', convert_csv_geo)
     add_route('POST', '/convert_extrabasemap', convert_extrabasemap)
+    add_route('POST', '/convert_geopackage', convert_geopackage)
     add_route('POST', '/convert_tabular', convert_tabular)
     add_route('POST', '/helpers/calc', calc_helper)
     app.router.add_static('/static/', path='static', name='static')

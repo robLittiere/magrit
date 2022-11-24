@@ -327,6 +327,52 @@ export function handle_upload_files(files) {
   }
 }
 
+function handleGpkg(files) {
+  const data = new FormData();
+  data.append('file', files[0]);
+
+  const user_selected_layers = [];
+  let hashFile;
+  xhrequest('POST', '/convert_geopackage', data, true)
+    .then((rawData) => {
+      const data = JSON.parse(rawData);
+      hashFile = data.hash;
+      const list_layers = data.list_layers.map((d) => `<li value="${d}">${d}<input type="checkbox"/></li>`).join('');
+      swal({
+        title: '',
+        html: `<h3>GeoPackage import</h3>
+            <ul class="gpkg-list-layers">${list_layers}</ul>`,
+        type: 'info',
+        showCancelButton: true,
+        showCloseButton: false,
+        allowEscapeKey: true,
+        allowOutsideClick: false,
+        confirmButtonColor: '#DD6B55',
+        confirmButtonText: _tr('app_page.common.confirm'),
+        preConfirm: () => new Promise((resolve, reject) => {
+          document.querySelectorAll('.gpkg-list-layers > li > input')
+            .forEach((d) => {
+              if (d.checked) {
+                user_selected_layers.push(d.parentNode.getAttribute('value'));
+              }
+            });
+          resolve();
+        }),
+      }).then(() => {
+        console.log(hashFile, user_selected_layers);
+        const dataToSend = new FormData();
+        dataToSend.append('hash', hashFile);
+        dataToSend.append('layers', user_selected_layers);
+        xhrequest('POST', '/convert_geopackage', dataToSend, true)
+          .then((rawData2) => {
+
+          });
+      });
+    }, () => {
+      display_error_during_computation();
+    });
+}
+
 function handleOneByOneShp(files) {
   function populate_shp_slot(slots, file) {
     if (file.name.toLowerCase().indexOf('.shp') > -1) {
@@ -499,6 +545,8 @@ export function prepare_drop_section() {
                 _elem.removeEventListener('drop', _drop_func);
               });
             handleOneByOneShp(files);
+          } else if (files[0]._ext === 'gpkg') {
+            handleGpkg(files);
           } else {
             handle_upload_files(files, null);
           }
