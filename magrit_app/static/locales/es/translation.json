@@ -493,7 +493,7 @@
             "subtitle": "Personalizar la leyenda",
             "lgd_title": "Título",
             "var_name": "Subtítulo<br>",
-            "float_rounding": "Redondear los número decimales<br> ",
+            "float_rounding": "Redondear los número decimales",
             "gap_boxes": "Sin espacio entre los cuadros",
             "nested_symbols": "Símbolos sobrepuestos",
             "join_line": "Mostrando una línea de unión",

@@ -500,7 +500,7 @@
             "subtitle": "Legend customization",
             "lgd_title": "Title",
             "var_name": "Subtitle<br>",
-            "float_rounding": "Floating number rounding precision<br> ",
+            "float_rounding": "Floating number rounding precision",
             "gap_boxes": "No gap between color boxes",
             "nested_symbols": "Nested symbols",
             "join_line": "Showing a join line",

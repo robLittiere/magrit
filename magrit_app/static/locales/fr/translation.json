@@ -499,7 +499,7 @@
             "subtitle": "Personnalisation de la légende",
             "lgd_title": "Titre",
             "var_name": "Sous-titre<br>",
-            "float_rounding": "Arrondi des nombres flottants<br> ",
+            "float_rounding": "Arrondi des nombres flottants",
             "gap_boxes": "Pas d'espaces entre les boites",
             "nested_symbols": "Symboles encastrés",
             "join_line": "Affichage d'une ligne de jointure",
