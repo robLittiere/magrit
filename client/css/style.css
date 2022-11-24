@@ -1016,6 +1016,11 @@ img.layout_ft_ico:hover {
   min-height: 310px;
 }
 
+.swal2_xlarge {
+  min-width: 600px;
+  min-height: 310px;
+}
+
 /*#txtwzr_table > tbody > tr > td, #txtwzr_table > thead > tr > th {
     border-top: 1px solid #999;
     padding: 8px;
@@ -1277,4 +1282,16 @@ img#remove_target:hover, img#remove_dataset:hover {
 .ot-visible,
 .ot-showing {
   z-index: 1070 !important;
+}
+
+
+table.gpkg-list-layers {
+    width: 100%;
+}
+
+table.gpkg-list-layers th,
+table.gpkg-list-layers td {
+  word-wrap: break-word;
+  padding: 5px;
+  max-width: 325px;
 }

@@ -111,7 +111,11 @@
             "shp_one_by_one_msg2": "(nom du fichier : {{name}})",
             "shp_one_by_one_msg3": "Faire glisser les fichiers manquants dans cette zone",
             "shp_one_by_one_missing_files": "Fichiers manquants",
-            "undefined_category": "Catégorie non définie"
+            "undefined_category": "Catégorie non définie",
+            "gpkg_import": "Import d'un fichier GeoPackage",
+            "gpkg_import_msg": "Veuillez sélectionner les couches à importer",
+            "gpkg_add": "Ajouter",
+            "gpkg_target": "En tant que couche cible"
         },
         "table": {
             "search": "Recherche...",

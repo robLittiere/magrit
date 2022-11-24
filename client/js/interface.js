@@ -114,7 +114,7 @@ export function setUpInterface(reload_project) {
     .append('p')
     .attr('class', 'cont_map_btn')
     .insert('button')
-    .attrs(elem => ({
+    .attrs((elem) => ({
       class: elem.class,
       'data-i18n': elem.i18n,
       'data-ot-delay': 0,
@@ -122,7 +122,7 @@ export function setUpInterface(reload_project) {
       'data-ot-target': true,
       id: elem.id,
     }))
-    .html(elem => elem.html);
+    .html((elem) => elem.html);
 
   // Trigger actions when buttons are clicked and set-up the initial view :
   d3.selectAll('.zoom_button').on('click', zoomClick);
@@ -188,14 +188,22 @@ export function askTypeMultipleLayers(list_layers) {
   const layers = list_layers.map((d) => `
       <tr>
         <td value="${d}">${d}</td>
-        <td><input class="layer-to-add" type="checkbox"/></td>
-        <td><input type="radio" name="target-layer"/></td>
+        <td><input class="layer-to-add" type="checkbox" /></td>
+        <td><input type="radio" name="target-layer" disabled /></td>
       </tr>`).join('');
-  return swal({
+  const promise = swal({
     title: '',
-    html: `<h3>Import de plusieurs couches</h3>
-            <table class="gpkg-list-layers">${layers}</table>`,
+    html: `<p>${_tr('app_page.common.gpkg_import_msg')}</p>
+            <table class="gpkg-list-layers" style="margin: auto;">
+            <tr>
+              <th></th>
+              <th>${_tr('app_page.common.gpkg_add')}</th>
+              <th>${_tr('app_page.common.gpkg_target')}</th>
+            </tr>
+              ${layers}
+            </table>`,
     type: 'info',
+    customClass: 'swal2_xlarge',
     showCancelButton: true,
     showCloseButton: false,
     allowEscapeKey: true,
@@ -220,6 +228,25 @@ export function askTypeMultipleLayers(list_layers) {
       }
     }),
   });
+
+  const gpkgCheckboxOnClick = function gpkgCheckboxOnClick () {
+    // Change the state of the radio button depending on if the
+    // checkbox is checked or not
+    if (this.checked) {
+      this.parentElement.nextElementSibling.firstElementChild.disabled = false;
+    } else {
+      this.parentElement.nextElementSibling.firstElementChild.disabled = true;
+      this.parentElement.nextElementSibling.firstElementChild.checked = false;
+    }
+  };
+
+  document.querySelectorAll('input.layer-to-add')
+    .forEach((el) => {
+      // eslint-disable-next-line no-param-reassign
+      el.onclick = gpkgCheckboxOnClick;
+    });
+
+  return promise;
 };
 
 /**
