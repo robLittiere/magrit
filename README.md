@@ -1,13 +1,13 @@
-[![png](magrit_app/static/img/magrit_banner.png)](http://magrit.cnrs.fr)  
-[![riate](https://github.com/riatelab/magrit/raw/master/magrit_app/static/img/riate_blue_red.png)](http://riate.cnrs.fr)   
+[![png](magrit_app/static/img/magrit_banner.png)](https://magrit.cnrs.fr)  
+[![riate](https://github.com/riatelab/magrit/raw/master/magrit_app/static/img/riate_blue_red.png)](https://riate.cnrs.fr)   
 [![Release name](https://img.shields.io/github/release/riatelab/magrit.svg)](https://github.com/riatelab/magrit/releases)
 
 <!--
 [![Docker Build Status](https://img.shields.io/docker/cloud/build/magrit/magrit)](https://hub.docker.com/r/magrit/magrit/)   
 -->
 
-[en] [Magrit](http://magrit.cnrs.fr) is an online mapping application developed by [UAR RIATE](http://www.riate.cnrs.fr).  
-[fr]  [Magrit](http://magrit.cnrs.fr) est une application de cartographie thématique développée par l'[UAR RIATE](http://www.riate.cnrs.fr).
+[en] [Magrit](https://magrit.cnrs.fr) is an online mapping application developed by [UAR RIATE](https://riate.cnrs.fr/).  
+[fr]  [Magrit](https://magrit.cnrs.fr) est une application de cartographie thématique développée par l'[UAR RIATE](https://riate.cnrs.fr/).
 
 ## Basics
 - Magrit is an online application for thematic mapping (*cartography*).
@@ -23,15 +23,17 @@
 
 ## Usage
 Most users should go on :
-- the [application page](http://magrit.cnrs.fr)
-- the [user documentation](http://magrit.cnrs.fr/docs/)
-- the [blog](http://magrit.hypotheses.org)
+- the [application page](https://magrit.cnrs.fr)
+- the [user documentation](https://magrit.cnrs.fr/docs/)
+- the [blog](https://magrit.hypotheses.org)
 
 
 ## Examples
 <p><img src="https://github.com/mthh/example-magrit-projects/raw/master/nuts3_cagr2.png" height="210"/><img src="https://github.com/mthh/example-magrit-projects/raw/master/cinema_pot2.png" height="210"/><img src="https://magrit.hypotheses.org/files/2017/02/worldpop.png" height="210"/></p>
 
-More maps are available in the [gallery](http://magrit.hypotheses.org/galerie).
+<p><img src="https://magrit.hypotheses.org/files/2022/11/emission-co2-900x854-1.png" height="210" /><img src="https://magrit.hypotheses.org/files/2022/11/wolrd-pop-point-bertin.png" height="210" /><img src="https://magrit.hypotheses.org/files/2018/09/structure_peuplement.png" height="210" /></p>
+
+More maps are available in the [gallery](https://magrit.hypotheses.org/galerie).
 
 
 ## Simple installation / Installation for development
@@ -52,4 +54,4 @@ Contributions are welcome! There are various ways to contribute to the project w
 - Report bugs or send us feedback.
 - Add new translations or fix existing ones.
 - Contribute code (you're in the right place! Clone the repo, fix what you want to be fixed and submit a pull request).
-- Contribute to the [gallery](http://magrit.hypotheses.org/galerie) by submitting your best maps.
+- Contribute to the [gallery](https://magrit.hypotheses.org/galerie) by submitting your best maps.
