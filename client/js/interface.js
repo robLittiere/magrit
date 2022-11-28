@@ -334,7 +334,6 @@ export function handle_upload_files(files) {
       rd.onloadend = () => {
         const [valid, tmp] = isValidJSON(rd.result);
         if (!valid) {
-          console.log(tmp);
           return swal({
             title: `${_tr('app_page.common.error')}!`,
             text: _tr('app_page.common.alert_upload_invalid'),
@@ -404,25 +403,34 @@ function handleGpkg(files) {
     .then((rawData) => {
       const data = JSON.parse(rawData);
       hashFile = data.hash;
-       askTypeMultipleLayers(data.list_layers)
+      askTypeMultipleLayers(data.list_layers)
         .then(({ user_selected_layers, target_layer }) => {
-          console.log(hashFile, user_selected_layers, target_layer);
           const formData2 = new FormData();
           formData2.append('hash', hashFile);
           formData2.append('layers', JSON.stringify(user_selected_layers));
           xhrequest('POST', '/convert_geopackage', formData2, true)
             .then((rawData2) => {
               const data2 = JSON.parse(rawData2);
+              const has_target_layer = !!target_layer;
+              // Sort layers so that the target layer is the last one to be added
+              data2.sort((a, b) => (Object.keys(a.file.objects)[0] === target_layer ? 1 : -1));
+              // Add each layer to the map, propose to the user to use the projection of the target layer
+              // or otherwise use the projection of the last layer added
               data2.forEach(({ key, file, proj }) => {
                 const layer_name = Object.keys(file.objects)[0];
                 const target_layer_on_add = layer_name === target_layer;
                 add_layer_topojson(
-                  JSON.stringify({ key, file, proj }),
+                  JSON.stringify({
+                    key,
+                    file,
+                    // eslint-disable-next-line max-len
+                    proj: (has_target_layer && target_layer_on_add) || !has_target_layer ? proj : undefined,
+                  }),
                   { target_layer_on_add },
                 );
               });
             });
-          });
+        });
     }, () => {
       display_error_during_computation();
     });
@@ -449,7 +457,7 @@ function handleOneByOneShp(files) {
       return false;
     }
   }
-  let name = files[0].name.substring(0, files[0].name.lastIndexOf('.'));
+  const name = files[0].name.substring(0, files[0].name.lastIndexOf('.'));
   const shp_slots = new Map();
 
   swal({

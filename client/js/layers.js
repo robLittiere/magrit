@@ -417,9 +417,9 @@ export function add_layer_topojson(text, options = {}) {
 
   // An alert is triggered when the layer is successfully added, except if
   // 'skip_alert' is false.
-  // That "success" alert guide the user through other message; one for typing it's
-  // data fields, on other (optionnal) for making the jointure between it's layer
-  // and it's tabular dataset and another one (optional too)
+  // That "success" alert guide the user through other message; one for typing its
+  // data fields, on other (optionnal) for making the jointure between its layer
+  // and its tabular dataset and another one (optional too)
   // to allow him to use the projection originally provided with the layer.
   if (!skip_alert) {
     if (fields_type) {
