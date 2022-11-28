@@ -1454,12 +1454,21 @@ async def convert_geopackage(request):
         # (each one is hashed and stored in redis as for the other imported layers)
         for layer in wanted_layers:
             gdf = gpd.read_file(path.decode(), layer=layer)
+            # Sanitize column names
+            regex_field_name = re.compile("[^a-zA-Z0-9_-ëêàáâãæêéèñòóô]+")
+            d = {}
+            for col_name in gdf.columns:
+                new_col_name = regex_field_name.sub('_', col_name)
+                d[col_name] = new_col_name
+            gdf.rename(columns=d, inplace=True)
+            # Read input projection to use it later in the UI
             input_projection = gdf.crs.to_proj4()
             if input_projection is not None:
                 gdf.to_crs('EPSG:4326', inplace=True)
             input_projection = input_projection \
                 if not input_projection == '+proj=longlat +datum=WGS84 +no_defs +type=crs' \
                 else None
+            # Convert to geojson then to topojson
             res = gdf.to_json()
             result = await geojson_to_topojson(res.encode(), layer_name=layer)
 
