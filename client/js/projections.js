@@ -115,8 +115,7 @@ function handle_proj_center_button(param) {
   // Fetch the current rotation params :
   const current_rotation = proj.rotate();
   // Reuse it for the missing value passed in arguments and do the rotation:
-  // proj.rotate(param.map((val, i) => val !== null ? val : current_rotation[i]));
-  proj.rotate(param.map((val, i) => val || current_rotation[i]));
+  proj.rotate(param.map((val, i) => val !== null ? val : current_rotation[i]));
   // Redraw the path and move the symbols :
   map.selectAll('.layer').selectAll('path').attr('d', path);
   reproj_symbol_layer();
@@ -124,7 +123,7 @@ function handle_proj_center_button(param) {
 
 function handle_parallels_change(parallels) {
   const current_values = proj.parallels();
-  proj.parallels(parallels.map((val, i) => val || current_values[i]));
+  proj.parallels(parallels.map((val, i) => val !== null ? val : current_values[i]));
   map.selectAll('.layer').selectAll('path').attr('d', path);
   reproj_symbol_layer();
 }
@@ -552,9 +551,11 @@ const createBoxCustomProjection = function createBoxCustomProjection() {
     })
     .property('value', prev_rotate ? -prev_rotate[0] : 0)
     .on('input', function () {
-      if (this.value > 180) this.value = 180;
-      else if (this.value < -180) this.value = -180;
-      handle_proj_center_button([-this.value, null, null]);
+      let val = +this.value;
+      if (val > 180) val = 180;
+      else if (val < -180) val = -180;
+      this.value = val;
+      handle_proj_center_button([-val, null, null]);
     });
 
   const phi_section = rotate_section.append('p')
@@ -571,8 +572,10 @@ const createBoxCustomProjection = function createBoxCustomProjection() {
     })
     .property('value', prev_rotate ? -prev_rotate[1] : 0)
     .on('input', function () {
-      if (this.value > 180) { this.value = 180; } else if (this.value < -180) { this.value = -180; }
-      handle_proj_center_button([null, -this.value, null]);
+      let val = +this.value;
+      if (val > 180) { val = 180; } else if (val < -180) { val = -180; }
+      this.value = val;
+      handle_proj_center_button([null, -val, null]);
     });
 
   const gamma_section = rotate_section.append('p')
@@ -589,8 +592,10 @@ const createBoxCustomProjection = function createBoxCustomProjection() {
     })
     .property('value', prev_rotate ? -prev_rotate[2] : 0)
     .on('input', function () {
-      if (this.value > 90) { this.value = 90; } else if (this.value < -90) { this.value = -90; }
-      handle_proj_center_button([null, null, -this.value]);
+      let val = +this.value;
+      if (val > 90) { val = 90; } else if (val < -90) { val = -90; }
+      this.value = val;
+      handle_proj_center_button([null, null, -val]);
     });
 
   const parallels_section = options_proj_content.append('div')
@@ -611,9 +616,11 @@ const createBoxCustomProjection = function createBoxCustomProjection() {
     })
     .property('value', prev_parallels ? prev_parallels[0] : 0)
     .on('input', function () {
-      if (this.value > 90) this.value = 90;
-      else if (this.value < -90) this.value = -90;
-      handle_parallels_change([this.value, null]);
+      let val = +this.value;
+      if (val > 90) val = 90;
+      else if (val < -90) val = -90;
+      this.value = val;
+      handle_parallels_change([val, null]);
     });
   const sp2_input = inputs.append('input')
     .styles({ width: '60px', display: 'inline', 'margin-left': '2px' })
@@ -622,9 +629,11 @@ const createBoxCustomProjection = function createBoxCustomProjection() {
     })
     .property('value', prev_parallels ? prev_parallels[1] : 0)
     .on('input', function () {
-      if (this.value > 90) this.value = 90;
-      else if (this.value < -90) this.value = -90;
-      handle_parallels_change([null, this.value]);
+      let val = +this.value;
+      if (val > 90) val = 90;
+      else if (val < -90) val = -90;
+      this.value = val;
+      handle_parallels_change([null, val]);
     });
 
   const parallel_section = options_proj_content.append('div')
@@ -642,9 +651,11 @@ const createBoxCustomProjection = function createBoxCustomProjection() {
     })
     .property('value', prev_parallel || 0)
     .on('input', function () {
-      if (this.value > 90) this.value = 90;
-      else if (this.value < -90) this.value = -90;
-      handle_parallel_change(this.value);
+      let val = +this.value;
+      if (val > 90) val = 90;
+      else if (val < -90) val = -90;
+      this.value = val;
+      handle_parallel_change(val);
     });
 
   if (prev_projection === 'def_proj4') {
