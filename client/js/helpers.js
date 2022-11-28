@@ -1246,3 +1246,13 @@ function squareForceCollide() {
 
   return force;
 }
+
+
+export function parseTransformAttribute(t) {
+  const d = {};
+  for (const i in t = t.match(/(\w+\((-?\d+\.?\d*e?-?\d*,?)+\))+/g)) {
+    const c = t[i].match(/[\w.-]+/g);
+    d[c.shift()] = c;
+  }
+  return d;
+}
