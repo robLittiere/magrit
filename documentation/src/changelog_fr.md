@@ -1,6 +1,6 @@
 # Historique des versions et des changements effectués
 
-#### Pas de version publiée
+#### 0.12.0 (2022-11-30)
 
 - Nouvelle fonctionnalité : Permet le chargement des couches vecteur contenues dans des fichiers GeoPackage.
 
