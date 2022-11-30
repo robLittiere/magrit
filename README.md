@@ -31,7 +31,7 @@ Most users should go on :
 ## Examples
 <p style="text-align: center;"><img src="https://github.com/mthh/example-magrit-projects/raw/master/nuts3_cagr2.png" height="210"/><img src="https://github.com/mthh/example-magrit-projects/raw/master/cinema_pot2.png" height="210"/><img src="https://magrit.hypotheses.org/files/2017/02/worldpop.png" height="210"/></p>
 
-<p style="text-align: center;"><img src="https://magrit.hypotheses.org/files/2022/11/emission-co2-900x854-1.png" height="202" /><img src="https://magrit.hypotheses.org/files/2022/11/wolrd-pop-point-bertin.png" height="202" /><img src="https://magrit.hypotheses.org/files/2022/11/structure-peuplement.png" height="202" style="background: white" /></p>
+<p style="text-align: center;"><img src="https://magrit.hypotheses.org/files/2022/11/emission-co2-900x854-1.png" height="200" /><img src="https://magrit.hypotheses.org/files/2022/11/wolrd-pop-point-bertin.png" height="200" /><img src="https://magrit.hypotheses.org/files/2022/11/typo_urbain_rural_ocde_nuts3.png" height="200" style="background: white" /></p>
 
 More maps are available in the [gallery](https://magrit.hypotheses.org/galerie).
 
