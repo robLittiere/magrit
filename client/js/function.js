@@ -217,8 +217,8 @@ function display_warning_empty_geom(features) {
 
 /**
 * Return an approximate value (based on the bbox of the targeted layer)
-* to fill the "span" field in stewart functionnality
-* as well as the "resolution" field in grid functionnality.
+* to fill the "span" field in stewart functionality
+* as well as the "resolution" field in grid functionality.
 *
 * @param {String} func_name - the name of the representation for which this function
 *                             is called (between 'grid' and 'stewart').
@@ -251,7 +251,7 @@ function test_maxmin_resolution(cell_value) {
     [Mabs(bbox[2]) - Mabs(bbox[0]), bbox[1]], [Mabs(bbox[2]) - Mabs(bbox[0]), bbox[3]]);
   // const area = width_km * height_km;
   const bigger_side = Mmax(height_km, width_km);
-  if ((width_km * height_km) / (cell_value * cell_value) > 25000) {
+  if ((width_km * height_km) / (cell_value * cell_value) > 42000) {
     return 'higher';
   } else if (cell_value > bigger_side / 1.66) {
     return 'lower';
