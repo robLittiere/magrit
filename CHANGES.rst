@@ -1,6 +1,11 @@
 Changes
 =======
 
+Unreleased
+----------
+
+- Fix an apparently old bug about reloading of old project files (project file generated around 2017 that did not yet contain version information, before 0.3.0, so probably only very few people / project files were affected).
+
 0.12.0 (2022-11-30)
 ------------------
 

@@ -1,5 +1,9 @@
 # Historique des versions et des changements effectués
 
+#### Pas de version publiée
+
+- Corrige un ancien bug sur le chargement des ficher-projets générés avec les premières version de Magrit vers 2017 (avant la version 0.3.0, ne contenant pas d'informations relatives à la version utilisée pour générer le fichier-projet en question).
+
 #### 0.12.0 (2022-11-30)
 
 - Nouvelle fonctionnalité : Permet le chargement des couches vecteur contenues dans des fichiers GeoPackage.

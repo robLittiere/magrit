@@ -553,14 +553,21 @@ function display_error_loading_project(error) {
 
 const getAppVersion = (info) => {
   if (!info || !info.version) {
-    return { app_version: undefined, p_version: undefined };
+    return {
+      app_version: '0.0.0',
+      p_version: {
+        major: 0,
+        minor: 0,
+        patch: 0,
+      },
+    };
   }
   const app_version = info.version;
   const version_split = app_version.split('.');
   const p_version = {
-    major: version_split[0],
-    minor: version_split[1],
-    patch: version_split[2],
+    major: +version_split[0],
+    minor: +version_split[1],
+    patch: +version_split[2],
   };
   return { app_version, p_version };
 };
@@ -709,7 +716,7 @@ function rehandle_legend(layer_name, properties, version) {
     const lgd = svg_map.querySelector(`#${prop.type}.lgdf_${_app.layer_to_id.get(layer_name)}`);
 
     console.log(version, prop.type);
-    if (+version.major < 1 && +version.minor < 12 && prop.type === 'legend_root_symbol') {
+    if (version.major < 1 && version.minor < 12 && prop.type === 'legend_root_symbol') {
       // Starting from version 0.12.0, the legend is drawn slightly differently,
       // so we have to move legend elements saved before 0.12.0
       // so that they are drawn in the same place as before
@@ -1035,8 +1042,7 @@ export function apply_user_preferences(json_pref) {
 
     // Reload the sphere differently as some ("breaking") changes were made
     // when updating to 0.3.3
-    if (app_version === undefined
-        || (p_version.major === 0 && p_version.minor <= 3 && p_version.patch < 3)) {
+    if (p_version.major === 0 && p_version.minor <= 3 && p_version.patch < 3) {
       if (layer_name === 'Sphere') {
         layer_type = 'sphere';
       } else if (layer_name === 'Graticule') {
