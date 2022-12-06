@@ -366,6 +366,8 @@ export function handle_upload_files(files) {
     handle_dataset(files[0]);
   } else if (files[0]._ext.indexOf('xls') > -1 || files[0]._ext.indexOf('ods') > -1) {
     convert_dataset(files[0]);
+  } else if (files[0]._ext === 'gpkg') {
+    handleGpkg(files);
   } else {
     let shp_part;
     Array.prototype.forEach.call(files, (f) => {

@@ -15,7 +15,7 @@ function click_button_add_layer() {
   if (self.id === 'img_data_ext' || self.id === 'data_ext') {
     input.setAttribute('accept', '.xls,.xlsx,.csv,.tsv,.ods,.txt');
   } else if (self.id === 'input_geom' || self.id === 'img_in_geom') {
-    input.setAttribute('accept', '.gml,.kml,.geojson,.topojson,.shp,.dbf,.shx,.prj,.cpg,.json');
+    input.setAttribute('accept', '.gml,.kml,.geojson,.topojson,.shp,.dbf,.shx,.prj,.cpg,.json,.gpkg');
   }
   input.setAttribute('type', 'file');
   input.setAttribute('multiple', '');
