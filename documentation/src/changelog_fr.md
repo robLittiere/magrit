@@ -1,5 +1,9 @@
 # Historique des versions et des changements effectués
 
+#### Unreleased
+
+- Correction d'un bug qui empêchait de faire certaines représentations cartographiques après avoir promu une couche d'habillage en couche cible.
+
 #### 0.12.1 (2022-12-06)
 
 - Corrige un ancien bug sur le chargement des ficher-projets générés avec les premières version de Magrit vers 2017 (avant la version 0.3.0, ne contenant pas d'informations relatives à la version utilisée pour générer le fichier-projet en question).

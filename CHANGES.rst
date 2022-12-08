@@ -1,6 +1,12 @@
 Changes
 =======
 
+Unreleased
+----------
+
+- Fix bug that was preventing to do some new cartographic portrayals after promoting a layout layer to target layer.
+
+
 0.12.1 (2022-12-06)
 -------------------
 
