@@ -38,6 +38,7 @@
     "loc-i18next": "0.1.4",
     "polylabel": "^1.1.0",
     "proj4": "2.8.0",
+    "reproject-geojson": "^0.3.0",
     "sortablejs": "^1.10.2",
     "tippy.js": "2.5.2",
     "topojson": "^3.0.2"

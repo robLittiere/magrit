@@ -5,14 +5,23 @@ import { display_discretization } from './classification/discretization_panel';
 import { display_categorical_box } from './classification/categorical_panel';
 import { getOptNbClass, discretize_to_colors, discretize_to_size } from './classification/common';
 import {
-  cloneObj, coordsPointOnFeature,
-  copy_layer, create_li_layer_elem,
+  cloneObj,
+  coordsPointOnFeature,
+  copy_layer,
+  create_li_layer_elem,
   display_error_during_computation,
-  drag_elem_geo, drag_elem_geo2,
-  drag_waffle, getFieldsType,
+  drag_elem_geo,
+  drag_elem_geo2,
+  drag_waffle,
+  getFieldsType,
   get_other_layer_names,
   send_layer_server,
-  setSelected, xhrequest, isNumber, makeDorlingSimulation, makeDemersSimulation,
+  setSelected,
+  xhrequest,
+  isNumber,
+  makeDorlingSimulation,
+  makeDemersSimulation,
+  reprojectToRobinson,
 } from './helpers';
 import {
   getBinsCount, get_nb_decimals, has_negative,
@@ -27,6 +36,15 @@ import { zoom_without_redraw } from './map_ctrl';
 import { isInterrupted } from './projections';
 import { display_box_symbol_typo, make_style_box_indiv_symbol } from './symbols_picto';
 import { bindTooltips } from './tooltips';
+
+import GoCartWasm from './go-cart';
+
+let GoCart;
+GoCartWasm()
+  .then((GoCartModule) => {
+    console.log(GoCartWasm, GoCartModule);
+    GoCart = GoCartModule;
+  });
 
 const section2 = d3.select('#menu').select('#section2');
 
@@ -2051,9 +2069,15 @@ const fields_Anamorphose = {
       if (this.value === 'olson') {
         section2.selectAll('.opt_dougenik').style('display', 'none');
         section2.selectAll('.opt_olson').style('display', undefined);
+        section2.selectAll('.opt_gastner').style('display', 'none');
       } else if (this.value === 'dougenik') {
         section2.selectAll('.opt_olson').style('display', 'none');
         section2.selectAll('.opt_dougenik').style('display', undefined);
+        section2.selectAll('.opt_gastner').style('display', 'none');
+      } else if (this.value === 'gastner') {
+        section2.selectAll('.opt_olson').style('display', 'none');
+        section2.selectAll('.opt_dougenik').style('display', 'none');
+        section2.selectAll('.opt_gastner').style('display', undefined);
       }
     });
     section2.selectAll('.params').attr('disabled', null);
@@ -2183,6 +2207,27 @@ const fields_Anamorphose = {
             display_error_during_computation();
             console.log(error);
           });
+      } else if (algo === 'gastner') {
+        const layer_name = Object.getOwnPropertyNames(data_manager.user_data)[0];
+        const ref_layer_id = _app.layer_to_id.get(layer_name);
+        const ref_selection = document.getElementById(ref_layer_id).getElementsByTagName('path');
+
+        const features = [];
+        for (let i = 0, nb_features = ref_selection.length; i < nb_features; ++i) {
+          features.push(reprojectToRobinson(ref_selection[i].__data__));
+        }
+        const geojson = {
+          type: 'FeatureCollection',
+          features,
+        };
+        console.log(GoCart, geojson, 'foobar');
+        let result;
+        try {
+          result = GoCart.makeCartogram(geojson, field_name);
+        } catch (e) {
+          console.log(e);
+        }
+        console.log(result);
       }
     });
     setSelected(field_selec.node(), field_selec.node().options[0].value);
@@ -2201,11 +2246,12 @@ function fillMenu_Anamorphose() {
 
   const algo_choice = dialog_content.append('p')
     .attr('class', 'params_section2');
-  algo_choice.append('span')
+  algo_choice.append('p')
     .attrs({ class: 'i18n', 'data-i18n': '[html]app_page.func_options.cartogram.algo' })
     .html(_tr('app_page.func_options.cartogram.algo'));
   const algo_selec = algo_choice.insert('select')
-    .attrs({ id: 'Anamorph_algo', class: 'params i18n' });
+    .attrs({ id: 'Anamorph_algo', class: 'params i18n' })
+    .style('margin-top', '2.5px');
 
   const field_choice = dialog_content.append('p').attr('class', 'params_section2');
   field_choice.append('p')
@@ -2226,6 +2272,7 @@ function fillMenu_Anamorphose() {
   [
     ['Dougenik & al. (1985)', 'dougenik'],
     ['Olson (2005)', 'olson'],
+    ['Gastner, Seguy & More (2018)', 'gastner'],
   ].forEach((fun_name) => {
     algo_selec.append('option').text(fun_name[0]).attr('value', fun_name[1]);
   });

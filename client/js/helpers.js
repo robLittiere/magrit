@@ -8,7 +8,17 @@ import {
 } from './ui/buttons';
 import { area, booleanPointInPolygon, nearestPoint, pointOnFeature, } from '@turf/turf';
 import * as polylabel from 'polylabel';
+import reprojectGeoJSONPlugable from 'reproject-geojson/pluggable';
+import proj4 from 'proj4';
 
+const _reprojectToRobinson = proj4('EPSG:4326', '+proj=robin +lon_0=0 +x_0=0 +y_0=0 +ellps=WGS84 +datum=WGS84 +units=m +no_defs').forward;
+
+export const reprojectToRobinson = (geojson) => reprojectGeoJSONPlugable(
+  geojson,
+  {
+    reproject: _reprojectToRobinson,
+  },
+);
 
 export const isNumber = (value) => value != null && value !== '' && isFinite(value);
 
