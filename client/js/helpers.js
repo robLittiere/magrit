@@ -12,6 +12,7 @@ import reprojectGeoJSONPlugable from 'reproject-geojson/pluggable';
 import proj4 from 'proj4';
 
 const _reprojectToRobinson = proj4('EPSG:4326', '+proj=robin +lon_0=0 +x_0=0 +y_0=0 +ellps=WGS84 +datum=WGS84 +units=m +no_defs').forward;
+const _reprojectFromRobinson = proj4('+proj=robin +lon_0=0 +x_0=0 +y_0=0 +ellps=WGS84 +datum=WGS84 +units=m +no_defs', 'EPSG:4326').forward;
 
 export const reprojectToRobinson = (geojson) => reprojectGeoJSONPlugable(
   geojson,
@@ -19,6 +20,15 @@ export const reprojectToRobinson = (geojson) => reprojectGeoJSONPlugable(
     reproject: _reprojectToRobinson,
   },
 );
+
+export const reprojectFromRobinson = (geojson) => reprojectGeoJSONPlugable(
+  geojson,
+  {
+    reproject: _reprojectFromRobinson,
+  },
+);
+
+export const sleep = (milliseconds) => new Promise((resolve) => setTimeout(resolve, milliseconds));
 
 export const isNumber = (value) => value != null && value !== '' && isFinite(value);
 

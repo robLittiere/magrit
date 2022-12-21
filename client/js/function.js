@@ -21,7 +21,7 @@ import {
   isNumber,
   makeDorlingSimulation,
   makeDemersSimulation,
-  reprojectToRobinson,
+  reprojectToRobinson, reprojectFromRobinson, sleep,
 } from './helpers';
 import {
   getBinsCount, get_nb_decimals, has_negative,
@@ -38,11 +38,11 @@ import { display_box_symbol_typo, make_style_box_indiv_symbol } from './symbols_
 import { bindTooltips } from './tooltips';
 
 import GoCartWasm from './go-cart';
+import * as topojson from "topojson";
 
 let GoCart;
 GoCartWasm()
   .then((GoCartModule) => {
-    console.log(GoCartWasm, GoCartModule);
     GoCart = GoCartModule;
   });
 
@@ -2208,26 +2208,54 @@ const fields_Anamorphose = {
             console.log(error);
           });
       } else if (algo === 'gastner') {
-        const layer_name = Object.getOwnPropertyNames(data_manager.user_data)[0];
-        const ref_layer_id = _app.layer_to_id.get(layer_name);
-        const ref_selection = document.getElementById(ref_layer_id).getElementsByTagName('path');
+        _app.waitingOverlay.display();
+        sleep(5)
+          .then(() => {
+            const layer_name = Object.getOwnPropertyNames(data_manager.user_data)[0];
+            const ref_layer_id = _app.layer_to_id.get(layer_name);
+            const ref_selection = document.getElementById(ref_layer_id).getElementsByTagName('path');
 
-        const features = [];
-        for (let i = 0, nb_features = ref_selection.length; i < nb_features; ++i) {
-          features.push(reprojectToRobinson(ref_selection[i].__data__));
-        }
-        const geojson = {
-          type: 'FeatureCollection',
-          features,
-        };
-        console.log(GoCart, geojson, 'foobar');
-        let result;
-        try {
-          result = GoCart.makeCartogram(geojson, field_name);
-        } catch (e) {
-          console.log(e);
-        }
-        console.log(result);
+            const features = [];
+            for (let i = 0, nb_features = ref_selection.length; i < nb_features; ++i) {
+              features.push(reprojectToRobinson(ref_selection[i].__data__));
+            }
+            const geojson = {
+              type: 'FeatureCollection',
+              features,
+            };
+            let result;
+            try {
+              result = GoCart.makeCartogram(geojson, field_name);
+            } catch (e) {
+              console.log(e);
+            }
+            result.features = result.features.map((ft) => reprojectFromRobinson(ft));
+            const nname = check_layer_name(new_user_layer_name.length > 0 ? new_user_layer_name : ['Cartogram', field_name, layer].join('_'));
+            const options = {
+              choosed_name: nname,
+              func_name: 'cartogram',
+              result_layer_on_add: true,
+            };
+            const data = {
+              file: topojson.topology({
+                [nname]: result,
+              }),
+            };
+
+            const n_layer_name = add_layer_topojson(JSON.stringify(data), options);
+
+            data_manager.current_layers[n_layer_name].fill_color = { random: true };
+            data_manager.current_layers[n_layer_name].is_result = true;
+            data_manager.current_layers[n_layer_name]['stroke-width-const'] = 0.8;
+            data_manager.current_layers[n_layer_name].renderer = 'Carto_gastner';
+            data_manager.current_layers[n_layer_name].rendered_field = field_name;
+
+            if (!data_manager.current_layers[n_layer_name].key_name) {
+              send_layer_server(n_layer_name, '/layers/add');
+            }
+            _app.waitingOverlay.hide();
+            switch_accordion_section();
+          });
       }
     });
     setSelected(field_selec.node(), field_selec.node().options[0].value);
