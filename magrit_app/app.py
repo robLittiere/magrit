@@ -1702,7 +1702,7 @@ async def init(loop, addr='0.0.0.0', port=None, watch_change=False, use_redis=Tr
         webpack_logger = logging.getLogger("webpack")
         asyncio.ensure_future(execute(
             webpack_logger,
-            'cd ../client && ./node_modules/webpack/bin/webpack.js --watch'))
+            'cd ../client && NODE_OPTIONS=--openssl-legacy-provider ./node_modules/webpack/bin/webpack.js --watch'))
 
     # Set GML_FIELDTYPES environment variable to define strategy for parsing GML files.
     # We are parsing everything as string because we only read the GML file

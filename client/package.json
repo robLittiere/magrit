@@ -1,8 +1,8 @@
 {
   "scripts": {
-    "build": "./node_modules/webpack/bin/webpack.js",
-    "minify": "NODE_ENV=production ./node_modules/webpack/bin/webpack.js",
-    "watch": "./node_modules/webpack/bin/webpack.js --watch"
+    "build": "NODE_OPTIONS=--openssl-legacy-provider ./node_modules/webpack/bin/webpack.js",
+    "minify": "NODE_OPTIONS=--openssl-legacy-provider NODE_ENV=production ./node_modules/webpack/bin/webpack.js",
+    "watch": "NODE_OPTIONS=--openssl-legacy-provider ./node_modules/webpack/bin/webpack.js --watch"
   },
   "version": "0.12.1",
   "dependencies": {
