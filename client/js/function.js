@@ -2217,6 +2217,10 @@ const fields_Anamorphose = {
             console.log(err);
           });
       } else if (algo === 'dougenik') {
+        if (data_manager.user_data[layer].length > 10000) {
+          display_error_during_computation(_tr('app_page.common.error_too_many_feature_for_cartogram'));
+          return;
+        }
         const formToSend = new FormData();
         const var_to_send = {};
         const nb_iter = document.getElementById('Anamorph_dougenik_iterations').value;
