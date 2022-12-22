@@ -6,6 +6,8 @@ Unreleased
 
 - Fix bug that was preventing to do some new cartographic portrayals after promoting a layout layer to target layer.
 
+- New: Add option to use Gastner, Seguy and More (2018) method to compute cartograms (only available in browsers that support WASM).
+
 
 0.12.1 (2022-12-06)
 -------------------
