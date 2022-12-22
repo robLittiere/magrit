@@ -34,6 +34,7 @@
             "error_too_many_features_color": "Very many features. The high number of colors may affect the readability of the map.",
             "error_too_low_resolution": "Too low resolution selected.",
             "error_too_high_resolution": "Too high resolution selected.",
+            "error_too_many_feature_for_cartogram": "The number of entities is too high to use this method.",
             "error_values_order": "Values have to be ordered (from the minimum to the maximum)",
             "error_map_project": "Unable to load project file. Error : ",
             "error_invalid_map_project": "Invalid/corrupted project-file.",

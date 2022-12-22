@@ -34,6 +34,7 @@
             "error_too_many_features_color": "El número de entidades es demasiado grande para este tipo de mapa. Esto podría afectar la lectura del mapa.",
             "error_too_low_resolution": "La resolución requerida es demasiado baja.",
             "error_too_high_resolution": "La resolución requerida es demasiado grande.",
+            "error_too_many_feature_for_cartogram": "El número de entidades es demasiado elevado para utilizar este método.",
             "error_values_order": "Los valores deben estar ordenados (de mínimo a máximo)",
             "error_map_project": "No se puede cargar el proyecto. Error: ",
             "error_invalid_map_project": "Archivo o proyecto inválido.",

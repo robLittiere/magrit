@@ -34,6 +34,7 @@
             "error_too_many_features_color": "Le nombres d'entités est très élevé pour ce type de représentation. Celà risque de nuire à la lisibilité de la carte.",
             "error_too_low_resolution": "La résolution demandée est trop faible.",
             "error_too_high_resolution": "La résolution demandée est trop importante.",
+            "error_too_many_feature_for_cartogram": "Le nombre d'entités est trop élevé pour pouvoir utiliser cette méthode.",
             "error_values_order": "Les valeurs doivent être ordonnées (du minimum au maximum)",
             "error_map_project": "Impossible de charger le fichier projet. Erreur : ",
             "error_invalid_map_project": "Fichier-projet corrompu/invalide.",
