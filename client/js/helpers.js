@@ -403,10 +403,13 @@ export function copy_layer(ref_layer, new_name, type_result, fields_to_copy) {
 * to the server in order to use it as other result layers computed server side
 * @param {string} layerName - The name of the layer to send
 * @param {string} url - The url to use
+* @param {number} method - How to gather feature into a GeoJSON feature collection
 * @return {undefined}
 */
-export function send_layer_server(layerName, url) {
-  const JSON_layer = path_to_geojson(layerName);
+export function send_layer_server(layerName, url, method = 1) {
+  const JSON_layer = method === 1
+    ? path_to_geojson(layerName)
+    : path_to_geojson2(layerName);
   const formToSend = new FormData();
   formToSend.append('geojson', JSON_layer);
   formToSend.append('layer_name', layerName);

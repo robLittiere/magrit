@@ -67,8 +67,6 @@ const isWASMSupported = (() => {
   return supported;
 })();
 
-
-
 const section2 = d3.select('#menu').select('#section2');
 
 
@@ -225,8 +223,8 @@ export function check_layer_name(name) {
 * doesn't have any interesting field to use.
 */
 function display_error_num_field() {
-  // Actually we are not diplaying an error message anymore but closing
-  // closing the openend menu if their is no intersting field to be used for this
+  // Actually we are not displaying an error message anymore but closing
+  // closing the opened menu if their is no interesting field to be used for this
   // kind of representation. TODO : Reflect that in function names etc.
   clean_menu_function();
   // swal({
@@ -2295,6 +2293,7 @@ const fields_Anamorphose = {
               return;
             }
             result.features = result.features.map((ft) => reprojectFromRobinson(ft));
+
             const nname = check_layer_name(new_user_layer_name.length > 0 ? new_user_layer_name : ['Cartogram', field_name, layer].join('_'));
             const options = {
               choosed_name: nname,
@@ -2316,7 +2315,7 @@ const fields_Anamorphose = {
             data_manager.current_layers[n_layer_name].rendered_field = field_name;
 
             if (!data_manager.current_layers[n_layer_name].key_name) {
-              send_layer_server(n_layer_name, '/layers/add');
+              send_layer_server(n_layer_name, '/layers/add', 2);
             }
             _app.waitingOverlay.hide();
             switch_accordion_section();
