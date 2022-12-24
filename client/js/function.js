@@ -2284,6 +2284,7 @@ const fields_Anamorphose = {
 
               if (!response.success) {
                 console.log(response.data);
+                workerGoCart.terminate();
                 display_error_during_computation(_tr('app_page.common.error_message'));
                 return;
               }
@@ -2316,10 +2317,12 @@ const fields_Anamorphose = {
               }
               _app.waitingOverlay.hide();
               switch_accordion_section();
+              workerGoCart.terminate();
             };
             workerGoCart.postMessage({ geojson, field_name });
           } else {
             console.log(resp.data);
+            workerGoCart.terminate();
             display_error_during_computation(_tr('app_page.common.error_message'));
             return;
           }
