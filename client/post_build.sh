@@ -11,6 +11,7 @@ then
   cp css/style-fonts.css ../magrit_app/static/dist/style-fonts.css
   cp js/webworker* ../magrit_app/static/dist/
   cp js/*.wasm ../magrit_app/static/dist/
+  cp js/go-cart.js ../magrit_app/static/dist/
   cp dist/html/modules.html ../magrit_app/static/
   cp html/contact_form.html ../magrit_app/static/
   cp html/index.html ../magrit_app/static/

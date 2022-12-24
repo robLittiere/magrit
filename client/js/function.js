@@ -40,9 +40,6 @@ import { isInterrupted } from './projections';
 import { display_box_symbol_typo, make_style_box_indiv_symbol } from './symbols_picto';
 import { bindTooltips } from './tooltips';
 
-import GoCartWasm from './go-cart';
-
-let GoCart;
 const isWASMSupported = (() => {
   let supported = false;
   try {
@@ -57,15 +54,9 @@ const isWASMSupported = (() => {
   } catch (e) {
   }
 
-  if (supported) {
-    GoCartWasm()
-      .then((GoCartModule) => {
-        GoCart = GoCartModule;
-      });
-  }
-
   return supported;
 })();
+
 
 const section2 = d3.select('#menu').select('#section2');
 
@@ -2264,62 +2255,75 @@ const fields_Anamorphose = {
       } else if (algo === 'gastner') {
 
         _app.waitingOverlay.display();
-        sleep(5)
-          .then(() => {
-            const layer_name = Object.getOwnPropertyNames(data_manager.user_data)[0];
-            const ref_layer_id = _app.layer_to_id.get(layer_name);
-            const ref_selection = document.getElementById(ref_layer_id).getElementsByTagName('path');
 
-            if (ref_selection.length > 10000) {
+        const layer_name = Object.getOwnPropertyNames(data_manager.user_data)[0];
+        const ref_layer_id = _app.layer_to_id.get(layer_name);
+        const ref_selection = document.getElementById(ref_layer_id).getElementsByTagName('path');
+
+        if (ref_selection.length > 10000) {
+          _app.waitingOverlay.hide();
+          display_error_during_computation(_tr('app_page.common.error_too_many_feature_for_cartogram'));
+          return;
+        }
+
+        const features = [];
+        for (let i = 0, nb_features = ref_selection.length; i < nb_features; ++i) {
+          features.push(reprojectToRobinson(ref_selection[i].__data__));
+        }
+        const geojson = {
+          type: 'FeatureCollection',
+          features,
+        };
+
+        const workerGoCart = new Worker('static/dist/webworker_gocart.js');
+        workerGoCart.onmessage = function (_e) {
+          const resp = _e.data;
+          if (resp.success && resp.data === 'ready') {
+            workerGoCart.onmessage = function (e) {
+              const response = e.data;
+
+              if (!response.success) {
+                console.log(response.data);
+                display_error_during_computation(_tr('app_page.common.error_message'));
+                return;
+              }
+
+              const result = response.data;
+              result.features = result.features.map((ft) => reprojectFromRobinson(ft));
+
+              const nname = check_layer_name(new_user_layer_name.length > 0 ? new_user_layer_name : ['Cartogram', field_name, layer].join('_'));
+              const options = {
+                choosed_name: nname,
+                func_name: 'cartogram',
+                result_layer_on_add: true,
+              };
+              const data = {
+                file: topojson.topology({
+                  [nname]: result,
+                }),
+              };
+
+              const n_layer_name = add_layer_topojson(JSON.stringify(data), options);
+
+              data_manager.current_layers[n_layer_name].fill_color = { random: true };
+              data_manager.current_layers[n_layer_name].is_result = true;
+              data_manager.current_layers[n_layer_name]['stroke-width-const'] = 0.8;
+              data_manager.current_layers[n_layer_name].renderer = 'Carto_gastner';
+              data_manager.current_layers[n_layer_name].rendered_field = field_name;
+
+              if (!data_manager.current_layers[n_layer_name].key_name) {
+                send_layer_server(n_layer_name, '/layers/add', 2);
+              }
               _app.waitingOverlay.hide();
-              display_error_during_computation(_tr('app_page.common.error_too_many_feature_for_cartogram'));
-              return;
-            }
-
-            const features = [];
-            for (let i = 0, nb_features = ref_selection.length; i < nb_features; ++i) {
-              features.push(reprojectToRobinson(ref_selection[i].__data__));
-            }
-            const geojson = {
-              type: 'FeatureCollection',
-              features,
+              switch_accordion_section();
             };
-            let result;
-            try {
-              result = GoCart.makeCartogram(geojson, field_name);
-            } catch (e) {
-              console.log(e);
-              display_error_during_computation(_tr('app_page.common.error_message'));
-              return;
-            }
-            result.features = result.features.map((ft) => reprojectFromRobinson(ft));
-
-            const nname = check_layer_name(new_user_layer_name.length > 0 ? new_user_layer_name : ['Cartogram', field_name, layer].join('_'));
-            const options = {
-              choosed_name: nname,
-              func_name: 'cartogram',
-              result_layer_on_add: true,
-            };
-            const data = {
-              file: topojson.topology({
-                [nname]: result,
-              }),
-            };
-
-            const n_layer_name = add_layer_topojson(JSON.stringify(data), options);
-
-            data_manager.current_layers[n_layer_name].fill_color = { random: true };
-            data_manager.current_layers[n_layer_name].is_result = true;
-            data_manager.current_layers[n_layer_name]['stroke-width-const'] = 0.8;
-            data_manager.current_layers[n_layer_name].renderer = 'Carto_gastner';
-            data_manager.current_layers[n_layer_name].rendered_field = field_name;
-
-            if (!data_manager.current_layers[n_layer_name].key_name) {
-              send_layer_server(n_layer_name, '/layers/add', 2);
-            }
-            _app.waitingOverlay.hide();
-            switch_accordion_section();
-          });
+            workerGoCart.postMessage({ geojson, field_name });
+          } else {
+            console.log(resp.data);
+            display_error_during_computation(_tr('app_page.common.error_message'));
+            return;
+          }
+        };
       }
     });
     setSelected(field_selec.node(), field_selec.node().options[0].value);
