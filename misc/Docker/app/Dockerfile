@@ -7,8 +7,11 @@ RUN apt-get update \
     && apt-get install -y --no-install-recommends \
         software-properties-common gcc g++ libpython3.11-dev python3.11 python3.11-dev python3-pip \
         libgeos-c1v5 libgeos-dev libgdal30 libgdal-dev libspatialindex-dev libffi-dev \
-        nodejs npm libuv1 libuv1-dev unzip wget git \
+        libuv1 libuv1-dev unzip curl git \
         libxslt1.1 libxslt1-dev libxml2 libxml2-dev libkml-dev locales \
+    && curl -sL https://deb.nodesource.com/setup_18.x -o nodesource_setup.sh \
+    && bash nodesource_setup.sh \
+    && apt-get install -y nodejs \
     && npm -g install topojson \
     && rm -rf /var/lib/apt/lists/* \
     && locale-gen fr_FR.UTF-8
@@ -24,7 +27,7 @@ RUN cd /home/app/magrit/ \
     && python3.11 setup.py build_ext --inplace \
     && cd client \
     && npm install \
-    && node node_modules/webpack/bin/webpack.js \
+    && NODE_OPTIONS=--openssl-legacy-provider node node_modules/webpack/bin/webpack.js \
     && cd ../documentation \
     && ./mdbook build
 

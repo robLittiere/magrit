@@ -5,6 +5,7 @@
     "watch": "NODE_OPTIONS=--openssl-legacy-provider ./node_modules/webpack/bin/webpack.js --watch"
   },
   "version": "0.12.1",
+  "node" : ">=18.0.0",
   "dependencies": {
     "@turf/turf": "^6.5.0",
     "alertifyjs": "^1.13.1",
