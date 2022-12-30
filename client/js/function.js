@@ -2306,7 +2306,7 @@ const fields_Anamorphose = {
 
               const n_layer_name = add_layer_topojson(JSON.stringify(data), options);
               data_manager.current_layers[n_layer_name].is_result = true;
-              data_manager.current_layers[n_layer_name]['stroke-width-const'] = 0.8;
+              data_manager.current_layers[n_layer_name]['stroke-width-const'] = 0.4;
               data_manager.current_layers[n_layer_name].renderer = 'Carto_gastner';
               data_manager.current_layers[n_layer_name].rendered_field = field_name;
 
