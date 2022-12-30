@@ -389,7 +389,10 @@ export function get_map_project() {
       if (current_layer_prop.break_val) {
         layer_style_i.break_val = current_layer_prop.break_val;
       }
-    } else if (current_layer_prop.renderer && ['Stewart', 'Gridded', 'Choropleth', 'Categorical', 'Carto_doug', 'OlsonCarto'].indexOf(current_layer_prop.renderer) > -1) {
+    } else if (
+      current_layer_prop.renderer
+      && ['Stewart', 'Gridded', 'Choropleth', 'Categorical', 'Carto_doug', 'Carto_gastner', 'OlsonCarto'].indexOf(current_layer_prop.renderer) > -1
+    ) {
       selection = map.select(`#${layer_id}`).selectAll('path');
       layer_style_i.renderer = current_layer_prop.renderer;
       layer_style_i.topo_geom = true;
@@ -972,6 +975,7 @@ export function apply_user_preferences(json_pref) {
   const func_name_corresp = new Map([
     ['LinksGraduated', 'flow'],
     ['Carto_doug', 'cartogram'],
+    ['Carto_gastner', 'cartogram'],
     ['OlsonCarto', 'cartogram'],
     ['Stewart', 'smooth'],
     ['Gridded', 'grid'],
