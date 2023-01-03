@@ -129,8 +129,7 @@ cdef class Cartogram(object):
             # save weighted 'area' value for this feature :
             self.aLocal[fid].dValue = self.values[fid]
             # save centroid coord for the feature :
-            (self.aLocal[fid].ptCenter_x, self.aLocal[fid].ptCenter_y) = \
-                (geom.centroid.coords.ctypes[0], geom.centroid.coords.ctypes[1])
+            (self.aLocal[fid].ptCenter_x, self.aLocal[fid].ptCenter_y) = geom.centroid.coords[0]
 
         dFraction = area_total / value_total
         with nogil:
@@ -182,15 +181,18 @@ cdef class Cartogram(object):
             geom = [geom]
             nb_geom = 1
         else:
+            geom = geom.geoms
             nb_geom = len(geom)
         for it_geom in range(nb_geom):
             boundarys = geom[it_geom].boundary
             tmp_bound = []
             try:
-                nb_bound = <unsigned int>len(boundarys)
+                nb_bound = <unsigned int>len(boundarys.geoms)
+                boundarys = boundarys.geoms
             except:
-                boundarys = [boundarys]
                 nb_bound = 1
+                boundarys = [boundarys]
+
             for it_bound in range(nb_bound):
                 line_coord = []
                 xs, ys = boundarys[it_bound].coords.xy

@@ -954,10 +954,10 @@ static const char *__pyx_filename;
 
 static const char *__pyx_f[] = {
   "magrit_app/helpers/cy_misc.pyx",
-  "venv/lib/python3.10/site-packages/Cython/Includes/cpython/array.pxd",
-  "venv/lib/python3.10/site-packages/Cython/Includes/cpython/type.pxd",
-  "venv/lib/python3.10/site-packages/Cython/Includes/cpython/bool.pxd",
-  "venv/lib/python3.10/site-packages/Cython/Includes/cpython/complex.pxd",
+  "venv/lib/python3.11/site-packages/Cython/Includes/cpython/array.pxd",
+  "venv/lib/python3.11/site-packages/Cython/Includes/cpython/type.pxd",
+  "venv/lib/python3.11/site-packages/Cython/Includes/cpython/bool.pxd",
+  "venv/lib/python3.11/site-packages/Cython/Includes/cpython/complex.pxd",
 };
 
 /*--- Type declarations ---*/

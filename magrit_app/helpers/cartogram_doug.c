@@ -958,10 +958,10 @@ static const char *__pyx_filename;
 static const char *__pyx_f[] = {
   "magrit_app/helpers/cartogram_doug.pyx",
   "stringsource",
-  "venv/lib/python3.10/site-packages/Cython/Includes/cpython/array.pxd",
-  "venv/lib/python3.10/site-packages/Cython/Includes/cpython/type.pxd",
-  "venv/lib/python3.10/site-packages/Cython/Includes/cpython/bool.pxd",
-  "venv/lib/python3.10/site-packages/Cython/Includes/cpython/complex.pxd",
+  "venv/lib/python3.11/site-packages/Cython/Includes/cpython/array.pxd",
+  "venv/lib/python3.11/site-packages/Cython/Includes/cpython/type.pxd",
+  "venv/lib/python3.11/site-packages/Cython/Includes/cpython/bool.pxd",
+  "venv/lib/python3.11/site-packages/Cython/Includes/cpython/complex.pxd",
 };
 /* MemviewSliceStruct.proto */
 struct __pyx_memoryview_obj;
@@ -1099,7 +1099,7 @@ struct Holder {
   double dRadius;
 };
 
-/* "magrit_app/helpers/cartogram_doug.pyx":165
+/* "magrit_app/helpers/cartogram_doug.pyx":164
  *         self.dForceReductionFactor = 1 / (dMean + 1)
  * 
  *     cdef object transform_geom(self, object geom,             # <<<<<<<<<<<<<<
@@ -1611,11 +1611,6 @@ static int __Pyx_SetItemInt_Generic(PyObject *o, PyObject *j, PyObject *v);
 static CYTHON_INLINE int __Pyx_SetItemInt_Fast(PyObject *o, Py_ssize_t i, PyObject *v,
                                                int is_list, int wraparound, int boundscheck);
 
-/* WriteUnraisableException.proto */
-static void __Pyx_WriteUnraisable(const char *name, int clineno,
-                                  int lineno, const char *filename,
-                                  int full_traceback, int nogil);
-
 /* RaiseTooManyValuesToUnpack.proto */
 static CYTHON_INLINE void __Pyx_RaiseTooManyValuesError(Py_ssize_t expected);
 
@@ -1627,6 +1622,11 @@ static CYTHON_INLINE int __Pyx_IterFinish(void);
 
 /* UnpackItemEndCheck.proto */
 static int __Pyx_IternextUnpackEndCheck(PyObject *retval, Py_ssize_t expected);
+
+/* WriteUnraisableException.proto */
+static void __Pyx_WriteUnraisable(const char *name, int clineno,
+                                  int lineno, const char *filename,
+                                  int full_traceback, int nogil);
 
 /* ListAppend.proto */
 #if CYTHON_USE_PYLIST_INTERNALS && CYTHON_ASSUME_SAFE_MACROS
@@ -2287,13 +2287,13 @@ static const char __pyx_k_error[] = "error";
 static const char __pyx_k_f_idx[] = "f_idx";
 static const char __pyx_k_flags[] = "flags";
 static const char __pyx_k_geodf[] = "geodf";
+static const char __pyx_k_geoms[] = "geoms";
 static const char __pyx_k_range[] = "range";
 static const char __pyx_k_shape[] = "shape";
 static const char __pyx_k_start[] = "start";
 static const char __pyx_k_astype[] = "astype";
 static const char __pyx_k_buffer[] = "buffer";
 static const char __pyx_k_coords[] = "coords";
-static const char __pyx_k_ctypes[] = "ctypes";
 static const char __pyx_k_encode[] = "encode";
 static const char __pyx_k_format[] = "format";
 static const char __pyx_k_import[] = "__import__";
@@ -2429,7 +2429,6 @@ static PyObject *__pyx_n_s_columns;
 static PyObject *__pyx_kp_s_contiguous_and_direct;
 static PyObject *__pyx_kp_s_contiguous_and_indirect;
 static PyObject *__pyx_n_s_coords;
-static PyObject *__pyx_n_s_ctypes;
 static PyObject *__pyx_n_s_dict;
 static PyObject *__pyx_n_s_dtype_is_object;
 static PyObject *__pyx_n_s_encode;
@@ -2445,6 +2444,7 @@ static PyObject *__pyx_n_u_fortran;
 static PyObject *__pyx_n_s_geodf;
 static PyObject *__pyx_n_s_geom_type;
 static PyObject *__pyx_n_s_geometry;
+static PyObject *__pyx_n_s_geoms;
 static PyObject *__pyx_n_s_get_loc;
 static PyObject *__pyx_n_s_getstate;
 static PyObject *__pyx_kp_s_got_differing_extents_in_dimensi;
@@ -3609,11 +3609,14 @@ static void __pyx_f_10magrit_app_7helpers_14cartogram_doug_9Cartogram_getinfo(st
   unsigned int __pyx_t_6;
   double __pyx_t_7;
   size_t __pyx_t_8;
-  double __pyx_t_9;
-  int __pyx_t_10;
-  float __pyx_t_11;
-  float __pyx_t_12;
-  float __pyx_t_13;
+  PyObject *__pyx_t_9 = NULL;
+  PyObject *__pyx_t_10 = NULL;
+  PyObject *(*__pyx_t_11)(PyObject *);
+  double __pyx_t_12;
+  int __pyx_t_13;
+  float __pyx_t_14;
+  float __pyx_t_15;
+  float __pyx_t_16;
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
@@ -3736,59 +3739,83 @@ static void __pyx_f_10magrit_app_7helpers_14cartogram_doug_9Cartogram_getinfo(st
  *             # save weighted 'area' value for this feature :
  *             self.aLocal[fid].dValue = self.values[fid]             # <<<<<<<<<<<<<<
  *             # save centroid coord for the feature :
- *             (self.aLocal[fid].ptCenter_x, self.aLocal[fid].ptCenter_y) = \
+ *             (self.aLocal[fid].ptCenter_x, self.aLocal[fid].ptCenter_y) = geom.centroid.coords[0]
  */
     if (unlikely(!__pyx_v_self->values.memview)) {PyErr_SetString(PyExc_AttributeError,"Memoryview is not initialized");__PYX_ERR(0, 130, __pyx_L1_error)}
     __pyx_t_8 = __pyx_v_fid;
     (__pyx_v_self->aLocal[__pyx_v_fid]).dValue = (*((double *) ( /* dim=0 */ (__pyx_v_self->values.data + __pyx_t_8 * __pyx_v_self->values.strides[0]) )));
 
-    /* "magrit_app/helpers/cartogram_doug.pyx":133
- *             # save centroid coord for the feature :
- *             (self.aLocal[fid].ptCenter_x, self.aLocal[fid].ptCenter_y) = \
- *                 (geom.centroid.coords.ctypes[0], geom.centroid.coords.ctypes[1])             # <<<<<<<<<<<<<<
- * 
- *         dFraction = area_total / value_total
- */
-    __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_v_geom, __pyx_n_s_centroid); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 133, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_3);
-    __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_n_s_coords); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 133, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_2);
-    __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-    __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_ctypes); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 133, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_3);
-    __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    __pyx_t_2 = __Pyx_GetItemInt(__pyx_t_3, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 133, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_2);
-    __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-    __pyx_t_7 = __pyx_PyFloat_AsDouble(__pyx_t_2); if (unlikely((__pyx_t_7 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 133, __pyx_L1_error)
-    __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_geom, __pyx_n_s_centroid); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 133, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_2);
-    __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_coords); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 133, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_3);
-    __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_n_s_ctypes); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 133, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_2);
-    __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-    __pyx_t_3 = __Pyx_GetItemInt(__pyx_t_2, 1, long, 1, __Pyx_PyInt_From_long, 0, 0, 0); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 133, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_3);
-    __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    __pyx_t_9 = __pyx_PyFloat_AsDouble(__pyx_t_3); if (unlikely((__pyx_t_9 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 133, __pyx_L1_error)
-    __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-
     /* "magrit_app/helpers/cartogram_doug.pyx":132
  *             self.aLocal[fid].dValue = self.values[fid]
  *             # save centroid coord for the feature :
- *             (self.aLocal[fid].ptCenter_x, self.aLocal[fid].ptCenter_y) = \             # <<<<<<<<<<<<<<
- *                 (geom.centroid.coords.ctypes[0], geom.centroid.coords.ctypes[1])
+ *             (self.aLocal[fid].ptCenter_x, self.aLocal[fid].ptCenter_y) = geom.centroid.coords[0]             # <<<<<<<<<<<<<<
  * 
+ *         dFraction = area_total / value_total
  */
+    __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_v_geom, __pyx_n_s_centroid); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 132, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_3);
+    __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_n_s_coords); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 132, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_2);
+    __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+    __pyx_t_3 = __Pyx_GetItemInt(__pyx_t_2, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 0); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 132, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_3);
+    __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+    if ((likely(PyTuple_CheckExact(__pyx_t_3))) || (PyList_CheckExact(__pyx_t_3))) {
+      PyObject* sequence = __pyx_t_3;
+      Py_ssize_t size = __Pyx_PySequence_SIZE(sequence);
+      if (unlikely(size != 2)) {
+        if (size > 2) __Pyx_RaiseTooManyValuesError(2);
+        else if (size >= 0) __Pyx_RaiseNeedMoreValuesError(size);
+        __PYX_ERR(0, 132, __pyx_L1_error)
+      }
+      #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
+      if (likely(PyTuple_CheckExact(sequence))) {
+        __pyx_t_2 = PyTuple_GET_ITEM(sequence, 0); 
+        __pyx_t_9 = PyTuple_GET_ITEM(sequence, 1); 
+      } else {
+        __pyx_t_2 = PyList_GET_ITEM(sequence, 0); 
+        __pyx_t_9 = PyList_GET_ITEM(sequence, 1); 
+      }
+      __Pyx_INCREF(__pyx_t_2);
+      __Pyx_INCREF(__pyx_t_9);
+      #else
+      __pyx_t_2 = PySequence_ITEM(sequence, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 132, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_2);
+      __pyx_t_9 = PySequence_ITEM(sequence, 1); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 132, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_9);
+      #endif
+      __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+    } else {
+      Py_ssize_t index = -1;
+      __pyx_t_10 = PyObject_GetIter(__pyx_t_3); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 132, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_10);
+      __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+      __pyx_t_11 = Py_TYPE(__pyx_t_10)->tp_iternext;
+      index = 0; __pyx_t_2 = __pyx_t_11(__pyx_t_10); if (unlikely(!__pyx_t_2)) goto __pyx_L5_unpacking_failed;
+      __Pyx_GOTREF(__pyx_t_2);
+      index = 1; __pyx_t_9 = __pyx_t_11(__pyx_t_10); if (unlikely(!__pyx_t_9)) goto __pyx_L5_unpacking_failed;
+      __Pyx_GOTREF(__pyx_t_9);
+      if (__Pyx_IternextUnpackEndCheck(__pyx_t_11(__pyx_t_10), 2) < 0) __PYX_ERR(0, 132, __pyx_L1_error)
+      __pyx_t_11 = NULL;
+      __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
+      goto __pyx_L6_unpacking_done;
+      __pyx_L5_unpacking_failed:;
+      __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
+      __pyx_t_11 = NULL;
+      if (__Pyx_IterFinish() == 0) __Pyx_RaiseNeedMoreValuesError(index);
+      __PYX_ERR(0, 132, __pyx_L1_error)
+      __pyx_L6_unpacking_done:;
+    }
+    __pyx_t_7 = __pyx_PyFloat_AsDouble(__pyx_t_2); if (unlikely((__pyx_t_7 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 132, __pyx_L1_error)
+    __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+    __pyx_t_12 = __pyx_PyFloat_AsDouble(__pyx_t_9); if (unlikely((__pyx_t_12 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 132, __pyx_L1_error)
+    __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
     (__pyx_v_self->aLocal[__pyx_v_fid]).ptCenter_x = __pyx_t_7;
-    (__pyx_v_self->aLocal[__pyx_v_fid]).ptCenter_y = __pyx_t_9;
+    (__pyx_v_self->aLocal[__pyx_v_fid]).ptCenter_y = __pyx_t_12;
   }
 
-  /* "magrit_app/helpers/cartogram_doug.pyx":135
- *                 (geom.centroid.coords.ctypes[0], geom.centroid.coords.ctypes[1])
+  /* "magrit_app/helpers/cartogram_doug.pyx":134
+ *             (self.aLocal[fid].ptCenter_x, self.aLocal[fid].ptCenter_y) = geom.centroid.coords[0]
  * 
  *         dFraction = area_total / value_total             # <<<<<<<<<<<<<<
  *         with nogil:
@@ -3796,7 +3823,7 @@ static void __pyx_f_10magrit_app_7helpers_14cartogram_doug_9Cartogram_getinfo(st
  */
   __pyx_v_dFraction = (__pyx_v_area_total / __pyx_v_value_total);
 
-  /* "magrit_app/helpers/cartogram_doug.pyx":136
+  /* "magrit_app/helpers/cartogram_doug.pyx":135
  * 
  *         dFraction = area_total / value_total
  *         with nogil:             # <<<<<<<<<<<<<<
@@ -3811,7 +3838,7 @@ static void __pyx_f_10magrit_app_7helpers_14cartogram_doug_9Cartogram_getinfo(st
       #endif
       /*try:*/ {
 
-        /* "magrit_app/helpers/cartogram_doug.pyx":137
+        /* "magrit_app/helpers/cartogram_doug.pyx":136
  *         dFraction = area_total / value_total
  *         with nogil:
  *             for i in range(featCount):             # <<<<<<<<<<<<<<
@@ -3823,37 +3850,37 @@ static void __pyx_f_10magrit_app_7helpers_14cartogram_doug_9Cartogram_getinfo(st
         for (__pyx_t_6 = 0; __pyx_t_6 < __pyx_t_5; __pyx_t_6+=1) {
           __pyx_v_i = __pyx_t_6;
 
-          /* "magrit_app/helpers/cartogram_doug.pyx":138
+          /* "magrit_app/helpers/cartogram_doug.pyx":137
  *         with nogil:
  *             for i in range(featCount):
  *                 dPolygonValue = self.aLocal[i].dValue             # <<<<<<<<<<<<<<
  *                 dPolygonArea = self.aLocal[i].dArea
  *                 if dPolygonArea < 0:  # area should never be less than zero
  */
-          __pyx_t_9 = (__pyx_v_self->aLocal[__pyx_v_i]).dValue;
-          __pyx_v_dPolygonValue = __pyx_t_9;
+          __pyx_t_12 = (__pyx_v_self->aLocal[__pyx_v_i]).dValue;
+          __pyx_v_dPolygonValue = __pyx_t_12;
 
-          /* "magrit_app/helpers/cartogram_doug.pyx":139
+          /* "magrit_app/helpers/cartogram_doug.pyx":138
  *             for i in range(featCount):
  *                 dPolygonValue = self.aLocal[i].dValue
  *                 dPolygonArea = self.aLocal[i].dArea             # <<<<<<<<<<<<<<
  *                 if dPolygonArea < 0:  # area should never be less than zero
  *                     dPolygonArea = 0
  */
-          __pyx_t_9 = (__pyx_v_self->aLocal[__pyx_v_i]).dArea;
-          __pyx_v_dPolygonArea = __pyx_t_9;
+          __pyx_t_12 = (__pyx_v_self->aLocal[__pyx_v_i]).dArea;
+          __pyx_v_dPolygonArea = __pyx_t_12;
 
-          /* "magrit_app/helpers/cartogram_doug.pyx":140
+          /* "magrit_app/helpers/cartogram_doug.pyx":139
  *                 dPolygonValue = self.aLocal[i].dValue
  *                 dPolygonArea = self.aLocal[i].dArea
  *                 if dPolygonArea < 0:  # area should never be less than zero             # <<<<<<<<<<<<<<
  *                     dPolygonArea = 0
  *                 # this is our 'desired' area...
  */
-          __pyx_t_10 = ((__pyx_v_dPolygonArea < 0.0) != 0);
-          if (__pyx_t_10) {
+          __pyx_t_13 = ((__pyx_v_dPolygonArea < 0.0) != 0);
+          if (__pyx_t_13) {
 
-            /* "magrit_app/helpers/cartogram_doug.pyx":141
+            /* "magrit_app/helpers/cartogram_doug.pyx":140
  *                 dPolygonArea = self.aLocal[i].dArea
  *                 if dPolygonArea < 0:  # area should never be less than zero
  *                     dPolygonArea = 0             # <<<<<<<<<<<<<<
@@ -3862,7 +3889,7 @@ static void __pyx_f_10magrit_app_7helpers_14cartogram_doug_9Cartogram_getinfo(st
  */
             __pyx_v_dPolygonArea = 0.0;
 
-            /* "magrit_app/helpers/cartogram_doug.pyx":140
+            /* "magrit_app/helpers/cartogram_doug.pyx":139
  *                 dPolygonValue = self.aLocal[i].dValue
  *                 dPolygonArea = self.aLocal[i].dArea
  *                 if dPolygonArea < 0:  # area should never be less than zero             # <<<<<<<<<<<<<<
@@ -3871,7 +3898,7 @@ static void __pyx_f_10magrit_app_7helpers_14cartogram_doug_9Cartogram_getinfo(st
  */
           }
 
-          /* "magrit_app/helpers/cartogram_doug.pyx":143
+          /* "magrit_app/helpers/cartogram_doug.pyx":142
  *                     dPolygonArea = 0
  *                 # this is our 'desired' area...
  *                 dDesired = dPolygonValue * dFraction             # <<<<<<<<<<<<<<
@@ -3880,7 +3907,7 @@ static void __pyx_f_10magrit_app_7helpers_14cartogram_doug_9Cartogram_getinfo(st
  */
           __pyx_v_dDesired = (__pyx_v_dPolygonValue * __pyx_v_dFraction);
 
-          /* "magrit_app/helpers/cartogram_doug.pyx":145
+          /* "magrit_app/helpers/cartogram_doug.pyx":144
  *                 dDesired = dPolygonValue * dFraction
  *                 # calculate radius, a zero area is zero radius
  *                 dRadius = sqrt(dPolygonArea / pi)             # <<<<<<<<<<<<<<
@@ -3889,7 +3916,7 @@ static void __pyx_f_10magrit_app_7helpers_14cartogram_doug_9Cartogram_getinfo(st
  */
           __pyx_v_dRadius = sqrt((__pyx_v_dPolygonArea / __pyx_v_pi));
 
-          /* "magrit_app/helpers/cartogram_doug.pyx":146
+          /* "magrit_app/helpers/cartogram_doug.pyx":145
  *                 # calculate radius, a zero area is zero radius
  *                 dRadius = sqrt(dPolygonArea / pi)
  *                 self.aLocal[i].dRadius = dRadius             # <<<<<<<<<<<<<<
@@ -3898,7 +3925,7 @@ static void __pyx_f_10magrit_app_7helpers_14cartogram_doug_9Cartogram_getinfo(st
  */
           (__pyx_v_self->aLocal[__pyx_v_i]).dRadius = __pyx_v_dRadius;
 
-          /* "magrit_app/helpers/cartogram_doug.pyx":147
+          /* "magrit_app/helpers/cartogram_doug.pyx":146
  *                 dRadius = sqrt(dPolygonArea / pi)
  *                 self.aLocal[i].dRadius = dRadius
  *                 tmp = dDesired / pi             # <<<<<<<<<<<<<<
@@ -3907,17 +3934,17 @@ static void __pyx_f_10magrit_app_7helpers_14cartogram_doug_9Cartogram_getinfo(st
  */
           __pyx_v_tmp = (__pyx_v_dDesired / __pyx_v_pi);
 
-          /* "magrit_app/helpers/cartogram_doug.pyx":148
+          /* "magrit_app/helpers/cartogram_doug.pyx":147
  *                 self.aLocal[i].dRadius = dRadius
  *                 tmp = dDesired / pi
  *                 if tmp > 0:             # <<<<<<<<<<<<<<
  *                     # calculate area mass, don't think this should be negative
  *                     self.aLocal[i].dMass = sqrt(dDesired / pi) - dRadius
  */
-          __pyx_t_10 = ((__pyx_v_tmp > 0.0) != 0);
-          if (__pyx_t_10) {
+          __pyx_t_13 = ((__pyx_v_tmp > 0.0) != 0);
+          if (__pyx_t_13) {
 
-            /* "magrit_app/helpers/cartogram_doug.pyx":150
+            /* "magrit_app/helpers/cartogram_doug.pyx":149
  *                 if tmp > 0:
  *                     # calculate area mass, don't think this should be negative
  *                     self.aLocal[i].dMass = sqrt(dDesired / pi) - dRadius             # <<<<<<<<<<<<<<
@@ -3926,17 +3953,17 @@ static void __pyx_f_10magrit_app_7helpers_14cartogram_doug_9Cartogram_getinfo(st
  */
             (__pyx_v_self->aLocal[__pyx_v_i]).dMass = (sqrt((__pyx_v_dDesired / __pyx_v_pi)) - __pyx_v_dRadius);
 
-            /* "magrit_app/helpers/cartogram_doug.pyx":148
+            /* "magrit_app/helpers/cartogram_doug.pyx":147
  *                 self.aLocal[i].dRadius = dRadius
  *                 tmp = dDesired / pi
  *                 if tmp > 0:             # <<<<<<<<<<<<<<
  *                     # calculate area mass, don't think this should be negative
  *                     self.aLocal[i].dMass = sqrt(dDesired / pi) - dRadius
  */
-            goto __pyx_L11;
+            goto __pyx_L13;
           }
 
-          /* "magrit_app/helpers/cartogram_doug.pyx":152
+          /* "magrit_app/helpers/cartogram_doug.pyx":151
  *                     self.aLocal[i].dMass = sqrt(dDesired / pi) - dRadius
  *                 else:
  *                     self.aLocal[i].dMass = 0             # <<<<<<<<<<<<<<
@@ -3946,9 +3973,9 @@ static void __pyx_f_10magrit_app_7helpers_14cartogram_doug_9Cartogram_getinfo(st
           /*else*/ {
             (__pyx_v_self->aLocal[__pyx_v_i]).dMass = 0.0;
           }
-          __pyx_L11:;
+          __pyx_L13:;
 
-          /* "magrit_app/helpers/cartogram_doug.pyx":157
+          /* "magrit_app/helpers/cartogram_doug.pyx":156
  *                 # calculate size error...
  *                 dSizeError = \
  *                     max(dPolygonArea, dDesired) / min(dPolygonArea, dDesired)             # <<<<<<<<<<<<<<
@@ -3956,22 +3983,22 @@ static void __pyx_f_10magrit_app_7helpers_14cartogram_doug_9Cartogram_getinfo(st
  *                 dSizeErrorTotal += dSizeError
  */
           __pyx_t_4 = __pyx_v_dDesired;
-          __pyx_t_11 = __pyx_v_dPolygonArea;
-          if (((__pyx_t_4 > __pyx_t_11) != 0)) {
-            __pyx_t_12 = __pyx_t_4;
+          __pyx_t_14 = __pyx_v_dPolygonArea;
+          if (((__pyx_t_4 > __pyx_t_14) != 0)) {
+            __pyx_t_15 = __pyx_t_4;
           } else {
-            __pyx_t_12 = __pyx_t_11;
+            __pyx_t_15 = __pyx_t_14;
           }
           __pyx_t_4 = __pyx_v_dDesired;
-          __pyx_t_11 = __pyx_v_dPolygonArea;
-          if (((__pyx_t_4 < __pyx_t_11) != 0)) {
-            __pyx_t_13 = __pyx_t_4;
+          __pyx_t_14 = __pyx_v_dPolygonArea;
+          if (((__pyx_t_4 < __pyx_t_14) != 0)) {
+            __pyx_t_16 = __pyx_t_4;
           } else {
-            __pyx_t_13 = __pyx_t_11;
+            __pyx_t_16 = __pyx_t_14;
           }
-          __pyx_v_dSizeError = (__pyx_t_12 / __pyx_t_13);
+          __pyx_v_dSizeError = (__pyx_t_15 / __pyx_t_16);
 
-          /* "magrit_app/helpers/cartogram_doug.pyx":159
+          /* "magrit_app/helpers/cartogram_doug.pyx":158
  *                     max(dPolygonArea, dDesired) / min(dPolygonArea, dDesired)
  *                 # this is the total size error for all polygons
  *                 dSizeErrorTotal += dSizeError             # <<<<<<<<<<<<<<
@@ -3982,7 +4009,7 @@ static void __pyx_f_10magrit_app_7helpers_14cartogram_doug_9Cartogram_getinfo(st
         }
       }
 
-      /* "magrit_app/helpers/cartogram_doug.pyx":136
+      /* "magrit_app/helpers/cartogram_doug.pyx":135
  * 
  *         dFraction = area_total / value_total
  *         with nogil:             # <<<<<<<<<<<<<<
@@ -3995,13 +4022,13 @@ static void __pyx_f_10magrit_app_7helpers_14cartogram_doug_9Cartogram_getinfo(st
           __Pyx_FastGIL_Forget();
           Py_BLOCK_THREADS
           #endif
-          goto __pyx_L7;
+          goto __pyx_L9;
         }
-        __pyx_L7:;
+        __pyx_L9:;
       }
   }
 
-  /* "magrit_app/helpers/cartogram_doug.pyx":161
+  /* "magrit_app/helpers/cartogram_doug.pyx":160
  *                 dSizeErrorTotal += dSizeError
  *         # average error
  *         dMean = dSizeErrorTotal / featCount             # <<<<<<<<<<<<<<
@@ -4010,7 +4037,7 @@ static void __pyx_f_10magrit_app_7helpers_14cartogram_doug_9Cartogram_getinfo(st
  */
   __pyx_v_dMean = (__pyx_v_dSizeErrorTotal / ((float)__pyx_v_featCount));
 
-  /* "magrit_app/helpers/cartogram_doug.pyx":163
+  /* "magrit_app/helpers/cartogram_doug.pyx":162
  *         dMean = dSizeErrorTotal / featCount
  *         # need to read up more on why this is done
  *         self.dForceReductionFactor = 1 / (dMean + 1)             # <<<<<<<<<<<<<<
@@ -4032,13 +4059,15 @@ static void __pyx_f_10magrit_app_7helpers_14cartogram_doug_9Cartogram_getinfo(st
   __pyx_L1_error:;
   __Pyx_XDECREF(__pyx_t_2);
   __Pyx_XDECREF(__pyx_t_3);
+  __Pyx_XDECREF(__pyx_t_9);
+  __Pyx_XDECREF(__pyx_t_10);
   __Pyx_WriteUnraisable("magrit_app.helpers.cartogram_doug.Cartogram.getinfo", __pyx_clineno, __pyx_lineno, __pyx_filename, 1, 0);
   __pyx_L0:;
   __Pyx_XDECREF(__pyx_v_geom);
   __Pyx_RefNannyFinishContext();
 }
 
-/* "magrit_app/helpers/cartogram_doug.pyx":165
+/* "magrit_app/helpers/cartogram_doug.pyx":164
  *         self.dForceReductionFactor = 1 / (dMean + 1)
  * 
  *     cdef object transform_geom(self, object geom,             # <<<<<<<<<<<<<<
@@ -4116,7 +4145,7 @@ static PyObject *__pyx_f_10magrit_app_7helpers_14cartogram_doug_9Cartogram_trans
   }
   __Pyx_INCREF(__pyx_v_geom);
 
-  /* "magrit_app/helpers/cartogram_doug.pyx":173
+  /* "magrit_app/helpers/cartogram_doug.pyx":172
  *             about its geometry and about other feature geometries.
  *         """
  *         cdef unsigned int i, k, it_geom=0, it_bound=0, l_coord_bound=0             # <<<<<<<<<<<<<<
@@ -4127,37 +4156,37 @@ static PyObject *__pyx_f_10magrit_app_7helpers_14cartogram_doug_9Cartogram_trans
   __pyx_v_it_bound = 0;
   __pyx_v_l_coord_bound = 0;
 
-  /* "magrit_app/helpers/cartogram_doug.pyx":179
+  /* "magrit_app/helpers/cartogram_doug.pyx":178
  *         cdef object boundarys
  *         cdef double[:] xs, ys
  *         cdef list tmp_bound, new_geom = []             # <<<<<<<<<<<<<<
  * 
  *         if isinstance(geom, Polygon):
  */
-  __pyx_t_1 = PyList_New(0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 179, __pyx_L1_error)
+  __pyx_t_1 = PyList_New(0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 178, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_v_new_geom = ((PyObject*)__pyx_t_1);
   __pyx_t_1 = 0;
 
-  /* "magrit_app/helpers/cartogram_doug.pyx":181
+  /* "magrit_app/helpers/cartogram_doug.pyx":180
  *         cdef list tmp_bound, new_geom = []
  * 
  *         if isinstance(geom, Polygon):             # <<<<<<<<<<<<<<
  *             geom = [geom]
  *             nb_geom = 1
  */
-  __pyx_t_2 = PyObject_IsInstance(__pyx_v_geom, __pyx_v_Polygon); if (unlikely(__pyx_t_2 == ((int)-1))) __PYX_ERR(0, 181, __pyx_L1_error)
+  __pyx_t_2 = PyObject_IsInstance(__pyx_v_geom, __pyx_v_Polygon); if (unlikely(__pyx_t_2 == ((int)-1))) __PYX_ERR(0, 180, __pyx_L1_error)
   __pyx_t_3 = (__pyx_t_2 != 0);
   if (__pyx_t_3) {
 
-    /* "magrit_app/helpers/cartogram_doug.pyx":182
+    /* "magrit_app/helpers/cartogram_doug.pyx":181
  * 
  *         if isinstance(geom, Polygon):
  *             geom = [geom]             # <<<<<<<<<<<<<<
  *             nb_geom = 1
  *         else:
  */
-    __pyx_t_1 = PyList_New(1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 182, __pyx_L1_error)
+    __pyx_t_1 = PyList_New(1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 181, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_INCREF(__pyx_v_geom);
     __Pyx_GIVEREF(__pyx_v_geom);
@@ -4165,16 +4194,16 @@ static PyObject *__pyx_f_10magrit_app_7helpers_14cartogram_doug_9Cartogram_trans
     __Pyx_DECREF_SET(__pyx_v_geom, __pyx_t_1);
     __pyx_t_1 = 0;
 
-    /* "magrit_app/helpers/cartogram_doug.pyx":183
+    /* "magrit_app/helpers/cartogram_doug.pyx":182
  *         if isinstance(geom, Polygon):
  *             geom = [geom]
  *             nb_geom = 1             # <<<<<<<<<<<<<<
  *         else:
- *             nb_geom = len(geom)
+ *             geom = geom.geoms
  */
     __pyx_v_nb_geom = 1;
 
-    /* "magrit_app/helpers/cartogram_doug.pyx":181
+    /* "magrit_app/helpers/cartogram_doug.pyx":180
  *         cdef list tmp_bound, new_geom = []
  * 
  *         if isinstance(geom, Polygon):             # <<<<<<<<<<<<<<
@@ -4184,21 +4213,33 @@ static PyObject *__pyx_f_10magrit_app_7helpers_14cartogram_doug_9Cartogram_trans
     goto __pyx_L3;
   }
 
-  /* "magrit_app/helpers/cartogram_doug.pyx":185
+  /* "magrit_app/helpers/cartogram_doug.pyx":184
  *             nb_geom = 1
  *         else:
+ *             geom = geom.geoms             # <<<<<<<<<<<<<<
+ *             nb_geom = len(geom)
+ *         for it_geom in range(nb_geom):
+ */
+  /*else*/ {
+    __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_geom, __pyx_n_s_geoms); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 184, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_1);
+    __Pyx_DECREF_SET(__pyx_v_geom, __pyx_t_1);
+    __pyx_t_1 = 0;
+
+    /* "magrit_app/helpers/cartogram_doug.pyx":185
+ *         else:
+ *             geom = geom.geoms
  *             nb_geom = len(geom)             # <<<<<<<<<<<<<<
  *         for it_geom in range(nb_geom):
  *             boundarys = geom[it_geom].boundary
  */
-  /*else*/ {
     __pyx_t_4 = PyObject_Length(__pyx_v_geom); if (unlikely(__pyx_t_4 == ((Py_ssize_t)-1))) __PYX_ERR(0, 185, __pyx_L1_error)
     __pyx_v_nb_geom = __pyx_t_4;
   }
   __pyx_L3:;
 
   /* "magrit_app/helpers/cartogram_doug.pyx":186
- *         else:
+ *             geom = geom.geoms
  *             nb_geom = len(geom)
  *         for it_geom in range(nb_geom):             # <<<<<<<<<<<<<<
  *             boundarys = geom[it_geom].boundary
@@ -4229,7 +4270,7 @@ static PyObject *__pyx_f_10magrit_app_7helpers_14cartogram_doug_9Cartogram_trans
  *             boundarys = geom[it_geom].boundary
  *             tmp_bound = []             # <<<<<<<<<<<<<<
  *             try:
- *                 nb_bound = <unsigned int>len(boundarys)
+ *                 nb_bound = <unsigned int>len(boundarys.geoms)
  */
     __pyx_t_7 = PyList_New(0); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 188, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_7);
@@ -4240,8 +4281,8 @@ static PyObject *__pyx_f_10magrit_app_7helpers_14cartogram_doug_9Cartogram_trans
  *             boundarys = geom[it_geom].boundary
  *             tmp_bound = []
  *             try:             # <<<<<<<<<<<<<<
- *                 nb_bound = <unsigned int>len(boundarys)
- *             except:
+ *                 nb_bound = <unsigned int>len(boundarys.geoms)
+ *                 boundarys = boundarys.geoms
  */
     {
       __Pyx_PyThreadState_declare
@@ -4255,19 +4296,34 @@ static PyObject *__pyx_f_10magrit_app_7helpers_14cartogram_doug_9Cartogram_trans
         /* "magrit_app/helpers/cartogram_doug.pyx":190
  *             tmp_bound = []
  *             try:
- *                 nb_bound = <unsigned int>len(boundarys)             # <<<<<<<<<<<<<<
+ *                 nb_bound = <unsigned int>len(boundarys.geoms)             # <<<<<<<<<<<<<<
+ *                 boundarys = boundarys.geoms
  *             except:
- *                 boundarys = [boundarys]
  */
-        __pyx_t_11 = PyObject_Length(__pyx_v_boundarys); if (unlikely(__pyx_t_11 == ((Py_ssize_t)-1))) __PYX_ERR(0, 190, __pyx_L6_error)
+        __pyx_t_7 = __Pyx_PyObject_GetAttrStr(__pyx_v_boundarys, __pyx_n_s_geoms); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 190, __pyx_L6_error)
+        __Pyx_GOTREF(__pyx_t_7);
+        __pyx_t_11 = PyObject_Length(__pyx_t_7); if (unlikely(__pyx_t_11 == ((Py_ssize_t)-1))) __PYX_ERR(0, 190, __pyx_L6_error)
+        __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
         __pyx_v_nb_bound = ((unsigned int)__pyx_t_11);
+
+        /* "magrit_app/helpers/cartogram_doug.pyx":191
+ *             try:
+ *                 nb_bound = <unsigned int>len(boundarys.geoms)
+ *                 boundarys = boundarys.geoms             # <<<<<<<<<<<<<<
+ *             except:
+ *                 nb_bound = 1
+ */
+        __pyx_t_7 = __Pyx_PyObject_GetAttrStr(__pyx_v_boundarys, __pyx_n_s_geoms); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 191, __pyx_L6_error)
+        __Pyx_GOTREF(__pyx_t_7);
+        __Pyx_DECREF_SET(__pyx_v_boundarys, __pyx_t_7);
+        __pyx_t_7 = 0;
 
         /* "magrit_app/helpers/cartogram_doug.pyx":189
  *             boundarys = geom[it_geom].boundary
  *             tmp_bound = []
  *             try:             # <<<<<<<<<<<<<<
- *                 nb_bound = <unsigned int>len(boundarys)
- *             except:
+ *                 nb_bound = <unsigned int>len(boundarys.geoms)
+ *                 boundarys = boundarys.geoms
  */
       }
       __Pyx_XDECREF(__pyx_t_8); __pyx_t_8 = 0;
@@ -4278,43 +4334,43 @@ static PyObject *__pyx_f_10magrit_app_7helpers_14cartogram_doug_9Cartogram_trans
       __Pyx_XDECREF(__pyx_t_1); __pyx_t_1 = 0;
       __Pyx_XDECREF(__pyx_t_7); __pyx_t_7 = 0;
 
-      /* "magrit_app/helpers/cartogram_doug.pyx":191
- *             try:
- *                 nb_bound = <unsigned int>len(boundarys)
+      /* "magrit_app/helpers/cartogram_doug.pyx":192
+ *                 nb_bound = <unsigned int>len(boundarys.geoms)
+ *                 boundarys = boundarys.geoms
  *             except:             # <<<<<<<<<<<<<<
- *                 boundarys = [boundarys]
  *                 nb_bound = 1
+ *                 boundarys = [boundarys]
  */
       /*except:*/ {
         __Pyx_AddTraceback("magrit_app.helpers.cartogram_doug.Cartogram.transform_geom", __pyx_clineno, __pyx_lineno, __pyx_filename);
-        if (__Pyx_GetException(&__pyx_t_7, &__pyx_t_1, &__pyx_t_12) < 0) __PYX_ERR(0, 191, __pyx_L8_except_error)
+        if (__Pyx_GetException(&__pyx_t_7, &__pyx_t_1, &__pyx_t_12) < 0) __PYX_ERR(0, 192, __pyx_L8_except_error)
         __Pyx_GOTREF(__pyx_t_7);
         __Pyx_GOTREF(__pyx_t_1);
         __Pyx_GOTREF(__pyx_t_12);
 
-        /* "magrit_app/helpers/cartogram_doug.pyx":192
- *                 nb_bound = <unsigned int>len(boundarys)
+        /* "magrit_app/helpers/cartogram_doug.pyx":193
+ *                 boundarys = boundarys.geoms
  *             except:
- *                 boundarys = [boundarys]             # <<<<<<<<<<<<<<
+ *                 nb_bound = 1             # <<<<<<<<<<<<<<
+ *                 boundarys = [boundarys]
+ * 
+ */
+        __pyx_v_nb_bound = 1;
+
+        /* "magrit_app/helpers/cartogram_doug.pyx":194
+ *             except:
  *                 nb_bound = 1
+ *                 boundarys = [boundarys]             # <<<<<<<<<<<<<<
+ * 
  *             for it_bound in range(nb_bound):
  */
-        __pyx_t_13 = PyList_New(1); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 192, __pyx_L8_except_error)
+        __pyx_t_13 = PyList_New(1); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 194, __pyx_L8_except_error)
         __Pyx_GOTREF(__pyx_t_13);
         __Pyx_INCREF(__pyx_v_boundarys);
         __Pyx_GIVEREF(__pyx_v_boundarys);
         PyList_SET_ITEM(__pyx_t_13, 0, __pyx_v_boundarys);
         __Pyx_DECREF_SET(__pyx_v_boundarys, __pyx_t_13);
         __pyx_t_13 = 0;
-
-        /* "magrit_app/helpers/cartogram_doug.pyx":193
- *             except:
- *                 boundarys = [boundarys]
- *                 nb_bound = 1             # <<<<<<<<<<<<<<
- *             for it_bound in range(nb_bound):
- *                 line_coord = []
- */
-        __pyx_v_nb_bound = 1;
         __Pyx_XDECREF(__pyx_t_7); __pyx_t_7 = 0;
         __Pyx_XDECREF(__pyx_t_1); __pyx_t_1 = 0;
         __Pyx_XDECREF(__pyx_t_12); __pyx_t_12 = 0;
@@ -4326,8 +4382,8 @@ static PyObject *__pyx_f_10magrit_app_7helpers_14cartogram_doug_9Cartogram_trans
  *             boundarys = geom[it_geom].boundary
  *             tmp_bound = []
  *             try:             # <<<<<<<<<<<<<<
- *                 nb_bound = <unsigned int>len(boundarys)
- *             except:
+ *                 nb_bound = <unsigned int>len(boundarys.geoms)
+ *                 boundarys = boundarys.geoms
  */
       __Pyx_XGIVEREF(__pyx_t_8);
       __Pyx_XGIVEREF(__pyx_t_9);
@@ -4342,9 +4398,9 @@ static PyObject *__pyx_f_10magrit_app_7helpers_14cartogram_doug_9Cartogram_trans
       __pyx_L13_try_end:;
     }
 
-    /* "magrit_app/helpers/cartogram_doug.pyx":194
+    /* "magrit_app/helpers/cartogram_doug.pyx":196
  *                 boundarys = [boundarys]
- *                 nb_bound = 1
+ * 
  *             for it_bound in range(nb_bound):             # <<<<<<<<<<<<<<
  *                 line_coord = []
  *                 xs, ys = boundarys[it_bound].coords.xy
@@ -4354,31 +4410,31 @@ static PyObject *__pyx_f_10magrit_app_7helpers_14cartogram_doug_9Cartogram_trans
     for (__pyx_t_15 = 0; __pyx_t_15 < __pyx_t_14; __pyx_t_15+=1) {
       __pyx_v_it_bound = __pyx_t_15;
 
-      /* "magrit_app/helpers/cartogram_doug.pyx":195
- *                 nb_bound = 1
+      /* "magrit_app/helpers/cartogram_doug.pyx":197
+ * 
  *             for it_bound in range(nb_bound):
  *                 line_coord = []             # <<<<<<<<<<<<<<
  *                 xs, ys = boundarys[it_bound].coords.xy
  *                 l_coord_bound = <unsigned int>len(xs)
  */
-      __pyx_t_12 = PyList_New(0); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 195, __pyx_L1_error)
+      __pyx_t_12 = PyList_New(0); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 197, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_12);
       __Pyx_XDECREF_SET(__pyx_v_line_coord, ((PyObject*)__pyx_t_12));
       __pyx_t_12 = 0;
 
-      /* "magrit_app/helpers/cartogram_doug.pyx":196
+      /* "magrit_app/helpers/cartogram_doug.pyx":198
  *             for it_bound in range(nb_bound):
  *                 line_coord = []
  *                 xs, ys = boundarys[it_bound].coords.xy             # <<<<<<<<<<<<<<
  *                 l_coord_bound = <unsigned int>len(xs)
  *                 with nogil:
  */
-      __pyx_t_12 = __Pyx_GetItemInt(__pyx_v_boundarys, __pyx_v_it_bound, unsigned int, 0, __Pyx_PyInt_From_unsigned_int, 0, 0, 0); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 196, __pyx_L1_error)
+      __pyx_t_12 = __Pyx_GetItemInt(__pyx_v_boundarys, __pyx_v_it_bound, unsigned int, 0, __Pyx_PyInt_From_unsigned_int, 0, 0, 0); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 198, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_12);
-      __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_t_12, __pyx_n_s_coords); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 196, __pyx_L1_error)
+      __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_t_12, __pyx_n_s_coords); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 198, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_1);
       __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
-      __pyx_t_12 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_xy); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 196, __pyx_L1_error)
+      __pyx_t_12 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_xy); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 198, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_12);
       __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
       if ((likely(PyTuple_CheckExact(__pyx_t_12))) || (PyList_CheckExact(__pyx_t_12))) {
@@ -4387,7 +4443,7 @@ static PyObject *__pyx_f_10magrit_app_7helpers_14cartogram_doug_9Cartogram_trans
         if (unlikely(size != 2)) {
           if (size > 2) __Pyx_RaiseTooManyValuesError(2);
           else if (size >= 0) __Pyx_RaiseNeedMoreValuesError(size);
-          __PYX_ERR(0, 196, __pyx_L1_error)
+          __PYX_ERR(0, 198, __pyx_L1_error)
         }
         #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
         if (likely(PyTuple_CheckExact(sequence))) {
@@ -4400,15 +4456,15 @@ static PyObject *__pyx_f_10magrit_app_7helpers_14cartogram_doug_9Cartogram_trans
         __Pyx_INCREF(__pyx_t_1);
         __Pyx_INCREF(__pyx_t_7);
         #else
-        __pyx_t_1 = PySequence_ITEM(sequence, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 196, __pyx_L1_error)
+        __pyx_t_1 = PySequence_ITEM(sequence, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 198, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_1);
-        __pyx_t_7 = PySequence_ITEM(sequence, 1); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 196, __pyx_L1_error)
+        __pyx_t_7 = PySequence_ITEM(sequence, 1); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 198, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_7);
         #endif
         __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
       } else {
         Py_ssize_t index = -1;
-        __pyx_t_13 = PyObject_GetIter(__pyx_t_12); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 196, __pyx_L1_error)
+        __pyx_t_13 = PyObject_GetIter(__pyx_t_12); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 198, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_13);
         __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
         __pyx_t_16 = Py_TYPE(__pyx_t_13)->tp_iternext;
@@ -4416,7 +4472,7 @@ static PyObject *__pyx_f_10magrit_app_7helpers_14cartogram_doug_9Cartogram_trans
         __Pyx_GOTREF(__pyx_t_1);
         index = 1; __pyx_t_7 = __pyx_t_16(__pyx_t_13); if (unlikely(!__pyx_t_7)) goto __pyx_L18_unpacking_failed;
         __Pyx_GOTREF(__pyx_t_7);
-        if (__Pyx_IternextUnpackEndCheck(__pyx_t_16(__pyx_t_13), 2) < 0) __PYX_ERR(0, 196, __pyx_L1_error)
+        if (__Pyx_IternextUnpackEndCheck(__pyx_t_16(__pyx_t_13), 2) < 0) __PYX_ERR(0, 198, __pyx_L1_error)
         __pyx_t_16 = NULL;
         __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
         goto __pyx_L19_unpacking_done;
@@ -4424,12 +4480,12 @@ static PyObject *__pyx_f_10magrit_app_7helpers_14cartogram_doug_9Cartogram_trans
         __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
         __pyx_t_16 = NULL;
         if (__Pyx_IterFinish() == 0) __Pyx_RaiseNeedMoreValuesError(index);
-        __PYX_ERR(0, 196, __pyx_L1_error)
+        __PYX_ERR(0, 198, __pyx_L1_error)
         __pyx_L19_unpacking_done:;
       }
-      __pyx_t_17 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(__pyx_t_1, PyBUF_WRITABLE); if (unlikely(!__pyx_t_17.memview)) __PYX_ERR(0, 196, __pyx_L1_error)
+      __pyx_t_17 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(__pyx_t_1, PyBUF_WRITABLE); if (unlikely(!__pyx_t_17.memview)) __PYX_ERR(0, 198, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-      __pyx_t_18 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(__pyx_t_7, PyBUF_WRITABLE); if (unlikely(!__pyx_t_18.memview)) __PYX_ERR(0, 196, __pyx_L1_error)
+      __pyx_t_18 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(__pyx_t_7, PyBUF_WRITABLE); if (unlikely(!__pyx_t_18.memview)) __PYX_ERR(0, 198, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
       __PYX_XDEC_MEMVIEW(&__pyx_v_xs, 1);
       __pyx_v_xs = __pyx_t_17;
@@ -4440,7 +4496,7 @@ static PyObject *__pyx_f_10magrit_app_7helpers_14cartogram_doug_9Cartogram_trans
       __pyx_t_18.memview = NULL;
       __pyx_t_18.data = NULL;
 
-      /* "magrit_app/helpers/cartogram_doug.pyx":197
+      /* "magrit_app/helpers/cartogram_doug.pyx":199
  *                 line_coord = []
  *                 xs, ys = boundarys[it_bound].coords.xy
  *                 l_coord_bound = <unsigned int>len(xs)             # <<<<<<<<<<<<<<
@@ -4450,7 +4506,7 @@ static PyObject *__pyx_f_10magrit_app_7helpers_14cartogram_doug_9Cartogram_trans
       __pyx_t_19 = __Pyx_MemoryView_Len(__pyx_v_xs); 
       __pyx_v_l_coord_bound = ((unsigned int)__pyx_t_19);
 
-      /* "magrit_app/helpers/cartogram_doug.pyx":198
+      /* "magrit_app/helpers/cartogram_doug.pyx":200
  *                 xs, ys = boundarys[it_bound].coords.xy
  *                 l_coord_bound = <unsigned int>len(xs)
  *                 with nogil:             # <<<<<<<<<<<<<<
@@ -4465,7 +4521,7 @@ static PyObject *__pyx_f_10magrit_app_7helpers_14cartogram_doug_9Cartogram_trans
           #endif
           /*try:*/ {
 
-            /* "magrit_app/helpers/cartogram_doug.pyx":199
+            /* "magrit_app/helpers/cartogram_doug.pyx":201
  *                 l_coord_bound = <unsigned int>len(xs)
  *                 with nogil:
  *                     for k in range(l_coord_bound):             # <<<<<<<<<<<<<<
@@ -4477,7 +4533,7 @@ static PyObject *__pyx_f_10magrit_app_7helpers_14cartogram_doug_9Cartogram_trans
             for (__pyx_t_22 = 0; __pyx_t_22 < __pyx_t_21; __pyx_t_22+=1) {
               __pyx_v_k = __pyx_t_22;
 
-              /* "magrit_app/helpers/cartogram_doug.pyx":200
+              /* "magrit_app/helpers/cartogram_doug.pyx":202
  *                 with nogil:
  *                     for k in range(l_coord_bound):
  *                         x = xs[k]             # <<<<<<<<<<<<<<
@@ -4487,7 +4543,7 @@ static PyObject *__pyx_f_10magrit_app_7helpers_14cartogram_doug_9Cartogram_trans
               __pyx_t_19 = __pyx_v_k;
               __pyx_v_x = (*((double *) ( /* dim=0 */ (__pyx_v_xs.data + __pyx_t_19 * __pyx_v_xs.strides[0]) )));
 
-              /* "magrit_app/helpers/cartogram_doug.pyx":201
+              /* "magrit_app/helpers/cartogram_doug.pyx":203
  *                     for k in range(l_coord_bound):
  *                         x = xs[k]
  *                         y = ys[k]             # <<<<<<<<<<<<<<
@@ -4497,7 +4553,7 @@ static PyObject *__pyx_f_10magrit_app_7helpers_14cartogram_doug_9Cartogram_trans
               __pyx_t_19 = __pyx_v_k;
               __pyx_v_y = (*((double *) ( /* dim=0 */ (__pyx_v_ys.data + __pyx_t_19 * __pyx_v_ys.strides[0]) )));
 
-              /* "magrit_app/helpers/cartogram_doug.pyx":202
+              /* "magrit_app/helpers/cartogram_doug.pyx":204
  *                         x = xs[k]
  *                         y = ys[k]
  *                         x0, y0 = x, y             # <<<<<<<<<<<<<<
@@ -4509,7 +4565,7 @@ static PyObject *__pyx_f_10magrit_app_7helpers_14cartogram_doug_9Cartogram_trans
               __pyx_v_x0 = __pyx_t_23;
               __pyx_v_y0 = __pyx_t_24;
 
-              /* "magrit_app/helpers/cartogram_doug.pyx":204
+              /* "magrit_app/helpers/cartogram_doug.pyx":206
  *                         x0, y0 = x, y
  *                         # Compute the influence of all shapes on this point
  *                         for i in range(self.total_features):             # <<<<<<<<<<<<<<
@@ -4521,7 +4577,7 @@ static PyObject *__pyx_f_10magrit_app_7helpers_14cartogram_doug_9Cartogram_trans
               for (__pyx_t_27 = 0; __pyx_t_27 < __pyx_t_26; __pyx_t_27+=1) {
                 __pyx_v_i = __pyx_t_27;
 
-                /* "magrit_app/helpers/cartogram_doug.pyx":205
+                /* "magrit_app/helpers/cartogram_doug.pyx":207
  *                         # Compute the influence of all shapes on this point
  *                         for i in range(self.total_features):
  *                             lf = &self.aLocal[i]             # <<<<<<<<<<<<<<
@@ -4530,7 +4586,7 @@ static PyObject *__pyx_f_10magrit_app_7helpers_14cartogram_doug_9Cartogram_trans
  */
                 __pyx_v_lf = (&(__pyx_v_self->aLocal[__pyx_v_i]));
 
-                /* "magrit_app/helpers/cartogram_doug.pyx":206
+                /* "magrit_app/helpers/cartogram_doug.pyx":208
  *                         for i in range(self.total_features):
  *                             lf = &self.aLocal[i]
  *                             cx = lf.ptCenter_x             # <<<<<<<<<<<<<<
@@ -4540,7 +4596,7 @@ static PyObject *__pyx_f_10magrit_app_7helpers_14cartogram_doug_9Cartogram_trans
                 __pyx_t_24 = __pyx_v_lf->ptCenter_x;
                 __pyx_v_cx = __pyx_t_24;
 
-                /* "magrit_app/helpers/cartogram_doug.pyx":207
+                /* "magrit_app/helpers/cartogram_doug.pyx":209
  *                             lf = &self.aLocal[i]
  *                             cx = lf.ptCenter_x
  *                             cy = lf.ptCenter_y             # <<<<<<<<<<<<<<
@@ -4550,7 +4606,7 @@ static PyObject *__pyx_f_10magrit_app_7helpers_14cartogram_doug_9Cartogram_trans
                 __pyx_t_24 = __pyx_v_lf->ptCenter_y;
                 __pyx_v_cy = __pyx_t_24;
 
-                /* "magrit_app/helpers/cartogram_doug.pyx":209
+                /* "magrit_app/helpers/cartogram_doug.pyx":211
  *                             cy = lf.ptCenter_y
  *                             # Pythagorean distance
  *                             distance = sqrt((x0 - cx) ** 2 + (y0 - cy) ** 2)             # <<<<<<<<<<<<<<
@@ -4559,7 +4615,7 @@ static PyObject *__pyx_f_10magrit_app_7helpers_14cartogram_doug_9Cartogram_trans
  */
                 __pyx_v_distance = sqrt((pow((__pyx_v_x0 - __pyx_v_cx), 2.0) + pow((__pyx_v_y0 - __pyx_v_cy), 2.0)));
 
-                /* "magrit_app/helpers/cartogram_doug.pyx":210
+                /* "magrit_app/helpers/cartogram_doug.pyx":212
  *                             # Pythagorean distance
  *                             distance = sqrt((x0 - cx) ** 2 + (y0 - cy) ** 2)
  *                             if distance > lf.dRadius:             # <<<<<<<<<<<<<<
@@ -4569,7 +4625,7 @@ static PyObject *__pyx_f_10magrit_app_7helpers_14cartogram_doug_9Cartogram_trans
                 __pyx_t_3 = ((__pyx_v_distance > __pyx_v_lf->dRadius) != 0);
                 if (__pyx_t_3) {
 
-                  /* "magrit_app/helpers/cartogram_doug.pyx":213
+                  /* "magrit_app/helpers/cartogram_doug.pyx":215
  *                                 # Calculate the force on verteces far away
  *                                 # from the centroid of this feature
  *                                 Fij = lf.dMass * lf.dRadius / distance             # <<<<<<<<<<<<<<
@@ -4578,7 +4634,7 @@ static PyObject *__pyx_f_10magrit_app_7helpers_14cartogram_doug_9Cartogram_trans
  */
                   __pyx_v_Fij = ((__pyx_v_lf->dMass * __pyx_v_lf->dRadius) / __pyx_v_distance);
 
-                  /* "magrit_app/helpers/cartogram_doug.pyx":210
+                  /* "magrit_app/helpers/cartogram_doug.pyx":212
  *                             # Pythagorean distance
  *                             distance = sqrt((x0 - cx) ** 2 + (y0 - cy) ** 2)
  *                             if distance > lf.dRadius:             # <<<<<<<<<<<<<<
@@ -4588,7 +4644,7 @@ static PyObject *__pyx_f_10magrit_app_7helpers_14cartogram_doug_9Cartogram_trans
                   goto __pyx_L29;
                 }
 
-                /* "magrit_app/helpers/cartogram_doug.pyx":217
+                /* "magrit_app/helpers/cartogram_doug.pyx":219
  *                                 # Calculate the force on verteces far away
  *                                 # from the centroid of this feature
  *                                 xF = distance / lf.dRadius             # <<<<<<<<<<<<<<
@@ -4598,7 +4654,7 @@ static PyObject *__pyx_f_10magrit_app_7helpers_14cartogram_doug_9Cartogram_trans
                 /*else*/ {
                   __pyx_v_xF = (__pyx_v_distance / __pyx_v_lf->dRadius);
 
-                  /* "magrit_app/helpers/cartogram_doug.pyx":218
+                  /* "magrit_app/helpers/cartogram_doug.pyx":220
  *                                 # from the centroid of this feature
  *                                 xF = distance / lf.dRadius
  *                                 Fij = lf.dMass * (xF ** 2) * (4 - (3 * xF))             # <<<<<<<<<<<<<<
@@ -4609,7 +4665,7 @@ static PyObject *__pyx_f_10magrit_app_7helpers_14cartogram_doug_9Cartogram_trans
                 }
                 __pyx_L29:;
 
-                /* "magrit_app/helpers/cartogram_doug.pyx":219
+                /* "magrit_app/helpers/cartogram_doug.pyx":221
  *                                 xF = distance / lf.dRadius
  *                                 Fij = lf.dMass * (xF ** 2) * (4 - (3 * xF))
  *                             Fij = Fij * self.dForceReductionFactor / distance             # <<<<<<<<<<<<<<
@@ -4618,7 +4674,7 @@ static PyObject *__pyx_f_10magrit_app_7helpers_14cartogram_doug_9Cartogram_trans
  */
                 __pyx_v_Fij = ((__pyx_v_Fij * __pyx_v_self->dForceReductionFactor) / __pyx_v_distance);
 
-                /* "magrit_app/helpers/cartogram_doug.pyx":220
+                /* "magrit_app/helpers/cartogram_doug.pyx":222
  *                                 Fij = lf.dMass * (xF ** 2) * (4 - (3 * xF))
  *                             Fij = Fij * self.dForceReductionFactor / distance
  *                             x = (x0 - cx) * Fij + x             # <<<<<<<<<<<<<<
@@ -4627,7 +4683,7 @@ static PyObject *__pyx_f_10magrit_app_7helpers_14cartogram_doug_9Cartogram_trans
  */
                 __pyx_v_x = (((__pyx_v_x0 - __pyx_v_cx) * __pyx_v_Fij) + __pyx_v_x);
 
-                /* "magrit_app/helpers/cartogram_doug.pyx":221
+                /* "magrit_app/helpers/cartogram_doug.pyx":223
  *                             Fij = Fij * self.dForceReductionFactor / distance
  *                             x = (x0 - cx) * Fij + x
  *                             y = (y0 - cy) * Fij + y             # <<<<<<<<<<<<<<
@@ -4637,7 +4693,7 @@ static PyObject *__pyx_f_10magrit_app_7helpers_14cartogram_doug_9Cartogram_trans
                 __pyx_v_y = (((__pyx_v_y0 - __pyx_v_cy) * __pyx_v_Fij) + __pyx_v_y);
               }
 
-              /* "magrit_app/helpers/cartogram_doug.pyx":222
+              /* "magrit_app/helpers/cartogram_doug.pyx":224
  *                             x = (x0 - cx) * Fij + x
  *                             y = (y0 - cy) * Fij + y
  *                         with gil:             # <<<<<<<<<<<<<<
@@ -4650,18 +4706,18 @@ static PyObject *__pyx_f_10magrit_app_7helpers_14cartogram_doug_9Cartogram_trans
                   #endif
                   /*try:*/ {
 
-                    /* "magrit_app/helpers/cartogram_doug.pyx":223
+                    /* "magrit_app/helpers/cartogram_doug.pyx":225
  *                             y = (y0 - cy) * Fij + y
  *                         with gil:
  *                             line_coord.append((x, y))             # <<<<<<<<<<<<<<
  *                 tmp_bound.append(line_coord)
  * 
  */
-                    __pyx_t_12 = PyFloat_FromDouble(__pyx_v_x); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 223, __pyx_L33_error)
+                    __pyx_t_12 = PyFloat_FromDouble(__pyx_v_x); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 225, __pyx_L33_error)
                     __Pyx_GOTREF(__pyx_t_12);
-                    __pyx_t_7 = PyFloat_FromDouble(__pyx_v_y); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 223, __pyx_L33_error)
+                    __pyx_t_7 = PyFloat_FromDouble(__pyx_v_y); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 225, __pyx_L33_error)
                     __Pyx_GOTREF(__pyx_t_7);
-                    __pyx_t_1 = PyTuple_New(2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 223, __pyx_L33_error)
+                    __pyx_t_1 = PyTuple_New(2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 225, __pyx_L33_error)
                     __Pyx_GOTREF(__pyx_t_1);
                     __Pyx_GIVEREF(__pyx_t_12);
                     PyTuple_SET_ITEM(__pyx_t_1, 0, __pyx_t_12);
@@ -4669,11 +4725,11 @@ static PyObject *__pyx_f_10magrit_app_7helpers_14cartogram_doug_9Cartogram_trans
                     PyTuple_SET_ITEM(__pyx_t_1, 1, __pyx_t_7);
                     __pyx_t_12 = 0;
                     __pyx_t_7 = 0;
-                    __pyx_t_28 = __Pyx_PyList_Append(__pyx_v_line_coord, __pyx_t_1); if (unlikely(__pyx_t_28 == ((int)-1))) __PYX_ERR(0, 223, __pyx_L33_error)
+                    __pyx_t_28 = __Pyx_PyList_Append(__pyx_v_line_coord, __pyx_t_1); if (unlikely(__pyx_t_28 == ((int)-1))) __PYX_ERR(0, 225, __pyx_L33_error)
                     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
                   }
 
-                  /* "magrit_app/helpers/cartogram_doug.pyx":222
+                  /* "magrit_app/helpers/cartogram_doug.pyx":224
  *                             x = (x0 - cx) * Fij + x
  *                             y = (y0 - cy) * Fij + y
  *                         with gil:             # <<<<<<<<<<<<<<
@@ -4699,7 +4755,7 @@ static PyObject *__pyx_f_10magrit_app_7helpers_14cartogram_doug_9Cartogram_trans
             }
           }
 
-          /* "magrit_app/helpers/cartogram_doug.pyx":198
+          /* "magrit_app/helpers/cartogram_doug.pyx":200
  *                 xs, ys = boundarys[it_bound].coords.xy
  *                 l_coord_bound = <unsigned int>len(xs)
  *                 with nogil:             # <<<<<<<<<<<<<<
@@ -4725,17 +4781,17 @@ static PyObject *__pyx_f_10magrit_app_7helpers_14cartogram_doug_9Cartogram_trans
           }
       }
 
-      /* "magrit_app/helpers/cartogram_doug.pyx":224
+      /* "magrit_app/helpers/cartogram_doug.pyx":226
  *                         with gil:
  *                             line_coord.append((x, y))
  *                 tmp_bound.append(line_coord)             # <<<<<<<<<<<<<<
  * 
  *             if nb_bound == 1:
  */
-      __pyx_t_28 = __Pyx_PyList_Append(__pyx_v_tmp_bound, __pyx_v_line_coord); if (unlikely(__pyx_t_28 == ((int)-1))) __PYX_ERR(0, 224, __pyx_L1_error)
+      __pyx_t_28 = __Pyx_PyList_Append(__pyx_v_tmp_bound, __pyx_v_line_coord); if (unlikely(__pyx_t_28 == ((int)-1))) __PYX_ERR(0, 226, __pyx_L1_error)
     }
 
-    /* "magrit_app/helpers/cartogram_doug.pyx":226
+    /* "magrit_app/helpers/cartogram_doug.pyx":228
  *                 tmp_bound.append(line_coord)
  * 
  *             if nb_bound == 1:             # <<<<<<<<<<<<<<
@@ -4745,7 +4801,7 @@ static PyObject *__pyx_f_10magrit_app_7helpers_14cartogram_doug_9Cartogram_trans
     __pyx_t_3 = ((__pyx_v_nb_bound == 1) != 0);
     if (__pyx_t_3) {
 
-      /* "magrit_app/helpers/cartogram_doug.pyx":227
+      /* "magrit_app/helpers/cartogram_doug.pyx":229
  * 
  *             if nb_bound == 1:
  *                 new_geom.append(Polygon(tmp_bound[0]))             # <<<<<<<<<<<<<<
@@ -4765,13 +4821,13 @@ static PyObject *__pyx_f_10magrit_app_7helpers_14cartogram_doug_9Cartogram_trans
       }
       __pyx_t_1 = (__pyx_t_12) ? __Pyx_PyObject_Call2Args(__pyx_t_7, __pyx_t_12, PyList_GET_ITEM(__pyx_v_tmp_bound, 0)) : __Pyx_PyObject_CallOneArg(__pyx_t_7, PyList_GET_ITEM(__pyx_v_tmp_bound, 0));
       __Pyx_XDECREF(__pyx_t_12); __pyx_t_12 = 0;
-      if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 227, __pyx_L1_error)
+      if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 229, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_1);
       __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
-      __pyx_t_28 = __Pyx_PyList_Append(__pyx_v_new_geom, __pyx_t_1); if (unlikely(__pyx_t_28 == ((int)-1))) __PYX_ERR(0, 227, __pyx_L1_error)
+      __pyx_t_28 = __Pyx_PyList_Append(__pyx_v_new_geom, __pyx_t_1); if (unlikely(__pyx_t_28 == ((int)-1))) __PYX_ERR(0, 229, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-      /* "magrit_app/helpers/cartogram_doug.pyx":226
+      /* "magrit_app/helpers/cartogram_doug.pyx":228
  *                 tmp_bound.append(line_coord)
  * 
  *             if nb_bound == 1:             # <<<<<<<<<<<<<<
@@ -4781,7 +4837,7 @@ static PyObject *__pyx_f_10magrit_app_7helpers_14cartogram_doug_9Cartogram_trans
       goto __pyx_L35;
     }
 
-    /* "magrit_app/helpers/cartogram_doug.pyx":229
+    /* "magrit_app/helpers/cartogram_doug.pyx":231
  *                 new_geom.append(Polygon(tmp_bound[0]))
  *             else:
  *                 for it_bound in range(nb_bound):             # <<<<<<<<<<<<<<
@@ -4794,7 +4850,7 @@ static PyObject *__pyx_f_10magrit_app_7helpers_14cartogram_doug_9Cartogram_trans
       for (__pyx_t_15 = 0; __pyx_t_15 < __pyx_t_14; __pyx_t_15+=1) {
         __pyx_v_it_bound = __pyx_t_15;
 
-        /* "magrit_app/helpers/cartogram_doug.pyx":230
+        /* "magrit_app/helpers/cartogram_doug.pyx":232
  *             else:
  *                 for it_bound in range(nb_bound):
  *                     new_geom.append(Polygon(tmp_bound[it_bound]))             # <<<<<<<<<<<<<<
@@ -4814,17 +4870,17 @@ static PyObject *__pyx_f_10magrit_app_7helpers_14cartogram_doug_9Cartogram_trans
         }
         __pyx_t_1 = (__pyx_t_12) ? __Pyx_PyObject_Call2Args(__pyx_t_7, __pyx_t_12, PyList_GET_ITEM(__pyx_v_tmp_bound, __pyx_v_it_bound)) : __Pyx_PyObject_CallOneArg(__pyx_t_7, PyList_GET_ITEM(__pyx_v_tmp_bound, __pyx_v_it_bound));
         __Pyx_XDECREF(__pyx_t_12); __pyx_t_12 = 0;
-        if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 230, __pyx_L1_error)
+        if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 232, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_1);
         __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
-        __pyx_t_28 = __Pyx_PyList_Append(__pyx_v_new_geom, __pyx_t_1); if (unlikely(__pyx_t_28 == ((int)-1))) __PYX_ERR(0, 230, __pyx_L1_error)
+        __pyx_t_28 = __Pyx_PyList_Append(__pyx_v_new_geom, __pyx_t_1); if (unlikely(__pyx_t_28 == ((int)-1))) __PYX_ERR(0, 232, __pyx_L1_error)
         __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
       }
     }
     __pyx_L35:;
   }
 
-  /* "magrit_app/helpers/cartogram_doug.pyx":232
+  /* "magrit_app/helpers/cartogram_doug.pyx":234
  *                     new_geom.append(Polygon(tmp_bound[it_bound]))
  * 
  *         if nb_geom > 1:             # <<<<<<<<<<<<<<
@@ -4834,7 +4890,7 @@ static PyObject *__pyx_f_10magrit_app_7helpers_14cartogram_doug_9Cartogram_trans
   __pyx_t_3 = ((__pyx_v_nb_geom > 1) != 0);
   if (__pyx_t_3) {
 
-    /* "magrit_app/helpers/cartogram_doug.pyx":233
+    /* "magrit_app/helpers/cartogram_doug.pyx":235
  * 
  *         if nb_geom > 1:
  *             return MultiPolygon(new_geom)             # <<<<<<<<<<<<<<
@@ -4855,14 +4911,14 @@ static PyObject *__pyx_f_10magrit_app_7helpers_14cartogram_doug_9Cartogram_trans
     }
     __pyx_t_1 = (__pyx_t_12) ? __Pyx_PyObject_Call2Args(__pyx_t_7, __pyx_t_12, __pyx_v_new_geom) : __Pyx_PyObject_CallOneArg(__pyx_t_7, __pyx_v_new_geom);
     __Pyx_XDECREF(__pyx_t_12); __pyx_t_12 = 0;
-    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 233, __pyx_L1_error)
+    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 235, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
     __pyx_r = __pyx_t_1;
     __pyx_t_1 = 0;
     goto __pyx_L0;
 
-    /* "magrit_app/helpers/cartogram_doug.pyx":232
+    /* "magrit_app/helpers/cartogram_doug.pyx":234
  *                     new_geom.append(Polygon(tmp_bound[it_bound]))
  * 
  *         if nb_geom > 1:             # <<<<<<<<<<<<<<
@@ -4871,7 +4927,7 @@ static PyObject *__pyx_f_10magrit_app_7helpers_14cartogram_doug_9Cartogram_trans
  */
   }
 
-  /* "magrit_app/helpers/cartogram_doug.pyx":234
+  /* "magrit_app/helpers/cartogram_doug.pyx":236
  *         if nb_geom > 1:
  *             return MultiPolygon(new_geom)
  *         elif nb_geom == 1:             # <<<<<<<<<<<<<<
@@ -4880,7 +4936,7 @@ static PyObject *__pyx_f_10magrit_app_7helpers_14cartogram_doug_9Cartogram_trans
   __pyx_t_3 = ((__pyx_v_nb_geom == 1) != 0);
   if (__pyx_t_3) {
 
-    /* "magrit_app/helpers/cartogram_doug.pyx":235
+    /* "magrit_app/helpers/cartogram_doug.pyx":237
  *             return MultiPolygon(new_geom)
  *         elif nb_geom == 1:
  *             return new_geom[0]             # <<<<<<<<<<<<<<
@@ -4890,7 +4946,7 @@ static PyObject *__pyx_f_10magrit_app_7helpers_14cartogram_doug_9Cartogram_trans
     __pyx_r = PyList_GET_ITEM(__pyx_v_new_geom, 0);
     goto __pyx_L0;
 
-    /* "magrit_app/helpers/cartogram_doug.pyx":234
+    /* "magrit_app/helpers/cartogram_doug.pyx":236
  *         if nb_geom > 1:
  *             return MultiPolygon(new_geom)
  *         elif nb_geom == 1:             # <<<<<<<<<<<<<<
@@ -4898,7 +4954,7 @@ static PyObject *__pyx_f_10magrit_app_7helpers_14cartogram_doug_9Cartogram_trans
  */
   }
 
-  /* "magrit_app/helpers/cartogram_doug.pyx":165
+  /* "magrit_app/helpers/cartogram_doug.pyx":164
  *         self.dForceReductionFactor = 1 / (dMean + 1)
  * 
  *     cdef object transform_geom(self, object geom,             # <<<<<<<<<<<<<<
@@ -19694,7 +19750,6 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_kp_s_contiguous_and_direct, __pyx_k_contiguous_and_direct, sizeof(__pyx_k_contiguous_and_direct), 0, 0, 1, 0},
   {&__pyx_kp_s_contiguous_and_indirect, __pyx_k_contiguous_and_indirect, sizeof(__pyx_k_contiguous_and_indirect), 0, 0, 1, 0},
   {&__pyx_n_s_coords, __pyx_k_coords, sizeof(__pyx_k_coords), 0, 0, 1, 1},
-  {&__pyx_n_s_ctypes, __pyx_k_ctypes, sizeof(__pyx_k_ctypes), 0, 0, 1, 1},
   {&__pyx_n_s_dict, __pyx_k_dict, sizeof(__pyx_k_dict), 0, 0, 1, 1},
   {&__pyx_n_s_dtype_is_object, __pyx_k_dtype_is_object, sizeof(__pyx_k_dtype_is_object), 0, 0, 1, 1},
   {&__pyx_n_s_encode, __pyx_k_encode, sizeof(__pyx_k_encode), 0, 0, 1, 1},
@@ -19710,6 +19765,7 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_geodf, __pyx_k_geodf, sizeof(__pyx_k_geodf), 0, 0, 1, 1},
   {&__pyx_n_s_geom_type, __pyx_k_geom_type, sizeof(__pyx_k_geom_type), 0, 0, 1, 1},
   {&__pyx_n_s_geometry, __pyx_k_geometry, sizeof(__pyx_k_geometry), 0, 0, 1, 1},
+  {&__pyx_n_s_geoms, __pyx_k_geoms, sizeof(__pyx_k_geoms), 0, 0, 1, 1},
   {&__pyx_n_s_get_loc, __pyx_k_get_loc, sizeof(__pyx_k_get_loc), 0, 0, 1, 1},
   {&__pyx_n_s_getstate, __pyx_k_getstate, sizeof(__pyx_k_getstate), 0, 0, 1, 1},
   {&__pyx_kp_s_got_differing_extents_in_dimensi, __pyx_k_got_differing_extents_in_dimensi, sizeof(__pyx_k_got_differing_extents_in_dimensi), 0, 0, 1, 0},
@@ -20541,32 +20597,32 @@ if (!__Pyx_RefNanny) {
   if (PyDict_SetItem(__pyx_d, __pyx_n_s_make_cartogram, __pyx_t_2) < 0) __PYX_ERR(0, 22, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "magrit_app/helpers/cartogram_doug.pyx":166
+  /* "magrit_app/helpers/cartogram_doug.pyx":165
  * 
  *     cdef object transform_geom(self, object geom,
  *                                Polygon=Polygon, MultiPolygon=MultiPolygon,             # <<<<<<<<<<<<<<
  *                                LineString=LineString):
  *         """
  */
-  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_Polygon); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 166, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_Polygon); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 165, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_k__3 = __pyx_t_2;
   __Pyx_GIVEREF(__pyx_t_2);
   __pyx_t_2 = 0;
-  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_MultiPolygon); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 166, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_MultiPolygon); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 165, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_k__4 = __pyx_t_2;
   __Pyx_GIVEREF(__pyx_t_2);
   __pyx_t_2 = 0;
 
-  /* "magrit_app/helpers/cartogram_doug.pyx":167
+  /* "magrit_app/helpers/cartogram_doug.pyx":166
  *     cdef object transform_geom(self, object geom,
  *                                Polygon=Polygon, MultiPolygon=MultiPolygon,
  *                                LineString=LineString):             # <<<<<<<<<<<<<<
  *         """
  *         Core function computing the transformation on the Polygon (or on each
  */
-  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_LineString); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 167, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_LineString); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 166, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_k__27 = __pyx_t_2;
   __Pyx_GIVEREF(__pyx_t_2);
@@ -22036,48 +22092,6 @@ static CYTHON_INLINE int __Pyx_SetItemInt_Fast(PyObject *o, Py_ssize_t i, PyObje
     return __Pyx_SetItemInt_Generic(o, PyInt_FromSsize_t(i), v);
 }
 
-/* WriteUnraisableException */
-static void __Pyx_WriteUnraisable(const char *name, CYTHON_UNUSED int clineno,
-                                  CYTHON_UNUSED int lineno, CYTHON_UNUSED const char *filename,
-                                  int full_traceback, CYTHON_UNUSED int nogil) {
-    PyObject *old_exc, *old_val, *old_tb;
-    PyObject *ctx;
-    __Pyx_PyThreadState_declare
-#ifdef WITH_THREAD
-    PyGILState_STATE state;
-    if (nogil)
-        state = PyGILState_Ensure();
-#ifdef _MSC_VER
-    else state = (PyGILState_STATE)-1;
-#endif
-#endif
-    __Pyx_PyThreadState_assign
-    __Pyx_ErrFetch(&old_exc, &old_val, &old_tb);
-    if (full_traceback) {
-        Py_XINCREF(old_exc);
-        Py_XINCREF(old_val);
-        Py_XINCREF(old_tb);
-        __Pyx_ErrRestore(old_exc, old_val, old_tb);
-        PyErr_PrintEx(1);
-    }
-    #if PY_MAJOR_VERSION < 3
-    ctx = PyString_FromString(name);
-    #else
-    ctx = PyUnicode_FromString(name);
-    #endif
-    __Pyx_ErrRestore(old_exc, old_val, old_tb);
-    if (!ctx) {
-        PyErr_WriteUnraisable(Py_None);
-    } else {
-        PyErr_WriteUnraisable(ctx);
-        Py_DECREF(ctx);
-    }
-#ifdef WITH_THREAD
-    if (nogil)
-        PyGILState_Release(state);
-#endif
-}
-
 /* RaiseTooManyValuesToUnpack */
 static CYTHON_INLINE void __Pyx_RaiseTooManyValuesError(Py_ssize_t expected) {
     PyErr_Format(PyExc_ValueError,
@@ -22136,6 +22150,48 @@ static int __Pyx_IternextUnpackEndCheck(PyObject *retval, Py_ssize_t expected) {
         return __Pyx_IterFinish();
     }
     return 0;
+}
+
+/* WriteUnraisableException */
+static void __Pyx_WriteUnraisable(const char *name, CYTHON_UNUSED int clineno,
+                                  CYTHON_UNUSED int lineno, CYTHON_UNUSED const char *filename,
+                                  int full_traceback, CYTHON_UNUSED int nogil) {
+    PyObject *old_exc, *old_val, *old_tb;
+    PyObject *ctx;
+    __Pyx_PyThreadState_declare
+#ifdef WITH_THREAD
+    PyGILState_STATE state;
+    if (nogil)
+        state = PyGILState_Ensure();
+#ifdef _MSC_VER
+    else state = (PyGILState_STATE)-1;
+#endif
+#endif
+    __Pyx_PyThreadState_assign
+    __Pyx_ErrFetch(&old_exc, &old_val, &old_tb);
+    if (full_traceback) {
+        Py_XINCREF(old_exc);
+        Py_XINCREF(old_val);
+        Py_XINCREF(old_tb);
+        __Pyx_ErrRestore(old_exc, old_val, old_tb);
+        PyErr_PrintEx(1);
+    }
+    #if PY_MAJOR_VERSION < 3
+    ctx = PyString_FromString(name);
+    #else
+    ctx = PyUnicode_FromString(name);
+    #endif
+    __Pyx_ErrRestore(old_exc, old_val, old_tb);
+    if (!ctx) {
+        PyErr_WriteUnraisable(Py_None);
+    } else {
+        PyErr_WriteUnraisable(ctx);
+        Py_DECREF(ctx);
+    }
+#ifdef WITH_THREAD
+    if (nogil)
+        PyGILState_Release(state);
+#endif
 }
 
 /* ArgTypeTest */
