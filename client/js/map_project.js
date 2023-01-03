@@ -718,7 +718,6 @@ function rehandle_legend(layer_name, properties, version) {
     }
     const lgd = svg_map.querySelector(`#${prop.type}.lgdf_${_app.layer_to_id.get(layer_name)}`);
 
-    console.log(version, prop.type);
     if (version.major < 1 && version.minor < 12 && prop.type === 'legend_root_symbol') {
       // Starting from version 0.12.0, the legend is drawn slightly differently,
       // so we have to move legend elements saved before 0.12.0

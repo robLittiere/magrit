@@ -421,10 +421,19 @@ function handleGpkg(files) {
           xhrequest('POST', '/convert_geopackage', formData2, true)
             .then((rawData2) => {
               const data2 = JSON.parse(rawData2);
+              // Did the user select one of the layers as the (new) target layer ?
               const has_target_layer = !!target_layer;
+              // Is there already a target layer in the interface ?
+              const existingTargetLayer = Object.keys(data_manager.user_data).length > 0;
+              // If so, we need to downgrade it as a layout layer
+              // before adding a new target layer...
+              if (existingTargetLayer && has_target_layer) {
+                downgradeTargetLayer();
+              }
               // Sort layers so that the target layer is the last one to be added
               data2.sort((a, b) => (Object.keys(a.file.objects)[0] === target_layer ? 1 : -1));
-              // Add each layer to the map, propose to the user to use the projection of the target layer
+              // Add each layer to the map, propose to the user
+              // to use the projection of the target layer
               // or otherwise use the projection of the last layer added
               data2.forEach(({ key, file, proj }) => {
                 const layer_name = Object.keys(file.objects)[0];
@@ -440,6 +449,8 @@ function handleGpkg(files) {
                 );
               });
             });
+        }, () => {
+          // User dismissed the dialog
         });
     }, () => {
       display_error_during_computation();
