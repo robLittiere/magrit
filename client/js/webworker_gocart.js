@@ -1,4 +1,4 @@
-importScripts('go-cart.js');
+importScripts('https://unpkg.com/go-cart-wasm@0.2.0/dist/go-cart.js');
 
 let GoCart;
 
@@ -18,9 +18,9 @@ onmessage = function(e) {
   postMessage(response);
 };
 
-initGoCart()
-  .then((GoCartModule) => {
-    GoCart = GoCartModule;
-    postMessage({ success: true, data: 'ready' });
-  });
-
+initGoCart({
+  locateFile: () => 'https://unpkg.com/go-cart-wasm@0.2.0/dist/cart.wasm',
+}).then((GoCartModule) => {
+  GoCart = GoCartModule;
+  postMessage({ success: true, data: 'ready' });
+});
