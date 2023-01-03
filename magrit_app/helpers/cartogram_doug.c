@@ -4270,7 +4270,7 @@ static PyObject *__pyx_f_10magrit_app_7helpers_14cartogram_doug_9Cartogram_trans
  *             boundarys = geom[it_geom].boundary
  *             tmp_bound = []             # <<<<<<<<<<<<<<
  *             try:
- *                 nb_bound = <unsigned int>len(boundarys.geoms)
+ *                 nb_bound = <Py_ssize_t>len(boundarys.geoms)
  */
     __pyx_t_7 = PyList_New(0); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 188, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_7);
@@ -4281,7 +4281,7 @@ static PyObject *__pyx_f_10magrit_app_7helpers_14cartogram_doug_9Cartogram_trans
  *             boundarys = geom[it_geom].boundary
  *             tmp_bound = []
  *             try:             # <<<<<<<<<<<<<<
- *                 nb_bound = <unsigned int>len(boundarys.geoms)
+ *                 nb_bound = <Py_ssize_t>len(boundarys.geoms)
  *                 boundarys = boundarys.geoms
  */
     {
@@ -4296,7 +4296,7 @@ static PyObject *__pyx_f_10magrit_app_7helpers_14cartogram_doug_9Cartogram_trans
         /* "magrit_app/helpers/cartogram_doug.pyx":190
  *             tmp_bound = []
  *             try:
- *                 nb_bound = <unsigned int>len(boundarys.geoms)             # <<<<<<<<<<<<<<
+ *                 nb_bound = <Py_ssize_t>len(boundarys.geoms)             # <<<<<<<<<<<<<<
  *                 boundarys = boundarys.geoms
  *             except:
  */
@@ -4304,11 +4304,11 @@ static PyObject *__pyx_f_10magrit_app_7helpers_14cartogram_doug_9Cartogram_trans
         __Pyx_GOTREF(__pyx_t_7);
         __pyx_t_11 = PyObject_Length(__pyx_t_7); if (unlikely(__pyx_t_11 == ((Py_ssize_t)-1))) __PYX_ERR(0, 190, __pyx_L6_error)
         __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
-        __pyx_v_nb_bound = ((unsigned int)__pyx_t_11);
+        __pyx_v_nb_bound = ((Py_ssize_t)__pyx_t_11);
 
         /* "magrit_app/helpers/cartogram_doug.pyx":191
  *             try:
- *                 nb_bound = <unsigned int>len(boundarys.geoms)
+ *                 nb_bound = <Py_ssize_t>len(boundarys.geoms)
  *                 boundarys = boundarys.geoms             # <<<<<<<<<<<<<<
  *             except:
  *                 nb_bound = 1
@@ -4322,7 +4322,7 @@ static PyObject *__pyx_f_10magrit_app_7helpers_14cartogram_doug_9Cartogram_trans
  *             boundarys = geom[it_geom].boundary
  *             tmp_bound = []
  *             try:             # <<<<<<<<<<<<<<
- *                 nb_bound = <unsigned int>len(boundarys.geoms)
+ *                 nb_bound = <Py_ssize_t>len(boundarys.geoms)
  *                 boundarys = boundarys.geoms
  */
       }
@@ -4335,7 +4335,7 @@ static PyObject *__pyx_f_10magrit_app_7helpers_14cartogram_doug_9Cartogram_trans
       __Pyx_XDECREF(__pyx_t_7); __pyx_t_7 = 0;
 
       /* "magrit_app/helpers/cartogram_doug.pyx":192
- *                 nb_bound = <unsigned int>len(boundarys.geoms)
+ *                 nb_bound = <Py_ssize_t>len(boundarys.geoms)
  *                 boundarys = boundarys.geoms
  *             except:             # <<<<<<<<<<<<<<
  *                 nb_bound = 1
@@ -4382,7 +4382,7 @@ static PyObject *__pyx_f_10magrit_app_7helpers_14cartogram_doug_9Cartogram_trans
  *             boundarys = geom[it_geom].boundary
  *             tmp_bound = []
  *             try:             # <<<<<<<<<<<<<<
- *                 nb_bound = <unsigned int>len(boundarys.geoms)
+ *                 nb_bound = <Py_ssize_t>len(boundarys.geoms)
  *                 boundarys = boundarys.geoms
  */
       __Pyx_XGIVEREF(__pyx_t_8);

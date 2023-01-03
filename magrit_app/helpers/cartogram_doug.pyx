@@ -187,7 +187,7 @@ cdef class Cartogram(object):
             boundarys = geom[it_geom].boundary
             tmp_bound = []
             try:
-                nb_bound = <unsigned int>len(boundarys.geoms)
+                nb_bound = <Py_ssize_t>len(boundarys.geoms)
                 boundarys = boundarys.geoms
             except:
                 nb_bound = 1
