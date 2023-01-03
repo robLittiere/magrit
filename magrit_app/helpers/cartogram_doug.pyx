@@ -28,7 +28,7 @@ def make_cartogram(geodf, field_name, iterations=5):
 
     Parameters
     ----------
-    gdf: geopandas.GeoDataFrame
+    geodf: geopandas.GeoDataFrame
         The GeoDataFrame containing the geometry and a field to use for the
         transformation.
     field_name: String
