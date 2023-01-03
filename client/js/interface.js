@@ -185,11 +185,19 @@ export function setUpInterface(reload_project) {
 export function askTypeMultipleLayers(list_layers) {
   const user_selected_layers = [];
   let target_layer;
+  // How many layer in the geopackage ?
+  const onlyOneLayer = list_layers.length === 1;
+  // Is there already a target layer ?
+  const noTargetLayer = Object.keys(data_manager.user_data).length === 0;
+  // If there is only one layer in the geopackage, the input checkbox is checked by default.
+  // In addition, if there is no target layer in the UI, we also check the radio button
+  // (saying it is the target layer) by default.
+  // Otherwise, nothing is checked by default and the user has to make a choice.
   const layers = list_layers.map((d) => `
       <tr>
         <td value="${d}">${d}</td>
-        <td><input class="layer-to-add" type="checkbox" /></td>
-        <td><input type="radio" name="target-layer" disabled /></td>
+        <td><input class="layer-to-add" type="checkbox" ${onlyOneLayer ? 'checked' : ''}/></td>
+        <td><input type="radio" name="target-layer" ${onlyOneLayer ? noTargetLayer ? 'checked' : '' : 'disabled'} /></td>
       </tr>`).join('');
   const promise = swal({
     title: '',
