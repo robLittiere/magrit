@@ -4,7 +4,7 @@
 
 - Correction d'un bug qui empêchait de faire certaines représentations cartographiques après avoir promu une couche d'habillage en couche cible.
 
-- Nouveau : Ajout d'une option permettant d'utiliser la méthode de Gastner, Seguy et More (2018) pour calculer les cartogrammes.
+- Nouveau : Ajout d'une option permettant d'utiliser la méthode de Gastner, Seguy et More (2018) pour calculer les cartogrammes (seulement disponible dans les navigateurs qui supportent WebAssembly).
 
 #### 0.12.1 (2022-12-06)
 
