@@ -29,7 +29,7 @@ def save_version_packagejson(version):
 
 def rebuild_assets():
     p = Popen(
-        'NODE_ENV=production ./node_modules/webpack/bin/webpack.js',
+        'NODE_ENV=production NODE_OPTIONS=--openssl-legacy-provider ./node_modules/webpack/bin/webpack.js',
         shell=True, stderr=PIPE, stdout=PIPE)
     a, b = p.communicate()
     if b:

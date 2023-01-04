@@ -1,6 +1,6 @@
 # Historique des versions et des changements effectués
 
-#### Unreleased
+#### 0.13.0 (2023-01-04)
 
 - Correction d'un bug qui empêchait de faire certaines représentations cartographiques après avoir promu une couche d'habillage en couche cible.
 
