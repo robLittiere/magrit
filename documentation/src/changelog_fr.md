@@ -1,5 +1,11 @@
 # Historique des versions et des changements effectués
 
+#### 0.13.1 (unreleased)
+
+- Mise à jour de go-cart-wasm pour utiliser la version 0.3.0 (corrige un problème de boucle infinie sur certains jeux de données)
+
+- Corrige un DeprecationWarning lors de la reprojection de certaines géometries.
+
 #### 0.13.0 (2023-01-04)
 
 - Correction d'un bug qui empêchait de faire certaines représentations cartographiques après avoir promu une couche d'habillage en couche cible.

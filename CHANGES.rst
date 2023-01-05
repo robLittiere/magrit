@@ -1,6 +1,15 @@
 Changes
 =======
 
+0.13.1 (unreleased)
+-------------------
+
+- Update go-cart-wasm version to 0.3.0 (avoid infinite loop on some edge cases).
+
+- Remove some deprecation warning when reprojecting some geometries in Python code.
+
+-
+
 0.13.0 (2023-01-04)
 -------------------
 
