@@ -8,7 +8,7 @@ Changes
 
 - Remove some deprecation warning when reprojecting some geometries in Python code.
 
--
+- Improve how to overlay disappears if an error is encountered during Gastner, Seguy and More cartogram creation.
 
 0.13.0 (2023-01-04)
 -------------------

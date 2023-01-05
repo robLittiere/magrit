@@ -4,6 +4,8 @@
 
 - Mise à jour de go-cart-wasm pour utiliser la version 0.3.0 (corrige un problème de boucle infinie sur certains jeux de données)
 
+- Améliore la gestion de l'overlay en cas d'erreur lors du calcul des cartogrammes de Gastner, Seguy et More.
+
 - Corrige un DeprecationWarning lors de la reprojection de certaines géometries.
 
 #### 0.13.0 (2023-01-04)
