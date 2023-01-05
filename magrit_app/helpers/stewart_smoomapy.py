@@ -57,7 +57,7 @@ def quick_stewart_mod(input_geojson_points, variable_name, span,
                            user_defined_breaks,
                            output="GeoDataFrame")
     _min, _max = result[["min", "max"]].values.T.tolist()
-    result.to_crs({'init': 'epsg:4326'}, inplace=True)
+    result.to_crs('epsg:4326', inplace=True)
     if not mask:
         # In some weird cases, when not using a clipping mask, some resulting
         # geometries seems to be malformed, but hopefully saving it
