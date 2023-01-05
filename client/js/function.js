@@ -2276,6 +2276,7 @@ const fields_Anamorphose = {
         };
 
         const workerGoCart = new Worker('static/dist/webworker_gocart.js');
+        _app.webworker_to_cancel = workerGoCart;
         workerGoCart.onmessage = function (_e) {
           const resp = _e.data;
           if (resp.success && resp.data === 'ready') {
@@ -2284,6 +2285,7 @@ const fields_Anamorphose = {
 
               if (!response.success) {
                 console.log(response.data);
+                _app.waitingOverlay.hide();
                 workerGoCart.terminate();
                 display_error_during_computation(_tr('app_page.common.error_message'));
                 return;
@@ -2321,6 +2323,7 @@ const fields_Anamorphose = {
           } else {
             console.log(resp.data);
             workerGoCart.terminate();
+            _app.waitingOverlay.hide();
             display_error_during_computation(_tr('app_page.common.error_message'));
             return;
           }
