@@ -1,7 +1,7 @@
 Changes
 =======
 
-0.13.1 (unreleased)
+0.13.1 (2023-01-05)
 -------------------
 
 - Update go-cart-wasm version to 0.3.0 (avoid infinite loop on some edge cases).
