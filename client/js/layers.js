@@ -5,7 +5,7 @@ import { check_remove_existing_box, make_confirm_dialog2 } from './dialogs';
 import { check_layer_name } from './function';
 import {
   create_li_layer_elem, display_error_during_computation,
-  isValidJSON, make_box_type_fields, request_data, setSelected, xhrequest,
+  isValidJSON, make_box_type_fields, request_data, rewind, setSelected, xhrequest,
 } from './helpers';
 import { valid_join_check_display } from './join_popup';
 import { zoom_without_redraw } from './map_ctrl';
@@ -346,12 +346,13 @@ export function add_layer_topojson(text, options = {}) {
   });
 
   const func_data_idx = (_, ix) => `feature_${ix}`;
+  const features = rewind(topojson.feature(topoObj, topoObj_objects), true).features;
 
   map.insert('g', '.legend')
     .attrs({ id: lyr_id, class: data_to_load ? 'targeted_layer layer' : 'layer' })
     .styles({ 'stroke-linecap': 'round', 'stroke-linejoin': 'round' })
     .selectAll('.subunit')
-    .data(topojson.feature(topoObj, topoObj_objects).features, d => d.id)
+    .data(features, d => d.id)
     .enter()
     .append('path')
     .attrs({ d: path_to_use, id: func_data_idx })

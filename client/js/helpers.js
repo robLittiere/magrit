@@ -1269,8 +1269,6 @@ function squareForceCollide() {
 
   return force;
 }
-
-
 export function parseTransformAttribute(t) {
   const d = {};
   for (const i in t = t.match(/(\w+\((-?\d+\.?\d*e?-?\d*,?)+\))+/g)) {
@@ -1278,4 +1276,46 @@ export function parseTransformAttribute(t) {
     d[c.shift()] = c;
   }
   return d;
+}
+
+function rewindRing(ring, dir) {
+  let tArea = 0;
+  let err = 0;
+  // eslint-disable-next-line no-plusplus
+  for (let i = 0, len = ring.length, j = len - 1; i < len; j = i++) {
+    const k = (ring[i][0] - ring[j][0]) * (ring[j][1] + ring[i][1]);
+    const m = tArea + k;
+    err += Math.abs(tArea) >= Math.abs(k) ? tArea - m + k : k - m + tArea;
+    tArea = m;
+  }
+  if (tArea + err >= 0 !== !!dir) ring.reverse();
+}
+
+function rewindRings(rings, outer) {
+  if (rings.length === 0) return;
+  rewindRing(rings[0], outer);
+  for (let i = 1; i < rings.length; i++) {
+    rewindRing(rings[i], !outer);
+  }
+}
+
+// Rewind rings of geojson (Multi)Polygons
+// adapted from https://github.com/mapbox/geojson-rewind
+// (originally authored by Mapbox, under ISC Licence)
+export function rewind(geojson, outer) {
+  if (!geojson.type || geojson.type !== 'FeatureCollection') {
+    throw new Error('Input must be a GeoJSON FeatureCollection');
+  }
+
+  for (let i = 0; i < geojson.features.length; i++) {
+    if (geojson.features[i].geometry.type === 'Polygon') {
+      rewindRings(geojson.features[i].geometry.coordinates, outer);
+    } else if (geojson.features[i].geometry.type === 'MultiPolygon') {
+      for (let j = 0; j < geojson.features[i].geometry.coordinates.length; j++) {
+        rewindRings(geojson.features[i].geometry.coordinates[j], outer);
+      }
+    }
+  }
+
+  return geojson;
 }
