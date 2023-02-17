@@ -1,5 +1,9 @@
 # Historique des versions et des changements effectués
 
+#### 0.13.2 (2023-02-17)
+
+- Rembobine les anneaux des polygones avant d'afficher les couches dans la carte (pour éviter certains problèmes de rendu avec certaines géométries et d3.js).
+
 #### 0.13.1 (2023-01-05)
 
 - Mise à jour de go-cart-wasm pour utiliser la version 0.3.0 (corrige un problème de boucle infinie sur certains jeux de données)

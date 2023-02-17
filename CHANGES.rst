@@ -1,6 +1,12 @@
 Changes
 =======
 
+
+0.13.2 (2023-02-17)
+-------------------
+
+- Rewind rings of polygons before displaying layers in the map (to avoid some rendering issues with some geometries and d3.js).
+
 0.13.1 (2023-01-05)
 -------------------
 
