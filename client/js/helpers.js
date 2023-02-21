@@ -6,7 +6,7 @@ import {
   button_table, button_trash, button_type,
   button_zoom_fit, eye_open0, sys_run_button_t2,
 } from './ui/buttons';
-import { area, booleanPointInPolygon, nearestPoint, pointOnFeature, } from '@turf/turf';
+import {area, booleanPointInPolygon, nearestPoint, pointOnFeature, polygon,} from '@turf/turf';
 import * as polylabel from 'polylabel';
 import reprojectGeoJSONPlugable from 'reproject-geojson/pluggable';
 import proj4 from 'proj4';
@@ -1278,7 +1278,7 @@ export function parseTransformAttribute(t) {
   return d;
 }
 
-function rewindRing(ring, dir) {
+function rewindRing(ring, rings, dir, rewindLargerThanHemisphere) {
   let tArea = 0;
   let err = 0;
   // eslint-disable-next-line no-plusplus
@@ -1288,31 +1288,46 @@ function rewindRing(ring, dir) {
     err += Math.abs(tArea) >= Math.abs(k) ? tArea - m + k : k - m + tArea;
     tArea = m;
   }
-  if (tArea + err >= 0 !== !!dir) ring.reverse();
+  if (
+    tArea + err >= 0 !== !!dir
+  ) {
+    ring.reverse();
+  }
+  if (Math.abs(tArea + err) > 0.1 && (
+    !dir
+      ? !d3.geoContains({ type: 'Polygon', coordinates: [ring] }, rings[0][0])
+      : rings[1]
+        ? !d3.geoContains({ type: 'Polygon', coordinates: [ring] }, rings[1][0])
+        : rewindLargerThanHemisphere && d3.geoArea({ type: 'Polygon', coordinates: [ring] }) > Math.PI * 2)
+  ) ring.reverse();
 }
 
-function rewindRings(rings, outer) {
+function rewindRings(rings, rewindLargerThanHemisphere, outer = true) {
   if (rings.length === 0) return;
-  rewindRing(rings[0], outer);
+  rewindRing(rings[0], rings, outer, rewindLargerThanHemisphere);
   for (let i = 1; i < rings.length; i++) {
-    rewindRing(rings[i], !outer);
+    rewindRing(rings[i], rings, !outer, rewindLargerThanHemisphere);
   }
 }
 
-// Rewind rings of geojson (Multi)Polygons
-// adapted from https://github.com/mapbox/geojson-rewind
-// (originally authored by Mapbox, under ISC Licence)
-export function rewind(geojson, outer) {
+
+// Rewind rings of geojson (Multi)Polygons,
+// originally adapted from https://github.com/mapbox/geojson-rewind (authored by Mapbox, under ISC Licence)
+// but reworked to follow Philippe Rivière advices (cf. https://observablehq.com/@fil/rewind and
+// https://github.com/neocarto/bertin/issues/108).
+// In the end, we endup mixing the two approaches, as applying the Philippe Rivière's method to some
+// polygons (e.g. the one of the "Région Nord-Pas-De-Calais-Picardie") leads to a non-valid polygon.
+export function rewind(geojson, rewindLargerThanHemisphere = true) {
   if (!geojson.type || geojson.type !== 'FeatureCollection') {
     throw new Error('Input must be a GeoJSON FeatureCollection');
   }
 
   for (let i = 0; i < geojson.features.length; i++) {
     if (geojson.features[i].geometry.type === 'Polygon') {
-      rewindRings(geojson.features[i].geometry.coordinates, outer);
+      rewindRings(geojson.features[i].geometry.coordinates, rewindLargerThanHemisphere);
     } else if (geojson.features[i].geometry.type === 'MultiPolygon') {
       for (let j = 0; j < geojson.features[i].geometry.coordinates.length; j++) {
-        rewindRings(geojson.features[i].geometry.coordinates[j], outer);
+        rewindRings(geojson.features[i].geometry.coordinates[j], rewindLargerThanHemisphere);
       }
     }
   }

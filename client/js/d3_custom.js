@@ -292,6 +292,7 @@ export {
   geoTransform,
   geoTransverseMercator,
   geoTransverseMercatorRaw,
+  geoContains,
 } from 'd3-geo';
 
 export {
