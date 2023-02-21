@@ -2,6 +2,13 @@ Changes
 =======
 
 
+0.13.3 (2023-02-21)
+-------------------
+
+- Try to improve rings rewinding since some existing issues weren't solved (#104) and since some new issues have arisen (#105).
+
+- Fig a bug preventing to load target layers that don't have any attribute field.
+
 0.13.2 (2023-02-17)
 -------------------
 

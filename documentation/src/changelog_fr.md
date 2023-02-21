@@ -1,5 +1,11 @@
 # Historique des versions et des changements effectués
 
+#### 0.13.3 (2023-02-21)
+
+- Essayer d'améliorer le rembobinage des anneaux des polygones puisque certains problèmes existants n'ont pas été résolus (#104) et que de nouveaux problèmes sont apparus (#105).
+
+- Corrige un bug empêchant de charger des couches cibles qui n'ont aucun champ d'attribut.
+
 #### 0.13.2 (2023-02-17)
 
 - Rembobine les anneaux des polygones avant d'afficher les couches dans la carte (pour éviter certains problèmes de rendu avec certaines géométries et d3.js).
