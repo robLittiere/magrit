@@ -329,6 +329,7 @@ export function add_layer_topojson(text, options = {}) {
   const path_to_use = options.pointRadius ? path.pointRadius(options.pointRadius) : path;
   const nb_fields = field_names.length;
   topoObj_objects.geometries.forEach((d, ix) => {
+    if (!d.properties) d.properties = {}; // eslint-disable-line no-param-reassign
     if (data_to_load && nb_fields > 0) {
       if (d.id !== undefined && d.id !== ix) {
         d.properties._uid = d.id; // eslint-disable-line no-param-reassign
