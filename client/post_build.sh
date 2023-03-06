@@ -1,3 +1,5 @@
+#!/bin/bash
+
 files=$(ls dist/app.*.js 2> /dev/null | wc -l)
 if [ "$files" != "0" ]
 then
