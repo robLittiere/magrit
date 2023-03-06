@@ -74,7 +74,6 @@ Rplots.pdf
 tmp/
 
 # Node / npm files to ignore :
-
 .npm
 .grunt
 .eslintcache
@@ -89,6 +88,9 @@ magrit_app/static/*.html
 
 # Dont track built documentation files
 margrit_app/static/book
+
+# Dont track mdbook executable if any
+documentation/mdbook
 
 # Pytest cache
 /.pytest_cache/
