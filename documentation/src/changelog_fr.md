@@ -1,5 +1,9 @@
 # Historique des versions et des changements effectués
 
+#### 0.13.4 (2023-03-14)
+
+- Modification de la recette docker pour permettre la création et la publication sur docker hub d'images multi-plateformes (amd64 / arm64).
+
 #### 0.13.3 (2023-02-21)
 
 - Essayer d'améliorer le rembobinage des anneaux des polygones puisque certains problèmes existants n'ont pas été résolus (#104) et que de nouveaux problèmes sont apparus (#105).
@@ -26,7 +30,7 @@
 
 #### 0.12.1 (2022-12-06)
 
-- Corrige un ancien bug sur le chargement des ficher-projets générés avec les premières version de Magrit vers 2017 (avant la version 0.3.0, ne contenant pas d'informations relatives à la version utilisée pour générer le fichier-projet en question).
+- Corrige un ancien bug sur le chargement des ficher-projets générés avec les premières versions de Magrit vers 2017 (avant la version 0.3.0, ne contenant pas d'informations relatives à la version utilisée pour générer le fichier-projet en question).
 
 - Corrige un bug lors de l'import des geopackages lors du clic sur "Ajout d'un fond de carte" (l'import fonctionnait seulement quand le fichier était glissé-déposé sur la carte).
 
