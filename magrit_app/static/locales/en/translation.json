@@ -594,7 +594,8 @@
             "field_categ": "<strong>Field</strong> : {{ field }}<br>{{ nb_class }} categories<br>{{ nb_features}} features",
             "count_feature": " <i> ({{ count }} feature)</i>",
             "count_feature_plural": " <i> ({{ count }} features)</i>",
-            "title_click": "Click me to choose a symbol!"
+            "title_click": "Click me to choose a symbol!",
+            "checkbox_desc": "Check/uncheck to display pictograms"
         },
         "categorical_box": {
             "title": "Color a categorical field - {{ layer }} - {{ nb_features }} features",
