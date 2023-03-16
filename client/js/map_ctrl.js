@@ -122,12 +122,18 @@ export function reproj_symbol_layer() {
             return { x: pt[0], y: pt[1] };
           });
       } else if (symbol === 'image') { // Reproject pictograms :
+        // Get previously filtered symbols from data_manager :
+        const filtered_symbols = data_manager.current_layers[lyr_name].filtered_symbols;
         map.select(`#${global._app.layer_to_id.get(lyr_name)}`)
           .selectAll(symbol)
           .attrs(function (d) {
-            const coords = global.proj(d.geometry.coordinates),
-              size = +this.getAttribute('width').replace('px', '') / 2;
-            return { x: coords[0] - size, y: coords[1] - size };
+            let field = d.properties.symbol_field;
+            // Only render the symbols that were not filtered out :
+            if(!filtered_symbols.includes(field)){
+              const coords = global.proj(d.geometry.coordinates),
+                size = +this.getAttribute('width').replace('px', '') / 2;
+              return { x: coords[0] - size, y: coords[1] - size };
+            }
           });
       } else if (symbol === 'circle') { // Reproject Prop Symbol :
         const isDorling = !!data_manager.current_layers[lyr_name].dorling_demers;

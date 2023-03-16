@@ -3851,7 +3851,6 @@ const fields_TypoSymbol = {
         display_box_symbol_typo(layer, field, symbol_map).then((confirmed) => {
           if (confirmed) {
             document.getElementById('yesTypoSymbols').disabled = null;
-            console.log(confirmed)
             self.rendering_params[field] = {
               nb_cat: confirmed[0],
               symbols_map: confirmed[1],
@@ -3879,7 +3878,7 @@ const fields_TypoSymbol = {
 };
 
 // Added picto_filter parameter, a list of pictograms not to be displayed
-function render_TypoSymbols(rendering_params, new_name, hidden_picto)  { 
+function render_TypoSymbols(rendering_params, new_name, filtered_symbols)  { 
   const layer_name = Object.getOwnPropertyNames(data_manager.user_data)[0];
   const ref_layer_id = _app.layer_to_id.get(layer_name);
   const field = rendering_params.field;
@@ -3943,13 +3942,13 @@ function render_TypoSymbols(rendering_params, new_name, hidden_picto)  {
       if (field_value === null || field_value === '' || field_value === undefined) {
         field_value = 'undefined_category';
       }
-      // Values are stored as strings in our symbol map
-      const symb = rendering_params.symbols_map.get(`${field_value}`);
-      const coords = global.proj(d.geometry.coordinates);
-      
-      // Check if the field value is within the filtered list the user doesn't want to display
-      // If the symbol wasnt created (so it is undefined), it means that the field value is in the filtered list
-      if(symb != undefined){
+
+      // Check if field value is within the filtered list the user doesn't want to display
+      if(!filtered_symbols.includes(field_value)){
+        // Values are stored as strings in our symbol map
+        const symb = rendering_params.symbols_map.get(`${field_value}`);
+        const coords = global.proj(d.geometry.coordinates);
+        
         return {
           // Add a unique id to each element and a class to each element for future improvement
           id: `Picto_${i}`, 
@@ -3968,16 +3967,16 @@ function render_TypoSymbols(rendering_params, new_name, hidden_picto)  {
     })
     .call(drag_elem_geo);
 
-
-  data_manager.current_layers[layer_to_add] = {
-    n_features: data_manager.current_layers[layer_name].n_features,
-    renderer: 'TypoSymbols',
-    symbols_map: rendering_params.symbols_map,
-    rendered_field: field,
-    is_result: true,
-    symbol: 'image',
-    ref_layer_name: layer_name,
-  };
+    data_manager.current_layers[layer_to_add] = {
+      n_features: data_manager.current_layers[layer_name].n_features,
+      renderer: 'TypoSymbols',
+      symbols_map: rendering_params.symbols_map,
+      filtered_symbols: filtered_symbols,
+      rendered_field: field,
+      is_result: true,
+      symbol: 'image',
+      ref_layer_name: layer_name,
+    };
   
   create_li_layer_elem(layer_to_add, nb_ft, ['Point', 'symbol'], 'result');
   handle_legend(layer_to_add);
