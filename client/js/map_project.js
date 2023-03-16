@@ -273,7 +273,8 @@ export function get_map_project() {
         ? 'sphere' : false) || (current_layer_prop.graticule ? 'graticule' : 'layer'),
       nb_ft = current_layer_prop.n_features;
     let selection;
-
+    console.log("current_layer_prop", current_layer_prop);
+    
     layer_style_i.layer_name = layer_name;
     layer_style_i.layer_type = layer_type;
     layer_style_i.n_features = nb_ft;

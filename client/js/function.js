@@ -3851,6 +3851,7 @@ const fields_TypoSymbol = {
         display_box_symbol_typo(layer, field, symbol_map).then((confirmed) => {
           if (confirmed) {
             document.getElementById('yesTypoSymbols').disabled = null;
+            console.log(confirmed)
             self.rendering_params[field] = {
               nb_cat: confirmed[0],
               symbols_map: confirmed[1],
@@ -3932,29 +3933,33 @@ function render_TypoSymbols(rendering_params, new_name, hidden_picto)  {
       let field_value = d.properties.symbol_field;
       
       // Check if field value is within the filtered list the user doesn't want to display
-      if (hidden_picto.includes(field_value)) {
+      /* if (hidden_picto.includes(field_value)) {
         d3.select(this).remove();
         return null;
-      }
+      } */
   
       // Entry in the symbol map was replaced by 'undefined_category'
       // when the field value was null :
       if (field_value === null || field_value === '' || field_value === undefined) {
         field_value = 'undefined_category';
       }
-        // Values are stored as strings in our symbol map
-        const symb = rendering_params.symbols_map.get(`${field_value}`),
-            coords = global.proj(d.geometry.coordinates);
-
+      // Values are stored as strings in our symbol map
+      const symb = rendering_params.symbols_map.get(`${field_value}`);
+      const coords = global.proj(d.geometry.coordinates);
+      
+      // Check if the field value is within the filtered list the user doesn't want to display
+      // If the symbol wasnt created (so it is undefined), it means that the field value is in the filtered list
+      if(symb != undefined){
         return {
-            /* Armel : ID et class a vérifier, peut etre intule pour la feature, crée a la base pour pouvoir tout déplacer en meme temps */
-            id: `Picto_${i}`, 
-            x: coords[0] - symb[1] / 2,
-            y: coords[1] - symb[1] / 2,
-            width: symb[1],
-            height: symb[1],
-            'xlink:href': symb[0],
+          // Add a unique id to each element and a class to each element for future improvement
+          id: `Picto_${i}`, 
+          x: coords[0] - symb[1] / 2,
+          y: coords[1] - symb[1] / 2,
+          width: symb[1],
+          height: symb[1],
+          'xlink:href': symb[0],
         };
+      }
     })
     .on('mouseover', function () { this.style.cursor = 'pointer'; })
     .on('mouseout', function () { this.style.cursor = 'initial'; })

@@ -10,34 +10,39 @@ import { cloneObj } from "./helpers";
 
 export const display_box_symbol_typo = function (layer, field, categories) {
     const fetch_symbol_categories = function () {
+        // Add the list of unchecked checkboxes
+        let symbol_filter = fetch_unchecked_images();    
         const categ = document.getElementsByClassName("typo_class");
         const symbol_map = new Map();
         for (let i = 0; i < categ.length; i++) {
             const selec = categ[i].querySelector(".symbol_section");
             const new_name = categ[i].querySelector(".typo_name").value;
-            if (selec.style.backgroundImage.length > 7) {
-                const img = selec.style.backgroundImage
-                    .split("url(")[1]
-                    .substring(1)
-                    .slice(0, -2);
-                const size = +categ[i].querySelector("#symbol_size").value;
-                symbol_map.set(categ[i].__data__.name, [
-                    img,
-                    size,
-                    new_name,
-                    cats[i].nb_elem,
-                ]);
-            } else {  
-                symbol_map.set(categ[i].__data__.name, [
-                    null,
-                    0,
-                    new_name,
-                    cats[i].nb_elem,
-                ]);
+
+            // If the new name is not in the list of unchecked checkboxes, add the symbol to the map
+            // Otherwise user has unchecked the checkbox, so we don't want to display the symbol
+            if(!symbol_filter.includes(new_name)){
+                if (selec.style.backgroundImage.length > 7) {
+                    const img = selec.style.backgroundImage
+                        .split("url(")[1]
+                        .substring(1)
+                        .slice(0, -2);
+                    const size = +categ[i].querySelector("#symbol_size").value;
+                    symbol_map.set(categ[i].__data__.name, [
+                        img,
+                        size,
+                        new_name,
+                        cats[i].nb_elem,
+                    ]);
+                } else {  
+                    symbol_map.set(categ[i].__data__.name, [
+                        null,
+                        0,
+                        new_name,
+                        cats[i].nb_elem,
+                    ]);
+                }
             }
         }
-        // Add the list of unchecked checkboxes
-        let symbol_filter = fetch_unchecked_images();    
           
 
         return [symbol_map, symbol_filter]; 
