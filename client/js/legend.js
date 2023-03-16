@@ -715,6 +715,8 @@ export function createLegend_symbol(layer, field, title, subtitle, nested = 'fal
       layer_field: field,
     });
 
+  
+
   const rect_under_legend = legend_root.insert('rect');
 
   const legend_elems = legend_root.selectAll('.legend')
