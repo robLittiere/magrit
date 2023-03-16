@@ -154,7 +154,7 @@ export const display_box_symbol_typo = function (layer, field, categories) {
         })
         // Here add the label text for checkbox
         .html(
-            _tr("app_page.symbol_typo_box.checkbox_desc")
+            _tr("ap_page.spymbol_typo_box.checkbox_desc")
         )
 
     // Append ul to container instead of newbox
