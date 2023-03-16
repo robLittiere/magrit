@@ -3876,8 +3876,9 @@ const fields_TypoSymbol = {
   },
   rendering_params: {},
 };
-
-function render_TypoSymbols(rendering_params, new_name) {
+// Added a new parameter hidde_picto
+// This is a list of fields that the user has checked to not render
+function render_TypoSymbols(rendering_params, new_name, hidden_picto) {
   const layer_name = Object.getOwnPropertyNames(data_manager.user_data)[0];
   const ref_layer_id = _app.layer_to_id.get(layer_name);
   const { field } = rendering_params;
