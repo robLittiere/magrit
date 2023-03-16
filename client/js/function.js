@@ -3855,6 +3855,9 @@ const fields_TypoSymbol = {
               nb_cat: confirmed[0],
               symbols_map: confirmed[1],
               field,
+              // List of fields checked by the user for fields images not to be rendered
+              // We get this from the returned promise
+              picto_filter : confirmed[2]
             };
           }
         });
@@ -3862,7 +3865,7 @@ const fields_TypoSymbol = {
     });
     ok_button.on('click', () => {
       const field = field_to_use.node().value;
-      render_TypoSymbols(self.rendering_params[field], uo_layer_name.node().value);
+      render_TypoSymbols(self.rendering_params[field], uo_layer_name.node().value, self.rendering_params[field].picto_filter );
     });
     setSelected(field_to_use.node(), fields_all[0]);
     uo_layer_name.attr('value', ['Symbols', layer].join('_'));
@@ -3923,6 +3926,13 @@ function render_TypoSymbols(rendering_params, new_name) {
     .insert('image')
     .attrs((d) => {
       let field_value = d.properties.symbol_field;
+
+      // Check if field value is within the filtered list the user doesn't want to display
+      if (hidden_picto.includes(field_value)) {
+        d3.select(this).remove();
+        return null;
+      }
+
       // Entry in the symbol map was replaced by 'undefined_category'
       // when the field value was null :
       if (field_value === null || field_value === '' || field_value === undefined) {
@@ -3932,6 +3942,9 @@ function render_TypoSymbols(rendering_params, new_name) {
       const symb = rendering_params.symbols_map.get(`${field_value}`);
       const coords = global.proj(d.geometry.coordinates);
       return {
+        // Add a unique id to each element and a class to each element for future improvement
+        id: `Picto_${i}`, 
+        class : "Feature_drag_"+ i, 
         x: coords[0] - symb[1] / 2,
         y: coords[1] - symb[1] / 2,
         width: symb[1],
