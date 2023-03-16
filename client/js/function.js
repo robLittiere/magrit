@@ -3930,13 +3930,7 @@ function render_TypoSymbols(rendering_params, new_name, filtered_symbols)  {
     .insert('image') 
     .attrs(function (d, i) {
       let field_value = d.properties.symbol_field;
-      
-      // Check if field value is within the filtered list the user doesn't want to display
-      /* if (hidden_picto.includes(field_value)) {
-        d3.select(this).remove();
-        return null;
-      } */
-  
+
       // Entry in the symbol map was replaced by 'undefined_category'
       // when the field value was null :
       if (field_value === null || field_value === '' || field_value === undefined) {
