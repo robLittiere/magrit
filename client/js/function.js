@@ -3854,7 +3854,7 @@ const fields_TypoSymbol = {
             self.rendering_params[field] = {
               nb_cat: confirmed[0],
               symbols_map: confirmed[1],
-              field,
+              field : field,
               // List of fields checked by the user for fields images not to be rendered
               // We get this from the returned promise
               picto_filter : confirmed[2]
@@ -3949,7 +3949,6 @@ function render_TypoSymbols(rendering_params, new_name, hidden_picto)  {
         return {
             /* Armel : ID et class a vérifier, peut etre intule pour la feature, crée a la base pour pouvoir tout déplacer en meme temps */
             id: `Picto_${i}`, 
-            class : "Feature_drag_"+ i, 
             x: coords[0] - symb[1] / 2,
             y: coords[1] - symb[1] / 2,
             width: symb[1],

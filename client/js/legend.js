@@ -1396,7 +1396,7 @@ export function createLegend_choro(layer, field, title, subtitle, box_gap = 0, r
       .attr('x', xpos + boxwidth * 2 + 10)
       .attr('y', (d, i) => y_pos2 + i * boxheight + (i * boxgap) + (boxheight * 2 / 3))
       .styles({ 'alignment-baseline': 'middle', 'font-size': '10px' })
-      .text(d => d.value);
+      .text(d => d.value); 
   }
   if (layer_prop.options_disc && layer_prop.options_disc.no_data) {
     const gp_no_data = legend_root.append('g');
