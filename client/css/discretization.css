@@ -179,4 +179,16 @@ li.typo_class > p.color_square {
 li.typo_class > p.symbol_section {
   cursor: pointer;
 }
+
+li.typo_li {
+  display: flex;
+  align-items: center;
+  transition: opacity 0.1s;
+  
+}
+
+.typo_container {
+  display: flex;
+  flex-direction: column;
+}
 /* End of styles for list of elements in categorical / picto panel */

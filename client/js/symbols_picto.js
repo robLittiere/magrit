@@ -36,6 +36,7 @@ export const display_box_symbol_typo = function (layer, field, categories) {
                 ]);
             }
         }
+        // Add the list of unchecked checkboxes
         let symbol_filter = fetch_unchecked_images();    
           
 
@@ -43,6 +44,7 @@ export const display_box_symbol_typo = function (layer, field, categories) {
     };
 
     /**
+     * Armel Vidali - 2023-03-05
      * Fetch all checked checkboxes, allow to not display pictograms for certain field values (ex : no images for Asia)
      * 
      * @returns List of field values not to display
@@ -148,7 +150,7 @@ export const display_box_symbol_typo = function (layer, field, categories) {
         .append("p")
         .styles({
             float: "left",
-            "margin-bottom": "2px",
+            "margin-bottom": "5px",
         })
         // Here add the label text for checkbox
         .html(
@@ -282,7 +284,7 @@ export const display_box_symbol_typo = function (layer, field, categories) {
         container.querySelector(".btn_ok").onclick = function () {
             const symbol_and_filter = fetch_symbol_categories();
             const symbol_map = symbol_and_filter[0];
-            /** armel : list of fields for which the user doesn't want images */ 
+            // List of fields for which the user doesn't want images 
             const symbol_filter = symbol_and_filter[1] 
             resolve([nb_class, symbol_map, symbol_filter]);
             clean_up_box();
