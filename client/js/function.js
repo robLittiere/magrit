@@ -3853,7 +3853,7 @@ const fields_TypoSymbol = {
             document.getElementById('yesTypoSymbols').disabled = null;
             self.rendering_params[field] = {
               nb_cat: confirmed[0],
-              symbols_map: confirmed[1],
+              symbols_to_display: confirmed[1],
               field : field,
               // List of fields checked by the user for fields images not to be rendered
               // We get this from the returned promise
@@ -3879,6 +3879,7 @@ const fields_TypoSymbol = {
 
 // Added picto_filter parameter, a list of pictograms not to be displayed
 function render_TypoSymbols(rendering_params, new_name, filtered_symbols)  { 
+  console.log("rendering params in render_TypoSymbols", rendering_params);
   const layer_name = Object.getOwnPropertyNames(data_manager.user_data)[0];
   const ref_layer_id = _app.layer_to_id.get(layer_name);
   const field = rendering_params.field;
@@ -3940,7 +3941,7 @@ function render_TypoSymbols(rendering_params, new_name, filtered_symbols)  {
       // Check if field value is within the filtered list the user doesn't want to display
       if(!filtered_symbols.includes(field_value)){
         // Values are stored as strings in our symbol map
-        const symb = rendering_params.symbols_map.get(`${field_value}`);
+        const symb = rendering_params.symbols_to_display.get(`${field_value}`);
         const coords = global.proj(d.geometry.coordinates);
         
         return {
@@ -3964,7 +3965,7 @@ function render_TypoSymbols(rendering_params, new_name, filtered_symbols)  {
     data_manager.current_layers[layer_to_add] = {
       n_features: data_manager.current_layers[layer_name].n_features,
       renderer: 'TypoSymbols',
-      symbols_map: rendering_params.symbols_map,
+      symbols_to_display: rendering_params.symbols_to_display,
       filtered_symbols: filtered_symbols,
       rendered_field: field,
       is_result: true,

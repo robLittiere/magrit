@@ -273,7 +273,7 @@ export function get_map_project() {
         ? 'sphere' : false) || (current_layer_prop.graticule ? 'graticule' : 'layer'),
       nb_ft = current_layer_prop.n_features;
     let selection;
-
+    console.log("layer data on save", current_layer_prop)
     layer_style_i.layer_name = layer_name;
     layer_style_i.layer_type = layer_type;
     layer_style_i.n_features = nb_ft;
@@ -437,7 +437,11 @@ export function get_map_project() {
     } else if (current_layer_prop.renderer && current_layer_prop.renderer === 'TypoSymbols') {
       selection = map.select(`#${layer_id}`).selectAll('image');
       layer_style_i.renderer = current_layer_prop.renderer;
-      layer_style_i.symbols_map = [...current_layer_prop.symbols_map];
+
+      layer_style_i.symbols_to_display = [...current_layer_prop.symbols_to_display];
+      console.log("map saving layer ", layer_style_i);
+      //layer_style_i.symbols_map = [...current_layer_prop.symbols_to_display];
+
       // Add the filtered symbol list so we can retreive on project reload
       layer_style_i.filtered_symbols = current_layer_prop.filtered_symbols;
       layer_style_i.rendered_field = current_layer_prop.rendered_field;
@@ -1320,7 +1324,8 @@ export function apply_user_preferences(json_pref) {
           at_end.push([restorePreviousPosWaffle, layer_id, _layer.current_position, _layer.symbol]);
         }
       } else if (_layer.renderer && _layer.renderer.startsWith('TypoSymbol')) {
-        const symbols_map = new Map(_layer.symbols_map);
+        console.log("layer data on loading data", _layer);
+        const symbols_to_display = new Map(_layer.symbols_to_display);
         const new_layer_data = {
           type: 'FeatureCollection',
           features: _layer.current_state.map((d) => d.data),
@@ -1373,7 +1378,7 @@ export function apply_user_preferences(json_pref) {
              * 
              */
             if(!filtered_symbols.includes(field_value)){
-              const symb = symbols_map.get(field_value),
+              const symb = symbols_to_display.get(field_value),
                 prop = _layer.current_state[j],
                 coords = prop.pos;
               return {
@@ -1399,7 +1404,7 @@ export function apply_user_preferences(json_pref) {
         data_manager.current_layers[layer_name] = {
           n_features: nb_features,
           renderer: 'TypoSymbols',
-          symbols_map: symbols_map,
+          symbols_to_display: symbols_to_display,
           filtered_symbols: filtered_symbols,
           rendered_field: _layer.rendered_field,
           is_result: true,

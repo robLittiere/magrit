@@ -10,6 +10,7 @@ import { cloneObj } from "./helpers";
 
 export const display_box_symbol_typo = function (layer, field, categories) {
     const fetch_symbol_categories = function () {
+        console.log("categories", categories)
         // Add the list of unchecked checkboxes
         let symbol_filter = fetch_unchecked_images();    
         const categ = document.getElementsByClassName("typo_class");
@@ -44,7 +45,7 @@ export const display_box_symbol_typo = function (layer, field, categories) {
             }
         }
           
-
+        console.log("symbol_map", symbol_map)
         return [symbol_map, symbol_filter]; 
     };
 
