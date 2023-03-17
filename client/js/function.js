@@ -3879,7 +3879,6 @@ const fields_TypoSymbol = {
 
 // Added picto_filter parameter, a list of pictograms not to be displayed
 function render_TypoSymbols(rendering_params, new_name, filtered_symbols)  { 
-  console.log("rendering params in render_TypoSymbols", rendering_params);
   const layer_name = Object.getOwnPropertyNames(data_manager.user_data)[0];
   const ref_layer_id = _app.layer_to_id.get(layer_name);
   const field = rendering_params.field;

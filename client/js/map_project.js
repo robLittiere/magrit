@@ -273,7 +273,6 @@ export function get_map_project() {
         ? 'sphere' : false) || (current_layer_prop.graticule ? 'graticule' : 'layer'),
       nb_ft = current_layer_prop.n_features;
     let selection;
-    console.log("layer data on save", current_layer_prop)
     layer_style_i.layer_name = layer_name;
     layer_style_i.layer_type = layer_type;
     layer_style_i.n_features = nb_ft;
@@ -439,7 +438,6 @@ export function get_map_project() {
       layer_style_i.renderer = current_layer_prop.renderer;
 
       layer_style_i.symbols_to_display = [...current_layer_prop.symbols_to_display];
-      console.log("map saving layer ", layer_style_i);
       //layer_style_i.symbols_map = [...current_layer_prop.symbols_to_display];
 
       // Add the filtered symbol list so we can retreive on project reload
@@ -1324,7 +1322,6 @@ export function apply_user_preferences(json_pref) {
           at_end.push([restorePreviousPosWaffle, layer_id, _layer.current_position, _layer.symbol]);
         }
       } else if (_layer.renderer && _layer.renderer.startsWith('TypoSymbol')) {
-        console.log("layer data on loading data", _layer);
         const symbols_to_display = new Map(_layer.symbols_to_display);
         const new_layer_data = {
           type: 'FeatureCollection',
