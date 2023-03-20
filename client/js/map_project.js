@@ -1358,22 +1358,6 @@ export function apply_user_preferences(json_pref) {
             ) { // Entry in the symbol map is always stored as string since 0.10.1 :
               field_value = `${field_value}`;
             }
-            /**
-             * Robin Littiere - 2023-03-16
-             * Here we are filtering the symbols that are in the filtered_symbols array
-             * We do this so we only project the desired symbols on the map
-             * 
-             * The way it's done is by simply getting the list of filtered symbols
-             * and checking if the current symbol is in the list
-             * 
-             * If there are A LOT of symbols, I don't know to what extent it could be a performance issue
-             * Though, it doesn't seem to be a problem for now
-             * 
-             * I was thinking of using the "new_layer_data" object and filter this object using the filtered_symbols array instead
-             * But since I saw that there were some geomtry properties in the object, I didn't want to mess with it
-             * As it could possibly have some unwanted side effects
-             * 
-             */
             const symb = symbols_to_display.get(field_value),
               prop = _layer.current_state[j],
               coords = prop.pos;
