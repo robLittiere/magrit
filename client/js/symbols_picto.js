@@ -73,10 +73,6 @@ export const display_box_symbol_typo = function (layer, field, categories) {
         cats = [],
         res_symbols = _app.default_symbols;
 
-
-    
-        
-
     if (!categories) {
         categories = new Map();
         for (let i = 0; i < nb_features; ++i) {
