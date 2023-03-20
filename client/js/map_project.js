@@ -273,7 +273,6 @@ export function get_map_project() {
         ? 'sphere' : false) || (current_layer_prop.graticule ? 'graticule' : 'layer'),
       nb_ft = current_layer_prop.n_features;
     let selection;
-
     layer_style_i.layer_name = layer_name;
     layer_style_i.layer_type = layer_type;
     layer_style_i.n_features = nb_ft;
@@ -437,7 +436,12 @@ export function get_map_project() {
     } else if (current_layer_prop.renderer && current_layer_prop.renderer === 'TypoSymbols') {
       selection = map.select(`#${layer_id}`).selectAll('image');
       layer_style_i.renderer = current_layer_prop.renderer;
-      layer_style_i.symbols_map = [...current_layer_prop.symbols_map];
+
+      layer_style_i.symbols_to_display = [...current_layer_prop.symbols_to_display];
+      //layer_style_i.symbols_map = [...current_layer_prop.symbols_to_display];
+
+      // Add the filtered symbol list so we can retreive on project reload
+      layer_style_i.filtered_symbols = current_layer_prop.filtered_symbols;
       layer_style_i.rendered_field = current_layer_prop.rendered_field;
       layer_style_i.ref_layer_name = current_layer_prop.ref_layer_name;
 
@@ -1318,14 +1322,14 @@ export function apply_user_preferences(json_pref) {
           at_end.push([restorePreviousPosWaffle, layer_id, _layer.current_position, _layer.symbol]);
         }
       } else if (_layer.renderer && _layer.renderer.startsWith('TypoSymbol')) {
-        const symbols_map = new Map(_layer.symbols_map);
+        const symbols_to_display = new Map(_layer.symbols_to_display);
         const new_layer_data = {
           type: 'FeatureCollection',
           features: _layer.current_state.map((d) => d.data),
         };
-
         const nb_features = new_layer_data.features.length;
         const context_menu = new ContextMenu();
+        const filtered_symbols = _layer.filtered_symbols;
         const getItems = (self_parent) => [
           { name: _tr('app_page.common.edit_style'), action: () => { make_style_box_indiv_symbol(self_parent); } },
           { name: _tr('app_page.common.delete'), action: () => { self_parent.style.display = 'none'; } }, // eslint-disable-line no-param-reassign
@@ -1341,6 +1345,7 @@ export function apply_user_preferences(json_pref) {
           .insert('image')
           .attrs((d, j) => {
             let field_value = d.properties.symbol_field;
+
             // Entry in the symbol map was replaced by 'undefined_category' in 0.10.0
             // when the field value was null :
             if (
@@ -1353,10 +1358,12 @@ export function apply_user_preferences(json_pref) {
             ) { // Entry in the symbol map is always stored as string since 0.10.1 :
               field_value = `${field_value}`;
             }
-            const symb = symbols_map.get(field_value),
+            const symb = symbols_to_display.get(field_value),
               prop = _layer.current_state[j],
               coords = prop.pos;
             return {
+              // Add a unique id to each element and a class to each element for future improvement
+              id: `Picto_${i}`,
               x: coords[0] - symb[1] / 2,
               y: coords[1] - symb[1] / 2,
               width: prop.size,
@@ -1376,7 +1383,8 @@ export function apply_user_preferences(json_pref) {
         data_manager.current_layers[layer_name] = {
           n_features: nb_features,
           renderer: 'TypoSymbols',
-          symbols_map: symbols_map,
+          symbols_to_display: symbols_to_display,
+          filtered_symbols: filtered_symbols,
           rendered_field: _layer.rendered_field,
           is_result: true,
           symbol: 'image',

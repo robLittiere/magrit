@@ -1,5 +1,9 @@
 # Historique des versions et des changements effectués
 
+#### Unreleased
+
+- Ajout d'une fonctionnalité permettant le filtrage d'une ou plusieurs catégories lors de la création d'une couche de pictogrammes (merci à @robLittiere et à @ArmelVidali pour la contribution <a href="https://github.com/riatelab/magrit/issues/106">contribution #106</a>).
+
 #### 0.13.4 (2023-03-14)
 
 - Modification de la recette docker pour permettre la création et la publication sur docker hub d'images multi-plateformes (amd64 / arm64).
