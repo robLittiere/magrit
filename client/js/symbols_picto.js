@@ -67,10 +67,15 @@ export const display_box_symbol_typo = function (layer, field, categories) {
         return images_to_hide;
     }
     
+
     const nb_features = data_manager.current_layers[layer].n_features,
         data_layer = data_manager.user_data[layer],
         cats = [],
         res_symbols = _app.default_symbols;
+
+
+    
+        
 
     if (!categories) {
         categories = new Map();
