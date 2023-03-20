@@ -3854,10 +3854,10 @@ const fields_TypoSymbol = {
             self.rendering_params[field] = {
               nb_cat: confirmed[0],
               symbols_to_display: confirmed[1],
-              field : field,
+              field: field,
               // List of fields checked by the user for fields images not to be rendered
               // We get this from the returned promise
-              picto_filter : confirmed[2]
+              picto_filter: confirmed[2],
             };
           }
         });
@@ -3865,7 +3865,7 @@ const fields_TypoSymbol = {
     });
     ok_button.on('click', () => {
       const field = field_to_use.node().value;
-      render_TypoSymbols(self.rendering_params[field], uo_layer_name.node().value, self.rendering_params[field].picto_filter );
+      render_TypoSymbols(self.rendering_params[field], uo_layer_name.node().value, self.rendering_params[field].picto_filter);
     });
     setSelected(field_to_use.node(), fields_all[0]);
     uo_layer_name.attr('value', ['Symbols', layer].join('_'));
@@ -3878,7 +3878,7 @@ const fields_TypoSymbol = {
 };
 
 // Added picto_filter parameter, a list of pictograms not to be displayed
-function render_TypoSymbols(rendering_params, new_name, filtered_symbols)  { 
+function render_TypoSymbols(rendering_params, new_name, filtered_symbols) {
   const layer_name = Object.getOwnPropertyNames(data_manager.user_data)[0];
   const ref_layer_id = _app.layer_to_id.get(layer_name);
   const field = rendering_params.field;
@@ -3919,15 +3919,12 @@ function render_TypoSymbols(rendering_params, new_name, filtered_symbols)  {
   _app.layer_to_id.set(layer_to_add, layer_id);
   _app.id_to_layer.set(layer_id, layer_to_add);
 
-  
-  
-  
   map.insert('g', '.legend')
     .attrs({ id: layer_id, class: 'layer no_clip' })
     .selectAll('image')
     .data(new_layer_data.features)
     .enter()
-    .insert('image') 
+    .insert('image')
     .attrs(function (d, i) {
       let field_value = d.properties.symbol_field;
 
@@ -3942,10 +3939,10 @@ function render_TypoSymbols(rendering_params, new_name, filtered_symbols)  {
         // Values are stored as strings in our symbol map
         const symb = rendering_params.symbols_to_display.get(`${field_value}`);
         const coords = global.proj(d.geometry.coordinates);
-        
+
         return {
           // Add a unique id to each element and a class to each element for future improvement
-          id: `Picto_${i}`, 
+          id: `Picto_${i}`,
           x: coords[0] - symb[1] / 2,
           y: coords[1] - symb[1] / 2,
           width: symb[1],
@@ -3961,17 +3958,17 @@ function render_TypoSymbols(rendering_params, new_name, filtered_symbols)  {
     })
     .call(drag_elem_geo);
 
-    data_manager.current_layers[layer_to_add] = {
-      n_features: data_manager.current_layers[layer_name].n_features,
-      renderer: 'TypoSymbols',
-      symbols_to_display: rendering_params.symbols_to_display,
-      filtered_symbols: filtered_symbols,
-      rendered_field: field,
-      is_result: true,
-      symbol: 'image',
-      ref_layer_name: layer_name,
-    };
-  
+  data_manager.current_layers[layer_to_add] = {
+    n_features: data_manager.current_layers[layer_name].n_features,
+    renderer: 'TypoSymbols',
+    symbols_to_display: rendering_params.symbols_to_display,
+    filtered_symbols: filtered_symbols,
+    rendered_field: field,
+    is_result: true,
+    symbol: 'image',
+    ref_layer_name: layer_name,
+  };
+
   create_li_layer_elem(layer_to_add, nb_ft, ['Point', 'symbol'], 'result');
   handle_legend(layer_to_add);
   zoom_without_redraw();

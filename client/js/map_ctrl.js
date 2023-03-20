@@ -127,9 +127,9 @@ export function reproj_symbol_layer() {
         map.select(`#${global._app.layer_to_id.get(lyr_name)}`)
           .selectAll(symbol)
           .attrs(function (d) {
-            let field = d.properties.symbol_field;
+            const field = d.properties.symbol_field;
             // Only render the symbols that were not filtered out :
-            if(!filtered_symbols.includes(`${field}`)){
+            if (!filtered_symbols.includes(`${field}`)) {
               const coords = global.proj(d.geometry.coordinates),
                 size = +this.getAttribute('width').replace('px', '') / 2;
               return { x: coords[0] - size, y: coords[1] - size };
