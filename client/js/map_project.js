@@ -1374,20 +1374,18 @@ export function apply_user_preferences(json_pref) {
              * As it could possibly have some unwanted side effects
              * 
              */
-            if (!filtered_symbols.includes(field_value)) {
-              const symb = symbols_to_display.get(field_value),
-                prop = _layer.current_state[j],
-                coords = prop.pos;
-              return {
-                // Add a unique id to each element and a class to each element for future improvement
-                id: `Picto_${i}`,
-                x: coords[0] - symb[1] / 2,
-                y: coords[1] - symb[1] / 2,
-                width: prop.size,
-                height: prop.size,
-                'xlink:href': symb[0],
-              };
-            }
+            const symb = symbols_to_display.get(field_value),
+              prop = _layer.current_state[j],
+              coords = prop.pos;
+            return {
+              // Add a unique id to each element and a class to each element for future improvement
+              id: `Picto_${i}`,
+              x: coords[0] - symb[1] / 2,
+              y: coords[1] - symb[1] / 2,
+              width: prop.size,
+              height: prop.size,
+              'xlink:href': symb[0],
+            };
           })
           .style('display', (d, j) => _layer.current_state[j].display)
           .on('mouseover', function () { this.style.cursor = 'pointer'; })

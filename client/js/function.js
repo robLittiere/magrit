@@ -3891,16 +3891,19 @@ function render_TypoSymbols(rendering_params, new_name, filtered_symbols) {
     for (let i = 0, nb_features = ref_selection.length; i < nb_features; ++i) {
       const ft = ref_selection[i].__data__;
       const value = ft.properties[field];
-      const new_obj = {
-        id: i,
-        type: 'Feature',
-        properties: {},
-        geometry: { type: 'Point' },
-      };
-      new_obj.properties.symbol_field = value;
-      new_obj.properties.id_parent = ft.id;
-      new_obj.geometry.coordinates = coordsPointOnFeature(ft.geometry);
-      result.push(new_obj);
+      // Check if field value is within the filtered list the user doesn't want to display
+      if (!filtered_symbols.includes(`${value}`)) {
+        const new_obj = {
+          id: i,
+          type: 'Feature',
+          properties: {},
+          geometry: {type: 'Point'},
+        };
+        new_obj.properties.symbol_field = value;
+        new_obj.properties.id_parent = ft.id;
+        new_obj.geometry.coordinates = coordsPointOnFeature(ft.geometry);
+        result.push(new_obj);
+      }
     }
     return {
       type: 'FeatureCollection',
@@ -3934,22 +3937,19 @@ function render_TypoSymbols(rendering_params, new_name, filtered_symbols) {
         field_value = 'undefined_category';
       }
 
-      // Check if field value is within the filtered list the user doesn't want to display
-      if(!filtered_symbols.includes(`${field_value}`)){
-        // Values are stored as strings in our symbol map
-        const symb = rendering_params.symbols_to_display.get(`${field_value}`);
-        const coords = global.proj(d.geometry.coordinates);
+      // Values are stored as strings in our symbol map
+      const symb = rendering_params.symbols_to_display.get(`${field_value}`);
+      const coords = global.proj(d.geometry.coordinates);
 
-        return {
-          // Add a unique id to each element and a class to each element for future improvement
-          id: `Picto_${i}`,
-          x: coords[0] - symb[1] / 2,
-          y: coords[1] - symb[1] / 2,
-          width: symb[1],
-          height: symb[1],
-          'xlink:href': symb[0],
-        };
-      }
+      return {
+        // Add a unique id to each element and a class to each element for future improvement
+        id: `Picto_${i}`,
+        x: coords[0] - symb[1] / 2,
+        y: coords[1] - symb[1] / 2,
+        width: symb[1],
+        height: symb[1],
+        'xlink:href': symb[0],
+      };
     })
     .on('mouseover', function () { this.style.cursor = 'pointer'; })
     .on('mouseout', function () { this.style.cursor = 'initial'; })

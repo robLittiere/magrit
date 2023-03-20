@@ -194,7 +194,7 @@ function createStyleBoxTypoSymbols(layer_name) {
 
   const selection = map.select(`#${_app.layer_to_id.get(layer_name)}`).selectAll('image'),
     ref_layer_name = data_manager.current_layers[layer_name].ref_layer_name,
-    symbols_map = data_manager.current_layers[layer_name].symbols_map,
+    symbols_map = data_manager.current_layers[layer_name].symbols_to_display,
     rendered_field = data_manager.current_layers[layer_name].rendered_field;
 
   const prev_settings = [],
@@ -237,7 +237,7 @@ function createStyleBoxTypoSymbols(layer_name) {
       selection.transition()
         .attrs((d) => {
           const centroid = global.proj(d.geometry.coordinates),
-            size_symbol = symbols_map.get(d.properties.symbol_field)[1] / 2;
+            size_symbol = symbols_map.get(`${d.properties.symbol_field}`)[1] / 2;
           return { x: centroid[0] - size_symbol, y: centroid[1] - size_symbol };
         });
     });
