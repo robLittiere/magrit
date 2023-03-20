@@ -100,6 +100,8 @@ function createLegend(layer, title) {
     el = createLegend_line_symbol(layer, field, title, field);
   } else if (renderer.indexOf('TwoStocksWaffle') !== -1) {
     el = createLegend_waffle(layer, field, title, '');
+  } else if (renderer.indexOf('Label') !== -1) {
+    el = createLegend_label(layer, field, title, '');
   } else if (!renderer) {
     el = createLegend_layout(layer, data_manager.current_layers[layer].type, title, '', undefined, layer);
   } else {
@@ -1261,6 +1263,140 @@ export function createLegend_layout(layer, type_geom, title, subtitle, rect_fill
   make_legend_context_menu(legend_root, layer);
   return legend_root;
 }
+
+export function createLegend_label(layer, title, subtitle, rect_fill_value, text_value, note_bottom) {
+  const layer_prop = data_manager.current_layers[layer];
+  const space_elem = 18;
+  const boxheight = 18;
+  const boxwidth = 18;
+  const xpos = 30;
+  let ypos = 30;
+  const tmp_class_name = `legend legend_feature lgdf_${_app.layer_to_id.get(layer)}`;
+  const color_layer = data_manager.current_layers[layer].fill_color.single;
+  const legend_root = map.insert('g')
+    .styles({ cursor: 'grab', 'font-size': '11px', 'font-family': 'verdana' })
+    .attrs({
+      id: 'legend_root_label',
+      class: tmp_class_name,
+      transform: 'translate(0,0)',
+      layer_name: layer,
+    });
+  const rect_under_legend = legend_root.insert('rect');
+
+  legend_root.insert('text')
+    .attrs(subtitle != ''
+      ? { id: 'legendtitle', x: xpos + boxheight, y: ypos }
+      : { id: 'legendtitle', x: xpos + boxheight, y: ypos + 15 })
+    .styles({
+      'font-size': '12px',
+      'font-family': 'verdana',
+      'font-weight': 'bold',
+    })
+    .text(title || '');
+
+  legend_root.insert('text')
+    .attrs({ id: 'legendsubtitle', x: xpos + boxheight, y: ypos + 15 })
+    .styles({
+      'font-size': '12px',
+      'font-family': 'verdana',
+      'font-style': 'italic',
+    })
+    .text(subtitle);
+
+  const legend_elems = legend_root
+    .append('g')
+    .insert('g')
+    .attr('class', 'lg legend_0');
+
+  // if (type_geom === 'Polygon') {
+  //   const stroke_color = map.select(`#${_app.layer_to_id.get(layer)}`).select('path').style('stroke');
+  //   const stroke_width = map.select(`#${_app.layer_to_id.get(layer)}`).select('path').style('stroke-width');
+  //   legend_elems
+  //     .append('rect')
+  //     .attrs({
+  //       x: xpos + boxwidth,
+  //       y: ypos + boxheight * 1.8,
+  //       width: boxwidth,
+  //       height: boxheight,
+  //     })
+  //     .styles({
+  //       fill: color_layer,
+  //       stroke: stroke_color,
+  //       'stroke-width': stroke_width,
+  //     });
+  //
+  //   legend_elems
+  //     .append('text')
+  //     .attrs({ x: xpos + boxwidth * 2 + 10, y: ypos + boxheight * 2.6 })
+  //     .styles({ 'alignment-baseline': 'middle', 'font-size': '10px' })
+  //     .text(text_value);
+  //   ypos += (30 + boxheight);
+  // } else if (type_geom === 'Line') {
+  //   const stroke_width = +data_manager.current_layers[layer]['stroke-width-const'];
+  //   legend_elems
+  //     .append('rect')
+  //     .styles({
+  //       fill: color_layer,
+  //       stroke: 'rgb(0, 0, 0)',
+  //       'fill-opacity': 1,
+  //       'stroke-width': 0,
+  //     })
+  //     .attrs({
+  //       x: xpos + boxwidth,
+  //       y: ypos + boxheight * 1.9 + (boxheight / 2) - (stroke_width / 2),
+  //       width: boxwidth,
+  //       height: stroke_width,
+  //     });
+  //
+  //   legend_elems
+  //     .append('text')
+  //     .attrs({ x: xpos + boxwidth * 2 + 10, y: ypos + boxheight * 2.6 })
+  //     .styles({ 'alignment-baseline': 'middle', 'font-size': '10px' })
+  //     .text(text_value);
+  //   ypos = ypos + boxheight * 1.9 + (boxheight / 2) + (stroke_width / 2);
+  // } else if (type_geom === 'Point') {
+  //   const radius = data_manager.current_layers[layer].pointRadius * svg_map.__zoom.k;
+  //   const stroke_color = map.select(`#${_app.layer_to_id.get(layer)}`).select('path').style('stroke');
+  //   const stroke_width = map.select(`#${_app.layer_to_id.get(layer)}`).style('stroke-width');
+  //   const dist_to_title = 30;
+  //   legend_elems
+  //     .append('circle')
+  //     .styles({
+  //       fill: color_layer,
+  //       stroke: stroke_color,
+  //       'fill-opacity': 1,
+  //       'stroke-width': stroke_width,
+  //     })
+  //     .attrs(d => ({
+  //       cx: xpos + space_elem + 4 + radius / 2,
+  //       cy: ypos + dist_to_title + radius,
+  //       r: radius,
+  //     }));
+  //   legend_elems.append('text')
+  //     .attrs(d => ({
+  //       x: xpos + space_elem + 4 + (radius * 2) * 0.75 + 7,
+  //       y: ypos + dist_to_title + 1 + radius,
+  //     }))
+  //     .styles({ 'alignment-baseline': 'middle', 'font-size': '10px' })
+  //     .text(text_value);
+  //   ypos = ypos + dist_to_title + 1 + radius * 2;
+  // }
+
+  legend_root.append('g')
+    .insert('text')
+    .attrs({ id: 'legend_bottom_note', x: xpos + boxheight, y: ypos + boxheight})
+    .styles({
+      'font-size': '11px',
+      'font-family': 'verdana',
+    })
+    .text(note_bottom != null ? note_bottom : '');
+
+  legend_root.call(drag_legend_func(legend_root));
+  make_underlying_rect(legend_root, rect_under_legend, rect_fill_value);
+  make_legend_context_menu(legend_root, layer);
+  return legend_root;
+
+};
 
 export function createLegend_choro(layer, field, title, subtitle, box_gap = 0, rect_fill_value, rounding_precision, no_data_txt, note_bottom) {
   const layer_prop = data_manager.current_layers[layer];
