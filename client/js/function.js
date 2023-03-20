@@ -3938,7 +3938,7 @@ function render_TypoSymbols(rendering_params, new_name, filtered_symbols)  {
       }
 
       // Check if field value is within the filtered list the user doesn't want to display
-      if(!filtered_symbols.includes(field_value)){
+      if(!filtered_symbols.includes(`${field_value}`)){
         // Values are stored as strings in our symbol map
         const symb = rendering_params.symbols_to_display.get(`${field_value}`);
         const coords = global.proj(d.geometry.coordinates);
