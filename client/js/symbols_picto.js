@@ -287,7 +287,6 @@ export const display_box_symbol_typo = function (layer, field, categories) {
             _tr("app_page.symbol_typo_box.count_feature", { count: d.nb_elem })
         );
 
-
     /* armel : adds a checkbox pan to select labels to be rendered simultaniously with pictograms */
     newbox.append("h3").html("Labels");
     

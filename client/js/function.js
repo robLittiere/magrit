@@ -5021,6 +5021,7 @@ export const render_label = function render_label(layer, rendering_params, optio
         'stroke-width': stroke_width,
       })
       .text((d) => d.properties.label);
+      
   }
 
   selection
@@ -5150,10 +5151,10 @@ export const render_label_graticule = function render_label_graticule(layer, ren
  * Before, all labels were stacked on top of each other
  *  
  */
-function stack_labels(){
-
+export function stack_labels(){
 
   var map_labels = document.querySelectorAll('[id*="L_Label"]')  
+  
 
   for(let i = 0; i < map_labels.length; i++){
 
@@ -5165,7 +5166,7 @@ function stack_labels(){
 
           
           var pictograms = document.getElementById(`Picto_${y}`)
-          pictogram_height = parseInt(pictograms.getAttribute("height"))
+          pictogram_height = (parseInt(pictograms.getAttribute("height")) /2) + 10 
         }
         
 
@@ -5173,16 +5174,30 @@ function stack_labels(){
           avec get by id = defined. probabelement un pb de l'état du DOM a un instant T */
           let label_font_size = parseInt(getComputedStyle(map_labels[i].childNodes[y]).fontSize)
 
+          
+
           let y_label = parseInt(map_labels[i].childNodes[y].getAttribute("y")) 
+
+          //Check if the labels have already been stacked. Prevents a shift in display if the user renders the labels
+          //one by one directly though the layer
+          if(map_labels[i].childNodes[y].getAttribute("stacked") == true ){
+              //do nothing
+          }
 
           /* the x corrdinate stays the same, each label's y attribute is incremented with :
             - the height of the image (divided by 2 +10 to have a little gap but not be too far)
             - the height of the other text labels
            */
+          else{
           map_labels[i].childNodes[y].setAttribute(
               "y",
-              y_label + pictogram_height/2 + 10 + i*label_font_size
+              y_label + pictogram_height + i*label_font_size
           )
+          //Set a flag to know if this stack operation have already been made
+          map_labels[i].childNodes[y].setAttribute(
+            "stacked",
+            "true"
+        )}
       }
   } 
 }  
