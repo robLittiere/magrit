@@ -5031,9 +5031,10 @@ export const render_label = function render_label(layer, rendering_params, optio
     fill_color: txt_color,
     rendered_field: label_field,
     is_result: true,
-    ref_layer_name: layer,
+    ref_layer_name: layer || options.ref_layer_name,
     default_size: font_size,
     default_font: selected_font,
+    filter_options: rendering_params.filter_options,
     buffer,
   };
   create_li_layer_elem(layer_to_add, nb_ft, ['Point', 'label'], 'result');
