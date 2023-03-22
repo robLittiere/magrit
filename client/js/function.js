@@ -3858,6 +3858,9 @@ const fields_TypoSymbol = {
               // List of fields checked by the user for fields images not to be rendered
               // We get this from the returned promise
               picto_filter: confirmed[2],
+              //List of fields checked by the user to render labels
+              labels_render : confirmed[3]
+          
             };
           }
         });
