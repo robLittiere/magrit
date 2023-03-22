@@ -466,6 +466,8 @@ export function get_map_project() {
       layer_style_i.default_size = +current_layer_prop.default_size.slice(0, 2);
       layer_style_i.fill_color = current_layer_prop.fill_color;
       layer_style_i.buffer = current_layer_prop.buffer;
+      layer_style_i.filter_options = current_layer_prop.filter_options;
+      layer_style_i.ref_layer_name = current_layer_prop.ref_layer_name;
       const features = [];
       const current_position = [];
       for (let j = selec.length - 1; j > -1; j--) {
@@ -1287,11 +1289,13 @@ export function apply_user_preferences(json_pref) {
           color: _layer.fill_color,
           ref_font_size: _layer.default_size,
           font: _layer.default_font,
+          filter_options: _layer.filter_options,
           buffer: _layer.buffer,
         };
         render_label(null, rendering_params, {
           data: _layer.data_labels,
           current_position: _layer.current_position,
+          ref_layer_name: _layer.ref_layer_name,
         });
         layer_id = _app.layer_to_id.get(layer_name);
 
