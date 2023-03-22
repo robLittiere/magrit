@@ -66,6 +66,22 @@ export const display_box_symbol_typo = function (layer, field, categories) {
         }
         return images_to_hide;
     }
+
+    /**
+     * Armel : gets all checkbox checked by the user to render labels for multiple fields at once
+     * 
+     * @returns label_categ_to_render - the list of labels to be rendered by render_label()
+     */
+    function fetch_labels(){
+        const label_checkbox = document.getElementsByClassName("multiple_label_class");
+        let label_categ_to_render = [];
+        for (let i = 0; i < label_checkbox.length; i++){
+            if (label_checkbox[i].checked == true){
+                label_categ_to_render.push(label_checkbox[i].id)
+            }
+        }
+        return label_categ_to_render     
+    }
     
 
     const nb_features = data_manager.current_layers[layer].n_features,
@@ -127,6 +143,8 @@ export const display_box_symbol_typo = function (layer, field, categories) {
         });
     }
     const nb_class = cats.length ;
+    // Armel : object containg all collumns. Used to make a list of checkbox to select labels to be rendered
+    const champs = Object.keys(data_layer[0]) 
 
     const modal_box = make_dialog_container(
         "symbol_box",
@@ -269,6 +287,20 @@ export const display_box_symbol_typo = function (layer, field, categories) {
             _tr("app_page.symbol_typo_box.count_feature", { count: d.nb_elem })
         );
 
+
+    /* armel : adds a checkbox pan to select labels to be rendered simultaniously with pictograms */
+    newbox.append("h3").html("Labels");
+    
+    newbox
+        .append("ul")
+        .selectAll("ul")
+        .data(champs)
+        .enter()
+        .append("li")
+        .text((champs) => champs + " ")
+        .append("input")
+        .attrs((champs) => ({ class : "multiple_label_class",type: "checkbox", id : champs}));
+
     new Sortable(document.getElementById("typo_categories"));
 
     return new Promise((resolve, reject) => {
@@ -289,8 +321,10 @@ export const display_box_symbol_typo = function (layer, field, categories) {
             const symbol_and_filter = fetch_symbol_categories();
             const symbol_map = symbol_and_filter[0];
             // List of fields for which the user doesn't want images 
-            const symbol_filter = symbol_and_filter[1] 
-            resolve([nb_class, symbol_map, symbol_filter]);
+            const symbol_filter = symbol_and_filter[1]; 
+            // List of fields for which the user wants images
+            const label_to_render = fetch_labels();
+            resolve([nb_class, symbol_map, symbol_filter, label_to_render]);
             clean_up_box();
         };
         container.querySelector(".btn_cancel").onclick = _onclose;

@@ -3866,6 +3866,10 @@ const fields_TypoSymbol = {
     ok_button.on('click', () => {
       const field = field_to_use.node().value;
       render_TypoSymbols(self.rendering_params[field], uo_layer_name.node().value, self.rendering_params[field].picto_filter);
+
+      // Rendering labels associated to each pictograms, taking account user choices and images presence or absence
+      const rendering_params_labels = self.rendering_params[field].labels_render
+      render_multiple_labels(layer, rendering_params_labels)
     });
     setSelected(field_to_use.node(), fields_all[0]);
     uo_layer_name.attr('value', ['Symbols', layer].join('_'));
@@ -5135,3 +5139,79 @@ export const render_label_graticule = function render_label_graticule(layer, ren
   zoom_without_redraw();
   return layer_to_add;
 };
+
+/**
+ * Stacks labels under the point it is linked to.
+ * If there is pictograms on the maps, it starts stacking underneath
+ * 
+ * Before, all labels were stacked on top of each other
+ *  
+ */
+function stack_labels(){
+
+
+  var map_labels = document.querySelectorAll('[id*="L_Label"]')  
+
+  for(let i = 0; i < map_labels.length; i++){
+
+      for(let y = 0; y < map_labels[i].childNodes.length; y++){
+
+        /* If there is an image, the height of it is saved in order to put the label x-pixels underneath */
+        var pictogram_height = 0
+        if(!(document.getElementById(`Picto_${y}`) == undefined)){
+
+          
+          var pictograms = document.getElementById(`Picto_${y}`)
+          pictogram_height = parseInt(pictograms.getAttribute("height"))
+        }
+        
+
+          /* armel : a regler > probleme de dom. En selectionnant avec querySelectorAll = undefined,
+          avec get by id = defined. probabelement un pb de l'état du DOM a un instant T */
+          let label_font_size = parseInt(getComputedStyle(map_labels[i].childNodes[y]).fontSize)
+
+          let y_label = parseInt(map_labels[i].childNodes[y].getAttribute("y")) 
+
+          /* the x corrdinate stays the same, each label's y attribute is incremented with :
+            - the height of the image (divided by 2 +10 to have a little gap but not be too far)
+            - the height of the other text labels
+           */
+          map_labels[i].childNodes[y].setAttribute(
+              "y",
+              y_label + pictogram_height/2 + 10 + i*label_font_size
+          )
+      }
+  } 
+}  
+
+/**
+ * Renders a list of labels passed in parameters and stacks them one underneath the other
+ * 
+ * Allows to render multiple labels at once and stack them so they are readable, 
+ * accounting presence of an image.
+ * 
+ * Before, more than one label at once was unreadable
+ * 
+ * @param {*} layer - reference layer to link labels
+ * @param {*} labels - list of labels to be rendered
+ */
+function render_multiple_labels(layer, labels ){
+
+  var label_object = {
+    "uo_layer_name": "",
+    "label_field": "",
+    "color": "#000",
+    "ref_font_size": 12,
+    "font": "verdana"
+  }
+
+  /*armel : calling the label rendering function for each field select by the user */
+  for(let label of labels){
+
+    label_object.label_field = label
+    label_object.uo_layer_name =  `Label_${layer + label}`
+    render_label(layer, label_object)
+  };
+  stack_labels() /* Armel : once all the images and labels are rendered, labels are stacked underneath */
+
+}
