@@ -2,7 +2,12 @@
 
 #### Unreleased
 
-- Ajout d'une fonctionnalité permettant le filtrage d'une ou plusieurs catégories lors de la création d'une couche de pictogrammes (merci à @robLittiere et à @ArmelVidali pour la contribution <a href="https://github.com/riatelab/magrit/issues/106">contribution #106</a>).
+- Nouveau : Ajout d'une fonctionnalité permettant le filtrage d'une ou plusieurs catégories lors de la création d'une couche de pictogrammes (merci à @robLittiere et à @ArmelVidali pour la contribution <a href="https://github.com/riatelab/magrit/pull/106">contribution #106</a>).
+
+- Nouveau : Ajout d'une fonctionnalité permettant d'ajouter une légende aux couches de labels (<a href="https://github.com/riatelab/magrit/issues/107">cf. issue #107</a>)
+
+- Correction de fautes d'orthographe dans la traduction française.
+
 
 #### 0.13.4 (2023-03-14)
 
