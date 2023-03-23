@@ -155,6 +155,7 @@ export const display_box_symbol_typo = function (layer, field, categories) {
         .select("#symbol_box")
         .select(".modal-body")
         .styles({
+            "overflow-y": "scroll",
             "max-height": `${window.innerHeight - 145}px`,
         });
 
@@ -287,60 +288,48 @@ export const display_box_symbol_typo = function (layer, field, categories) {
         );
 
     ///////////////////////////////////////////////////////////////
-    const newbox_1 = d3
-        .select("#symbol_box")
-        .select(".modal-label")
     
-    newbox_1
-        .append("p")
-        .styles({
-            "padding-left":"15px"
-        })
-        .html(_tr("app_page.symbol_typo_box.checkbox_desc"))
-        
 
-    newbox_1.append("div")
+    newbox.append("div")
         .attr("class", "label_container")
         .append("p")
         .styles({
             float: "left",
-            /* "margin-bottom": "5px",    */         
+            "margin-bottom": "5px",
         })
         // Here add the label text for checkbox
-        /* .html(
-            _tr("app_page.symbol_typo_box.checkbox_desc")
-        ) */
+        .html(
+            _tr("app_page.symbol_typo_box.label_checkbox")
+        )
 
     // Append ul to container instead of newbox
-    newbox_1.selectAll(".label_container")
+    newbox.selectAll(".label_container")
         .append("ul")
         .styles({
             padding: "unset",
             "list-style": "none",
-            width : "min-content",
-            "padding-left": "1em",
+            width : "min-content"
         })
+        .attr("id", "label_categories")
         .selectAll("li")
         .data(label_fields)
         .enter()
         .append("li")
-        .attr("class", "label_class label_li")
-        .attr("id", (_, i) => ["line_label", i].join("_"))
+        .attrs((label_fields) => ({ class : "label_class label_li", id : `line_${label_fields}`}))
         .styles({
-            opacity : 0.6,
-            display : "flex"
-        })
+            opacity : 0.6
+        });
 
-        newbox_1
-        .selectAll(".label_li")
-        /* .styles({
-            "margin-left": "30px",
-        }) */
+    newbox
+        .selectAll(".label_class")
+        .insert("span")
+        .styles({
+            "margin-left": "10px",
+        })
         .append("input")
-        .data(label_fields)
         .attrs((d,i) => {
             return{
-                id : label_fields[i],
+                id : (d) => d,
                 class : "label_hide_check",
                 type : "checkbox"
 
@@ -349,10 +338,10 @@ export const display_box_symbol_typo = function (layer, field, categories) {
         // Check the box by default
         .property('checked', false)
         .styles({
-            "vertical-align": "middle",
+            margin: 0,
         })
         .on("click", function() {
-            let box = this.parentNode.parentNode
+            let box =  document.getElementById(`line_${this.id}`)
             if(this.checked){
                 box.style.opacity = 1
 
@@ -362,35 +351,18 @@ export const display_box_symbol_typo = function (layer, field, categories) {
             }
         })   
 
-        newbox_1
-        .selectAll(".label_li")
+    newbox
+        .selectAll(".label_class")
         .append("input")
-        .data(label_fields)
         .styles({
             width: "200px",
             height: "30px",
             "vertical-align": "middle",
-            "margin-left": "10px",
+            "margin-left": "10px"
         })
         .attrs((d) => ({ class: "label_name", id: d }))
         .property("value", (d) => d);
 
-
-        
-    ///////////////////////////////////////////////////////////////
-
-    /* armel : adds a checkbox pan to select labels to be rendered simultaniously with pictograms */
-    /* newbox.append("h3").html("Labels");
-    
-    newbox
-        .append("ul")
-        .selectAll("ul")
-        .data(label_fields)
-        .enter()
-        .append("li")
-        .text((label_fields) => label_fields + " ")
-        .append("input")
-        .attrs((label_fields) => ({ class : "multiple_label_class",type: "checkbox", id : label_fields})); */
 
     new Sortable(document.getElementById("typo_categories"));
 
