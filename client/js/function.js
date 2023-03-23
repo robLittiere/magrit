@@ -40,6 +40,7 @@ import { isInterrupted } from './projections';
 import { display_box_symbol_typo, make_style_box_indiv_symbol } from './symbols_picto';
 import { bindTooltips } from './tooltips';
 
+
 const isWASMSupported = (() => {
   let supported = false;
   try {

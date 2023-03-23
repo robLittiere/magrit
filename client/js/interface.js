@@ -34,6 +34,7 @@ import makeSection2 from './ui/section2';
 import makeSection3 from './ui/section3';
 import makeSection4 from './ui/section4';
 import { makeSection5 } from './ui/section5';
+import {makeSection6} from './ui/section6';
 
 /**
 * Maxium allowed input size in bytes. If the input file is larger than
@@ -93,7 +94,8 @@ export function setUpInterface(reload_project) {
   makeSection3();
   makeSection4();
   add_simplified_land_layer();
-  makeSection5();
+  makeSection5()
+  makeSection6();
 
   // Zoom-in, Zoom-out, Info, Hand-Move and RectZoom buttons (on the top of the map) :
   const lm = map_div

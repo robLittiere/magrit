@@ -19,6 +19,7 @@ import {
   remove_layer_cleanup, scale_to_lyr,
   update_section1, update_section1_layout,
 } from './interface';
+import { update_section_6 } from './ui/section6';
 
 /**
 * Function to display the dialog allowing to choose and add a sample target layer.
@@ -536,5 +537,7 @@ export function add_layer_topojson(text, options = {}) {
     // if any:
     data_manager.current_layers[lyr_name_to_add].default_projection = ['proj4', parsedJSON.proj];
   }
+  update_section_6();
   return lyr_name_to_add;
+  
 }
