@@ -56,6 +56,11 @@ export function makeSection6() {
 
 
   /* section choix des valeurs */
+  dv6
+    .append("p")
+    .text("Choix des valeurs")
+
+
   const value_choice = dv6.append("div")
 
   value_choice
@@ -72,6 +77,7 @@ export function update_section_6(){
 
     const layer_choice = d3.select('#layer_choice');
     const field_choice = d3.select('#field_choice')
+    const value_choice = d3.select("#value_choice")
     
     const options = []
     for(let i = 0; i < document.getElementById("layer_choice").options.length; i++   ){
@@ -113,6 +119,19 @@ export function update_section_6(){
         }
     ) 
 
-    
+    field_choice
+        .selectAll('option')
+        .on("click" , function(){
 
+            let option_text = this.text
+            let original_fields =  Array.from(data_manager.user_data[option_text].original_fields)
+
+            for(let i = 0; i < original_fields.length; i ++){
+
+                value_choice
+                    .append("li")
+                    .text(original_fields[i])
+            }
+        }
+    ) 
 }
