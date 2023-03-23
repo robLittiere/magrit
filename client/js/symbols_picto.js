@@ -287,9 +287,8 @@ export const display_box_symbol_typo = function (layer, field, categories) {
             _tr("app_page.symbol_typo_box.count_feature", { count: d.nb_elem })
         );
 
-    ///////////////////////////////////////////////////////////////
     
-
+    // Adding a container for label selection
     newbox.append("div")
         .attr("class", "label_container")
         .append("p")
@@ -335,7 +334,7 @@ export const display_box_symbol_typo = function (layer, field, categories) {
 
             }
         })
-        // Check the box by default
+        // Uncheck the box by default
         .property('checked', false)
         .styles({
             margin: 0,
