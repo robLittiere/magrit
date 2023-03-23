@@ -1279,12 +1279,16 @@ export function createLegend_label(layer, example_value, legend_value, rect_fill
     rendered_field,
     ref_layer_name,
     filter_options,
+    buffer,
   } = layer_prop;
 
   const boxheight = 8 + +font_size.replace('px', '');
   const filter_text = filter_value === undefined && filter_options
     ? `${filter_options.field} ${filter_options.type_filter === 'inf' ? '<' : '>'} ${filter_options.filter_value}`
     : filter_value;
+
+  const stroke = buffer ? buffer.color : null;
+  const stroke_width = buffer ? buffer.size : null;
 
   const legend_root = map.insert('g')
     .styles({ cursor: 'grab', 'font-size': '11px', 'font-family': 'verdana' })
@@ -1302,6 +1306,9 @@ export function createLegend_label(layer, example_value, legend_value, rect_fill
       'font-size': font_size,
       'font-family': font,
       fill: color,
+      stroke: stroke,
+      'stroke-width': stroke_width,
+      'paint-order': 'stroke fill',
     })
     .text(`${example_value || first_feature}`);
 
