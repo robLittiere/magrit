@@ -5169,27 +5169,20 @@ export function stack_labels(){
           pictogram_height = (parseInt(pictograms.getAttribute("height")) /2) + 10 
         }
         
+        /* armel : a regler > probleme de dom. En selectionnant avec querySelectorAll = undefined,
+        avec get by id = defined. probabelement un pb de l'état du DOM a un instant T */
+        let label_font_size = parseInt(getComputedStyle(map_labels[i].childNodes[y]).fontSize)
 
-          /* armel : a regler > probleme de dom. En selectionnant avec querySelectorAll = undefined,
-          avec get by id = defined. probabelement un pb de l'état du DOM a un instant T */
-          let label_font_size = parseInt(getComputedStyle(map_labels[i].childNodes[y]).fontSize)
+        let y_label = parseInt(map_labels[i].childNodes[y].getAttribute("y")) 
 
-          
-
-          let y_label = parseInt(map_labels[i].childNodes[y].getAttribute("y")) 
-
-          //Check if the labels have already been stacked. Prevents a shift in display if the user renders the labels
-          //one by one directly though the layer
-          if(map_labels[i].childNodes[y].getAttribute("stacked") == true ){
-              //do nothing
-          }
-
-          /* the x corrdinate stays the same, each label's y attribute is incremented with :
-            - the height of the image (divided by 2 +10 to have a little gap but not be too far)
-            - the height of the other text labels
-           */
-          else{
-          map_labels[i].childNodes[y].setAttribute(
+        //Check if the labels have already been stacked. Prevents a shift in display if the user renders the labels
+        //one by one directly though the layer
+        if(map_labels[i].childNodes[y].getAttribute("stacked") == null ){
+            // If it has not been stacked
+            // The x corrdinate stays the same, each label's y attribute is incremented with :
+            // - the height of the image (divided by 2 +10 to have a little gap but not be too far)
+            // - the height of the other text labels
+            map_labels[i].childNodes[y].setAttribute(
               "y",
               y_label + pictogram_height + i*label_font_size
           )
@@ -5197,7 +5190,8 @@ export function stack_labels(){
           map_labels[i].childNodes[y].setAttribute(
             "stacked",
             "true"
-        )}
+          )
+        }
       }
   } 
 }  
