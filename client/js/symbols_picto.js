@@ -76,7 +76,7 @@ export const display_box_symbol_typo = function (layer, field, categories) {
         const label_checkbox = document.querySelectorAll(".label_hide_check");
         let label_categ_to_render = [];
         for (let i = 0; i < label_checkbox.length; i++){
-            if (label_checkbox[i].checked == true){
+            if (label_checkbox[i].checked){
                 label_categ_to_render.push(label_checkbox[i].id)
             }
         }
@@ -384,7 +384,7 @@ export const display_box_symbol_typo = function (layer, field, categories) {
             const symbol_map = symbol_and_filter[0];
             // List of fields for which the user doesn't want images 
             const symbol_filter = symbol_and_filter[1]; 
-            // List of fields for which the user wants images
+            // List of labels checked by user
             const label_to_render = fetch_labels();
             resolve([nb_class, symbol_map, symbol_filter, label_to_render]);
             clean_up_box();
