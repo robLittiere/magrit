@@ -32,6 +32,7 @@ import {
   createLegend_line_symbol,
   createLegend_symbol,
   createLegend_waffle,
+  createLegend_label,
 } from './legend';
 import { canvas_mod_size, canvas_rotation_value, reproj_symbol_layer, rotate_global, zoom_without_redraw } from './map_ctrl';
 import {
@@ -721,6 +722,14 @@ function rehandle_legend(layer_name, properties, version) {
         prop.text_value,
         prop.bottom_note,
       );
+    } else if (prop.type === 'legend_root_label') {
+      createLegend_label(
+        layer_name,
+        prop.title,
+        prop.subtitle,
+        prop.rect_fill_value,
+        prop.bottom_note,
+      );
     }
     const lgd = svg_map.querySelector(`#${prop.type}.lgdf_${_app.layer_to_id.get(layer_name)}`);
 
@@ -1298,6 +1307,10 @@ export function apply_user_preferences(json_pref) {
           ref_layer_name: _layer.ref_layer_name,
         });
         layer_id = _app.layer_to_id.get(layer_name);
+
+        if (_layer.legend) {
+          rehandle_legend(layer_name, _layer.legend, p_version);
+        }
 
         // Restore previous positions after everything is settled
         if (_layer.current_position) {
