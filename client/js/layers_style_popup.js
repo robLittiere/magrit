@@ -767,10 +767,10 @@ function redraw_legend(type_legend, layer_name, field) {
   let lgd = document.querySelector(selector);
   if (lgd) {
     const transform_param = lgd.getAttribute('transform'),
-      lgd_title = lgd.querySelector('#legendtitle').innerHTML,
-      lgd_subtitle = lgd.querySelector('#legendsubtitle').innerHTML,
+      lgd_title = lgd.querySelector('#legendtitle').textContent,
+      lgd_subtitle = lgd.querySelector('#legendsubtitle').textContent,
       rounding_precision = lgd.getAttribute('rounding_precision'),
-      note = lgd.querySelector('#legend_bottom_note').innerHTML,
+      note = lgd.querySelector('#legend_bottom_note').textContent,
       boxgap = lgd.getAttribute('boxgap');
     const rect_fill_value = (lgd.getAttribute('visible_rect') === 'true') ? {
       color: lgd.querySelector('#under_rect').style.fill,
@@ -814,7 +814,7 @@ function redraw_legend(type_legend, layer_name, field) {
         lgd_title,
         lgd_subtitle,
         rect_fill_value,
-        note,
+        note || null,
       );
     } else {
       lgd.remove();

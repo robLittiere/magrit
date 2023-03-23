@@ -4922,9 +4922,9 @@ export const render_label = function render_label(layer, rendering_params, optio
   let filter_test = () => true;
   if (rendering_params.filter_options !== undefined) {
     if (rendering_params.filter_options.type_filter === 'sup') {
-      filter_test = (prop) => (prop[rendering_params.filter_options.field] > rendering_params.filter_options.filter_value);
+      filter_test = (prop) => (prop[rendering_params.filter_options.field] > +rendering_params.filter_options.filter_value);
     } else if (rendering_params.filter_options.type_filter === 'inf') {
-      filter_test = (prop) => (prop[rendering_params.filter_options.field] < rendering_params.filter_options.filter_value);
+      filter_test = (prop) => (prop[rendering_params.filter_options.field] < +rendering_params.filter_options.filter_value);
     }
   }
   const layer_id = encodeId(layer_to_add);

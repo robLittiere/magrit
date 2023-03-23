@@ -1282,7 +1282,9 @@ export function createLegend_label(layer, example_value, legend_value, rect_fill
   } = layer_prop;
 
   const boxheight = 8 + +font_size.replace('px', '');
-  const filter_text = filter_options ? `${filter_options.field} ${filter_options.type_filter === 'inf' ? '<' : '>'} ${filter_options.filter_value}` : null;
+  const filter_text = filter_value === undefined && filter_options
+    ? `${filter_options.field} ${filter_options.type_filter === 'inf' ? '<' : '>'} ${filter_options.filter_value}`
+    : filter_value;
 
   const legend_root = map.insert('g')
     .styles({ cursor: 'grab', 'font-size': '11px', 'font-family': 'verdana' })
@@ -1322,7 +1324,7 @@ export function createLegend_label(layer, example_value, legend_value, rect_fill
       'font-family': 'verdana',
       'font-style': 'italic',
     })
-    .text(filter_value || (filter_text != null ? filter_text : ''));
+    .text(filter_text);
 
   legend_root.call(drag_legend_func(legend_root));
   make_underlying_rect(legend_root, rect_under_legend, rect_fill_value);
