@@ -73,7 +73,7 @@ export const display_box_symbol_typo = function (layer, field, categories) {
      * @returns label_categ_to_render - the list of labels to be rendered by render_label()
      */
     function fetch_labels(){
-        const label_checkbox = document.getElementsByClassName("multiple_label_class");
+        const label_checkbox = document.querySelectorAll(".label_hide_check");
         let label_categ_to_render = [];
         for (let i = 0; i < label_checkbox.length; i++){
             if (label_checkbox[i].checked == true){
@@ -144,7 +144,7 @@ export const display_box_symbol_typo = function (layer, field, categories) {
     }
     const nb_class = cats.length ;
     // Armel : object containg all collumns. Used to make a list of checkbox to select labels to be rendered
-    const champs = Object.keys(data_layer[0]) 
+    const label_fields = Object.keys(data_layer[0]) 
 
     const modal_box = make_dialog_container(
         "symbol_box",
@@ -155,7 +155,6 @@ export const display_box_symbol_typo = function (layer, field, categories) {
         .select("#symbol_box")
         .select(".modal-body")
         .styles({
-            "overflow-y": "scroll",
             "max-height": `${window.innerHeight - 145}px`,
         });
 
@@ -287,18 +286,111 @@ export const display_box_symbol_typo = function (layer, field, categories) {
             _tr("app_page.symbol_typo_box.count_feature", { count: d.nb_elem })
         );
 
+    ///////////////////////////////////////////////////////////////
+    const newbox_1 = d3
+        .select("#symbol_box")
+        .select(".modal-label")
+    
+    newbox_1
+        .append("p")
+        .styles({
+            "padding-left":"15px"
+        })
+        .html(_tr("app_page.symbol_typo_box.checkbox_desc"))
+        
+
+    newbox_1.append("div")
+        .attr("class", "label_container")
+        .append("p")
+        .styles({
+            float: "left",
+            /* "margin-bottom": "5px",    */         
+        })
+        // Here add the label text for checkbox
+        /* .html(
+            _tr("app_page.symbol_typo_box.checkbox_desc")
+        ) */
+
+    // Append ul to container instead of newbox
+    newbox_1.selectAll(".label_container")
+        .append("ul")
+        .styles({
+            padding: "unset",
+            "list-style": "none",
+            width : "min-content",
+            "padding-left": "1em",
+        })
+        .selectAll("li")
+        .data(label_fields)
+        .enter()
+        .append("li")
+        .attr("class", "label_class label_li")
+        .attr("id", (_, i) => ["line_label", i].join("_"))
+        .styles({
+            opacity : 0.6,
+            display : "flex"
+        })
+
+        newbox_1
+        .selectAll(".label_li")
+        /* .styles({
+            "margin-left": "30px",
+        }) */
+        .append("input")
+        .data(label_fields)
+        .attrs((d,i) => {
+            return{
+                id : label_fields[i],
+                class : "label_hide_check",
+                type : "checkbox"
+
+            }
+        })
+        // Check the box by default
+        .property('checked', false)
+        .styles({
+            "vertical-align": "middle",
+        })
+        .on("click", function() {
+            let box = this.parentNode.parentNode
+            if(this.checked){
+                box.style.opacity = 1
+
+            }
+            else{
+                box.style.opacity = 0.6
+            }
+        })   
+
+        newbox_1
+        .selectAll(".label_li")
+        .append("input")
+        .data(label_fields)
+        .styles({
+            width: "200px",
+            height: "30px",
+            "vertical-align": "middle",
+            "margin-left": "10px",
+        })
+        .attrs((d) => ({ class: "label_name", id: d }))
+        .property("value", (d) => d);
+
+
+        
+    ///////////////////////////////////////////////////////////////
+
     /* armel : adds a checkbox pan to select labels to be rendered simultaniously with pictograms */
-    newbox.append("h3").html("Labels");
+    /* newbox.append("h3").html("Labels");
     
     newbox
         .append("ul")
         .selectAll("ul")
-        .data(champs)
+        .data(label_fields)
         .enter()
         .append("li")
-        .text((champs) => champs + " ")
+        .text((label_fields) => label_fields + " ")
         .append("input")
-        .attrs((champs) => ({ class : "multiple_label_class",type: "checkbox", id : champs}));
+        .attrs((label_fields) => ({ class : "multiple_label_class",type: "checkbox", id : label_fields})); */
 
     new Sortable(document.getElementById("typo_categories"));
 
