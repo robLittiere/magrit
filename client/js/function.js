@@ -3896,9 +3896,9 @@ function render_TypoSymbols(rendering_params, new_name, filtered_symbols) {
 
   function make_geojson_pt_layer() {
     const result = [];
-    // added a counter to set an "old_id" attribute allowing to check if 
+    // Added a counter to set an "old_id" attribute allowing to check if 
     // a pictogram was supposed to be there but isn't after user filtering
-    var counter = 0
+    var counter = 0;
     for (let i = 0, nb_features = ref_selection.length; i < nb_features; ++i) {
       const ft = ref_selection[i].__data__;
       const value = ft.properties[field];
@@ -3956,8 +3956,7 @@ function render_TypoSymbols(rendering_params, new_name, filtered_symbols) {
       console.log(`Picto_${i}`,d.old_id);
 
       return {
-        // Add a unique id to each element and a class to each element for future improvement
-        id: `Picto_${i}`,
+        id: `Picto_${i}`, // Add a unique id to each element and a class to each element for future improvement
         old_id : `Picto_old_id_${d.old_id}`, // old id for debugg purpose 
         x: coords[0] - symb[1] / 2,
         y: coords[1] - symb[1] / 2,
@@ -5153,19 +5152,20 @@ export const render_label_graticule = function render_label_graticule(layer, ren
 };
 
 /**
- * Stacks labels under the point it is linked to.
- * If there is pictograms on the maps, it starts stacking underneath
+ * Stacks labels under the point it is linked to (if so)
+ * If there is pictograms on the map, it starts stacking underneath, otherwise, it stacks labels one under the other
  * 
  * Before, all labels were stacked on top of each other
  *  
  */
 export function stack_labels(){
 
+  // Gets all
   var map_labels = document.querySelectorAll('[id*="L_Label"]')  
   
-
+  // For each "label" layer
   for(let i = 0; i < map_labels.length; i++){
-
+      // For each label
       for(let y = 0; y < map_labels[i].childNodes.length; y++){
 
         /* If there is an image, the height of it is saved in order to put the label x-pixels underneath */
@@ -5177,8 +5177,7 @@ export function stack_labels(){
           pictogram_height = (parseInt(pictograms.getAttribute("height")) /2) + 10 
         }
         
-        /* armel : a regler > probleme de dom. En selectionnant avec querySelectorAll = undefined,
-        avec get by id = defined. probabelement un pb de l'état du DOM a un instant T */
+        
         let label_font_size = parseInt(getComputedStyle(map_labels[i].childNodes[y]).fontSize)
 
         let y_label = parseInt(map_labels[i].childNodes[y].getAttribute("y")) 
@@ -5189,7 +5188,7 @@ export function stack_labels(){
             // If it has not been stacked
             // The x corrdinate stays the same, each label's y attribute is incremented with :
             // - the height of the image (divided by 2 +10 to have a little gap but not be too far)
-            // - the height of the other text labels
+            // - the height of the other text labels * the number of labels ("i" counter)
             map_labels[i].childNodes[y].setAttribute(
               "y",
               y_label + pictogram_height + i*label_font_size
@@ -5225,13 +5224,13 @@ function render_multiple_labels(layer, labels ){
     "font": "verdana"
   }
 
-  /*armel : calling the label rendering function for each field select by the user */
+  // Calling the label rendering function for each field select by the user
   for(let label of labels){
 
     label_object.label_field = label
     label_object.uo_layer_name =  `Label_${layer + label}`
     render_label(layer, label_object)
   };
-  stack_labels() /* Armel : once all the images and labels are rendered, labels are stacked underneath */
+  stack_labels() // once all the images and labels are rendered, labels are stacked underneath 
 
 }
