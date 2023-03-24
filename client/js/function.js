@@ -39,6 +39,7 @@ import { zoom_without_redraw } from './map_ctrl';
 import { isInterrupted } from './projections';
 import { display_box_symbol_typo, make_style_box_indiv_symbol } from './symbols_picto';
 import { bindTooltips } from './tooltips';
+import { count } from 'd3-array';
 
 const isWASMSupported = (() => {
   let supported = false;
@@ -3895,6 +3896,9 @@ function render_TypoSymbols(rendering_params, new_name, filtered_symbols) {
 
   function make_geojson_pt_layer() {
     const result = [];
+    // added a counter to set an "old_id" attribute allowing to check if 
+    // a pictogram was supposed to be there but isn't after user filtering
+    var counter = 0
     for (let i = 0, nb_features = ref_selection.length; i < nb_features; ++i) {
       const ft = ref_selection[i].__data__;
       const value = ft.properties[field];
@@ -3902,15 +3906,17 @@ function render_TypoSymbols(rendering_params, new_name, filtered_symbols) {
       if (!filtered_symbols.includes(`${value}`)) {
         const new_obj = {
           id: i,
+          old_id : counter,
           type: 'Feature',
           properties: {},
           geometry: {type: 'Point'},
-        };
+        }
         new_obj.properties.symbol_field = value;
         new_obj.properties.id_parent = ft.id;
         new_obj.geometry.coordinates = coordsPointOnFeature(ft.geometry);
         result.push(new_obj);
       }
+      counter += 1
     }
     return {
       type: 'FeatureCollection',
@@ -3947,10 +3953,12 @@ function render_TypoSymbols(rendering_params, new_name, filtered_symbols) {
       // Values are stored as strings in our symbol map
       const symb = rendering_params.symbols_to_display.get(`${field_value}`);
       const coords = global.proj(d.geometry.coordinates);
+      console.log(`Picto_${i}`,d.old_id);
 
       return {
         // Add a unique id to each element and a class to each element for future improvement
         id: `Picto_${i}`,
+        old_id : `Picto_old_id_${d.old_id}`, // old id for debugg purpose 
         x: coords[0] - symb[1] / 2,
         y: coords[1] - symb[1] / 2,
         width: symb[1],
@@ -5162,10 +5170,10 @@ export function stack_labels(){
 
         /* If there is an image, the height of it is saved in order to put the label x-pixels underneath */
         var pictogram_height = 0
-        if(!(document.getElementById(`Picto_${y}`) == undefined)){
+        if(!(document.querySelector(`[old_id=Picto_old_id_${y}]`) == undefined)){
 
           
-          var pictograms = document.getElementById(`Picto_${y}`)
+          var pictograms = document.querySelector(`[old_id=Picto_old_id_${y}]`)
           pictogram_height = (parseInt(pictograms.getAttribute("height")) /2) + 10 
         }
         
