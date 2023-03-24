@@ -1,6 +1,11 @@
 Changes
 =======
 
+Unreleased
+----------
+
+- Fix the location of labels derived from a dorling/demers (proportional symbol) layer (Fix #108). Also works on symbols that were manually moved.
+
 0.14.0 (2023-03-24)
 -------------------
 

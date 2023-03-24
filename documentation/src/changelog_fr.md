@@ -1,5 +1,9 @@
 # Historique des versions et des changements effectués
 
+#### Unreleased
+
+- Correction de l'emplacement des étiquettes dérivées d'une couche de symboles proportionnels déplacés pour éviter les chevauchements (dorling/demers) (<a href="https://github.com/riatelab/magrit/issues/108">cf. issue #108</a>). Fonctionne également sur les symboles qui ont été déplacés manuellement.
+
 #### 0.14.0 (2023-03-24)
 
 - Nouveau : Ajout d'une fonctionnalité permettant le filtrage d'une ou plusieurs catégories lors de la création d'une couche de pictogrammes (merci à @robLittiere et à @ArmelVidali pour la contribution <a href="https://github.com/riatelab/magrit/pull/106">contribution #106</a>).
