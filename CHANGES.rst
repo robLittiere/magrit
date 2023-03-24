@@ -1,8 +1,8 @@
 Changes
 =======
 
-Unreleased
-----------
+0.14.0 (2023-03-24)
+-------------------
 
 - New: Enables the filtering of one or more categories of symbols when rendering a Typo Symbol map (thanks to @robLittiere and @ArmelVidali / see PR #106)
 
