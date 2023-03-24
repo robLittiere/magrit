@@ -63,12 +63,17 @@ export function makeSection6() {
 
   const value_choice = dv6.append("div")
 
-  value_choice
-    .append("ul")
-    .attrs({
-        "id" : "value_choice"
-    })
+  value_choice.styles({
+    "display" : "flex",
+    "flex-direction" : "column",
+    "justify-content" : "center"
+  })
 
+  value_choice
+    .append('ul')
+    .attrs({
+        'id' : "value_choice"
+    })
 }
 
 
@@ -76,8 +81,8 @@ export function makeSection6() {
 export function update_section_6(){
 
     const layer_choice = d3.select('#layer_choice');
-    const field_choice = d3.select('#field_choice')
-    const value_choice = d3.select("#value_choice")
+    const field_choice = d3.select('#field_choice');
+    const value_choice = d3.select("#value_choice");
     
     const options = []
     for(let i = 0; i < document.getElementById("layer_choice").options.length; i++   ){
@@ -99,6 +104,7 @@ export function update_section_6(){
 
     }
 
+    // peuple le menu déoulant "dimension" lorsqu'on change de couche
     layer_choice
         .selectAll('option')
         .on("click" , function(){
@@ -115,23 +121,93 @@ export function update_section_6(){
                 field_choice
                     .append("option")
                     .text(original_fields[i])
+            update_section_6()
             }
         }
     ) 
 
+    // peuple le menu déroulant avec la liste des valeurs correspondante au champ selectionnée
     field_choice
-        .selectAll('option')
+        .selectAll('li')
         .on("click" , function(){
+            value_choice.selectAll("option").remove()
 
-            let option_text = this.text
-            let original_fields =  Array.from(data_manager.user_data[option_text].original_fields)
+            var unique_values = Array.from(get_unique_value("brazil")[this.text]) 
 
-            for(let i = 0; i < original_fields.length; i ++){
-
+            for(let value of unique_values){
                 value_choice
                     .append("li")
-                    .text(original_fields[i])
+                    .text(value)
             }
+            update_section_6()
+            
         }
     ) 
+
+    value_choice
+        .selectAll("li")
+        .on("click",  function(){
+          let shapes_to_filter = filter_values("brazil", "Capital", this.text)
+
+
+          for(let shape of shapes_to_filter){
+
+            let filtered_shape = document.getElementById(`feature_${shape}`)
+
+            let display_attribute = filtered_shape.getAttribute("display")
+
+            if(display_attribute == "none"){
+              filtered_shape.setAttribute("display", "")
+            }
+            else{
+              filtered_shape.setAttribute("display" , "none")
+            }
+            
+          }  
+        } 
+        )
+
+
+
+
+
+
+}
+
+function get_unique_value(layer){
+
+  var user_data = data_manager.user_data[layer]
+  var user_values = {}
+  var original_fields = data_manager.current_layers[layer].original_fields
+
+  //pour chaque champ de la couche
+  for(let current_field of original_fields){
+    //récupérer les valeurs uniques du champ
+    let unique_values = new Set()
+    for(let i  = 0; i < user_data.length ; i++){
+        unique_values.add(user_data[i][current_field])
+        
+    }
+    original_fields[current_field] = unique_values
+  }
+
+  // retourne un objet avec clef = nom du champ, valeur = set de values
+  return original_fields
+}
+
+
+function filter_values(layer, field, value){
+  var user_data = data_manager.user_data[layer]
+  var shapes_to_filter = []
+
+  for(let i = 0 ; i < user_data.length; i ++){
+    if (user_data[i][field] == value){
+      shapes_to_filter.push(i)
+    }
+
+  }
+
+
+  return shapes_to_filter
+
 }
