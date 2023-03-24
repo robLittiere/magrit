@@ -4945,12 +4945,23 @@ export const render_label = function render_label(layer, rendering_params, optio
     let i_id = 0;
     nb_ft = ref_selection.length;
     for (let i = 0; i < nb_ft; i++) {
-      const ft = ref_selection[i].__data__;
+      const ref_elem = ref_selection[i];
+      const ft = ref_elem.__data__;
       if (!filter_test(ft.properties)) continue;
-      let coords;
       if (!ft.geometry) {
         warn_empty_features.push([i, ft]);
         continue;
+      }
+      let coords;
+      // Use the geometry of the circle/square if label are rendered on a symbol
+      // layer because the symbol might have been moved (either manually by the user or
+      // by using the dorling/demers algorithm).
+      // Otherwise, use our custom 'coordsPointOnFeature' function.
+      if (type_ft_ref === 'circle') {
+        coords = proj.invert([ref_elem.cx.baseVal.value, ref_elem.cy.baseVal.value]);
+      } else if (type_ft_ref === 'rect') {
+        const size = ref_elem.width.baseVal.value;
+        coords = proj.invert([ref_elem.x.baseVal.value + size / 2, ref_elem.y.baseVal.value + size / 2]);
       } else {
         coords = coordsPointOnFeature(ft.geometry);
       }
