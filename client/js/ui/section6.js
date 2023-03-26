@@ -56,12 +56,15 @@ export function makeSection6() {
 
 
   /* section choix des valeurs */
-  dv6
-    .append("p")
-    .text("Choix des valeurs")
-
-
+  
   const value_choice = dv6.append("div")
+
+  value_choice.append("p")
+  .text("Choix des valeurs")
+  .styles({
+    "display" : "flex",
+    "align-self" : "center"
+  })
 
   value_choice.styles({
     "display" : "flex",
@@ -73,6 +76,10 @@ export function makeSection6() {
     .append('ul')
     .attrs({
         'id' : "value_choice"
+    })
+    .styles({
+      "list-style" : "none",
+      "align-self" : "center"
     })
 }
 
@@ -100,9 +107,28 @@ export function update_section_6(){
             .attrs({
                 'id' : `layer_name${layer_name}`
             })
-            .text(layer_name)}      
+            .text(layer_name)}   
+             
 
     }
+
+
+    /* let original_fields =  Array.from(data_manager.current_layers[layer_choice.property("value")].original_fields)
+
+    for(let i = 0; i < original_fields.length; i ++){
+
+        field_choice
+          .append("option")
+          .text(original_fields[i])
+    } */
+    
+
+    
+    
+
+    
+
+    
 
     // peuple le menu déoulant "dimension" lorsqu'on change de couche
     layer_choice
@@ -128,39 +154,48 @@ export function update_section_6(){
 
     // peuple le menu déroulant avec la liste des valeurs correspondante au champ selectionnée
     field_choice
-        .selectAll('li')
+        .selectAll('option')
         .on("click" , function(){
-            value_choice.selectAll("option").remove()
+            value_choice.selectAll("li").remove()
 
-            var unique_values = Array.from(get_unique_value("brazil")[this.text]) 
+            var unique_values = Array.from(get_unique_value(layer_choice.property("value"))[this.text]) 
+            console.log(layer_choice.property("value"));
 
             for(let value of unique_values){
                 value_choice
                     .append("li")
+                    .styles({
+                      "align-self" : "flex-end"
+                    })
                     .text(value)
+                    .append("input")
+                    .attrs({"type" :"checkbox", "value" : value})
+                    
+
             }
-            update_section_6()
+            
             
         }
     ) 
 
     value_choice
         .selectAll("li")
+        .selectAll("input")
         .on("click",  function(){
-          let shapes_to_filter = filter_values("brazil", "Capital", this.text)
+          let shapes_to_filter = filter_values(layer_choice.property("value"), field_choice.property("value"), this.value)
+
 
 
           for(let shape of shapes_to_filter){
 
             let filtered_shape = document.getElementById(`feature_${shape}`)
 
-            let display_attribute = filtered_shape.getAttribute("display")
-
-            if(display_attribute == "none"){
-              filtered_shape.setAttribute("display", "")
+            
+            if(this.checked == true){
+              filtered_shape.setAttribute("display", "none")
             }
             else{
-              filtered_shape.setAttribute("display" , "none")
+              filtered_shape.setAttribute("display" , "")
             }
             
           }  
