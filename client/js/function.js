@@ -4936,9 +4936,9 @@ export const render_label = function render_label(layer, rendering_params, optio
   let filter_test = () => true;
   if (rendering_params.filter_options !== undefined) {
     if (rendering_params.filter_options.type_filter === 'sup') {
-      filter_test = (prop) => (prop[rendering_params.filter_options.field] > rendering_params.filter_options.filter_value);
+      filter_test = (prop) => (prop[rendering_params.filter_options.field] > +rendering_params.filter_options.filter_value);
     } else if (rendering_params.filter_options.type_filter === 'inf') {
-      filter_test = (prop) => (prop[rendering_params.filter_options.field] < rendering_params.filter_options.filter_value);
+      filter_test = (prop) => (prop[rendering_params.filter_options.field] < +rendering_params.filter_options.filter_value);
     }
   }
   const layer_id = encodeId(layer_to_add);
@@ -4959,12 +4959,23 @@ export const render_label = function render_label(layer, rendering_params, optio
     let i_id = 0;
     nb_ft = ref_selection.length;
     for (let i = 0; i < nb_ft; i++) {
-      const ft = ref_selection[i].__data__;
+      const ref_elem = ref_selection[i];
+      const ft = ref_elem.__data__;
       if (!filter_test(ft.properties)) continue;
-      let coords;
       if (!ft.geometry) {
         warn_empty_features.push([i, ft]);
         continue;
+      }
+      let coords;
+      // Use the geometry of the circle/square if label are rendered on a symbol
+      // layer because the symbol might have been moved (either manually by the user or
+      // by using the dorling/demers algorithm).
+      // Otherwise, use our custom 'coordsPointOnFeature' function.
+      if (type_ft_ref === 'circle') {
+        coords = proj.invert([ref_elem.cx.baseVal.value, ref_elem.cy.baseVal.value]);
+      } else if (type_ft_ref === 'rect') {
+        const size = ref_elem.width.baseVal.value;
+        coords = proj.invert([ref_elem.x.baseVal.value + size / 2, ref_elem.y.baseVal.value + size / 2]);
       } else {
         coords = coordsPointOnFeature(ft.geometry);
       }
@@ -5046,9 +5057,10 @@ export const render_label = function render_label(layer, rendering_params, optio
     fill_color: txt_color,
     rendered_field: label_field,
     is_result: true,
-    ref_layer_name: layer,
+    ref_layer_name: layer || options.ref_layer_name,
     default_size: font_size,
     default_font: selected_font,
+    filter_options: rendering_params.filter_options,
     buffer,
   };
   create_li_layer_elem(layer_to_add, nb_ft, ['Point', 'label'], 'result');

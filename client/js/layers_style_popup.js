@@ -19,7 +19,7 @@ import { prop_sizer3_e, round_value } from './helpers_calc';
 import { binds_layers_buttons, displayInfoOnMove } from './interface';
 import {
   createLegend_choro, createLegend_choro_horizontal,
-  createLegend_discont_links, createLegend_layout,
+  createLegend_discont_links, createLegend_label, createLegend_layout,
   createLegend_line_symbol, createLegend_waffle,
 } from './legend';
 import { redraw_legends_symbols, zoom_without_redraw } from './map_ctrl';
@@ -359,6 +359,7 @@ function createStyleBoxLabel(layer_name) {
         if (new_layer_name !== layer_name) {
           change_layer_name(layer_name, check_layer_name(new_layer_name.trim()));
         }
+        redraw_legend('label', layer_name, null);
       }
     });
 
@@ -761,14 +762,15 @@ function redraw_legend(type_legend, layer_name, field) {
        type_legend === 'line_class' ? [['#legend_root_lines_class.lgdf_', _app.layer_to_id.get(layer_name)].join(''), createLegend_discont_links] :
        type_legend === 'line_symbol' ? [['#legend_root_lines_symbol.lgdf_', _app.layer_to_id.get(layer_name)].join(''), createLegend_line_symbol] :
        type_legend === 'waffle' ? [['#legend_root_waffle.lgdf_', _app.layer_to_id.get(layer_name)].join(''), createLegend_waffle] :
-       type_legend === 'layout' ? [['#legend_root_layout.lgdf_', _app.layer_to_id.get(layer_name)].join(''), createLegend_layout] : undefined;
+       type_legend === 'layout' ? [['#legend_root_layout.lgdf_', _app.layer_to_id.get(layer_name)].join(''), createLegend_layout] :
+       type_legend === 'label' ? [['#legend_root_label.lgdf_', _app.layer_to_id.get(layer_name)].join(''), createLegend_label] : undefined;
   let lgd = document.querySelector(selector);
   if (lgd) {
     const transform_param = lgd.getAttribute('transform'),
-      lgd_title = lgd.querySelector('#legendtitle').innerHTML,
-      lgd_subtitle = lgd.querySelector('#legendsubtitle').innerHTML,
+      lgd_title = lgd.querySelector('#legendtitle').textContent,
+      lgd_subtitle = lgd.querySelector('#legendsubtitle').textContent,
       rounding_precision = lgd.getAttribute('rounding_precision'),
-      note = lgd.querySelector('#legend_bottom_note').innerHTML,
+      note = lgd.querySelector('#legend_bottom_note').textContent,
       boxgap = lgd.getAttribute('boxgap');
     const rect_fill_value = (lgd.getAttribute('visible_rect') === 'true') ? {
       color: lgd.querySelector('#under_rect').style.fill,
@@ -779,37 +781,52 @@ function redraw_legend(type_legend, layer_name, field) {
       no_data_txt = no_data_txt != null ? no_data_txt.textContent : null;
 
       lgd.remove();
-      legend_func(layer_name,
-           field,
-           lgd_title,
-           lgd_subtitle,
-           boxgap,
-           rect_fill_value,
-           rounding_precision,
-           no_data_txt,
-           note);
+      legend_func(
+        layer_name,
+        field,
+        lgd_title,
+        lgd_subtitle,
+        boxgap,
+        rect_fill_value,
+        rounding_precision,
+        no_data_txt,
+        note,
+      );
     } else if (type_legend === 'waffle') {
       lgd.remove();
       legend_func(layer_name, field, lgd_title, lgd_subtitle, rect_fill_value, note);
-    } else if (type_legend === 'layout'){
+    } else if (type_legend === 'layout') {
       lgd.remove();
       const text_value = lgd.querySelector('g.lg.legend_0 > text').innerHTML;
-      legend_func(layer_name,
-                  data_manager.current_layers[layer_name].type,
-                  lgd_title,
-                  lgd_subtitle,
-                  rect_fill_value,
-                  text_value,
-                  note);
+      legend_func(
+        layer_name,
+        data_manager.current_layers[layer_name].type,
+        lgd_title,
+        lgd_subtitle,
+        rect_fill_value,
+        text_value,
+        note,
+      );
+    } else if (type_legend === 'label') {
+      lgd.remove();
+      legend_func(
+        layer_name,
+        lgd_title,
+        lgd_subtitle,
+        rect_fill_value,
+        note || null,
+      );
     } else {
       lgd.remove();
-      legend_func(layer_name,
-                  data_manager.current_layers[layer_name].rendered_field,
-                  lgd_title,
-                  lgd_subtitle,
-                  rect_fill_value,
-                  rounding_precision,
-                  note);
+      legend_func(
+        layer_name,
+        data_manager.current_layers[layer_name].rendered_field,
+        lgd_title,
+        lgd_subtitle,
+        rect_fill_value,
+        rounding_precision,
+        note,
+      );
     }
     lgd = document.querySelector(selector);
     if (transform_param) {

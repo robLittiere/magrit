@@ -4,13 +4,22 @@ Changes
 Unreleased
 ----------
 
-- Enables the filtering of one or more categories of symbols when rendering a Typo Symbol map (thanks to @robLittiere and @ArmelVidali / see PR #106)
+- Fix the location of labels derived from a dorling/demers (proportional symbol) layer (Fix #108). Also works on symbols that were manually moved.
+
+0.14.0 (2023-03-24)
+-------------------
+
+- New: Enables the filtering of one or more categories of symbols when rendering a Typo Symbol map (thanks to @robLittiere and @ArmelVidali / see PR #106)
+
+- New: Add the possibility to create legend for label layers. Closes #107.
+
+- Fix some typos in french translation.
 
 
 0.13.4 (2023-03-14)
 -------------------
 
-- Change docker recipe to enable the creation and the publication on docker hub of multi-plateform images (amd64 / arm64).
+- Change docker recipe to enable the creation and the publication on docker hub of multi-platform images (amd64 / arm64).
 
 0.13.3 (2023-02-21)
 -------------------
