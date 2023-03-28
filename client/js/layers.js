@@ -324,6 +324,12 @@ export function add_layer_topojson(text, options = {}) {
     data_manager.result_data[lyr_name_to_add] = [];
     data_manager.current_layers[lyr_name_to_add].is_result = true;
   }
+  else{
+    /* armel : ajout de données pour les layout layer */
+    data_manager.current_layers[lyr_name_to_add].targeted = true;
+    data_manager.user_data[lyr_name_to_add] = [];
+
+  }
 
   const field_names = topoObj_objects.geometries[0].properties
     ? Object.getOwnPropertyNames(topoObj_objects.geometries[0].properties) : [];
@@ -344,6 +350,10 @@ export function add_layer_topojson(text, options = {}) {
       data_manager.user_data[lyr_name_to_add].push({ id: d.properties.id });
     } else if (result_layer_on_add) {
       data_manager.result_data[lyr_name_to_add].push(d.properties);
+    }
+    else{
+      // armel : ajout des données d'une layout layer au data manager pour faire ensuite des filtres
+      data_manager.user_data[lyr_name_to_add].push(d.properties)
     }
   });
 
@@ -421,6 +431,7 @@ export function add_layer_topojson(text, options = {}) {
       Object.getOwnPropertyNames(
         document.querySelector(`#${_app.layer_to_id.get(lyr_name_to_add)}`).querySelector('path').__data__.properties
       ),
+      
     );
     // Create the entry in the layer list:
     create_li_layer_elem(lyr_name_to_add, nb_ft, type, '');
