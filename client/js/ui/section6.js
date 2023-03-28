@@ -9,10 +9,9 @@ export function makeSection6() {
 
   dv6
   .append("button")
-  .on("click", function(){
-    get_index_checked_box();
-    reset_filter();
-    })
+  .attrs({
+    id : "reset_button"
+  })
   .style("text-align", "center")
   .style("display", "flex")
   .style("justify-content", "center")
@@ -108,6 +107,7 @@ export function update_section_6(){
       var element = d3.select(`#${id}`)
       return element
     }
+    var checked_inputs = {}
     
     const options = []
     // A l'execution, rajoute la liste des couches présentes au menu déroulant des couches
@@ -128,17 +128,6 @@ export function update_section_6(){
             })
             .text(layer_name)}   
     }
-
-
-    /* let original_fields =  Array.from(data_manager.current_layers[layer_choice.property("value")].original_fields)
-
-    for(let i = 0; i < original_fields.length; i ++){
-
-        field_choice
-          .append("option")
-          .text(original_fields[i])
-    } */    
-
     // peuple le menu déoulant "dimension" lorsqu'on change de couche
     return_d3_live_selection("layer_choice")
         .selectAll('option')
@@ -193,7 +182,7 @@ export function update_section_6(){
                     .attrs({"type" :"checkbox", "value" : value})
             }
           //maj du menu            
-         update_section_6()   
+         update_section_6();  
         }
     ) 
 
@@ -223,6 +212,69 @@ export function update_section_6(){
           }  
         } 
      )
+
+    
+    var reset_button = d3.select("#reset_button").on("click", function(){
+      reset_filter();
+      
+    })
+
+      /**
+   * Reinitialise tous les filtres pour tout afficher
+   */
+
+  function reset_filter(){
+    var value_choice = document.querySelectorAll("#value_choice input") 
+    for(let checkbox of value_choice){
+      checkbox.checked = false
+    }
+    var svg_map = document.getElementById("svg_map")
+
+    // pour chaque couche de la carte
+    for(let node of svg_map.childNodes){
+      if(node.nodeName == "defs"){/* do nothing */}
+      else{
+        // pour chaque svg de chaque couche
+        for(let path of node.childNodes){
+          path.setAttribute("display" , "")
+        }
+      }
+    }
+  }
+
+  /**
+   * Récupère toutes les checkbox cochées pour pouvoir les garder affichées en naviguant dans les couches
+   */
+  function get_index_checked_box(){
+    var value_choice = document.querySelectorAll("#value_choice input") 
+    var seleced_layer = d3.select("#layer_choice").property("value")
+    var seleced_field = d3.select("#field_choice").property("value")
+
+    checked_inputs[seleced_layer] = {}
+    checked_inputs[seleced_layer][seleced_field] = []
+
+    for(let i = 0; i < value_choice.length ; i++){
+      if(value_choice[i].checked == true){
+        checked_inputs[seleced_layer][seleced_field].push(i)
+      }
+    }
+  }
+
+  /**
+   * Recheck tous les checkbox précédemment cochées
+   */
+  function recheck_inputs(layer){
+    let inputs_to_check = checked_inputs[layer]
+    var value_choice = document.querySelectorAll("#value_choice input") 
+
+    for(let i = 0; i < value_choice.length ; i++){
+      if(inputs_to_check.includes(i)){
+      value_choice[i].checked == true}
+    }
+    
+  }
+
+
 }
 
 /**
@@ -269,56 +321,3 @@ function filter_values(layer, field, value){
 
 
 
-/**
- * Reinitialise tous les filtres pour tout afficher
- */
-
-function reset_filter(){
-  var value_choice = document.querySelectorAll("#value_choice input") 
-  for(let checkbox of value_choice){
-    checkbox.checked = false
-  }
-  var svg_map = document.getElementById("svg_map")
-
-  // pour chaque couche de la carte
-  for(let node of svg_map.childNodes){
-    if(node.nodeName == "defs"){/* do nothing */}
-    else{
-      // pour chaque svg de chaque couche
-      for(let path of node.childNodes){
-        path.setAttribute("display" , "")
-      }
-    }
-  }
-}
-
-/**
- * Récupère toutes les checkbox cochées pour pouvoir les garder affichées en naviguant dans les couches
- */
-function get_index_checked_box(){
-  var value_choice = document.querySelectorAll("#value_choice input") 
-  var seleced_layer = d3.select("€layer_choice").property("value")
-  var checked_inputs = []
-
-  for(let i = 0; i < value_choice.length ; i++){
-    if(value_choice[i].checked == true){
-      checked_inputs.push(i)
-    }
-  }
-
-  localStorage.setItem("checked_inputs", checked_inputs)
-}
-
-/**
- * Recheck tous les checkbox précédemment cochées
- */
-function recheck_inputs(){
-  let checked_inputs = localStorage.getItem("checked_inputs")
-  var value_choice = document.querySelectorAll("#value_choice input") 
-
-  for(let i = 0; i < value_choice.length ; i++){
-    if(checked_inputs.includes(i)){
-    value_choice[i].checked == true}
-  }
-  
-}
