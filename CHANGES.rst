@@ -1,10 +1,12 @@
 Changes
 =======
 
-Unreleased
-----------
+0.14.1 (2023-03-29)
+-------------------
 
 - Fix the location of labels derived from a dorling/demers (proportional symbol) layer (Fix #108). Also works on symbols that were manually moved.
+
+- Fix description of Departements and Regions sample dataset ("CODGEO" field was described as "CODEGEO", preventing to use the actual "CODGEO" field in some representations).
 
 0.14.0 (2023-03-24)
 -------------------

@@ -1,8 +1,11 @@
 # Historique des versions et des changements effectués
 
-#### Unreleased
+#### 0.14.1 (2023-03-29)
 
 - Correction de l'emplacement des étiquettes dérivées d'une couche de symboles proportionnels déplacés pour éviter les chevauchements (dorling/demers) (<a href="https://github.com/riatelab/magrit/issues/108">cf. issue #108</a>). Fonctionne également sur les symboles qui ont été déplacés manuellement.
+
+- Correction de la description de deux jeux de données d'exemple (Départements et Régions) où le champ "CODGEO" était décrit comme s'appelant "CODEGEO", empêchant d'effectuer certaines représentations sur le champ "CODGEO".
+
 
 #### 0.14.0 (2023-03-24)
 
