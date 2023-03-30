@@ -5163,6 +5163,7 @@ export const render_label_graticule = function render_label_graticule(layer, ren
   return layer_to_add;
 };
 
+
 /**
  * Stacks labels under the point it is linked to (if so)
  * If there is pictograms on the map, it starts stacking underneath, otherwise, it stacks labels one under the other
@@ -5172,7 +5173,10 @@ export const render_label_graticule = function render_label_graticule(layer, ren
  */
 export function stack_labels(){
 
-  // Gets all
+  // Gets all all prop symbol layers
+  var prop_symbols_layers = document.querySelectorAll('[id*="L_PropSymbol"]')
+
+  // Gets all label layers
   var map_labels = document.querySelectorAll('[id*="L_Label"]')  
   
   // For each "label" layer
@@ -5184,9 +5188,16 @@ export function stack_labels(){
         var pictogram_height = 0
         if(!(document.querySelector(`[old_id=Picto_old_id_${y}]`) == undefined)){
 
-          
           var pictograms = document.querySelector(`[old_id=Picto_old_id_${y}]`)
           pictogram_height = (parseInt(pictograms.getAttribute("height")) /2) + 10 
+          
+          for(let layer of prop_symbols_layers){
+            // get the size of the proportionnal symbol
+            var symbol_size = layer.childNodes[y]["r"].baseVal.value
+            if(pictogram_height < (symbol_size * 2) ){
+              pictogram_height = symbol_size + 10
+            }
+          }
         }
         
         
