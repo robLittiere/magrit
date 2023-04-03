@@ -1323,6 +1323,7 @@ export function rewind(geojson, rewindLargerThanHemisphere = true) {
   }
 
   for (let i = 0; i < geojson.features.length; i++) {
+    if (geojson.features[i].geometry == null) continue;
     if (geojson.features[i].geometry.type === 'Polygon') {
       rewindRings(geojson.features[i].geometry.coordinates, rewindLargerThanHemisphere);
     } else if (geojson.features[i].geometry.type === 'MultiPolygon') {
