@@ -39,6 +39,7 @@ import { zoom_without_redraw } from './map_ctrl';
 import { isInterrupted } from './projections';
 import { display_box_symbol_typo, make_style_box_indiv_symbol } from './symbols_picto';
 import { bindTooltips } from './tooltips';
+import { count } from 'd3-array';
 
 const isWASMSupported = (() => {
   let supported = false;
@@ -3857,7 +3858,7 @@ const fields_TypoSymbol = {
               field: field,
               // List of fields checked by the user for fields images not to be rendered
               // We get this from the returned promise
-              picto_filter: confirmed[2],
+              picto_filter: confirmed[2],          
             };
           }
         });
@@ -3888,6 +3889,9 @@ function render_TypoSymbols(rendering_params, new_name, filtered_symbols) {
 
   function make_geojson_pt_layer() {
     const result = [];
+    // Added a counter to set an "old_id" attribute allowing to check if 
+    // a pictogram was supposed to be there but isn't after user filtering
+    var counter = 0;
     for (let i = 0, nb_features = ref_selection.length; i < nb_features; ++i) {
       const ft = ref_selection[i].__data__;
       const value = ft.properties[field];
@@ -3895,15 +3899,17 @@ function render_TypoSymbols(rendering_params, new_name, filtered_symbols) {
       if (!filtered_symbols.includes(`${value}`)) {
         const new_obj = {
           id: i,
+          old_id : counter,
           type: 'Feature',
           properties: {},
           geometry: {type: 'Point'},
-        };
+        }
         new_obj.properties.symbol_field = value;
         new_obj.properties.id_parent = ft.id;
         new_obj.geometry.coordinates = coordsPointOnFeature(ft.geometry);
         result.push(new_obj);
       }
+      counter += 1
     }
     return {
       type: 'FeatureCollection',
@@ -3940,10 +3946,11 @@ function render_TypoSymbols(rendering_params, new_name, filtered_symbols) {
       // Values are stored as strings in our symbol map
       const symb = rendering_params.symbols_to_display.get(`${field_value}`);
       const coords = global.proj(d.geometry.coordinates);
+      console.log(`Picto_${i}`,d.old_id);
 
       return {
-        // Add a unique id to each element and a class to each element for future improvement
-        id: `Picto_${i}`,
+        id: `Picto_${i}`, // Add a unique id to each element and a class to each element for future improvement
+        old_id : `Picto_old_id_${d.old_id}`, // old id for debugg purpose 
         x: coords[0] - symb[1] / 2,
         y: coords[1] - symb[1] / 2,
         width: symb[1],
@@ -5025,6 +5032,7 @@ export const render_label = function render_label(layer, rendering_params, optio
         'stroke-width': stroke_width,
       })
       .text((d) => d.properties.label);
+      
   }
 
   selection
@@ -5147,3 +5155,54 @@ export const render_label_graticule = function render_label_graticule(layer, ren
   zoom_without_redraw();
   return layer_to_add;
 };
+
+
+/**
+ * Stacks labels under the point it is linked to (if so)
+ * If there is pictograms on the map, it starts stacking underneath, otherwise, it stacks labels one under the other
+ * 
+ * Before, all labels were stacked on top of each other
+ *  
+ */
+export function stack_labels(){
+
+  // Gets all label layers
+  var map_labels = document.querySelectorAll('[id*="L_Label"]')  
+  
+  // For each "label" layer
+  for(let i = 0; i < map_labels.length; i++){
+      // For each label
+      for(let y = 0; y < map_labels[i].childNodes.length; y++){
+
+        /* If there is an image, the height of it is saved in order to put the label x-pixels underneath */
+        var pictogram_height = 0
+        if(!(document.querySelector(`[old_id=Picto_old_id_${y}]`) == undefined)){
+
+          var pictograms = document.querySelector(`[old_id=Picto_old_id_${y}]`)
+          pictogram_height = (parseInt(pictograms.getAttribute("height")) /2) + 10 
+        }
+        
+        let label_font_size = parseInt(getComputedStyle(map_labels[i].childNodes[y]).fontSize)
+
+        let y_label = parseInt(map_labels[i].childNodes[y].getAttribute("y")) 
+
+        //Check if the labels have already been stacked. Prevents a shift in display if the user renders the labels
+        //one by one directly though the layer
+        if(map_labels[i].childNodes[y].getAttribute("stacked") == null ){
+            // If it has not been stacked
+            // The x corrdinate stays the same, each label's y attribute is incremented with :
+            // - the height of the image (divided by 2 +10 to have a little gap but not be too far)
+            // - the height of the other text labels * the number of labels ("i" counter)
+            map_labels[i].childNodes[y].setAttribute(
+              "y",
+              y_label + pictogram_height + i*label_font_size
+          )
+          //Set a flag to know if this stack operation have already been made
+          map_labels[i].childNodes[y].setAttribute(
+            "stacked",
+            "true"
+          )
+        }
+      }
+  } 
+}  

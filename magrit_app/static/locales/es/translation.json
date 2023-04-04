@@ -588,7 +588,8 @@
             "count_feature": " <i> ({{ count }} entidad)</i>",
             "count_feature_plural": " <i> ({{ count }} entidades)</i>",
             "title_click": "¡Seleccionar un símbolo!",
-            "checkbox_desc": "Marcar/desmarcar para mostrar pictogramas"
+            "checkbox_desc": "Marcar/desmarcar para mostrar pictogramas" ,
+            "label_checkbox": "Marcar/desmarcar para mostrar etiquetas"
         },
         "categorical_box": {
             "title": "Seleccionar los colores - {{ layer }} - {{ nb_features }} entidades",

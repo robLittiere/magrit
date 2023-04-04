@@ -5,7 +5,7 @@ import { display_categorical_box } from './classification/categorical_panel';
 import { display_discretization_links_discont } from './classification/discrtiz_links_discont';
 import { available_fonts } from './fonts';
 import {
-  check_layer_name, prepare_categories_array, render_label, render_label_graticule,
+  check_layer_name, prepare_categories_array, render_label, render_label_graticule, stack_labels
 } from './function';
 import {
   cloneObj,
@@ -2139,6 +2139,7 @@ function make_generate_labels_section(parent_node, layer_name) {
                   ref_font_size: 12,
                   uo_layer_name: ['Labels', selected_field, layer_name].join('_'),
                 });
+                stack_labels();
               }
             }, 50);
           }),

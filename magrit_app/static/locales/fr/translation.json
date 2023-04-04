@@ -594,7 +594,9 @@
             "count_feature": " <i> ({{ count }} entité)</i>",
             "count_feature_plural": " <i> ({{ count }} entités)</i>",
             "title_click": "Cliquer pour choisir un symbole!",
-            "checkbox_desc": "Cocher/Décocher pour afficher les pictogrammes"
+            "checkbox_desc": "Cocher/Décocher pour afficher les pictogrammes",
+            "label_checkbox": "Cocher/Décocher pour afficher les labels"
+            
         },
         "categorical_box": {
             "title": "Choix des couleurs - {{ layer }} - {{ nb_features }} entités",

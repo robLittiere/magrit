@@ -21,6 +21,8 @@ export function make_dialog_container(id_box, title, class_box) {
     <h4 class="modal-title" id="gridModalLabel">${_title}</h4>
     </div>
     <div class="modal-body"> </div>
+    <div class="modal-label"> </div>
+    
     <div class="modal-footer">
     <button type="button" class="btn btn-primary btn_ok" data-dismiss="modal">${_tr('app_page.common.confirm')}</button>
     <button type="button" class="btn btn-default btn_cancel">${_tr('app_page.common.cancel')}</button>

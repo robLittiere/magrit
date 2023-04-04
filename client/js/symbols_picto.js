@@ -65,17 +65,12 @@ export const display_box_symbol_typo = function (layer, field, categories) {
             }
         }
         return images_to_hide;
-    }
-    
+    }    
 
     const nb_features = data_manager.current_layers[layer].n_features,
         data_layer = data_manager.user_data[layer],
         cats = [],
         res_symbols = _app.default_symbols;
-
-
-    
-        
 
     if (!categories) {
         categories = new Map();
@@ -289,7 +284,7 @@ export const display_box_symbol_typo = function (layer, field, categories) {
             const symbol_and_filter = fetch_symbol_categories();
             const symbol_map = symbol_and_filter[0];
             // List of fields for which the user doesn't want images 
-            const symbol_filter = symbol_and_filter[1] 
+            const symbol_filter = symbol_and_filter[1]; 
             resolve([nb_class, symbol_map, symbol_filter]);
             clean_up_box();
         };
