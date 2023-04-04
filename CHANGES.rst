@@ -1,6 +1,11 @@
 Changes
 =======
 
+Unreleased
+----------
+
+- Fix bug with null / empty geometry introduced in commit 326e3c8 / version 0.13.2.
+
 0.14.1 (2023-03-29)
 -------------------
 

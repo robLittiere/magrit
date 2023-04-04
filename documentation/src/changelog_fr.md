@@ -1,5 +1,9 @@
 # Historique des versions et des changements effectués
 
+#### Unreleased
+
+- Correction d'un bug avec les géométries nulles / vides introduit dans le commit 326e3c8 / version 0.13.2.
+
 #### 0.14.1 (2023-03-29)
 
 - Correction de l'emplacement des étiquettes dérivées d'une couche de symboles proportionnels déplacés pour éviter les chevauchements (dorling/demers) (<a href="https://github.com/riatelab/magrit/issues/108">cf. issue #108</a>). Fonctionne également sur les symboles qui ont été déplacés manuellement.
