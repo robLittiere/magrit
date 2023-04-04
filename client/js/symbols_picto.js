@@ -65,33 +65,12 @@ export const display_box_symbol_typo = function (layer, field, categories) {
             }
         }
         return images_to_hide;
-    }
-
-    /**
-     * Armel : gets all checkbox checked by the user to render labels for multiple fields at once
-     * 
-     * @returns label_categ_to_render - the list of labels to be rendered by render_label()
-     */
-    function fetch_labels(){
-        const label_checkbox = document.querySelectorAll(".label_hide_check");
-        let label_categ_to_render = [];
-        for (let i = 0; i < label_checkbox.length; i++){
-            if (label_checkbox[i].checked){
-                label_categ_to_render.push(label_checkbox[i].id)
-            }
-        }
-        return label_categ_to_render     
-    }
-    
+    }    
 
     const nb_features = data_manager.current_layers[layer].n_features,
         data_layer = data_manager.user_data[layer],
         cats = [],
         res_symbols = _app.default_symbols;
-
-
-    
-        
 
     if (!categories) {
         categories = new Map();
@@ -143,8 +122,6 @@ export const display_box_symbol_typo = function (layer, field, categories) {
         });
     }
     const nb_class = cats.length ;
-    // Armel : object containg all collumns. Used to make a list of checkbox to select labels to be rendered
-    const label_fields = Object.keys(data_layer[0]) 
 
     const modal_box = make_dialog_container(
         "symbol_box",
@@ -287,82 +264,6 @@ export const display_box_symbol_typo = function (layer, field, categories) {
             _tr("app_page.symbol_typo_box.count_feature", { count: d.nb_elem })
         );
 
-    
-    // Adding a container for label selection
-    newbox.append("div")
-        .attr("class", "label_container")
-        .append("p")
-        .styles({
-            float: "left",
-            "margin-bottom": "5px",
-        })
-        // Here add the label text for checkbox
-        .html(
-            _tr("app_page.symbol_typo_box.label_checkbox")
-        )
-
-    // Append ul to container instead of newbox
-    newbox.selectAll(".label_container")
-        .append("ul")
-        .styles({
-            padding: "unset",
-            "list-style": "none",
-            width : "min-content"
-        })
-        .attr("id", "label_categories")
-        .selectAll("li")
-        .data(label_fields)
-        .enter()
-        .append("li")
-        .attrs((label_fields) => ({ class : "label_class label_li", id : `line_${label_fields}`}))
-        .styles({
-            opacity : 0.6
-        });
-
-    newbox
-        .selectAll(".label_class")
-        .insert("span")
-        .styles({
-            "margin-left": "10px",
-        })
-        .append("input")
-        .attrs((d,i) => {
-            return{
-                id : (d) => d,
-                class : "label_hide_check",
-                type : "checkbox"
-
-            }
-        })
-        // Uncheck the box by default
-        .property('checked', false)
-        .styles({
-            margin: 0,
-        })
-        .on("click", function() {
-            let box =  document.getElementById(`line_${this.id}`)
-            if(this.checked){
-                box.style.opacity = 1
-
-            }
-            else{
-                box.style.opacity = 0.6
-            }
-        })   
-
-    newbox
-        .selectAll(".label_class")
-        .append("input")
-        .styles({
-            width: "200px",
-            height: "30px",
-            "vertical-align": "middle",
-            "margin-left": "10px"
-        })
-        .attrs((d) => ({ class: "label_name", id: d }))
-        .property("value", (d) => d);
-
-
     new Sortable(document.getElementById("typo_categories"));
 
     return new Promise((resolve, reject) => {
@@ -384,9 +285,7 @@ export const display_box_symbol_typo = function (layer, field, categories) {
             const symbol_map = symbol_and_filter[0];
             // List of fields for which the user doesn't want images 
             const symbol_filter = symbol_and_filter[1]; 
-            // List of labels checked by user
-            const label_to_render = fetch_labels();
-            resolve([nb_class, symbol_map, symbol_filter, label_to_render]);
+            resolve([nb_class, symbol_map, symbol_filter]);
             clean_up_box();
         };
         container.querySelector(".btn_cancel").onclick = _onclose;

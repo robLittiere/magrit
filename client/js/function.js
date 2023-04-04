@@ -3858,10 +3858,7 @@ const fields_TypoSymbol = {
               field: field,
               // List of fields checked by the user for fields images not to be rendered
               // We get this from the returned promise
-              picto_filter: confirmed[2],
-              //List of fields checked by the user to render labels
-              labels_render : confirmed[3]
-          
+              picto_filter: confirmed[2],          
             };
           }
         });
@@ -3870,10 +3867,6 @@ const fields_TypoSymbol = {
     ok_button.on('click', () => {
       const field = field_to_use.node().value;
       render_TypoSymbols(self.rendering_params[field], uo_layer_name.node().value, self.rendering_params[field].picto_filter);
-
-      // Rendering labels associated to each pictograms, taking account user choices and images presence or absence
-      const rendering_params_labels = self.rendering_params[field].labels_render
-      render_multiple_labels(layer, rendering_params_labels)
     });
     setSelected(field_to_use.node(), fields_all[0]);
     uo_layer_name.attr('value', ['Symbols', layer].join('_'));
@@ -5173,9 +5166,6 @@ export const render_label_graticule = function render_label_graticule(layer, ren
  */
 export function stack_labels(){
 
-  // Gets all all prop symbol layers
-  var prop_symbols_layers = document.querySelectorAll('[id*="L_PropSymbol"]')
-
   // Gets all label layers
   var map_labels = document.querySelectorAll('[id*="L_Label"]')  
   
@@ -5190,16 +5180,7 @@ export function stack_labels(){
 
           var pictograms = document.querySelector(`[old_id=Picto_old_id_${y}]`)
           pictogram_height = (parseInt(pictograms.getAttribute("height")) /2) + 10 
-          
-          for(let layer of prop_symbols_layers){
-            // get the size of the proportionnal symbol
-            var symbol_size = layer.childNodes[y]["r"].baseVal.value
-            if(pictogram_height < (symbol_size * 2) ){
-              pictogram_height = symbol_size + 10
-            }
-          }
         }
-        
         
         let label_font_size = parseInt(getComputedStyle(map_labels[i].childNodes[y]).fontSize)
 
@@ -5225,35 +5206,3 @@ export function stack_labels(){
       }
   } 
 }  
-
-/**
- * Renders a list of labels passed in parameters and stacks them one underneath the other
- * 
- * Allows to render multiple labels at once and stack them so they are readable, 
- * accounting presence of an image.
- * 
- * Before, more than one label at once was unreadable
- * 
- * @param {*} layer - reference layer to link labels
- * @param {*} labels - list of labels to be rendered
- */
-function render_multiple_labels(layer, labels ){
-
-  var label_object = {
-    "uo_layer_name": "",
-    "label_field": "",
-    "color": "#000",
-    "ref_font_size": 12,
-    "font": "verdana"
-  }
-
-  // Calling the label rendering function for each field select by the user
-  for(let label of labels){
-
-    label_object.label_field = label
-    label_object.uo_layer_name =  `Label_${layer + label}`
-    render_label(layer, label_object)
-  };
-  stack_labels() // once all the images and labels are rendered, labels are stacked underneath 
-
-}
