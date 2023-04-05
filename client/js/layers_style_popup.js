@@ -25,6 +25,7 @@ import {
 import { redraw_legends_symbols, zoom_without_redraw } from './map_ctrl';
 import { make_table } from './tables';
 import { bindTooltips } from './tooltips';
+import {default as Sortable} from "sortablejs";
 
 /**
 * Function to dispatch the click on the "open style box" icon
@@ -2066,14 +2067,14 @@ function make_generate_labels_section(parent_node, layer_name) {
         swal({
           title: '',
           html: `<div id="content_label_box">
+<p>Vous pouvez sélectionner les différents champs à utiliser pour créer les labels. Ils seront automatiquement disposés pour éviter les superpositions entre les différents champs pour une même entité.</p>
+<ul id="list-labels" style="padding-inline-start: 0;">
+</ul>
 <p style="margin: 2px 0 2px 0;">${_tr('app_page.layer_style_popup.field_label')}</p>
-<select id="label_box_field">
-<option value="___">${_tr('app_page.common.field')}</option>
-</select>
 <div id="label_box_filter_section" style="margin: 10px 0 10px 0;font-size:0.9em;"></div>
 </div>`,
           type: 'question',
-          customClass: 'swal2_custom',
+          customClass: 'swal2_xlarge',
           showCancelButton: true,
           showCloseButton: false,
           allowEscapeKey: false,
@@ -2082,8 +2083,44 @@ function make_generate_labels_section(parent_node, layer_name) {
           confirmButtonText: _tr('app_page.common.confirm'),
           inputOptions: input_fields,
           onOpen: () => {
-            const sel = d3.select('#label_box_field');
-            _fields.forEach((f_name) => { sel.append('option').property('value', f_name).text(f_name); });
+            const ulElem = d3.select('#list-labels');
+            _fields.forEach((f_name) => {
+              const li = ulElem.append('li')
+                .attr('class', 'label-item');
+              li.append('span')
+                .styles({ 'margin-left': '5px' })
+                .append('input')
+                .attrs({ type: 'checkbox', id: `label_box_${f_name}` });
+
+              li.append('div')
+                .styles({
+                  width: '200px',
+                  height: '30px',
+                  'vertical-align': 'middle',
+                  'margin-left': '10px',
+                  display: 'inline-block',
+                })
+                .text(f_name);
+
+              const inpputPx = li.append('div');
+              inpputPx.append('input')
+                .attrs({ type: 'number', min: 0, max: 100, step: 1, value: 20 })
+                .styles({ width: '50px', 'margin-left': '25px', height: '30px' });
+
+              inpputPx.append('span')
+                .styles({ 'font-size': '0.8em', 'margin-left': '5px' })
+                .text('px');
+
+              const font_select = li.append('select');
+
+              available_fonts.forEach((font) => {
+                font_select.append('option').text(font[0]).attr('value', font[1]);
+              });
+
+            });
+
+            new Sortable(document.getElementById('list-labels'));
+
             if (fields_num.length > 0) {
               const section_filter = d3.select('#label_box_filter_section');
               section_filter.append('input')
@@ -2110,7 +2147,19 @@ function make_generate_labels_section(parent_node, layer_name) {
           },
           preConfirm: () => new Promise((resolve, reject) => {
             setTimeout(() => {
-              const selected_field = document.getElementById('label_box_field').value;
+              // Fetch all the fields that we want to render
+              const fields = [];
+              document.querySelectorAll('li.label-item').forEach((li) => {
+                if (li.querySelector('input[type="checkbox"]').checked) {
+                  fields.push({
+                    field: li.querySelector('div').innerHTML,
+                    size: li.querySelector('input[type=number]').value,
+                    font: li.querySelector('select').value,
+                  });
+                }
+              });
+
+              // Is there a filter ?
               let filter_options = undefined;
               if (fields_num.length > 0) {
                 let to_filter = document.getElementById('label_box_filter_chk').checked;
@@ -2127,20 +2176,24 @@ function make_generate_labels_section(parent_node, layer_name) {
                   };
                 }
               }
-              if (_fields.indexOf(selected_field) < 0) {
-                reject(_tr('app_page.common.no_value'));
-              } else {
-                resolve();
-                render_label(layer_name, {
-                  label_field: selected_field,
-                  filter_options: filter_options,
-                  color: '#000',
-                  font: 'verdana',
-                  ref_font_size: 12,
-                  uo_layer_name: ['Labels', selected_field, layer_name].join('_'),
-                });
-                stack_labels();
-              }
+
+              // Loop on the fields and render them
+              fields.forEach(({ field, size, font }) => {
+                if (_fields.indexOf(field) < 0) {
+                  reject(_tr('app_page.common.no_value'));
+                } else {
+                  resolve();
+                  render_label(layer_name, {
+                    label_field: field,
+                    filter_options: filter_options,
+                    color: '#000',
+                    font: font,
+                    ref_font_size: size,
+                    uo_layer_name: ['Labels', field, layer_name].join('_'),
+                  });
+                  stack_labels();
+                }
+              })
             }, 50);
           }),
         }).then(() => {

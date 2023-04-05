@@ -156,20 +156,23 @@
 }
 
 /* Styles for list of elements in categorical / picto panel */
-li.typo_class:first-child {
+li.typo_class:first-child, li.label-item:first-child  {
   border-top-left-radius: 4px;
   border-top-right-radius: 4px;
 }
 
-li.typo_class:last-child {
+li.typo_class:last-child, li.label-item:last-child {
   border-bottom-left-radius: 4px;
   border-bottom-right-radius: 4px;
 }
 
-li.typo_class {
+li.typo_class, li.label-item {
   border: 1px solid #ddd;
   padding: 4px;
   cursor: grab;
+  display: flex;
+  align-items: center;
+  transition: opacity 0.1s;
 }
 
 li.typo_class > p.color_square {
@@ -180,11 +183,8 @@ li.typo_class > p.symbol_section {
   cursor: pointer;
 }
 
-li.typo_li {
-  display: flex;
-  align-items: center;
-  transition: opacity 0.1s;
-  
+li.label-item {
+  justify-content: space-around;
 }
 
 .typo_container {

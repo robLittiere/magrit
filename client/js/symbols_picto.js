@@ -168,7 +168,7 @@ export const display_box_symbol_typo = function (layer, field, categories) {
         .data(cats)
         .enter()
         .append("li")
-        .attr("class", "typo_class typo_li")
+        .attr("class", "typo_class")
         .attr("id", (_, i) => ["line", i].join("_"))
 
     newbox

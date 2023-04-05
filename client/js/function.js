@@ -5159,50 +5159,49 @@ export const render_label_graticule = function render_label_graticule(layer, ren
 
 /**
  * Stacks labels under the point it is linked to (if so)
- * If there is pictograms on the map, it starts stacking underneath, otherwise, it stacks labels one under the other
- * 
- * Before, all labels were stacked on top of each other
- *  
+ * If there is pictograms on the map, it starts stacking underneath, otherwise,
+ * it stacks labels one under the other
+ *
+ * Before, all labels were stacked on top of each other.
+ *
  */
 export function stack_labels(){
 
   // Gets all label layers
-  var map_labels = document.querySelectorAll('[id*="L_Label"]')  
-  
+  const map_labels = document.querySelectorAll('[id*="L_Label"]');
+
   // For each "label" layer
-  for(let i = 0; i < map_labels.length; i++){
-      // For each label
-      for(let y = 0; y < map_labels[i].childNodes.length; y++){
+  for (let i = 0; i < map_labels.length; i++) {
+    // For each label
+    for (let y = 0; y < map_labels[i].childNodes.length; y++) {
 
-        /* If there is an image, the height of it is saved in order to put the label x-pixels underneath */
-        var pictogram_height = 0
-        if(!(document.querySelector(`[old_id=Picto_old_id_${y}]`) == undefined)){
+      // If there is an image, the height of it is saved in order to put
+      // the label x-pixels underneath
+      let pictogram_height = 0;
+      if (!(document.querySelector(`[old_id=Picto_old_id_${y}]`) == undefined)) {
 
-          var pictograms = document.querySelector(`[old_id=Picto_old_id_${y}]`)
-          pictogram_height = (parseInt(pictograms.getAttribute("height")) /2) + 10 
-        }
-        
-        let label_font_size = parseInt(getComputedStyle(map_labels[i].childNodes[y]).fontSize)
-
-        let y_label = parseInt(map_labels[i].childNodes[y].getAttribute("y")) 
-
-        //Check if the labels have already been stacked. Prevents a shift in display if the user renders the labels
-        //one by one directly though the layer
-        if(map_labels[i].childNodes[y].getAttribute("stacked") == null ){
-            // If it has not been stacked
-            // The x corrdinate stays the same, each label's y attribute is incremented with :
-            // - the height of the image (divided by 2 +10 to have a little gap but not be too far)
-            // - the height of the other text labels * the number of labels ("i" counter)
-            map_labels[i].childNodes[y].setAttribute(
-              "y",
-              y_label + pictogram_height + i*label_font_size
-          )
-          //Set a flag to know if this stack operation have already been made
-          map_labels[i].childNodes[y].setAttribute(
-            "stacked",
-            "true"
-          )
-        }
+        const pictograms = document.querySelector(`[old_id=Picto_old_id_${y}]`);
+        pictogram_height = (parseInt(pictograms.getAttribute('height'), 10) / 2) + 10;
       }
-  } 
-}  
+      // Check if the labels have already been stacked. Prevents a shift in display
+      // if the user renders the labels one by one directly though the layer
+      if (map_labels[i].childNodes[y].getAttribute('stacked') == null) {
+        const label_font_size = parseInt(getComputedStyle(map_labels[i].childNodes[y]).fontSize, 10);
+        const y_label = parseInt(map_labels[i].childNodes[y].getAttribute('y'), 10);
+        // If it has not been stacked
+        // The x coordinate stays the same, each label's y attribute is incremented with :
+        // - the height of the image (divided by 2 +10 to have a little gap but not be too far)
+        // - the height of the other text labels * the number of labels ("i" counter)
+        map_labels[i].childNodes[y].setAttribute(
+          'y',
+          y_label + pictogram_height + i * (label_font_size + 7.5),
+        );
+        // Set a flag to know if this stack operation have already been made
+        map_labels[i].childNodes[y].setAttribute(
+          'stacked',
+          'true',
+        );
+      }
+    }
+  }
+}
