@@ -2055,6 +2055,7 @@ function make_generate_labels_section(parent_node, layer_name) {
     .filter((a) => a.type === 'ratio' || a.type === 'stock')
     .map((a) => a.name);
   if (_fields && _fields.length > 0) {
+    const ref_layer_name = data_manager.current_layers[layer_name].ref_layer_name || layer_name;
     const labels_section = parent_node.append('p');
     const input_fields = {};
     for (let i = 0; i < _fields.length; i++) {
@@ -2081,7 +2082,6 @@ function make_generate_labels_section(parent_node, layer_name) {
           allowOutsideClick: false,
           confirmButtonColor: '#DD6B55',
           confirmButtonText: _tr('app_page.common.confirm'),
-          inputOptions: input_fields,
           onOpen: () => {
             const ulElem = d3.select('#list-labels');
             _fields.forEach((f_name) => {
@@ -2191,9 +2191,9 @@ function make_generate_labels_section(parent_node, layer_name) {
                     ref_font_size: size,
                     uo_layer_name: ['Labels', field, layer_name].join('_'),
                   });
-                  stack_labels();
+                  stack_labels(ref_layer_name);
                 }
-              })
+              });
             }, 50);
           }),
         }).then(() => {

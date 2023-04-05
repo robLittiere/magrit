@@ -5165,13 +5165,15 @@ export const render_label_graticule = function render_label_graticule(layer, ren
  * Before, all labels were stacked on top of each other.
  *
  */
-export function stack_labels(){
+export function stack_labels(ref_layer_name){
 
   // Gets all label layers
   const map_labels = document.querySelectorAll('[id*="L_Label"]');
 
   // For each "label" layer
   for (let i = 0; i < map_labels.length; i++) {
+    const layer_name = map_labels[i].getAttribute('id').replace('L_', '');
+    if (data_manager.current_layers[layer_name].ref_layer_name !== ref_layer_name) continue;
     // For each label
     for (let y = 0; y < map_labels[i].childNodes.length; y++) {
 
