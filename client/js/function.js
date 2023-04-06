@@ -3858,7 +3858,7 @@ const fields_TypoSymbol = {
               field: field,
               // List of fields checked by the user for fields images not to be rendered
               // We get this from the returned promise
-              picto_filter: confirmed[2],          
+              picto_filter: confirmed[2],
             };
           }
         });
@@ -3889,7 +3889,7 @@ function render_TypoSymbols(rendering_params, new_name, filtered_symbols) {
 
   function make_geojson_pt_layer() {
     const result = [];
-    // Added a counter to set an "old_id" attribute allowing to check if 
+    // Added a counter to set an "old_id" attribute allowing to check if
     // a pictogram was supposed to be there but isn't after user filtering
     var counter = 0;
     for (let i = 0, nb_features = ref_selection.length; i < nb_features; ++i) {
@@ -3950,7 +3950,7 @@ function render_TypoSymbols(rendering_params, new_name, filtered_symbols) {
 
       return {
         id: `Picto_${i}`, // Add a unique id to each element and a class to each element for future improvement
-        old_id : `Picto_old_id_${d.old_id}`, // old id for debugg purpose 
+        old_id : `Picto_old_id_${d.old_id}`, // old id for debugg purpose
         x: coords[0] - symb[1] / 2,
         y: coords[1] - symb[1] / 2,
         width: symb[1],
@@ -5032,7 +5032,7 @@ export const render_label = function render_label(layer, rendering_params, optio
         'stroke-width': stroke_width,
       })
       .text((d) => d.properties.label);
-      
+
   }
 
   selection
@@ -5165,7 +5165,7 @@ export const render_label_graticule = function render_label_graticule(layer, ren
  * Before, all labels were stacked on top of each other.
  *
  */
-export function stack_labels(ref_layer_name){
+export function stack_labels(ref_layer_name) {
 
   // Gets all label layers
   const map_labels = document.querySelectorAll('[id*="L_Label"]');
@@ -5173,10 +5173,9 @@ export function stack_labels(ref_layer_name){
   // For each "label" layer
   for (let i = 0; i < map_labels.length; i++) {
     const layer_name = map_labels[i].getAttribute('id').replace('L_', '');
-    if (data_manager.current_layers[layer_name].ref_layer_name !== ref_layer_name) continue;
+    if (ref_layer_name && data_manager.current_layers[layer_name].ref_layer_name !== ref_layer_name) continue;
     // For each label
     for (let y = 0; y < map_labels[i].childNodes.length; y++) {
-
       // If there is an image, the height of it is saved in order to put
       // the label x-pixels underneath
       let pictogram_height = 0;

@@ -2068,7 +2068,7 @@ function make_generate_labels_section(parent_node, layer_name) {
         swal({
           title: '',
           html: `<div id="content_label_box">
-<p>Vous pouvez sélectionner les différents champs à utiliser pour créer les labels. Ils seront automatiquement disposés pour éviter les superpositions entre les différents champs pour une même entité.</p>
+<p>${_tr('app_page.layer_style_popup.label_popup_explanation')}</p>
 <ul id="list-labels" style="padding-inline-start: 0;">
 </ul>
 <p style="margin: 2px 0 2px 0;">${_tr('app_page.layer_style_popup.field_label')}</p>
@@ -2083,6 +2083,7 @@ function make_generate_labels_section(parent_node, layer_name) {
           confirmButtonColor: '#DD6B55',
           confirmButtonText: _tr('app_page.common.confirm'),
           onOpen: () => {
+            document.querySelector('.swal2-confirm').setAttribute('disabled', 'disabled');
             const ulElem = d3.select('#list-labels');
             _fields.forEach((f_name) => {
               const li = ulElem.append('li')
@@ -2090,7 +2091,15 @@ function make_generate_labels_section(parent_node, layer_name) {
               li.append('span')
                 .styles({ 'margin-left': '5px' })
                 .append('input')
-                .attrs({ type: 'checkbox', id: `label_box_${f_name}` });
+                .attrs({ type: 'checkbox', id: `label_box_${f_name}` })
+                .on('change', () => {
+                  const checked = document.querySelectorAll('li.label-item input:checked').length;
+                  if (checked > 0) {
+                    document.querySelector('.swal2-confirm').removeAttribute('disabled');
+                  } else {
+                    document.querySelector('.swal2-confirm').setAttribute('disabled', 'disabled');
+                  }
+                });
 
               li.append('div')
                 .styles({
@@ -2104,7 +2113,13 @@ function make_generate_labels_section(parent_node, layer_name) {
 
               const inpputPx = li.append('div');
               inpputPx.append('input')
-                .attrs({ type: 'number', min: 0, max: 100, step: 1, value: 20 })
+                .attrs({
+                  type: 'number',
+                  min: 0,
+                  max: 100,
+                  step: 1,
+                  value: 14,
+                })
                 .styles({ width: '50px', 'margin-left': '25px', height: '30px' });
 
               inpputPx.append('span')
@@ -2116,7 +2131,6 @@ function make_generate_labels_section(parent_node, layer_name) {
               available_fonts.forEach((font) => {
                 font_select.append('option').text(font[0]).attr('value', font[1]);
               });
-
             });
 
             new Sortable(document.getElementById('list-labels'));
@@ -2127,7 +2141,7 @@ function make_generate_labels_section(parent_node, layer_name) {
                 .attrs({ type: 'checkbox', id: 'label_box_filter_chk' })
                 .on('change', function () {
                   if (this.checked) {
-                    subsection_filter_label.style('display', null);
+                    subsection_filter_label.style('display', 'flex');
                   } else {
                     subsection_filter_label.style('display', 'none');
                   }
@@ -2135,9 +2149,13 @@ function make_generate_labels_section(parent_node, layer_name) {
               section_filter.append('label')
                 .attr('for', 'label_box_filter_chk')
                 .html(_tr('app_page.layer_style_popup.filter_label'));
-              const subsection_filter_label = section_filter.append('div').style('display', 'none');
+
+              const subsection_filter_label = section_filter.append('div')
+                .styles({ display: 'none', 'justify-content': 'space-around', 'margin-top': '10px' });
+
               const sel2 = subsection_filter_label.append('select').attr('id', 'label_box_filter_field');
               fields_num.forEach((f_name) => { sel2.append('option').property('value', f_name).text(f_name); });
+
               const sel3 = subsection_filter_label.append('select').attr('id', 'label_box_filter_type');
               sel3.append('option').property('value', 'sup').text('>');
               sel3.append('option').property('value', 'inf').text('<');
@@ -2146,55 +2164,55 @@ function make_generate_labels_section(parent_node, layer_name) {
             }
           },
           preConfirm: () => new Promise((resolve, reject) => {
-            setTimeout(() => {
-              // Fetch all the fields that we want to render
-              const fields = [];
-              document.querySelectorAll('li.label-item').forEach((li) => {
-                if (li.querySelector('input[type="checkbox"]').checked) {
-                  fields.push({
-                    field: li.querySelector('div').innerHTML,
-                    size: li.querySelector('input[type=number]').value,
-                    font: li.querySelector('select').value,
-                  });
-                }
-              });
-
-              // Is there a filter ?
-              let filter_options = undefined;
-              if (fields_num.length > 0) {
-                let to_filter = document.getElementById('label_box_filter_chk').checked;
-                if (to_filter) {
-                  const filter_value = document.getElementById('label_box_filter_value').value;
-                  if (!filter_value || isNaN(filter_value)) {
-                    reject(_tr('app_page.common.incorrect_value'));
-                    return;
-                  }
-                  filter_options = {
-                    field: document.getElementById('label_box_filter_field').value,
-                    type_filter: document.getElementById('label_box_filter_type').value,
-                    filter_value: filter_value,
-                  };
-                }
+            // Fetch all the fields that we want to render
+            const fields = [];
+            document.querySelectorAll('li.label-item').forEach((li) => {
+              if (li.querySelector('input[type="checkbox"]').checked) {
+                fields.push({
+                  field: li.querySelector('div').innerHTML,
+                  size: li.querySelector('input[type=number]').value,
+                  font: li.querySelector('select').value,
+                });
               }
+            });
 
-              // Loop on the fields and render them
-              fields.forEach(({ field, size, font }) => {
-                if (_fields.indexOf(field) < 0) {
-                  reject(_tr('app_page.common.no_value'));
-                } else {
-                  resolve();
-                  render_label(layer_name, {
-                    label_field: field,
-                    filter_options: filter_options,
-                    color: '#000',
-                    font: font,
-                    ref_font_size: size,
-                    uo_layer_name: ['Labels', field, layer_name].join('_'),
-                  });
-                  stack_labels(ref_layer_name);
+            // Is there a filter ?
+            let filter_options = undefined;
+            if (fields_num.length > 0) {
+              let to_filter = document.getElementById('label_box_filter_chk').checked;
+              if (to_filter) {
+                const filter_value = document.getElementById('label_box_filter_value').value;
+                if (!filter_value || isNaN(filter_value)) {
+                  reject(_tr('app_page.common.incorrect_value'));
+                  return;
                 }
-              });
-            }, 50);
+                filter_options = {
+                  field: document.getElementById('label_box_filter_field').value,
+                  type_filter: document.getElementById('label_box_filter_type').value,
+                  filter_value: filter_value,
+                };
+              }
+            }
+
+            // Loop on the fields and render them
+            fields.forEach(({ field, size, font }) => {
+              if (_fields.indexOf(field) < 0) {
+                reject(_tr('app_page.common.no_value'));
+              } else {
+                resolve();
+                render_label(layer_name, {
+                  filter_options,
+                  font,
+                  label_field: field,
+                  color: '#000',
+                  ref_font_size: size,
+                  uo_layer_name: ['Labels', field, layer_name].join('_'),
+                });
+              }
+            });
+            if (fields.length > 0) {
+              stack_labels(ref_layer_name);
+            }
           }),
         }).then(() => {
           //console.log(value);
@@ -2207,7 +2225,7 @@ function make_generate_labels_section(parent_node, layer_name) {
 
 /**
 * Return the name of the fields/columns
-* (ie. the members of the `properties` Object for each feature on a layer)
+* (i.e. the members of the `properties` Object for each feature on a layer)
 *
 * @param {String} layer_name - The name of the layer.
 * @return {Array} - An array of Strings, one for each field name.
