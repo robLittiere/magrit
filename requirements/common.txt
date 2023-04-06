@@ -25,4 +25,4 @@ pyexcel-ods == 0.6.0
 pyexcel-ods3 == 0.6.1
 pyexcel-xls == 0.6.2
 pyexcel-xlsx == 0.6.0
--e git+https://github.com/mthh/smoomapy-magrit@ba66005a1f2bc240d125b20af78dc696538bf493#egg=smoomacypy
+-e git+https://github.com/mthh/smoomapy-magrit@7c6bcb75734387f4e332fea6dea36fa035c6fa5a#egg=smoomacypy
