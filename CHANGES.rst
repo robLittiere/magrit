@@ -1,8 +1,8 @@
 Changes
 =======
 
-Unreleased
-----------
+0.15.0 (2023-04-06)
+-------------------
 
 - Fix bug with null / empty geometry introduced in commit 326e3c8 / version 0.13.2.
 
@@ -10,7 +10,7 @@ Unreleased
 
 - Automatically stack labels for the same feature to avoid overlap (thanks to @robLittiere and @ArmelVidali / see PR #109).
 
-- Update `smoomapy` dependency to fix some issue when bounds given by the user are very close to the min/max bounds of the data (and that could result in a class without value).
+- Update ``smoomapy`` dependency to fix some issue when bounds given by the user are very close to the min/max bounds of the data (and that could result in a class without value).
 
 0.14.1 (2023-03-29)
 -------------------

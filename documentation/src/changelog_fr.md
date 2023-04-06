@@ -1,6 +1,6 @@
 # Historique des versions et des changements effectués
 
-#### Unreleased
+#### 0.15.0 (2023-04-06)
 
 - Correction d'un bug avec les géométries nulles / vides introduit dans le commit 326e3c8 / version 0.13.2.
 

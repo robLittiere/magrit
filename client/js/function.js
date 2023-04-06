@@ -5195,7 +5195,7 @@ export function stack_labels(ref_layer_name) {
         // - the height of the other text labels * the number of labels ("i" counter)
         map_labels[i].childNodes[y].setAttribute(
           'y',
-          y_label + pictogram_height + i * (label_font_size + 7.5),
+          y_label + pictogram_height + i * (label_font_size + 5),
         );
         // Set a flag to know if this stack operation have already been made
         map_labels[i].childNodes[y].setAttribute(
