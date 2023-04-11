@@ -1,8 +1,14 @@
 # Historique des versions et des changements effectués
 
-#### Unreleased
+#### 0.15.0 (2023-04-06)
 
 - Correction d'un bug avec les géométries nulles / vides introduit dans le commit 326e3c8 / version 0.13.2.
+
+- Amélioration du popup de création d'étiquettes pour permettre la création de plusieurs étiquettes à la fois, tout en étant capable de sélectionner la police et la taille de la police pour chaque champ.
+
+- Empiler automatiquement les étiquettes pour chaque entités afin d'éviter les chevauchements (merci à @robLittiere et à @ArmelVidali pour la contribution <a href="https://github.com/riatelab/magrit/pull/109">contribution #109</a>).
+
+- Mise à jour de la dépendance `smoomapy` pour corriger un problème lorsque les limites données par l'utilisateur sont très proches des limites min/max des données (et que cela pouvait résulter en une classe sans valeur).
 
 #### 0.14.1 (2023-03-29)
 

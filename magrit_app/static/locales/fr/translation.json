@@ -652,6 +652,7 @@
             "graticule_dasharray": "Taille des tirets<br>",
             "graticule_clip": "Limiter la taille du graticule à l'emprise de la couche de référence",
             "generate_labels": "Génération de labels pour cette couche...",
+            "label_popup_explanation": "Vous pouvez sélectionner les différents champs à utiliser pour créer les labels. Ils seront automatiquement disposés, dans l'ordre sélectionné, pour éviter les superpositions entre les différents champs pour une même entité.",
             "field_label": "Sélection du champ à utiliser",
             "layer_shadow": "Ajouter une ombre à la couche",
             "let_draggable": "Autoriser le déplacement des symboles",
