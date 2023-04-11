@@ -1,6 +1,6 @@
 # Historique des versions et des changements effectués
 
-#### Unreleased (2023-04-xx)
+#### 0.15.1 (2023-04-11)
 
 - Transfère la valeur d'opacité des couches (choroplèthe, etc.) à leurs légendes.
 
