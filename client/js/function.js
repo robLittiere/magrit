@@ -2742,6 +2742,7 @@ export function render_categorical(layer, rendering_params) {
   data_manager.current_layers[layer_name]['stroke-width-const'] = 0.75;
   data_manager.current_layers[layer_name].is_result = true;
   data_manager.current_layers[layer_name].color_map = color_map;
+  data_manager.current_layers[layer_name].fill_opacity = 0.9;
   zoom_without_redraw();
 }
 
@@ -2789,6 +2790,7 @@ function render_choro(layer, rendering_params) {
   data_manager.current_layers[layer_name].rendered_field = rendering_params.rendered_field;
   data_manager.current_layers[layer_name].fill_color = { class: rendering_params.colorsByFeature };
   data_manager.current_layers[layer_name]['stroke-width-const'] = 0.75;
+  data_manager.current_layers[layer_name].fill_opacity = 1;
   data_manager.current_layers[layer_name].is_result = true;
   data_manager.current_layers[layer_name].options_disc = options_disc;
   const colors_breaks = [];

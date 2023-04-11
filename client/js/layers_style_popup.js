@@ -1394,7 +1394,11 @@ function createStyleBox(layer_name) {
           };
         }
 
-        if ((rendering_params !== undefined && rendering_params.field !== undefined)) {
+        console.log(rendering_params);
+        if (
+          (rendering_params !== undefined && rendering_params.field !== undefined)
+          || +opacity != data_manager.current_layers[layer_name].fill_opacity
+        ) {
           if (document.querySelector(`.legend.legend_feature.lgdf_${_app.layer_to_id.get(layer_name)}`).id === 'legend_root') {
             redraw_legend('choro', layer_name, data_manager.current_layers[layer_name].rendered_field);
           } else {
@@ -1409,6 +1413,7 @@ function createStyleBox(layer_name) {
         }
         zoom_without_redraw();
       } else {
+        data_manager.current_layers[layer_name].fill_opacity = +opacity;
         // Reset to original values the rendering parameters if "no" is clicked
         selection.style('fill-opacity', opacity)
           .style('stroke-opacity', border_opacity);
@@ -1673,6 +1678,7 @@ function createStyleBox(layer_name) {
       selection.style('fill-opacity', this.value);
       fill_opacity_section.select('#fill_opacity_txt')
         .html(`${this.value * 100}%`);
+      data_manager.current_layers[layer_name].fill_opacity = +this.value;
     });
 
   const c_section = popup.append('div')
@@ -2071,7 +2077,7 @@ function make_generate_labels_section(parent_node, layer_name) {
 <p>Vous pouvez sélectionner les différents champs à utiliser pour créer les labels. Ils seront automatiquement disposés pour éviter les superpositions entre les différents champs pour une même entité.</p>
 <ul id="list-labels" style="padding-inline-start: 0;">
 </ul>
-<p style="margin: 2px 0 2px 0;">${_tr('app_page.layer_style_popup.field_label')}</p>
+<!-- <p style="margin: 2px 0 2px 0;">${_tr('app_page.layer_style_popup.field_label')}</p> -->
 <div id="label_box_filter_section" style="margin: 10px 0 10px 0;font-size:0.9em;"></div>
 </div>`,
           type: 'question',
@@ -2083,14 +2089,29 @@ function make_generate_labels_section(parent_node, layer_name) {
           confirmButtonColor: '#DD6B55',
           confirmButtonText: _tr('app_page.common.confirm'),
           onOpen: () => {
+            // Set 'confirmation' button to disabled by default
+            // (it will be enabled only if at least one checkbox is checked)
+            document.querySelector('button.swal2-confirm').setAttribute('disabled', 'true');
+
+            // Build the list of fields that can be used as labels
             const ulElem = d3.select('#list-labels');
             _fields.forEach((f_name) => {
               const li = ulElem.append('li')
                 .attr('class', 'label-item');
+
               li.append('span')
                 .styles({ 'margin-left': '5px' })
                 .append('input')
-                .attrs({ type: 'checkbox', id: `label_box_${f_name}` });
+                .attrs({ type: 'checkbox', id: `label_box_${f_name}` })
+                .on('change', () => {
+                  // Count how many checkboxes are checked
+                  const nChecked = document.querySelectorAll('#list-labels input[type=checkbox]:checked').length;
+                  if (nChecked > 0) {
+                    document.querySelector('button.swal2-confirm').removeAttribute('disabled');
+                  } else {
+                    document.querySelector('button.swal2-confirm').setAttribute('disabled', true);
+                  }
+                });
 
               li.append('div')
                 .styles({
@@ -2127,7 +2148,7 @@ function make_generate_labels_section(parent_node, layer_name) {
                 .attrs({ type: 'checkbox', id: 'label_box_filter_chk' })
                 .on('change', function () {
                   if (this.checked) {
-                    subsection_filter_label.style('display', null);
+                    subsection_filter_label.style('display', 'flex');
                   } else {
                     subsection_filter_label.style('display', 'none');
                   }
@@ -2135,10 +2156,19 @@ function make_generate_labels_section(parent_node, layer_name) {
               section_filter.append('label')
                 .attr('for', 'label_box_filter_chk')
                 .html(_tr('app_page.layer_style_popup.filter_label'));
-              const subsection_filter_label = section_filter.append('div').style('display', 'none');
-              const sel2 = subsection_filter_label.append('select').attr('id', 'label_box_filter_field');
-              fields_num.forEach((f_name) => { sel2.append('option').property('value', f_name).text(f_name); });
-              const sel3 = subsection_filter_label.append('select').attr('id', 'label_box_filter_type');
+
+              const subsection_filter_label = section_filter.append('div')
+                .styles({ 'justify-content': 'space-around', display: 'none' })
+
+              const sel2 = subsection_filter_label.append('select')
+                .attr('id', 'label_box_filter_field');
+
+              fields_num.forEach((f_name) => {
+                sel2.append('option').property('value', f_name).text(f_name);
+              });
+
+              const sel3 = subsection_filter_label.append('select')
+                .attr('id', 'label_box_filter_type');
               sel3.append('option').property('value', 'sup').text('>');
               sel3.append('option').property('value', 'inf').text('<');
               subsection_filter_label.append('input')
@@ -2146,55 +2176,53 @@ function make_generate_labels_section(parent_node, layer_name) {
             }
           },
           preConfirm: () => new Promise((resolve, reject) => {
-            setTimeout(() => {
-              // Fetch all the fields that we want to render
-              const fields = [];
-              document.querySelectorAll('li.label-item').forEach((li) => {
-                if (li.querySelector('input[type="checkbox"]').checked) {
-                  fields.push({
-                    field: li.querySelector('div').innerHTML,
-                    size: li.querySelector('input[type=number]').value,
-                    font: li.querySelector('select').value,
-                  });
-                }
-              });
-
-              // Is there a filter ?
-              let filter_options = undefined;
-              if (fields_num.length > 0) {
-                let to_filter = document.getElementById('label_box_filter_chk').checked;
-                if (to_filter) {
-                  const filter_value = document.getElementById('label_box_filter_value').value;
-                  if (!filter_value || isNaN(filter_value)) {
-                    reject(_tr('app_page.common.incorrect_value'));
-                    return;
-                  }
-                  filter_options = {
-                    field: document.getElementById('label_box_filter_field').value,
-                    type_filter: document.getElementById('label_box_filter_type').value,
-                    filter_value: filter_value,
-                  };
-                }
+            // Fetch all the fields that we want to render
+            const fields = [];
+            document.querySelectorAll('li.label-item').forEach((li) => {
+              if (li.querySelector('input[type="checkbox"]').checked) {
+                fields.push({
+                  field: li.querySelector('div').innerHTML,
+                  size: li.querySelector('input[type=number]').value,
+                  font: li.querySelector('select').value,
+                });
               }
+            });
 
-              // Loop on the fields and render them
-              fields.forEach(({ field, size, font }) => {
-                if (_fields.indexOf(field) < 0) {
-                  reject(_tr('app_page.common.no_value'));
-                } else {
-                  resolve();
-                  render_label(layer_name, {
-                    label_field: field,
-                    filter_options: filter_options,
-                    color: '#000',
-                    font: font,
-                    ref_font_size: size,
-                    uo_layer_name: ['Labels', field, layer_name].join('_'),
-                  });
-                  stack_labels(ref_layer_name);
+            // Is there a filter ?
+            let filter_options = undefined;
+            if (fields_num.length > 0) {
+              let to_filter = document.getElementById('label_box_filter_chk').checked;
+              if (to_filter) {
+                const filter_value = document.getElementById('label_box_filter_value').value;
+                if (!filter_value || isNaN(filter_value)) {
+                  reject(_tr('app_page.common.incorrect_value'));
+                  return;
                 }
-              });
-            }, 50);
+                filter_options = {
+                  field: document.getElementById('label_box_filter_field').value,
+                  type_filter: document.getElementById('label_box_filter_type').value,
+                  filter_value: filter_value,
+                };
+              }
+            }
+
+            // Loop on the fields and render them
+            fields.forEach(({ field, size, font }) => {
+              if (_fields.indexOf(field) < 0) {
+                reject(_tr('app_page.common.no_value'));
+              } else {
+                resolve();
+                render_label(layer_name, {
+                  label_field: field,
+                  filter_options: filter_options,
+                  color: '#000',
+                  font: font,
+                  ref_font_size: size,
+                  uo_layer_name: ['Labels', field, layer_name].join('_'),
+                });
+                stack_labels(ref_layer_name);
+              }
+            });
           }),
         }).then(() => {
           //console.log(value);
@@ -2565,6 +2593,9 @@ function createStyleBox_ProbSymbol(layer_name) {
             data_manager.current_layers[layer_name].color_map = rendering_params.color_map;
           }
           data_manager.current_layers[layer_name].rendered_field2 = rendering_params.field;
+
+        }
+        if ((type_method === 'PropSymbolsChoro' || type_method === 'PropSymbolsTypo') && (rendering_params !== undefined || +opacity !== data_manager.current_layers[layer_name].fill_opacity)) {
           // Also change the legend if there is one displayed :
           if (document.querySelector(`.legend.legend_feature.lgdf_${_app.layer_to_id.get(layer_name)}`).id === 'legend_root') {
             redraw_legend('choro', layer_name, data_manager.current_layers[layer_name].rendered_field);
@@ -2584,6 +2615,7 @@ function createStyleBox_ProbSymbol(layer_name) {
       } else {
         selection.style('fill-opacity', opacity);
         map.select(g_lyr_name).style('stroke-width', stroke_width);
+        data_manager.current_layers[layer_name].fill_opacity = +opacity;
         data_manager.current_layers[layer_name]['stroke-width-const'] = stroke_width;
         const fill_meth = Object.getOwnPropertyNames(fill_prev)[0];
         if (fill_meth === 'single') {
@@ -2811,6 +2843,7 @@ function createStyleBox_ProbSymbol(layer_name) {
       selection.style('fill-opacity', this.value);
       fill_opct_section.select('#fill_opacity_txt')
         .html(`${+this.value * 100}%`);
+      data_manager.current_layers[layer_name].fill_opacity = +this.value;
     });
 
 

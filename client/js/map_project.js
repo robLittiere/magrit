@@ -1111,6 +1111,7 @@ export function apply_user_preferences(json_pref) {
       if (_layer.options_disc) current_layer_prop.options_disc = _layer.options_disc;
       if (_layer.fill_color) current_layer_prop.fill_color = _layer.fill_color;
       if (_layer.color_palette) current_layer_prop.color_palette = _layer.color_palette;
+      if (_layer.fill_opacity) data_manager.current_layers[layer_name].fill_opacity = _layer.fill_opacity;
       if (_layer.renderer) {
         if (['Choropleth', 'Stewart', 'Gridded'].indexOf(_layer.renderer) > -1) {
           layer_selec_all
@@ -1275,6 +1276,9 @@ export function apply_user_preferences(json_pref) {
         }
         if (_layer.size_legend_symbol) {
           data_manager.current_layers[layer_name].size_legend_symbol = _layer.size_legend_symbol;
+        }
+        if (_layer.fill_opacity) {
+          data_manager.current_layers[layer_name].fill_opacity = _layer.fill_opacity;
         }
         if (_layer.legend) {
           rehandle_legend(layer_name, _layer.legend, p_version);

@@ -1429,7 +1429,11 @@ export function createLegend_choro(layer, field, title, subtitle, box_gap = 0, r
           height: boxheight,
         };
       })
-      .styles(d => ({ fill: d.color, stroke: d.color }));
+      .styles((d) => ({
+        fill: d.color,
+        'fill-opacity': layer_prop.fill_opacity,
+      }))
+      .style('stroke', layer_prop.fill_opacity === 1 ? layer_prop.fill_opacity : null);
   } else {
     legend_elems
       .append('image')
@@ -1585,7 +1589,11 @@ export function createLegend_choro_horizontal(layer, field, title, subtitle, box
     .attr('x', (d, i) => xpos + (boxgap + boxwidth) * i)
     .attr('y', y_pos2)
     .attrs({ width: boxwidth, height: boxheight })
-    .styles(d => ({ fill: d.color, stroke: d.color }));
+    .styles((d) => ({
+      fill: d.color,
+      'fill-opacity': layer_prop.fill_opacity,
+    }))
+    .style('stroke', layer_prop.fill_opacity === 1 ? layer_prop.fill_opacity : null);
 
   legend_elems
     .append('text')
