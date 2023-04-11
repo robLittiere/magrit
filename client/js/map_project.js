@@ -1112,8 +1112,6 @@ export function apply_user_preferences(json_pref) {
       if (_layer.fill_color) current_layer_prop.fill_color = _layer.fill_color;
       if (_layer.color_palette) current_layer_prop.color_palette = _layer.color_palette;
 
-      // data_manager.current_layers[layer_name].fill_opacity = _layer.fill_opacity == null ? 1 : _layer.fill_opacity;
-
       if (_layer.renderer) {
         if (['Choropleth', 'Stewart', 'Gridded'].indexOf(_layer.renderer) > -1) {
           layer_selec_all
