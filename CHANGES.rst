@@ -1,6 +1,11 @@
 Changes
 =======
 
+Unreleased (2023-04-xx)
+-----------------------
+
+- Transfers the fill-opacity of layers to their legends.
+
 0.15.0 (2023-04-06)
 -------------------
 
