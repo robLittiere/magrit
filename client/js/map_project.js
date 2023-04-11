@@ -314,7 +314,7 @@ export function get_map_project() {
     }
     if (current_layer_prop.targeted) {
       selection = map.select(`#${layer_id}`).selectAll('path');
-      layer_style_i.fill_opacity = selection.style('fill-opacity');
+      layer_style_i.fill_opacity = +selection.style('fill-opacity');
       layer_style_i.targeted = true;
       layer_style_i.topo_geom = true;
       // layer_style_i.topo_geom = JSON.stringify(_target_layer_file);
@@ -333,7 +333,7 @@ export function get_map_project() {
       }
     } else if (!current_layer_prop.renderer) {
       selection = map.select(`#${layer_id}`).selectAll('path');
-      layer_style_i.fill_opacity = selection.style('fill-opacity');
+      layer_style_i.fill_opacity = +selection.style('fill-opacity');
       layer_style_i.fill_color = current_layer_prop.fill_color;
       layer_style_i.topo_geom = true;
       layer_style_i.stroke_color = selection.style('stroke');
@@ -509,7 +509,7 @@ export function get_map_project() {
       selection = map.select(`#${layer_id}`).selectAll('path');
     }
     layer_style_i.stroke_opacity = selection.style('stroke-opacity');
-    layer_style_i.fill_opacity = selection.style('fill-opacity');
+    layer_style_i.fill_opacity = +selection.style('fill-opacity');
   }
 
   return Promise.all(
@@ -1111,7 +1111,9 @@ export function apply_user_preferences(json_pref) {
       if (_layer.options_disc) current_layer_prop.options_disc = _layer.options_disc;
       if (_layer.fill_color) current_layer_prop.fill_color = _layer.fill_color;
       if (_layer.color_palette) current_layer_prop.color_palette = _layer.color_palette;
-      if (_layer.fill_opacity) data_manager.current_layers[layer_name].fill_opacity = _layer.fill_opacity;
+
+      // data_manager.current_layers[layer_name].fill_opacity = _layer.fill_opacity == null ? 1 : _layer.fill_opacity;
+
       if (_layer.renderer) {
         if (['Choropleth', 'Stewart', 'Gridded'].indexOf(_layer.renderer) > -1) {
           layer_selec_all
@@ -1148,6 +1150,9 @@ export function apply_user_preferences(json_pref) {
           });
         }
       }
+
+      data_manager.current_layers[layer_name].fill_opacity = _layer.fill_opacity == null ? 1 : _layer.fill_opacity;
+
       if (_layer.stroke_color) {
         layer_selec_all.style('stroke', _layer.stroke_color);
       }

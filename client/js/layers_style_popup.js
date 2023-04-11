@@ -1394,7 +1394,6 @@ function createStyleBox(layer_name) {
           };
         }
 
-        console.log(rendering_params);
         if (
           (rendering_params !== undefined && rendering_params.field !== undefined)
           || +opacity != data_manager.current_layers[layer_name].fill_opacity
@@ -1850,6 +1849,7 @@ function createStyleBoxStewart(layer_name) {
         zoom_without_redraw();
       } else {
         // Reset to original values the rendering parameters if "no" is clicked
+        data_manager.current_layers[layer_name].fill_opacity = +opacity;
         selection.style('fill-opacity', opacity)
           .style('stroke-opacity', border_opacity);
         const zoom_scale = +d3.zoomTransform(map.node()).k;
@@ -1943,6 +1943,7 @@ function createStyleBoxStewart(layer_name) {
       selection.style('fill-opacity', this.value);
       fill_opacity_section.select('#fill_opacity_txt')
         .html(`${this.value * 100}%`);
+      data_manager.current_layers[layer_name].fill_opacity = +this.value;
     });
 
   const c_section = popup.append('div')
@@ -2077,7 +2078,7 @@ function make_generate_labels_section(parent_node, layer_name) {
 <p>${_tr('app_page.layer_style_popup.label_popup_explanation')}</p>
 <ul id="list-labels" style="padding-inline-start: 0;">
 </ul>
-<!-- <p style="margin: 2px 0 2px 0;">${_tr('app_page.layer_style_popup.field_label')}</p> -->
+<p style="margin: 2px 0 2px 0;">${_tr('app_page.layer_style_popup.field_label')}</p>
 <div id="label_box_filter_section" style="margin: 10px 0 10px 0;font-size:0.9em;"></div>
 </div>`,
           type: 'question',
