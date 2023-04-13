@@ -82,12 +82,14 @@ function handleClickAddRectangle() {
       return;
     }
     msg.dismiss();
+    map.select('.brush_rect_draw').dispatch('mouseup');
     map.select('.brush_rect_draw').remove();
     document.body.style.cursor = '';
     document.removeEventListener('keydown', esc_cancel);
   };
   function rectbrushended(event) {
     if (!event.selection) {
+      map.select('.brush_rect_draw').dispatch('mouseup');
       map.select('.brush_rect_draw').remove();
       document.body.style.cursor = '';
       msg.dismiss();
@@ -100,6 +102,7 @@ function handleClickAddRectangle() {
     const wi = (event.selection[1][0] - event.selection[0][0]) / k;
     const he = (event.selection[1][1] - event.selection[0][1]) / k;
     new UserRectangle(`user_rectangle_${rectangle_id}`, event.selection[0], svg_map, false, wi, he);
+    map.select('.brush_rect_draw').dispatch('mouseup');
     map.select('.brush_rect_draw').remove();
     document.removeEventListener('keydown', esc_cancel);
     document.body.style.cursor = '';

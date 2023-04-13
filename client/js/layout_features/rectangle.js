@@ -107,9 +107,11 @@ export default class UserRectangle {
     ];
 
     this.rectangle = this.svg_elem.append('g')
-      .attrs({ class: 'user_rectangle legend scalable-legend',
+      .attrs({
+        class: 'user_rectangle legend scalable-legend',
         id: this.id,
-        transform: svg_map.__zoom.toString() });
+        transform: svg_map.__zoom.toString(),
+      });
 
     this.rectangle.insert('rect')
       .attrs({
