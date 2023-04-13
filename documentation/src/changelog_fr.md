@@ -1,5 +1,11 @@
 # Historique des versions et des changements effectués
 
+#### Unreleased
+
+- Correction du comportement "mouseup" lors du dessin d'un rectangle (le curseur continuait à déplacer la carte après avoir dessiné le rectangle, même après avoir relâché le clic).
+
+- Correction du comportement "mouseup" lors d'un zoom avec une sélection rectangulaire (le curseur continuait à déplacer la carte après avoir dessiné le rectangle, même après avoir relâché le clic).
+
 #### 0.15.1 (2023-04-11)
 
 - Transfère la valeur d'opacité des couches (choroplèthe, etc.) à leurs légendes.
