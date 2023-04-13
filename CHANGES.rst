@@ -1,10 +1,10 @@
 Changes
 =======
 
-Unreleased
-----------
+0.15.2 (2023-04-13)
+-------------------
 
-- Fix mouseup behaviour when drawing a rectangle layout feature (the cursor was still moving the map after drawing the rectangle even after the click was released).
+- Fix the mouseup behaviour when drawing a rectangle layout feature (the cursor was still moving the map after drawing the rectangle even after the click was released).
 
 - Fix the mouseup behaviour when zooming with a rectangular selection (the cursor was still moving the map after drawing the rectangle even after the click was released).
 
