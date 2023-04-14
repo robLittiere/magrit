@@ -645,7 +645,6 @@
             "graticule_dasharray": "Tamaño de los guiones<br>",
             "generate_labels": "Generar etiquetas para esta capa...",
             "label_popup_explanation": "Puede seleccionar los diferentes campos que se utilizarán para crear las etiquetas. Se dispondrán automáticamente, en el orden seleccionado, para evitar solapamientos entre los distintos campos de una misma entidad.",
-            "field_label": "Seleccionar campo",
             "graticule_clip": "Usar los límites de la capa de referencia para la cuadrícula",
             "layer_shadow": "Añadir una sombra",
             "let_draggable": "Permitir símbolos mover",

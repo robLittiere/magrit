@@ -2078,7 +2078,6 @@ function make_generate_labels_section(parent_node, layer_name) {
 <p>${_tr('app_page.layer_style_popup.label_popup_explanation')}</p>
 <ul id="list-labels" style="padding-inline-start: 0;">
 </ul>
-<p style="margin: 2px 0 2px 0;">${_tr('app_page.layer_style_popup.field_label')}</p>
 <div id="label_box_filter_section" style="margin: 10px 0 10px 0;font-size:0.9em;"></div>
 </div>`,
           type: 'question',

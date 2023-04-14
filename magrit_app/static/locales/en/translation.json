@@ -653,7 +653,6 @@
             "graticule_clip": "Clip graticule to layer extent",
             "generate_labels": "Generate labels for this layer ...",
             "label_popup_explanation": "You can select the various fields to be used to create the labels. They will be automatically arranged, in the selected order, to avoid overlaps between the different fields for the same entity.",
-            "field_label": "Select a field",
             "layer_shadow": "Add a shadow",
             "let_draggable": "Allow moving symbols",
             "ref_colors": "Colors:",
