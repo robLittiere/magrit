@@ -11,12 +11,12 @@ Les données de rapports (de taux, d’intensités ou de ratios) sont des donné
 
 Un clic sur le bouton <img src="img/discr_new.png" alt="choro_map" style="width: 26px;"/> ouvre une boite dialogue permettant d'affiner la discrétisation et de choisir la palette de couleur.
 <p style="text-align: center;">
-<img src="img/discr3.png" alt="choro_map" style="width: 480px;"/>
+<img src="../img/discr3.png" alt="choro_map" style="width: 480px;"/>
 </p>
 Les différents modes de discrétisation proposés dans cette boite sont détaillés dans la partie <a href="./discretisation_fr.html"> Discrétisation des données</a>.
 
 #### Exemple :
 
 <p style="text-align: center;">
-<img src="img/choropleth_map.png" alt="choro_map" style="width: 480px;"/>
+<img src="../img/choropleth_map.png" alt="choro_map" style="width: 480px;"/>
 </p>

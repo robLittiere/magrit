@@ -23,13 +23,13 @@ Il est possible de choisir un nombre d'itérations pour cette option. Plus le no
 #### Exemple 1 :
 
 <p style="text-align: center;">
-<img src="img/propsymbolschoro.png" alt="img_propsymbolchoro_map" style="width: 480px;"/>
+<img src="../img/propsymbolschoro.png" alt="img_propsymbolchoro_map" style="width: 480px;"/>
 </p>
 
 #### Exemple 2 :
 
 <p style="text-align: center;">
-<img src="img/propsymbolchoro-overlap.png" alt="img_propsymbolchoro_overlap_map" style="width: 480px;"/>
+<img src="../img/propsymbolchoro-overlap.png" alt="img_propsymbolchoro_overlap_map" style="width: 480px;"/>
 </p>
 
 - Jeu de données : **GrandParisMunicipalites**
@@ -43,7 +43,7 @@ Il est possible de choisir un nombre d'itérations pour cette option. Plus le no
 #### Exemple 3 :
 
 <p style="text-align: center;">
-<img src="img/propsymbolchoro-no-overlap.png" alt="img_propsymbolchoro_overlap_map" style="width: 480px;"/>
+<img src="../img/propsymbolchoro-no-overlap.png" alt="img_propsymbolchoro_overlap_map" style="width: 480px;"/>
 </p>
 
 - Jeu de données : **GrandParisMunicipalites**

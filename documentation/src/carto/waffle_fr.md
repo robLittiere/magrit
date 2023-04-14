@@ -12,7 +12,7 @@ Cette méthode permet de représenter plusieurs stocks dans des unités comparab
 #### Exemple :
 
 <p style="text-align: center;">
-<img src="img/waffle_fontaines.png" alt="waffle_map" style="width: 480px;"/>
+<img src="../img/waffle_fontaines.png" alt="waffle_map" style="width: 480px;"/>
 </p>
 
 - Champs utilisés : **FONTAINE_POTABLE, FONTAINE_NON_POTABLE**

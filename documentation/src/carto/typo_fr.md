@@ -11,7 +11,7 @@ Note : il est possible de réordonner l'ordre d'apparition des modalités dans l
 #### Exemple :
 
 <p style="text-align: center;">
-<img src="img/typo_EPT_Paris.png" alt="img_typo_map" style="width: 480px;"/>
+<img src="../img/typo_EPT_Paris.png" alt="img_typo_map" style="width: 480px;"/>
 </p>
 
 - Champ utilisé : **LIBEPT**  
@@ -20,5 +20,5 @@ Note : il est possible de réordonner l'ordre d'apparition des modalités dans l
 #### Exemple (variable qualitative ordonnée) :
 
 <p style="text-align: center;">
-<img src="img/typo2.png" alt="img_typo_map" style="width: 480px;"/>
+<img src="../img/typo2.png" alt="img_typo_map" style="width: 480px;"/>
 </p>

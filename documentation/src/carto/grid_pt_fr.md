@@ -25,7 +25,7 @@ Plusieurs options d'analyse sont proposées et visent à calculer :
 #### Exemples :
 
 <p style="text-align: center;">
-<img src="img/date_moyenne_bati.png" alt="gridded_map" style="width: 560px;"/>
+<img src="../img/date_moyenne_bati.png" alt="gridded_map" style="width: 560px;"/>
 </p>
 
 - Type de maillage : **Couche de polygones**
@@ -36,7 +36,7 @@ Plusieurs options d'analyse sont proposées et visent à calculer :
 
 
 <p style="text-align: center;">
-<img src="img/densite_fontaine.png" alt="gridded_map" style="width: 560px;"/>
+<img src="../img/densite_fontaine.png" alt="gridded_map" style="width: 560px;"/>
 </p>
 
 - Type de maillage : **Couche de polygones**

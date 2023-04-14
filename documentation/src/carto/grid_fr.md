@@ -13,7 +13,7 @@ Les carreaux ainsi créés sont affectés de la valeur de la variable observée 
 #### Exemple :
 
 <p style="text-align: center;">
-<img src="img/gridded.png" alt="gridded_map" style="width: 480px;"/>
+<img src="../img/gridded.png" alt="gridded_map" style="width: 480px;"/>
 </p>
 
 - Champ utilisé : **pop2008**

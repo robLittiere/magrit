@@ -26,7 +26,7 @@ Trois méthodes de création de cartogrammes sont disponibles dans Magrit :
 #### Exemple, méthode (1):
 
 <p style="text-align: center;">
-<img src="img/dougenik.png" alt="dougenik_map" style="width: 480px;"/>
+<img src="../img/dougenik.png" alt="dougenik_map" style="width: 480px;"/>
 </p>
 
 - Méthode de **Dougenik**
@@ -37,7 +37,7 @@ Trois méthodes de création de cartogrammes sont disponibles dans Magrit :
 #### Exemple, méthode (3):
 
 <p style="text-align: center;">
-<img src="img/carto_gastner.png" alt="carto_gastner_map" style="width: 480px;"/>
+<img src="../img/carto_gastner.png" alt="carto_gastner_map" style="width: 480px;"/>
 </p>
 
 - Méthode de **Gaster, Seguy et More**

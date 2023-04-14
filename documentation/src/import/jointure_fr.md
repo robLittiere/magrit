@@ -5,11 +5,11 @@ Cette opération est appelée "**jointure**" (c'est également le cas dans les l
 Pour assurer le bon fonctionnement de cette méthode, les valeurs prisent par les identifiants , d'une part pour le fond de carte et d'autre part pour le jeu de données externe, doivent être uniques.
 
 <p style="text-align: center;">
-<img src="img/win_jnt_fr.png" alt="Dialogue de jointure"/>
+<img src="../img/win_jnt_fr.png" alt="Dialogue de jointure"/>
 </p>
 
-> <img src="img/joinfalse.png" alt="joinfalse" style="width: 35px;"/> Apparence de l'élément avant jointure  
-> <img src="img/jointrue.png" alt="jointrue" style="width: 35px;"/> Apparence de l'élément après jointure des champs  
+> <img src="../img/joinfalse.png" alt="joinfalse" style="width: 35px;"/> Apparence de l'élément avant jointure  
+> <img src="../img/jointrue.png" alt="jointrue" style="width: 35px;"/> Apparence de l'élément après jointure des champs  
 
 
 Exemple des valeurs attributaires du fond de carte (avant jointure) :  

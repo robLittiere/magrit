@@ -7,7 +7,7 @@ La visualisation de lignes de discontinuités permet de mettre en exergue les ru
 > ### Paramètres
 > * Le champ contenant les valeurs à utiliser.
 > * Le champ contenant des identifiants uniques permettant d'identifier les tronçons.
-> * Le type de discontinuités (c'est à dire le rapport entre la valeur des deux entités, parmi 'relatif' ou 'absolu').
+> * Le type de discontinuités (c'est-à-dire le rapport entre la valeur des deux entités, parmi 'relatif' ou 'absolu').
 > * Le nombre de classes à créer.
 > * La méthode utilisée pour discrétiser les valeurs.
 > * La couleur utilisée pour représenter les discontinuités.
@@ -16,5 +16,5 @@ La visualisation de lignes de discontinuités permet de mettre en exergue les ru
 #### ExempleW :
 
 <p style="text-align: center;">
-<img src="img/discont.png" alt="discont_map" style="width: 480px;"/>
+<img src="../img/discont.png" alt="discont_map" style="width: 480px;"/>
 </p>

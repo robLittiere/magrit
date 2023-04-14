@@ -26,7 +26,7 @@ Il est possible de choisir un nombre d'itérations pour cette option. Plus le no
 #### Exemple 1 :
 
 <p style="text-align: center;">
-<img src="img/propsymboltypo_map.png" alt="img_propsymboltypo_map" style="width: 480px;"/>
+<img src="../img/propsymboltypo_map.png" alt="img_propsymboltypo_map" style="width: 480px;"/>
 </p>
 
 - Champ utilisé : **pop1999**
@@ -38,7 +38,7 @@ Il est possible de choisir un nombre d'itérations pour cette option. Plus le no
 #### Exemple 2 :
 
 <p style="text-align: center;">
-<img src="img/propsymboltypo-overlap.png" alt="img_propsymboltypo_overlap" style="width: 480px;"/>
+<img src="../img/propsymboltypo-overlap.png" alt="img_propsymboltypo_overlap" style="width: 480px;"/>
 </p>
 
 
@@ -53,7 +53,7 @@ Il est possible de choisir un nombre d'itérations pour cette option. Plus le no
 #### Exemple 3 :
 
 <p style="text-align: center;">
-<img src="img/propsymboltypo-no-overlap.png" alt="img_propsymboltypo_no_overlap" style="width: 480px;"/>
+<img src="../img/propsymboltypo-no-overlap.png" alt="img_propsymboltypo_no_overlap" style="width: 480px;"/>
 </p>
 
 - Jeu de données : **Quartiers de Paris**

@@ -24,7 +24,7 @@ Il est possible de choisir un nombre d'itérations pour cette option. Plus le no
 #### Exemple 1 :
 
 <p style="text-align: center;">
-<img src="img/propsymbol.png" alt="img_propsymbol_map" style="width: 480px;"/>
+<img src="../img/propsymbol.png" alt="img_propsymbol_map" style="width: 480px;"/>
 </p>
 
 - Données : **Pays du monde**
@@ -36,7 +36,7 @@ Il est possible de choisir un nombre d'itérations pour cette option. Plus le no
 #### Exemple 2
 
 <p style="text-align: center;">
-<img src="img/prop-no-overlapping.png" alt="img_propsymbol_no_overlapping_map" style="width: 480px;"/>
+<img src="../img/prop-no-overlapping.png" alt="img_propsymbol_no_overlapping_map" style="width: 480px;"/>
 </p>
 
 - Données : **Pays du monde**
