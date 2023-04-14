@@ -1,6 +1,11 @@
 Changes
 =======
 
+0.15.3 (2023-04-14)
+-------------------
+
+- Fix links to image from subchapters in documentation.
+
 0.15.2 (2023-04-13)
 -------------------
 

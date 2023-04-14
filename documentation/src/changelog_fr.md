@@ -1,5 +1,9 @@
 # Historique des versions et des changements effectués
 
+#### 0.15.3 (2023-04-14)
+
+- Correction des liens vers les images dans les sous-chapitres de la documentation.
+
 #### 0.15.2 (2023-04-13)
 
 - Correction du comportement "mouseup" lors du dessin d'un rectangle (le curseur continuait à déplacer la carte après avoir dessiné le rectangle, même après avoir relâché le clic).
