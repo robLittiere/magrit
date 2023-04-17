@@ -1,5 +1,9 @@
 # Historique des versions et des changements effectués
 
+#### Unreleased
+
+- Désactivation du zoom par sélection rectangulaire lors d'un changement de projection s'il est activé
+
 #### 0.15.3 (2023-04-14)
 
 - Correction des liens vers les images dans les sous-chapitres de la documentation.

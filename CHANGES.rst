@@ -1,6 +1,11 @@
 Changes
 =======
 
+Unreleased
+----------
+
+- Deactivate zoom by rectangular selection when changing projection if its on
+
 0.15.3 (2023-04-14)
 -------------------
 
