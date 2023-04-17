@@ -55,6 +55,14 @@ const makeZoomRect = function makeZoomRect() {
     .call(brush);
 };
 
+export function removeZoomRect() {
+  const b = map.select('.brush');
+  if (b.node()) {
+    d3.select('#brush_zoom_button').classed('active', false);
+    b.remove();
+  }
+}
+
 /**
 * Function triggered when the user click on the "zoom by tracing a rectangle"
 * button.
@@ -63,7 +71,7 @@ const makeZoomRect = function makeZoomRect() {
 * @return {void}
 *
 */
-export default function handleZoomRect() {
+export function handleZoomRect() {
   const b = map.select('.brush');
   if (b.node()) {
     d3.select('#brush_zoom_button').classed('active', false);
