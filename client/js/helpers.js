@@ -86,6 +86,28 @@ export const createWaitingOverlay = () => {
   };
 };
 
+/**
+ * Function called while the user moves labels / proportional symbols / waffle on the map
+ * in order to indicate the original position of the element.
+ *
+ * @param {Event} event - The event that triggered the function call.
+ */
+const drag_start_ref_position = function (event) {
+  const zoom = svg_map.__zoom;
+  const centroid = path.centroid(this.__data__.geometry);
+  centroid[0] = centroid[0] * zoom.k + zoom.x;
+  centroid[1] = centroid[1] * zoom.k + zoom.y;
+  map.append('rect')
+    .attrs({
+      x: centroid[0] - 2,
+      y: centroid[1] - 2,
+      height: 4,
+      width: 4,
+      id: 'ref_symbol_location',
+    })
+    .style('fill', 'red');
+};
+
 export const drag_elem_geo = d3.drag()
   .subject(function () {
     const t = d3.select(this);
@@ -139,24 +161,14 @@ export const drag_elem_geo2 = d3.drag()
     event.sourceEvent.stopPropagation();
     event.sourceEvent.preventDefault();
     handle_click_hand('lock');
-    const zoom = svg_map.__zoom;
-    const centroid = path.centroid(this.__data__.geometry);
-    centroid[0] = centroid[0] * zoom.k + zoom.x;
-    centroid[1] = centroid[1] * zoom.k + zoom.y;
-    map.append('rect')
-      .attrs({
-        x: centroid[0] - 2,
-        y: centroid[1] - 2,
-        height: 4,
-        width: 4,
-        id: 'ref_symbol_location',
-      })
-      .style('fill', 'red');
+    // Display a red square to indicate the original position of the label
+    drag_start_ref_position.call(this, event);
   })
   .on('end', (event) => {
     if (event.subject && !event.subject.map_locked) {
       handle_click_hand('unlock');
     }
+    // Remove red square thaht indicates the original position of the label
     map.selectAll('#ref_symbol_location').remove();
   })
   .on('drag', function (event) {
@@ -166,6 +178,40 @@ export const drag_elem_geo2 = d3.drag()
       d3.select(this).attr('cx', event.x).attr('cy', event.y);
     }
   });
+
+export const drag_label = d3.drag()
+  .subject(function () {
+    const t = d3.select(this);
+    return {
+      x: t.attr('x'),
+      y: t.attr('y'),
+      map_locked: !!map_div.select('#hand_button').classed('locked'),
+    };
+  })
+  .on('start', function (event) {
+    event.sourceEvent.stopPropagation();
+    event.sourceEvent.preventDefault();
+    handle_click_hand('lock');
+    // Display a red square to indicate the original position of the label
+    drag_start_ref_position.call(this, event);
+  })
+  .on('end', function (event) {
+    if (event.subject && !event.subject.map_locked) { handle_click_hand('unlock'); }
+    // Compute geo coordinates corresponding to the label position
+    // and modify the geometry of the label
+    // (the original position is still stored in the data properties)
+    const t = d3.select(this);
+    const x = +t.attr('x');
+    const y = +t.attr('y');
+    const new_coords = proj.invert([x, y]);
+    t.datum().geometry.coordinates = new_coords;
+    // Remove red square thaht indicates the original position of the label
+    map.selectAll('#ref_symbol_location').remove();
+  })
+  .on('drag', function (event) {
+    d3.select(this).attr('x', event.x).attr('y', event.y);
+  });
+
 
 export const drag_waffle = d3.drag()
   .filter(function () {
@@ -181,16 +227,20 @@ export const drag_waffle = d3.drag()
       map_locked: !!map_div.select('#hand_button').classed('locked'),
     };
   })
-  .on('start', (event) => {
+  .on('start', function (event) {
     event.sourceEvent.stopPropagation();
     event.sourceEvent.preventDefault();
     handle_click_hand('lock');
+    // Display a red square to indicate the original position of the label
+    drag_start_ref_position.call(this, event);
   })
   .on('end', function (event) {
     if (event.subject && !event.subject.map_locked) {
       handle_click_hand('unlock');
     }
     d3.select(this).style('cursor', 'grab');
+    // Remove red square thaht indicates the original position of the label
+    map.selectAll('#ref_symbol_location').remove();
   })
   .on('drag', function (event) {
     d3.select(this)

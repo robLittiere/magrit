@@ -22,7 +22,7 @@ import {
   isNumber,
   makeDorlingSimulation,
   makeDemersSimulation,
-  reprojectToRobinson, reprojectFromRobinson, sleep,
+  reprojectToRobinson, reprojectFromRobinson, sleep, drag_label,
 } from './helpers';
 import {
   getBinsCount, get_nb_decimals, has_negative,
@@ -5043,7 +5043,7 @@ export const render_label = function render_label(layer, rendering_params, optio
     .on('dblclick contextmenu', function (event) {
       context_menu.showMenu(event, document.querySelector('body'), getItems(this));
     })
-    .call(drag_elem_geo);
+    .call(drag_label);
 
   data_manager.current_layers[layer_to_add] = {
     n_features: new_layer_data.length,

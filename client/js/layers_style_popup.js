@@ -388,7 +388,8 @@ function createStyleBoxLabel(layer_name) {
     .on('click', () => {
       selection.transition()
         .attrs((d) => {
-          const coords = global.proj(d.geometry.coordinates);
+          const ref_coords = [d.properties.x, d.properties.y];
+          const coords = global.proj(ref_coords);
           return { x: coords[0], y: coords[1] };
         });
     });
