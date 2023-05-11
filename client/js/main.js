@@ -170,6 +170,11 @@ function loadI18next(lang) {
     localize('.i18n');
     bindTooltips();
     prepare_available_symbols();
+    // We return null here to silence a warning about not using the promise returned by
+    // the call to prepare_available_symbols. This is because we don't want to wait for
+    // it to finish before continuing.
+    // (see http://bluebirdjs.com/docs/warning-explanations.html#warning-a-promise-was-created-in-a-handler-but-was-not-returned-from-it)
+    return null;
   }).catch((e) => {
     swal({
       title: _tr('app_page.common.error'),
