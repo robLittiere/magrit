@@ -17,7 +17,7 @@ Changes
 
 - Change CSS for inactive layers (because Inkscape does not support the "visibility" attribute on SVG elements nor the "visibility" CSS property).
 
-- Load pictograms when loading the application instead of deferring the loading to the first time the "pictogram panel" is opened (because it was causing some issues with slow network connections, because pictograms were not loaded when the user was trying to use them - see #110).
+- Load pictograms when loading the application instead of deferring the loading to the first time the "pictogram panel" is opened (it was causing some issues with slow network connections, because pictograms were not loaded when the user was trying to use them - see #110).
 
 0.15.3 (2023-04-14)
 -------------------

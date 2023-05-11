@@ -14,7 +14,7 @@
 
 - Modification des règles CSS pour les couches cachées (car Inkscape ne supporte pas l'attribut "visibility" sur les éléments SVG ni la propriété CSS "visibility").
 
-- Chargement des pictogrammes dès le chargement de l'application au lieu de différer le chargement à la première ouverture du "panneau des pictogrammes" (parce que cela causait des problèmes avec les connexions réseau lentes, parce que les pictogrammes n'étaient pas chargés lorsque l'utilisateur essayait de les utiliser - voir <a href="https://github.com/riatelab/magrit/issues/110">issue #110</a>).
+- Chargement des pictogrammes dès le chargement de l'application au lieu de différer le chargement à la première ouverture du "panneau des pictogrammes" (cela causait des problèmes avec les connexions réseau lentes, car les pictogrammes n'étaient pas chargés lorsque l'utilisateur essayait de les utiliser - voir <a href="https://github.com/riatelab/magrit/issues/110">issue #110</a>).
 
 #### 0.15.3 (2023-04-14)
 
