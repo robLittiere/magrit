@@ -2,7 +2,7 @@
 
 #### 0.16.0 (2023-05-11)
 
-- Désactivation du zoom par sélection rectangulaire lors d'un changement de projection s'il est activé
+- Désactivation du zoom par sélection rectangulaire lors d'un changement de projection s'il est activé.
 
 - Amélioration de la gestion des positions des étiquettes en évitant de réinitialiser la position des étiquettes lors d'un changement de projection pour les étiquettes qui ont été déplacées manuellement.
 
