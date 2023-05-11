@@ -1303,6 +1303,14 @@ export function apply_user_preferences(json_pref) {
         }
       // ... or this is a layer of labels :
       } else if (_layer.renderer && _layer.renderer.startsWith('Label')) {
+        // Starting from version 0.16.0, we store coordinates corresponding to the current
+        // position in the geometry.coordinates property of the geojson feature
+        // while still storing the original coordinates in property.x and property.y properties
+        if ((p_version.major === 0 && p_version.minor < 16) && _layer.current_position) {
+          _layer.data_labels.forEach((f, _i) => {
+            f.geometry.coordinates = proj.invert(_layer.current_position[_i]);
+          });
+        }
         const rendering_params = {
           uo_layer_name: layer_name,
           label_field: _layer.rendered_field,
