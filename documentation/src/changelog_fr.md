@@ -1,9 +1,17 @@
 # Historique des versions et des changements effectués
 
-#### Unreleased
+#### 0.16.0 (2023-05-11)
 
 - Désactivation du zoom par sélection rectangulaire lors d'un changement de projection s'il est activé
 
+- Amélioration de la gestion des positions des étiquettes en évitant de réinitialiser la position des étiquettes lors d'un changement de projection pour les étiquettes qui ont été déplacées manuellement.
+
+- Éviter de réinitialiser la position des étiquettes lors de l'export en SVG avec l'option "Découper le SVG sur l'emprise actuelle".
+
+- Modification des règles CSS pour les couches cachées (car Inkscape ne supporte pas l'attribut "visibility" sur les éléments SVG ni la propriété CSS "visibility").
+
+- Chargement des pictogrammes dès le chargement de l'application au lieu de différer le chargement à la première ouverture du "panneau des pictogrammes" (parce que cela causait des problèmes avec les connexions réseau lentes, parce que les pictogrammes n'étaient pas chargés lorsque l'utilisateur essayait de les utiliser - voir <a href="https://github.com/riatelab/magrit/issues/110">issue #110</a>).
+- 
 #### 0.15.3 (2023-04-14)
 
 - Correction des liens vers les images dans les sous-chapitres de la documentation.

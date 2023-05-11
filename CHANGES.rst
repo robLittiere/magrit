@@ -1,8 +1,8 @@
 Changes
 =======
 
-Unreleased
-----------
+0.16.0 (2023-05-11)
+-------------------
 
 - Deactivate zoom by rectangular selection when changing projection if its on.
 
@@ -10,7 +10,9 @@ Unreleased
 
 - Avoid resetting the position of the labels when exporting to SVG with the "Clip SVG on current extent" option.
 
-- Change CSS for inactive layers (because Inkscape does not support (anymore ?) the "visibility" attribute on SVG elements nor the "visibility" CSS property).
+- Change CSS for inactive layers (because Inkscape does not support the "visibility" attribute on SVG elements nor the "visibility" CSS property).
+
+- Load pictograms when loading the application instead of deferring the loading to the first time the "pictogram panel" is opened (because it was causing some issues with slow network connections, because pictograms were not loaded when the user was trying to use them - see #110).
 
 0.15.3 (2023-04-14)
 -------------------
