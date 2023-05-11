@@ -4,7 +4,13 @@ Changes
 Unreleased
 ----------
 
-- Deactivate zoom by rectangular selection when changing projection if its on
+- Deactivate zoom by rectangular selection when changing projection if its on.
+
+- Improve the handling of the label positions by avoiding to reset the position of the labels when changing projection for labels that have been manually moved.
+
+- Avoid resetting the position of the labels when exporting to SVG with the "Clip SVG on current extent" option.
+
+- Change CSS for inactive layers (because Inkscape does not support (anymore ?) the "visibility" attribute on SVG elements nor the "visibility" CSS property).
 
 0.15.3 (2023-04-14)
 -------------------
