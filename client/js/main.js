@@ -5,7 +5,7 @@ import './../css/style.css';
 import './../css/discretization.css';
 import './../node_modules/alertifyjs/build/css/alertify.min.css';
 import './../node_modules/alertifyjs/build/css/themes/semantic.min.css';
-import { setUpInterface } from './interface';
+import { prepare_available_symbols, setUpInterface } from './interface';
 import { xhrequest } from './helpers';
 import { Mround } from './helpers_math';
 import { makeSvgMap } from './map_ctrl';
@@ -169,6 +169,7 @@ function loadI18next(lang) {
     setUpInterface(params.reload);
     localize('.i18n');
     bindTooltips();
+    prepare_available_symbols();
   }).catch((e) => {
     swal({
       title: _tr('app_page.common.error'),

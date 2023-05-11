@@ -9,7 +9,7 @@ import ContextMenu from './../context-menu';
 import { check_layer_name } from './../function';
 import { create_li_layer_elem, drag_elem_geo } from './../helpers';
 import { Mround } from './../helpers_math';
-import { prepare_available_symbols, setSphereBottom } from './../interface';
+import { setSphereBottom } from './../interface';
 import { up_legends, up_legend, down_legend } from './../legend';
 import { zoom_without_redraw } from './../map_ctrl';
 import { isInterrupted } from './../projections';
@@ -247,17 +247,8 @@ function handleClickAddPicto() {
   }
   const msg = alertify.notify(_tr('app_page.notification.instruction_click_map'), 'warning', 0);
   document.addEventListener('keydown', esc_cancel);
-  let map_point,
-    click_pt,
-    prep_symbols,
-    available_symbols = false;
-
-  if (!(_app.default_symbols) || _app.default_symbols.length === 0) {
-    _app.default_symbols = [];
-    prep_symbols = prepare_available_symbols();
-  } else {
-    available_symbols = true;
-  }
+  let map_point;
+  let click_pt;
 
   document.body.style.cursor = 'not-allowed';
   map.style('cursor', 'crosshair')
@@ -273,11 +264,7 @@ function handleClickAddPicto() {
       }, 500);
       map.style('cursor', '').on('click', null);
       document.body.style.cursor = '';
-      if (!available_symbols) {
-        prep_symbols.then(display_box_symbol);
-      } else {
-        display_box_symbol();
-      }
+      display_box_symbol();
     });
 }
 

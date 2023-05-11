@@ -3802,10 +3802,6 @@ function fillMenu_TypoSymbol() {
   make_layer_name_input(dv2, 'TypoSymbols_output_name');
   make_ok_button(dv2, 'yesTypoSymbols');
   dv2.selectAll('.params').attr('disabled', true);
-  if (!(_app.default_symbols) || _app.default_symbols.length === 0) {
-    _app.default_symbols = [];
-    prepare_available_symbols();
-  }
 }
 
 function discard_rendering_empty_val() {
