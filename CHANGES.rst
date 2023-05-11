@@ -1,6 +1,11 @@
 Changes
 =======
 
+0.16.1 (2023-05-11)
+-------------------
+
+- Improve compatibility between the slightly new handling of the label position and the old handling of the label position (when loading a project file created with a version before 0.16.0).
+
 0.16.0 (2023-05-11)
 -------------------
 

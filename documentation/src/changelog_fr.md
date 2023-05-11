@@ -1,5 +1,9 @@
 # Historique des versions et des changements effectués
 
+#### 0.16.1 (2023-05-11)
+
+- Amélioration de la compatibilité entre la nouvelle gestion et l'ancienne gestion de la position des labels déplacés manuellement lors du chargement d'un fichier de projet créé avec une version antérieure à 0.16.0.
+
 #### 0.16.0 (2023-05-11)
 
 - Désactivation du zoom par sélection rectangulaire lors d'un changement de projection s'il est activé.
@@ -11,7 +15,7 @@
 - Modification des règles CSS pour les couches cachées (car Inkscape ne supporte pas l'attribut "visibility" sur les éléments SVG ni la propriété CSS "visibility").
 
 - Chargement des pictogrammes dès le chargement de l'application au lieu de différer le chargement à la première ouverture du "panneau des pictogrammes" (parce que cela causait des problèmes avec les connexions réseau lentes, parce que les pictogrammes n'étaient pas chargés lorsque l'utilisateur essayait de les utiliser - voir <a href="https://github.com/riatelab/magrit/issues/110">issue #110</a>).
-- 
+
 #### 0.15.3 (2023-04-14)
 
 - Correction des liens vers les images dans les sous-chapitres de la documentation.
