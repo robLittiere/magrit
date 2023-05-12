@@ -193,7 +193,20 @@ export const drag_label = d3.drag()
     event.sourceEvent.preventDefault();
     handle_click_hand('lock');
     // Display a red square to indicate the original position of the label
-    drag_start_ref_position.call(this, event);
+    const zoom = svg_map.__zoom;
+    const centroid = proj([this.__data__.properties.x, this.__data__.properties.y]);
+    centroid[0] = centroid[0] * zoom.k + zoom.x;
+    centroid[1] = centroid[1] * zoom.k + zoom.y;
+    map.append('rect')
+      .attrs({
+        x: centroid[0] - 2,
+        y: centroid[1] - 2,
+        height: 4,
+        width: 4,
+        id: 'ref_symbol_location',
+      })
+      .style('fill', 'red');
+
   })
   .on('end', function (event) {
     if (event.subject && !event.subject.map_locked) { handle_click_hand('unlock'); }

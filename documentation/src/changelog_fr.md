@@ -1,5 +1,9 @@
 # Historique des versions et des changements effectués
 
+#### 0.16.2 (2023-05-12)
+
+- Corrige la position des points rouges indiquant la position d'origine du label lors du déplacement d'un label.
+
 #### 0.16.1 (2023-05-11)
 
 - Amélioration de la compatibilité entre la nouvelle gestion et l'ancienne gestion de la position des labels déplacés manuellement lors du chargement d'un fichier de projet créé avec une version antérieure à 0.16.0.

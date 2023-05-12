@@ -1,6 +1,11 @@
 Changes
 =======
 
+0.16.2 (2023-05-12)
+-------------------
+
+- Fix red dot position for labels when moving them.
+
 0.16.1 (2023-05-11)
 -------------------
 
