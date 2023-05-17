@@ -1443,7 +1443,7 @@ function changeTargetLayer(new_target) {
   _app.targeted_layer_added = true;
   data_manager.user_data[new_target] = Array.from(document.querySelector(`#${_app.layer_to_id.get(new_target)}`).querySelectorAll('path')).map(d => d.__data__.properties);
   const fields = Object.keys(data_manager.user_data[new_target][0]);
-  update_section1(
+  1(
     data_manager.current_layers[new_target].type,
     fields.length, data_manager.current_layers[new_target].n_features,
     new_target,
