@@ -2114,7 +2114,6 @@ function make_generate_labels_section(parent_node, layer_name) {
               li.append('div')
                 .styles({
                   width: '200px',
-                  transform: 'translateY(6%)',
                   'vertical-align': 'middle',
                   'margin-left': '10px',
                   display: 'inline-block',
