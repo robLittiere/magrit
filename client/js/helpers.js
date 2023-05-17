@@ -126,7 +126,9 @@ export const drag_elem_geo = d3.drag()
     if (event.subject && !event.subject.map_locked) { handle_click_hand('unlock'); }
   })
   .on('drag', function (event) {
-    d3.select(this).attr('x', event.x).attr('y', event.y);
+    let drag_class = (d3.select(this).attr("drag"))
+
+    d3.selectAll(`[drag=${drag_class}]`).attr('x', event.x).attr('y', event.y);
   });
 
 /**
@@ -222,7 +224,13 @@ export const drag_label = d3.drag()
     map.selectAll('#ref_symbol_location').remove();
   })
   .on('drag', function (event) {
-    d3.select(this).attr('x', event.x).attr('y', event.y);
+    let drag_number = d3.select(this).attr("drag").replace("Label_drag_","")
+    /* d3.select(this).attr('x', event.x).attr('y', event.y); */
+    console.log(drag_number)
+
+
+    d3.select(`[drag=Label_drag_${drag_number}]`).attr('x', event.x).attr('y', event.y);
+    d3.select(`[drag=Picto_drag_${drag_number}]`).attr('x', event.x).attr('y', event.y);
   });
 
 

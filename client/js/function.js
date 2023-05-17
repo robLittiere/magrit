@@ -3898,6 +3898,7 @@ function render_TypoSymbols(rendering_params, new_name, filtered_symbols) {
         const new_obj = {
           id: i,
           old_id : counter,
+          drag :`Picto_drag_${i}`,
           type: 'Feature',
           properties: {},
           geometry: {type: 'Point'},
@@ -3949,6 +3950,7 @@ function render_TypoSymbols(rendering_params, new_name, filtered_symbols) {
       return {
         id: `Picto_${i}`, // Add a unique id to each element and a class to each element for future improvement
         old_id : `Picto_old_id_${d.old_id}`, // old id for debugg purpose
+        drag : `Picto_drag_${i}`,
         x: coords[0] - symb[1] / 2,
         y: coords[1] - symb[1] / 2,
         width: symb[1],
@@ -4994,6 +4996,7 @@ export const render_label = function render_label(layer, rendering_params, optio
     selection
       .attrs((d, i) => ({
         id: `Feature_${i}`,
+        drag : `Label_drag_${i}`,
         x: pt_position[i][0],
         y: pt_position[i][1],
         'alignment-baseline': 'middle',
@@ -5015,6 +5018,7 @@ export const render_label = function render_label(layer, rendering_params, optio
         const pt = global.proj(d.geometry.coordinates);
         return {
           id: `Feature_${i}`,
+          drag : `Label_drag_${i}`,
           x: pt[0],
           y: pt[1],
           'alignment-baseline': 'middle',
