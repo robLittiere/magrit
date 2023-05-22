@@ -19,7 +19,7 @@ import {
   remove_layer_cleanup, scale_to_lyr,
   update_section1, update_section1_layout,
 } from './interface';
-import { update_section_6 } from './ui/section6';
+import { update_section_6 , checked_boxes} from './ui/section6';
 
 /**
 * Function to display the dialog allowing to choose and add a sample target layer.
@@ -548,7 +548,16 @@ export function add_layer_topojson(text, options = {}) {
     // if any:
     data_manager.current_layers[lyr_name_to_add].default_projection = ['proj4', parsedJSON.proj];
   }
+
+  if(JSON.stringify(checked_boxes).includes(lyr_name_to_add) == false) {
+    checked_boxes[lyr_name_to_add] = {}
+    console.log(checked_boxes)
+    for(let field of Array.from(data_manager.current_layers[lyr_name_to_add].original_fields)){
+      console.log("check")
+      checked_boxes[lyr_name_to_add][field] = []
+    }
+  }
+  
   update_section_6();
   return lyr_name_to_add;
-  
 }

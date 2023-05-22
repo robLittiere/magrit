@@ -7,6 +7,7 @@ export function makeSection6() {
   const dv6 = section6.append('div');
 
 
+  // Bouton reset, décoche toutes les checkbox et retire le display none
   dv6
   .append("button")
   .on("click", function(){
@@ -38,15 +39,13 @@ export function makeSection6() {
 
   
 
+  // menu de selection de couche
   const layer_selection = dv6.append('div');
   layer_selection.styles({
     "display" : "flex",
     "flex-direction" : "column",
     "justify-content" : "center"
   })
-
-
-
   /* section choix de la couche */
   layer_selection.append('p')
     .attrs({
@@ -70,7 +69,6 @@ export function makeSection6() {
     "flex-direction" : "column",
     "justify-content" : "center"
   })
-
 
   field_choice
     .append('p')
@@ -116,29 +114,37 @@ export function makeSection6() {
     })
 }
 
+// variable stockant les couches déjà présentes sur l'UI, utilisé quand on ajoute une nouvelle couche pour ne pas avoir de doublons
 var options = []
-var checked_boxes = {}
+// Objet stockant les entités filtrées, utilisé pour recocher les checkbox après changement de menus
+export var checked_boxes = {}
 
+/**
+ * Met à jour les menus de la section après ajout de couches/selection de couche ou catégories
+ * 
+ * Contient la fonction pour filtrer les entités sur la carte
+ */
 export function update_section_6(){
-  console.log("execution update seciton 6")
 
     var layer_choice = document.getElementById("layer_choice")
     var field_choice = document.getElementById("field_choice")
 
     // A l'execution, rajoute la liste des couches présentes à la liste des couches présentes
     for(let i = 0; i < layer_choice.options.length; i++){
-        options.push(layer_choice.options[i].text)
+        options.push(layer_choice.options[i].text)        
       }  
 
-    /* ajout de chaque couche de l'UI a un menu déroulant */
+    // ajout de chaque couche de l'UI a un menu déroulant 
     for(let i = 0; i < Object.keys(data_manager.current_layers).length ; i++){
 
       let layer_name = Object.keys(data_manager.current_layers)[i]
 
+      // Si la couche n'est pas déjà présente, on l'ajoute au menu déourlant
       if( options.includes(layer_name) == false){
         let option = document.createElement("option")
         option.setAttribute("id", `layer_name_${layer_name}`)
         option.textContent = layer_name
+        // Met a jour le choix des colonnes et valeurs après selection d'une couche différente
         option.addEventListener("click",function(){
           reset_menu("field_choice","option")
           reset_menu("value_choice","li")
@@ -152,11 +158,11 @@ export function update_section_6(){
 
     // Ajout des valeurs uniques pour la catégorie selectionnée
     update_values()
-
   }
 
+  
+// Supprime tous les html_tag spécifiés d'un menu, utilisé lors du changement de couche/catégorie
   function reset_menu (menu_element, html_tag){
-    console.log("execution function reset menu")
     let sub_menu = document.getElementById(menu_element)
     let children_elements = sub_menu.querySelectorAll(html_tag)
 
@@ -165,6 +171,7 @@ export function update_section_6(){
     }
   }
 
+  // Insertion des catégories correspondante à la couche active dans le menu déroulant
   function update_fields(){
     let set_layer = document.getElementById("layer_choice").value
     let original_fields =  Array.from(data_manager.current_layers[set_layer].original_fields)
@@ -176,17 +183,19 @@ export function update_section_6(){
 
         category.addEventListener("click", function(){
           reset_menu("value_choice","li")
-          update_values()
+          update_values()          
         })
       }   
     update_values()
   }
 
+  // Ajout des valeurs lors du changement de couche
   function update_values(){
     let unique_values = get_unique_value(document.getElementById("layer_choice").value)
     let set_field = field_choice.value
       
     for(let value of unique_values[set_field].sort()){
+
         const liElement = document.createElement("li");
         liElement.style.alignSelf = "flex-end";
         
@@ -196,6 +205,11 @@ export function update_section_6(){
         const inputElement = document.createElement("input");
         inputElement.type = "checkbox";
         inputElement.value = value;
+
+        // Si la valeur à été précedemment coché par un utilisateur, elle est recochée lorsqu'on revient sur la catéogrie correspondante
+        if(JSON.stringify(checked_boxes[layer_choice.value][field_choice.value]).includes(value) == true ){
+          inputElement.checked = true
+        }
         
         liElement.appendChild(inputElement);
         value_choice.appendChild(liElement);
@@ -204,26 +218,35 @@ export function update_section_6(){
         inputElement.addEventListener("click",function(){
           let shapes_to_filter = filter_values(layer_choice.value,field_choice.value, this.value)
 
-          // pour chaque ID
+          // pour chaque ID, Filtrage ou défiltrage via display none du shape correspondant à la case cochée
           for(let shape of shapes_to_filter){ 
             // selection par ID compris à l'interrieur un groupe de path (une couche sur l'UI)
             let filtered_shape =  document.querySelector(`#L_${layer_choice.value} #feature_${shape}`)           
             if(this.checked == true){
               filtered_shape.setAttribute("display", "none")
+              manage_checked_boxes(true, layer_choice.value, field_choice.value, this.value)
               }
             else{
               filtered_shape.setAttribute("display" , "")
-              }            
+              manage_checked_boxes(false, layer_choice.value, field_choice.value, this.value)
+            }            
             }
           })
     }
   } 
 
-  /* layer_choice.querySelector("option").addEventListener("click",function(){
-    reset_menu("field_choice", "option")
-    reset_menu("value_choice","li")  
-  }, false) */
+  // Ajoute ou supprime des valeurs cochées/décochées de la variable checked_boxes
+  function manage_checked_boxes (add, layer, field, value){
+    let checked_boxes_stringified = JSON.stringify(checked_boxes)
 
+    if (add == true){
+      checked_boxes[layer][field].push(value)
+    }
+    if (add == false){
+      checked_boxes[layer][field] = checked_boxes[layer][field].filter(value => value != value)
+    }
+
+  }
 }
 
 
