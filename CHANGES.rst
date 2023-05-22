@@ -1,6 +1,11 @@
 Changes
 =======
 
+Unreleased
+----------
+
+- Fix field names vertical alignment in label creation options.
+
 0.16.2 (2023-05-12)
 -------------------
 

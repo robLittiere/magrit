@@ -1,5 +1,10 @@
 # Historique des versions et des changements effectués
 
+#### Unreleased 
+
+- Correction de l'alignement vertical des noms de champs dans les options de création des labels.
+
+
 #### 0.16.2 (2023-05-12)
 
 - Corrige la position des points rouges indiquant la position d'origine du label lors du déplacement d'un label.
