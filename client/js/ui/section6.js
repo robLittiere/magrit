@@ -276,7 +276,7 @@ function get_unique_value(layer){
 
 /**
  * Récupère la liste des id des entités donc la valeur d'un champ donné match la valeur selectionnée 
- * par l'utilisateur pour masquer
+ * par l'utilisateur pour masquer.
  * 
  * @returns liste d'ID d'entités a filtrer 
  */
