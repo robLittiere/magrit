@@ -549,15 +549,15 @@ export function add_layer_topojson(text, options = {}) {
     data_manager.current_layers[lyr_name_to_add].default_projection = ['proj4', parsedJSON.proj];
   }
 
+
+  // Ajout de la couche crée à l'objet contenant les valeur cochées pour chaque couche/catégorie
   if(JSON.stringify(checked_boxes).includes(lyr_name_to_add) == false) {
     checked_boxes[lyr_name_to_add] = {}
-    console.log(checked_boxes)
     for(let field of Array.from(data_manager.current_layers[lyr_name_to_add].original_fields)){
       console.log("check")
       checked_boxes[lyr_name_to_add][field] = []
     }
   }
-  
   update_section_6();
   return lyr_name_to_add;
 }
