@@ -2114,11 +2114,14 @@ function make_generate_labels_section(parent_node, layer_name) {
               li.append('div')
                 .styles({
                   width: '200px',
-                  height: '30px',
+                  overflow: 'hidden',
+                  'white-space': 'nowrap',
+                  'text-overflow': 'ellipsis',
                   'vertical-align': 'middle',
                   'margin-left': '10px',
                   display: 'inline-block',
                 })
+                .attr('title', f_name)
                 .text(f_name);
 
               const inpputPx = li.append('div');
