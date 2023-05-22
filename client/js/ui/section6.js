@@ -9,6 +9,24 @@ export function makeSection6() {
 
   dv6
   .append("button")
+  .on("click", function(){
+    var value_choice = document.querySelectorAll("#value_choice input") 
+    for(let checkbox of value_choice){
+      checkbox.checked = false
+    }
+    var svg_map = document.getElementById("svg_map")
+
+    // pour chaque couche de la carte
+    for(let node of svg_map.childNodes){
+      if(node.nodeName == "defs"){/* do nothing */}
+      else{
+        // pour chaque svg de chaque couche
+        for(let path of node.childNodes){
+          path.setAttribute("display" , "")
+        }
+      }
+    }
+  })
   .attrs({
     id : "reset_button"
   })
@@ -17,6 +35,7 @@ export function makeSection6() {
   .style("justify-content", "center")
   .style("align-items", "center")
   .text("Reinitialiser")
+
   
 
   const layer_selection = dv6.append('div');
@@ -97,47 +116,77 @@ export function makeSection6() {
     })
 }
 
+var options = []
+var checked_boxes = {}
+
 export function update_section_6(){
   console.log("execution update seciton 6")
-  const options = []
-    // A l'execution, rajoute la liste des couches présentes au menu déroulant des couches
-    for(let i = 0; i < document.getElementById("layer_choice").options.length; i++){
-        options.push(document.getElementById("layer_choice").options[i].text)
-      }
 
     var layer_choice = document.getElementById("layer_choice")
     var field_choice = document.getElementById("field_choice")
 
-    console.log("layer choice", layer_choice)
+    // A l'execution, rajoute la liste des couches présentes à la liste des couches présentes
+    for(let i = 0; i < layer_choice.options.length; i++){
+        options.push(layer_choice.options[i].text)
+      }  
 
     /* ajout de chaque couche de l'UI a un menu déroulant */
     for(let i = 0; i < Object.keys(data_manager.current_layers).length ; i++){
 
       let layer_name = Object.keys(data_manager.current_layers)[i]
-      
+
       if( options.includes(layer_name) == false){
         let option = document.createElement("option")
         option.setAttribute("id", `layer_name_${layer_name}`)
         option.textContent = layer_name
+        option.addEventListener("click",function(){
+          reset_menu("field_choice","option")
+          reset_menu("value_choice","li")
+          update_fields()
+        })
         layer_choice.appendChild(option)
-
       }
 
-      // Ajout de chaque catégorie pour la couche selectionnée
-      let set_layer = layer_choice.value
-      let original_fields =  Array.from(data_manager.current_layers[set_layer].original_fields)
+    // Ajout de chaque catégorie pour la couche selectionnée
+    update_fields() 
 
-      for(let i = 0; i < original_fields.length; i ++){
+    // Ajout des valeurs uniques pour la catégorie selectionnée
+    update_values()
+
+  }
+
+  function reset_menu (menu_element, html_tag){
+    console.log("execution function reset menu")
+    let sub_menu = document.getElementById(menu_element)
+    let children_elements = sub_menu.querySelectorAll(html_tag)
+
+    for(let element of children_elements){
+      element.remove()
+    }
+  }
+
+  function update_fields(){
+    let set_layer = document.getElementById("layer_choice").value
+    let original_fields =  Array.from(data_manager.current_layers[set_layer].original_fields)
+  
+    for(let i = 0; i < original_fields.length; i ++){
         let category = document.createElement("option")
         category.textContent = original_fields[i]
         field_choice.appendChild(category)
-        }    
 
-      // Ajout des valeurs uniques pour la catégorie selectionnée
-      let unique_values = get_unique_value(set_layer)
-      let set_field = field_choice.value
+        category.addEventListener("click", function(){
+          reset_menu("value_choice","li")
+          update_values()
+        })
+      }   
+    update_values()
+  }
+
+  function update_values(){
+    let unique_values = get_unique_value(document.getElementById("layer_choice").value)
+    let set_field = field_choice.value
       
-      for(let value of unique_values[set_field].sort()){
+    for(let value of unique_values[set_field].sort()){
         const liElement = document.createElement("li");
         liElement.style.alignSelf = "flex-end";
         
@@ -149,15 +198,32 @@ export function update_section_6(){
         inputElement.value = value;
         
         liElement.appendChild(inputElement);
-        value_choice.appendChild(liElement)
-      }
-
-  }
-
-  var layer_choice = document.getElementById("layer_choice")
+        value_choice.appendChild(liElement);
 
 
-  layer_choice.addEventListener("click",function(){console.log(this)}, false)
+        inputElement.addEventListener("click",function(){
+          let shapes_to_filter = filter_values(layer_choice.value,field_choice.value, this.value)
+
+          // pour chaque ID
+          for(let shape of shapes_to_filter){ 
+            // selection par ID compris à l'interrieur un groupe de path (une couche sur l'UI)
+            let filtered_shape =  document.querySelector(`#L_${layer_choice.value} #feature_${shape}`)           
+            if(this.checked == true){
+              filtered_shape.setAttribute("display", "none")
+              }
+            else{
+              filtered_shape.setAttribute("display" , "")
+              }            
+            }
+          })
+    }
+  } 
+
+  /* layer_choice.querySelector("option").addEventListener("click",function(){
+    reset_menu("field_choice", "option")
+    reset_menu("value_choice","li")  
+  }, false) */
+
 }
 
 
@@ -202,4 +268,3 @@ function filter_values(layer, field, value){
   }
   return shapes_to_filter
 }
-
