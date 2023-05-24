@@ -6,6 +6,8 @@ Unreleased
 
 - Fix field names vertical alignment in label creation options.
 
+- Remove useless CSS from 404 page (which included loading a font from Google Fonts).
+
 0.16.2 (2023-05-12)
 -------------------
 

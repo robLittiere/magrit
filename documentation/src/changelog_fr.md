@@ -4,6 +4,7 @@
 
 - Correction de l'alignement vertical des noms de champs dans les options de création des labels.
 
+- Suppression des CSS inutiles de la page 404 (qui incluait le chargement d'une police provenant de Google Fonts).
 
 #### 0.16.2 (2023-05-12)
 
