@@ -1,10 +1,26 @@
+import { AutoScroll } from 'sortablejs';
 import { Mround } from './../helpers_math';
 import { export_compo_png, export_compo_svg, export_layer_geo } from './../map_export';
 
 
 export function makeSection6() {
-  const section6 = d3.select('#section6');
-  const dv6 = section6.append('div');
+  const dv6 = map_div.insert('div');
+
+  dv6.attrs({
+    class : "light-menu"
+  })
+  dv6.styles({
+    "position":"absolute",
+    "right" : 0,
+    "top" : 0,
+    "border" : "solid black 2px",
+    "height" : "min-content",
+    "border-radius" : "8px",
+    "background-color" : "#efefef"
+
+  })
+  
+  
 
 
   // Bouton reset, décoche toutes les checkbox et retire le display none
@@ -31,15 +47,25 @@ export function makeSection6() {
   .attrs({
     id : "reset_button"
   })
-  .style("text-align", "center")
-  .style("display", "flex")
-  .style("justify-content", "center")
-  .style("align-items", "center")
   .text("Reinitialiser")
+
 
   
 
   // menu de selection de couche
+  dv6
+  .append("p")
+  .text("Couche")
+  .styles({
+    "background-color" : "#595959",
+    "color" : "#fff",
+    "margin-top" : "0px",
+    "margin-bottom" : "0px",
+    "font-family": "Baloo Bhaina",
+    "text-align" :"center"
+       
+  })
+
   const layer_selection = dv6.append('div');
   layer_selection.styles({
     "display" : "flex",
@@ -47,62 +73,84 @@ export function makeSection6() {
     "justify-content" : "center"
   })
   /* section choix de la couche */
-  layer_selection.append('p')
-    .attrs({
-      class: 'i18n', 'data-i18n': '[html]app_page.section5b.type', 'id' : 'layer_selection'
-    })
-    .styles({
-        "align-self" : "center"
-    })
 
   layer_selection
     .append('select')
     .attrs({
-        "id" : "layer_choice"
+        "id" : "layer_choice",
+        "size" :"2"
     })
+    .styles({
+      "max-height" : "calc(100% - 4px)",
+      "height" : "min-content",
+    });
 
   
   /* section choix de la colonne */
+  dv6
+  .append("p")
+  .text("Dimensions")
+  .styles({
+    "background-color" : "#595959",
+    "color" : "#fff",
+    "margin-top" : "0px",
+    "margin-bottom" : "0px",
+    "font-family": "Baloo Bhaina",
+    "text-align" :"center"
+       
+  })
+
   const field_choice = dv6.append('div')
   field_choice.styles({
     "display" : "flex",
     "flex-direction" : "column",
-    "justify-content" : "center"
+    "justify-content" : "center",
+    "height" :"min-content"
+    
+    
   })
 
-  field_choice
-    .append('p')
-    .text('Dimension')
-    .styles({
-        "align-self" : "center"
-    })
-    
 
   field_choice
     .append('select')
     .attrs({
-        'id' : 'field_choice'
+        'id' : 'field_choice',
+        "size": 3
+    })
+    .styles({ 
+      "overflow-y" : "auto",
+
     })
 
 
 
   /* section choix des valeurs */
+
+
+  dv6
+    .append("p")
+    .text("Choix des valeurs")
+    .styles({
+      "background-color" : "#595959",
+      "color" : "#fff",
+      "margin-top" : "0px",
+      "margin-bottom" : "0px",
+      "font-family": "Baloo Bhaina",
+      "text-align" :"center"
+         
+    })
   
   const value_choice = dv6.append("div")
-
-  value_choice.append("p")
-  .text("Choix des valeurs")
-  .styles({
-    "display" : "flex",
-    "align-self" : "center"
-  })
-
   value_choice.styles({
-    "display" : "flex",
-    "flex-direction" : "column",
-    "justify-content" : "center"
+    
+    "height" : "100px",
+    "overflow-y" : "auto",
+    "padding" :"0px"
+    
   })
 
+
+  
   value_choice
     .append('ul')
     .attrs({
@@ -110,9 +158,11 @@ export function makeSection6() {
     })
     .styles({
       "list-style" : "none",
-      "align-self" : "center"
+      "height" : "max-content"
+      
     })
 }
+
 
 // variable stockant les couches déjà présentes sur l'UI, utilisé quand on ajoute une nouvelle couche pour ne pas avoir de doublons
 var options = []
@@ -173,7 +223,15 @@ export function update_section_6(){
 
   // Insertion des catégories correspondante à la couche active dans le menu déroulant
   function update_fields(){
-    let set_layer = document.getElementById("layer_choice").value
+    let layer_choice = document.getElementById("layer_choice")
+
+    if(layer_choice.value != ""){
+      var set_layer = layer_choice.value
+    } 
+    else{
+      var set_layer = layer_choice.firstChild.value
+    }
+
     let original_fields =  Array.from(data_manager.current_layers[set_layer].original_fields)
   
     for(let i = 0; i < original_fields.length; i ++){
@@ -191,8 +249,21 @@ export function update_section_6(){
 
   // Ajout des valeurs lors du changement de couche
   function update_values(){
-    let unique_values = get_unique_value(document.getElementById("layer_choice").value)
-    let set_field = field_choice.value
+    let layer_choice = document.getElementById("layer_choice")
+    if(layer_choice.value != ""){
+      var set_layer = layer_choice.value
+    } 
+    else{
+      var set_layer = layer_choice.firstChild.value
+    }
+
+    let unique_values = get_unique_value(set_layer)
+    if(field_choice.value != ""){
+      var set_field = field_choice.value
+    } 
+    else{
+      var set_field = field_choice.firstChild.value
+    }
       
     for(let value of unique_values[set_field].sort()){
 
@@ -207,7 +278,7 @@ export function update_section_6(){
         inputElement.value = value;
 
         // Si la valeur à été précedemment coché par un utilisateur, elle est recochée lorsqu'on revient sur la catéogrie correspondante
-        if(JSON.stringify(checked_boxes[layer_choice.value][field_choice.value]).includes(value) == true ){
+        if(JSON.stringify(checked_boxes[set_layer][set_field]).includes(value) == true ){
           inputElement.checked = true
         }
         
@@ -216,19 +287,19 @@ export function update_section_6(){
 
 
         inputElement.addEventListener("click",function(){
-          let shapes_to_filter = filter_values(layer_choice.value,field_choice.value, this.value)
+          let shapes_to_filter = filter_values(set_layer ,set_field, this.value)
 
           // pour chaque ID, Filtrage ou défiltrage via display none du shape correspondant à la case cochée
           for(let shape of shapes_to_filter){ 
             // selection par ID compris à l'interrieur un groupe de path (une couche sur l'UI)
-            let filtered_shape =  document.querySelector(`#L_${layer_choice.value} #feature_${shape}`)           
+            let filtered_shape =  document.querySelector(`#L_${set_layer} #feature_${shape}`)           
             if(this.checked == true){
               filtered_shape.setAttribute("display", "none")
-              manage_checked_boxes(true, layer_choice.value, field_choice.value, this.value)
+              manage_checked_boxes(true, set_layer,set_field, this.value)
               }
             else{
               filtered_shape.setAttribute("display" , "")
-              manage_checked_boxes(false, layer_choice.value, field_choice.value, this.value)
+              manage_checked_boxes(false, set_layer , set_field, this.value)
             }            
             }
           })
