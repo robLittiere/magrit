@@ -115,7 +115,7 @@ export function makeSection6() {
     .append('select')
     .attrs({
         'id' : 'field_choice',
-        "size": 3
+        "size": 4
     })
     .styles({ 
       "overflow-y" : "auto",
