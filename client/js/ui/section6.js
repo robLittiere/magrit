@@ -184,24 +184,20 @@ export function update_section_6(){
         options.push(layer_choice.options[i].text)        
       }  
 
-    // ajout de chaque couche de l'UI a un menu déroulant 
-    for(let i = 0; i < Object.keys(data_manager.current_layers).length ; i++){
+    var target_layer = document.querySelector(`[class*="targeted_layer layer"]`)
 
-      let layer_name = Object.keys(data_manager.current_layers)[i]
-
-      // Si la couche n'est pas déjà présente, on l'ajoute au menu déourlant
-      if( options.includes(layer_name) == false){
-        let option = document.createElement("option")
-        option.setAttribute("id", `layer_name_${layer_name}`)
-        option.textContent = layer_name
-        // Met a jour le choix des colonnes et valeurs après selection d'une couche différente
-        option.addEventListener("click",function(){
-          reset_menu("field_choice","option")
-          reset_menu("value_choice","li")
-          update_fields()
-        })
-        layer_choice.appendChild(option)
-      }
+    if( options.includes(target_layer.id) == false){
+      let option = document.createElement("option")
+      option.setAttribute("id", `layer_name_${target_layer.id}`)
+      option.textContent = target_layer.id
+      // Met a jour le choix des colonnes et valeurs après selection d'une couche différente
+      option.addEventListener("click",function(){
+        reset_menu("field_choice","option")
+        reset_menu("value_choice","li")
+        update_fields()
+      })
+      layer_choice.appendChild(option)
+    
 
     // Ajout de chaque catégorie pour la couche selectionnée
     update_fields() 
