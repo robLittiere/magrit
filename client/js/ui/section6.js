@@ -179,32 +179,19 @@ export function update_section_6(){
     var layer_choice = document.getElementById("layer_choice")
     var field_choice = document.getElementById("field_choice")
 
-    // A l'execution, rajoute la liste des couches présentes à la liste des couches présentes
-    for(let i = 0; i < layer_choice.options.length; i++){
-        options.push(layer_choice.options[i].text)        
-      }  
+    var set_target_layer_id = ""
 
     var target_layer = document.querySelector(`[class*="targeted_layer layer"]`)
 
-    if( options.includes(target_layer.id) == false){
-      let option = document.createElement("option")
-      option.setAttribute("id", `layer_name_${target_layer.id}`)
-      option.textContent = target_layer.id
-      // Met a jour le choix des colonnes et valeurs après selection d'une couche différente
-      option.addEventListener("click",function(){
-        reset_menu("field_choice","option")
-        reset_menu("value_choice","li")
-        update_fields()
-      })
-      layer_choice.appendChild(option)
-    
+    if(set_target_layer_id != target_layer.id){
+      set_target_layer_id = target_layer.id.replace("L_","")
+    }
 
     // Ajout de chaque catégorie pour la couche selectionnée
     update_fields() 
 
     // Ajout des valeurs uniques pour la catégorie selectionnée
     update_values()
-  }
 
   
 // Supprime tous les html_tag spécifiés d'un menu, utilisé lors du changement de couche/catégorie
@@ -219,16 +206,7 @@ export function update_section_6(){
 
   // Insertion des catégories correspondante à la couche active dans le menu déroulant
   function update_fields(){
-    let layer_choice = document.getElementById("layer_choice")
-
-    if(layer_choice.value != ""){
-      var set_layer = layer_choice.value
-    } 
-    else{
-      var set_layer = layer_choice.firstChild.value
-    }
-
-    let original_fields =  Array.from(data_manager.current_layers[set_layer].original_fields)
+    let original_fields =  Array.from(data_manager.current_layers[set_target_layer_id].original_fields)
   
     for(let i = 0; i < original_fields.length; i ++){
         let category = document.createElement("option")
@@ -245,15 +223,8 @@ export function update_section_6(){
 
   // Ajout des valeurs lors du changement de couche
   function update_values(){
-    let layer_choice = document.getElementById("layer_choice")
-    if(layer_choice.value != ""){
-      var set_layer = layer_choice.value
-    } 
-    else{
-      var set_layer = layer_choice.firstChild.value
-    }
 
-    let unique_values = get_unique_value(set_layer)
+    let unique_values = get_unique_value(set_target_layer_id)
     if(field_choice.value != ""){
       var set_field = field_choice.value
     } 
@@ -274,7 +245,7 @@ export function update_section_6(){
         inputElement.value = value;
 
         // Si la valeur à été précedemment coché par un utilisateur, elle est recochée lorsqu'on revient sur la catéogrie correspondante
-        if(JSON.stringify(checked_boxes[set_layer][set_field]).includes(value) == true ){
+        if(JSON.stringify(checked_boxes[set_target_layer_id][set_field]).includes(value) == true ){
           inputElement.checked = true
         }
         
@@ -283,19 +254,24 @@ export function update_section_6(){
 
 
         inputElement.addEventListener("click",function(){
-          let shapes_to_filter = filter_values(set_layer ,set_field, this.value)
+          let shapes_to_filter = filter_values(set_target_layer_id ,set_field, this.value)
 
           // pour chaque ID, Filtrage ou défiltrage via display none du shape correspondant à la case cochée
           for(let shape of shapes_to_filter){ 
             // selection par ID compris à l'interrieur un groupe de path (une couche sur l'UI)
-            let filtered_shape =  document.querySelector(`#L_${set_layer} #feature_${shape}`)           
+            console.log(shape)
+            let shape_list =  document.querySelectorAll(`[id*=feature_${shape}]`)
+
+            for(let filtered_shape of shape_list)
+            
+            
             if(this.checked == true){
               filtered_shape.setAttribute("display", "none")
-              manage_checked_boxes(true, set_layer,set_field, this.value)
+              manage_checked_boxes(true, set_target_layer_id,set_field, this.value)
               }
             else{
               filtered_shape.setAttribute("display" , "")
-              manage_checked_boxes(false, set_layer , set_field, this.value)
+              manage_checked_boxes(false, set_target_layer_id , set_field, this.value)
             }            
             }
           })
