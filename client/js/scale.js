@@ -22,6 +22,18 @@ export function scale_elements(){
     .text("+")
     .attrs({"id":"scale_in"})
 
+    const sliderContainer = div.append("div").attr('class', 'slider_container')
+    console.log(sliderContainer)
+    sliderContainer.append("input")
+        .attr('type', 'range')
+        .attr('id', 'zoom-slider')
+        .attr('min', 0)
+        .attr('max', 2)
+        .attr('value', 1)
+        .attr('step', 0.1 )
+        .style('width', '100px')
+
+
     div
     .append("button")
     .text("-")
@@ -32,6 +44,69 @@ export function scale_elements(){
 
     var scale_in = document.getElementById("scale_in");
     var scale_out = document.getElementById("scale_out");
+    var slider = document.getElementById("zoom-slider")
+
+    slider.oninput = function(event){
+        console.log(event.target.value)
+        for(let i = 1 ; i < map.length; i ++){
+            if( !(map[i].classList.value.split(" ").includes("targeted_layer") || map[i].classList.value.split(" ").includes("legend"))){
+                                
+                for(let children of map[i].children){
+
+                    if(children.id.includes("PropSymbol")){
+                        console.log("prop")
+                        // Get original r (size)
+                        let old_r = children.getAttribute("old_r")   
+                        // If we only have the original size, we copy it  
+                        if(!old_r){
+                            children.setAttribute("old_r", children.getAttribute("r"))
+                            old_r = children.getAttribute("r")
+                        }
+                        let base_size = parseFloat(old_r)    
+                        console.log(base_size)          
+                    
+                        let new_size = base_size * event.target.value
+                        children.setAttribute("r", new_size); 
+                        }
+                    else if(children.id.includes("Picto")){
+                        console.log("symol")
+                        // Same logic as above
+                        let original_height = children.getAttribute("old_height")
+                        let original_width = children.getAttribute("old_width")
+                        if(!original_height && !original_width){
+                            children.setAttribute("old_height", children.getAttribute("height"))
+                            children.setAttribute("old_width", children.getAttribute("width"))
+                            original_height = children.getAttribute("height")
+                            original_width = children.getAttribute("width")
+                        }
+
+                        
+                        let height = parseFloat(original_height) 
+                        let width = parseFloat(original_width)                   
+                    
+                        let update_height = height * event.target.value
+                        let update_width = width * event.target.value
+
+                        children.setAttribute("height", update_height); 
+                        children.setAttribute("width", update_width); 
+                        }
+                               
+                    }
+
+                    let legendes = document.querySelectorAll(`[class*=${map[i].id}][class*=legend]`)
+                    for(let svg_tag of legendes){
+                        for(let element of svg_tag.childNodes){
+                            if(element.tagName == "g"){
+
+                            let currentTransform = parseFloat(element.firstChild.getAttribute("r"))                  
+                    
+                            let updatedTransform = currentTransform * event.target.value
+                            element.firstChild.setAttribute("r", updatedTransform); }}
+                        }   
+                }
+        } 
+    }
+
 
     
 
@@ -73,10 +148,7 @@ export function scale_elements(){
                         }                    
                 }             
         } 
-
-
-
-
+        slider.value = parseFloat(slider.value) + parseFloat(slider.getAttribute("step"))
     }
 
     scale_out.onclick=function(){       
@@ -119,5 +191,7 @@ export function scale_elements(){
                         }   
                 }
         } 
+        slider.value = parseFloat(slider.value) - parseFloat(slider.getAttribute("step"))
+
     }
 }
