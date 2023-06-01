@@ -26,7 +26,7 @@ import { apply_user_preferences, beforeUnloadWindow } from './map_project';
 import { addLastProjectionSelect, change_projection, change_projection_4 } from './projections';
 import { world_topology } from './sample_topo';
 import { boxExplore2 } from './tables';
-import handleZoomRect from './zoom_rect';
+import { handleZoomRect } from './zoom_rect';
 import { button_type } from './ui/buttons';
 import makeHeader from './ui/header';
 import makeSection1 from './ui/section1';

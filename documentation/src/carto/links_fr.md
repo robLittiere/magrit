@@ -17,7 +17,7 @@ Magrit propose de représenter l'épaisseur de la ligne de plusieurs façons : *
 #### Exemple :
 
 <p style="text-align: center;">
-<img src="img/flows.png" alt="link_map" style="width: 480px;"/>
+<img src="../img/flows.png" alt="link_map" style="width: 480px;"/>
 </p>
 
 #### Informations sur le format des données attendues :

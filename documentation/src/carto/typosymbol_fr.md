@@ -11,5 +11,5 @@ Note : il est possible de réordonner l'ordre d'apparition des modalités dans l
 #### Exemple :
 
 <p style="text-align: center;">
-<img src="img/typo_picto.png" alt="picto_map" style="width: 480px;"/>
+<img src="../img/typo_picto.png" alt="picto_map" style="width: 480px;"/>
 </p>

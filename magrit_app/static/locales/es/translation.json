@@ -587,7 +587,9 @@
             "field_categ": "<strong>Campo</strong> : {{ field }}<br>{{ nb_class }} categorías<br>{{ nb_features}} entidades",
             "count_feature": " <i> ({{ count }} entidad)</i>",
             "count_feature_plural": " <i> ({{ count }} entidades)</i>",
-            "title_click": "¡Seleccionar un símbolo!"
+            "title_click": "¡Seleccionar un símbolo!",
+            "checkbox_desc": "Marcar/desmarcar para mostrar pictogramas" ,
+            "label_checkbox": "Marcar/desmarcar para mostrar etiquetas"
         },
         "categorical_box": {
             "title": "Seleccionar los colores - {{ layer }} - {{ nb_features }} entidades",
@@ -642,7 +644,7 @@
             "graticule_steps": "Distancia angular entre las líneas<br>",
             "graticule_dasharray": "Tamaño de los guiones<br>",
             "generate_labels": "Generar etiquetas para esta capa...",
-            "field_label": "Seleccionar campo",
+            "label_popup_explanation": "Puede seleccionar los diferentes campos que se utilizarán para crear las etiquetas. Se dispondrán automáticamente, en el orden seleccionado, para evitar solapamientos entre los distintos campos de una misma entidad.",
             "graticule_clip": "Usar los límites de la capa de referencia para la cuadrícula",
             "layer_shadow": "Añadir una sombra",
             "let_draggable": "Permitir símbolos mover",

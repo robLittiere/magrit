@@ -1,5 +1,75 @@
 # Historique des versions et des changements effectués
 
+#### Unreleased 
+
+- Correction de l'alignement vertical des noms de champs dans les options de création des labels.
+
+- Suppression des CSS inutiles de la page 404 (qui incluait le chargement d'une police provenant de Google Fonts).
+
+#### 0.16.2 (2023-05-12)
+
+- Corrige la position des points rouges indiquant la position d'origine du label lors du déplacement d'un label.
+
+#### 0.16.1 (2023-05-11)
+
+- Amélioration de la compatibilité entre la nouvelle gestion et l'ancienne gestion de la position des labels déplacés manuellement lors du chargement d'un fichier de projet créé avec une version antérieure à 0.16.0.
+
+#### 0.16.0 (2023-05-11)
+
+- Désactivation du zoom par sélection rectangulaire lors d'un changement de projection s'il est activé.
+
+- Amélioration de la gestion des positions des étiquettes en évitant de réinitialiser la position des étiquettes lors d'un changement de projection pour les étiquettes qui ont été déplacées manuellement.
+
+- Éviter de réinitialiser la position des étiquettes lors de l'export en SVG avec l'option "Découper le SVG sur l'emprise actuelle".
+
+- Modification des règles CSS pour les couches cachées (car Inkscape ne supporte pas l'attribut "visibility" sur les éléments SVG ni la propriété CSS "visibility").
+
+- Chargement des pictogrammes dès le chargement de l'application au lieu de différer le chargement à la première ouverture du "panneau des pictogrammes" (cela causait des problèmes avec les connexions réseau lentes, car les pictogrammes n'étaient pas chargés lorsque l'utilisateur essayait de les utiliser - voir <a href="https://github.com/riatelab/magrit/issues/110">issue #110</a>).
+
+#### 0.15.3 (2023-04-14)
+
+- Correction des liens vers les images dans les sous-chapitres de la documentation.
+
+#### 0.15.2 (2023-04-13)
+
+- Correction du comportement "mouseup" lors du dessin d'un rectangle (le curseur continuait à déplacer la carte après avoir dessiné le rectangle, même après avoir relâché le clic).
+
+- Correction du comportement "mouseup" lors d'un zoom avec une sélection rectangulaire (le curseur continuait à déplacer la carte après avoir dessiné le rectangle, même après avoir relâché le clic).
+
+#### 0.15.1 (2023-04-11)
+
+- Transfère la valeur d'opacité des couches (choroplèthe, etc.) à leurs légendes.
+
+#### 0.15.0 (2023-04-06)
+
+- Correction d'un bug avec les géométries nulles / vides introduit dans le commit 326e3c8 / version 0.13.2.
+
+- Amélioration du popup de création d'étiquettes pour permettre la création de plusieurs étiquettes à la fois, tout en étant capable de sélectionner la police et la taille de la police pour chaque champ.
+
+- Empiler automatiquement les étiquettes pour chaque entité afin d'éviter les chevauchements (merci à @robLittiere et à @ArmelVidali pour la contribution <a href="https://github.com/riatelab/magrit/pull/109">contribution #109</a>).
+
+- Mise à jour de la dépendance `smoomapy` pour corriger un problème lorsque les limites données par l'utilisateur sont très proches des limites min/max des données (et que cela pouvait résulter en une classe sans valeur).
+
+#### 0.14.1 (2023-03-29)
+
+- Correction de l'emplacement des étiquettes dérivées d'une couche de symboles proportionnels déplacés pour éviter les chevauchements (dorling/demers) (<a href="https://github.com/riatelab/magrit/issues/108">cf. issue #108</a>). Fonctionne également sur les symboles qui ont été déplacés manuellement.
+
+- Correction de la description de deux jeux de données d'exemple (Départements et Régions) où le champ "CODGEO" était décrit comme s'appelant "CODEGEO", empêchant d'effectuer certaines représentations sur le champ "CODGEO".
+
+
+#### 0.14.0 (2023-03-24)
+
+- Nouveau : Ajout d'une fonctionnalité permettant le filtrage d'une ou plusieurs catégories lors de la création d'une couche de pictogrammes (merci à @robLittiere et à @ArmelVidali pour la contribution <a href="https://github.com/riatelab/magrit/pull/106">contribution #106</a>).
+
+- Nouveau : Ajout d'une fonctionnalité permettant d'ajouter une légende aux couches de labels (<a href="https://github.com/riatelab/magrit/issues/107">cf. issue #107</a>)
+
+- Correction de fautes d'orthographe dans la traduction française.
+
+
+#### 0.13.4 (2023-03-14)
+
+- Modification de la recette docker pour permettre la création et la publication sur docker hub d'images multi-plateformes (amd64 / arm64).
+
 #### 0.13.3 (2023-02-21)
 
 - Essayer d'améliorer le rembobinage des anneaux des polygones puisque certains problèmes existants n'ont pas été résolus (#104) et que de nouveaux problèmes sont apparus (#105).
@@ -26,7 +96,7 @@
 
 #### 0.12.1 (2022-12-06)
 
-- Corrige un ancien bug sur le chargement des ficher-projets générés avec les premières version de Magrit vers 2017 (avant la version 0.3.0, ne contenant pas d'informations relatives à la version utilisée pour générer le fichier-projet en question).
+- Corrige un ancien bug sur le chargement des ficher-projets générés avec les premières versions de Magrit vers 2017 (avant la version 0.3.0, ne contenant pas d'informations relatives à la version utilisée pour générer le fichier-projet en question).
 
 - Corrige un bug lors de l'import des geopackages lors du clic sur "Ajout d'un fond de carte" (l'import fonctionnait seulement quand le fichier était glissé-déposé sur la carte).
 

@@ -6,6 +6,7 @@ import { scale_to_lyr, remove_layer_cleanup, fitLayer, center_map } from './inte
 import { reproj_symbol_layer, zoom_without_redraw } from './map_ctrl';
 import { hatanoRaw, winkel1Raw } from './projection_others';
 import { add_layout_feature } from './layout_features/helpers';
+import { removeZoomRect } from "./zoom_rect";
 
 (d3.geoWinkel1 = (() => d3.geoProjection(winkel1Raw(45)).scale(200)));
 (d3.geoHatano = (() => d3.geoProjection(hatanoRaw).scale(200)));
@@ -267,6 +268,9 @@ const makeTooltipProj4 = (proj_select, proj4string) => {
 };
 
 export function handle_projection_select() {
+  // Remove the "zoom by rectangular selection" behavior if it exists
+  removeZoomRect();
+
   const tmp = this.querySelector('[value="last_projection"]');
   let val = this.value;
   if (val === 'more') {

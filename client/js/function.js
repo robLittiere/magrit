@@ -22,7 +22,7 @@ import {
   isNumber,
   makeDorlingSimulation,
   makeDemersSimulation,
-  reprojectToRobinson, reprojectFromRobinson, sleep,
+  reprojectToRobinson, reprojectFromRobinson, sleep, drag_label,
 } from './helpers';
 import {
   getBinsCount, get_nb_decimals, has_negative,
@@ -39,6 +39,7 @@ import { zoom_without_redraw } from './map_ctrl';
 import { isInterrupted } from './projections';
 import { display_box_symbol_typo, make_style_box_indiv_symbol } from './symbols_picto';
 import { bindTooltips } from './tooltips';
+import { count } from 'd3-array';
 
 const isWASMSupported = (() => {
   let supported = false;
@@ -2741,6 +2742,7 @@ export function render_categorical(layer, rendering_params) {
   data_manager.current_layers[layer_name]['stroke-width-const'] = 0.75;
   data_manager.current_layers[layer_name].is_result = true;
   data_manager.current_layers[layer_name].color_map = color_map;
+  data_manager.current_layers[layer_name].fill_opacity = 0.9;
   zoom_without_redraw();
 }
 
@@ -2788,6 +2790,7 @@ function render_choro(layer, rendering_params) {
   data_manager.current_layers[layer_name].rendered_field = rendering_params.rendered_field;
   data_manager.current_layers[layer_name].fill_color = { class: rendering_params.colorsByFeature };
   data_manager.current_layers[layer_name]['stroke-width-const'] = 0.75;
+  data_manager.current_layers[layer_name].fill_opacity = 1;
   data_manager.current_layers[layer_name].is_result = true;
   data_manager.current_layers[layer_name].options_disc = options_disc;
   const colors_breaks = [];
@@ -3799,10 +3802,6 @@ function fillMenu_TypoSymbol() {
   make_layer_name_input(dv2, 'TypoSymbols_output_name');
   make_ok_button(dv2, 'yesTypoSymbols');
   dv2.selectAll('.params').attr('disabled', true);
-  if (!(_app.default_symbols) || _app.default_symbols.length === 0) {
-    _app.default_symbols = [];
-    prepare_available_symbols();
-  }
 }
 
 function discard_rendering_empty_val() {
@@ -3853,8 +3852,11 @@ const fields_TypoSymbol = {
             document.getElementById('yesTypoSymbols').disabled = null;
             self.rendering_params[field] = {
               nb_cat: confirmed[0],
-              symbols_map: confirmed[1],
-              field,
+              symbols_to_display: confirmed[1],
+              field: field,
+              // List of fields checked by the user for fields images not to be rendered
+              // We get this from the returned promise
+              picto_filter: confirmed[2],
             };
           }
         });
@@ -3862,7 +3864,7 @@ const fields_TypoSymbol = {
     });
     ok_button.on('click', () => {
       const field = field_to_use.node().value;
-      render_TypoSymbols(self.rendering_params[field], uo_layer_name.node().value);
+      render_TypoSymbols(self.rendering_params[field], uo_layer_name.node().value, self.rendering_params[field].picto_filter);
     });
     setSelected(field_to_use.node(), fields_all[0]);
     uo_layer_name.attr('value', ['Symbols', layer].join('_'));
@@ -3874,29 +3876,38 @@ const fields_TypoSymbol = {
   rendering_params: {},
 };
 
-function render_TypoSymbols(rendering_params, new_name) {
+// Added picto_filter parameter, a list of pictograms not to be displayed
+function render_TypoSymbols(rendering_params, new_name, filtered_symbols) {
   const layer_name = Object.getOwnPropertyNames(data_manager.user_data)[0];
   const ref_layer_id = _app.layer_to_id.get(layer_name);
-  const { field } = rendering_params;
+  const field = rendering_params.field;
   const layer_to_add = check_layer_name(new_name.length > 0 ? new_name : ['Symbols', field, layer_name].join('_'));
   const ref_selection = document.getElementById(ref_layer_id).getElementsByTagName('path');
   const nb_ft = ref_selection.length;
 
   function make_geojson_pt_layer() {
     const result = [];
+    // Added a counter to set an "old_id" attribute allowing to check if
+    // a pictogram was supposed to be there but isn't after user filtering
+    var counter = 0;
     for (let i = 0, nb_features = ref_selection.length; i < nb_features; ++i) {
       const ft = ref_selection[i].__data__;
       const value = ft.properties[field];
-      const new_obj = {
-        id: i,
-        type: 'Feature',
-        properties: {},
-        geometry: { type: 'Point' },
-      };
-      new_obj.properties.symbol_field = value;
-      new_obj.properties.id_parent = ft.id;
-      new_obj.geometry.coordinates = coordsPointOnFeature(ft.geometry);
-      result.push(new_obj);
+      // Check if field value is within the filtered list the user doesn't want to display
+      if (!filtered_symbols.includes(`${value}`)) {
+        const new_obj = {
+          id: i,
+          old_id : counter,
+          type: 'Feature',
+          properties: {},
+          geometry: {type: 'Point'},
+        }
+        new_obj.properties.symbol_field = value;
+        new_obj.properties.id_parent = ft.id;
+        new_obj.geometry.coordinates = coordsPointOnFeature(ft.geometry);
+        result.push(new_obj);
+      }
+      counter += 1
     }
     return {
       type: 'FeatureCollection',
@@ -3907,7 +3918,7 @@ function render_TypoSymbols(rendering_params, new_name) {
   const new_layer_data = make_geojson_pt_layer();
   const layer_id = encodeId(layer_to_add);
   const context_menu = new ContextMenu();
-  const getItems = (self_parent) => [
+  const getItems = self_parent => [
     { name: _tr('app_page.common.edit_style'), action: () => { make_style_box_indiv_symbol(self_parent); } },
     { name: _tr('app_page.common.delete'), action: () => { self_parent.style.display = 'none'; } }, // eslint-disable-line no-param-reassign
   ];
@@ -3921,17 +3932,23 @@ function render_TypoSymbols(rendering_params, new_name) {
     .data(new_layer_data.features)
     .enter()
     .insert('image')
-    .attrs((d) => {
+    .attrs(function (d, i) {
       let field_value = d.properties.symbol_field;
+
       // Entry in the symbol map was replaced by 'undefined_category'
       // when the field value was null :
       if (field_value === null || field_value === '' || field_value === undefined) {
         field_value = 'undefined_category';
       }
+
       // Values are stored as strings in our symbol map
-      const symb = rendering_params.symbols_map.get(`${field_value}`);
+      const symb = rendering_params.symbols_to_display.get(`${field_value}`);
       const coords = global.proj(d.geometry.coordinates);
+      console.log(`Picto_${i}`,d.old_id);
+
       return {
+        id: `Picto_${i}`, // Add a unique id to each element and a class to each element for future improvement
+        old_id : `Picto_old_id_${d.old_id}`, // old id for debugg purpose
         x: coords[0] - symb[1] / 2,
         y: coords[1] - symb[1] / 2,
         width: symb[1],
@@ -3949,12 +3966,14 @@ function render_TypoSymbols(rendering_params, new_name) {
   data_manager.current_layers[layer_to_add] = {
     n_features: data_manager.current_layers[layer_name].n_features,
     renderer: 'TypoSymbols',
-    symbols_map: rendering_params.symbols_map,
+    symbols_to_display: rendering_params.symbols_to_display,
+    filtered_symbols: filtered_symbols,
     rendered_field: field,
     is_result: true,
     symbol: 'image',
     ref_layer_name: layer_name,
   };
+
   create_li_layer_elem(layer_to_add, nb_ft, ['Point', 'symbol'], 'result');
   handle_legend(layer_to_add);
   zoom_without_redraw();
@@ -4908,9 +4927,9 @@ export const render_label = function render_label(layer, rendering_params, optio
   let filter_test = () => true;
   if (rendering_params.filter_options !== undefined) {
     if (rendering_params.filter_options.type_filter === 'sup') {
-      filter_test = (prop) => (prop[rendering_params.filter_options.field] > rendering_params.filter_options.filter_value);
+      filter_test = (prop) => (prop[rendering_params.filter_options.field] > +rendering_params.filter_options.filter_value);
     } else if (rendering_params.filter_options.type_filter === 'inf') {
-      filter_test = (prop) => (prop[rendering_params.filter_options.field] < rendering_params.filter_options.filter_value);
+      filter_test = (prop) => (prop[rendering_params.filter_options.field] < +rendering_params.filter_options.filter_value);
     }
   }
   const layer_id = encodeId(layer_to_add);
@@ -4931,12 +4950,23 @@ export const render_label = function render_label(layer, rendering_params, optio
     let i_id = 0;
     nb_ft = ref_selection.length;
     for (let i = 0; i < nb_ft; i++) {
-      const ft = ref_selection[i].__data__;
+      const ref_elem = ref_selection[i];
+      const ft = ref_elem.__data__;
       if (!filter_test(ft.properties)) continue;
-      let coords;
       if (!ft.geometry) {
         warn_empty_features.push([i, ft]);
         continue;
+      }
+      let coords;
+      // Use the geometry of the circle/square if label are rendered on a symbol
+      // layer because the symbol might have been moved (either manually by the user or
+      // by using the dorling/demers algorithm).
+      // Otherwise, use our custom 'coordsPointOnFeature' function.
+      if (type_ft_ref === 'circle') {
+        coords = proj.invert([ref_elem.cx.baseVal.value, ref_elem.cy.baseVal.value]);
+      } else if (type_ft_ref === 'rect') {
+        const size = ref_elem.width.baseVal.value;
+        coords = proj.invert([ref_elem.x.baseVal.value + size / 2, ref_elem.y.baseVal.value + size / 2]);
       } else {
         coords = coordsPointOnFeature(ft.geometry);
       }
@@ -5000,6 +5030,7 @@ export const render_label = function render_label(layer, rendering_params, optio
         'stroke-width': stroke_width,
       })
       .text((d) => d.properties.label);
+
   }
 
   selection
@@ -5008,7 +5039,7 @@ export const render_label = function render_label(layer, rendering_params, optio
     .on('dblclick contextmenu', function (event) {
       context_menu.showMenu(event, document.querySelector('body'), getItems(this));
     })
-    .call(drag_elem_geo);
+    .call(drag_label);
 
   data_manager.current_layers[layer_to_add] = {
     n_features: new_layer_data.length,
@@ -5017,9 +5048,10 @@ export const render_label = function render_label(layer, rendering_params, optio
     fill_color: txt_color,
     rendered_field: label_field,
     is_result: true,
-    ref_layer_name: layer,
+    ref_layer_name: layer || options.ref_layer_name,
     default_size: font_size,
     default_font: selected_font,
+    filter_options: rendering_params.filter_options,
     buffer,
   };
   create_li_layer_elem(layer_to_add, nb_ft, ['Point', 'label'], 'result');
@@ -5121,3 +5153,54 @@ export const render_label_graticule = function render_label_graticule(layer, ren
   zoom_without_redraw();
   return layer_to_add;
 };
+
+
+/**
+ * Stacks labels under the point it is linked to (if so)
+ * If there is pictograms on the map, it starts stacking underneath, otherwise,
+ * it stacks labels one under the other
+ *
+ * Before, all labels were stacked on top of each other.
+ *
+ */
+export function stack_labels(ref_layer_name) {
+
+  // Gets all label layers
+  const map_labels = document.querySelectorAll('[id*="L_Label"]');
+
+  // For each "label" layer
+  for (let i = 0; i < map_labels.length; i++) {
+    const layer_name = map_labels[i].getAttribute('id').replace('L_', '');
+    if (ref_layer_name && data_manager.current_layers[layer_name].ref_layer_name !== ref_layer_name) continue;
+    // For each label
+    for (let y = 0; y < map_labels[i].childNodes.length; y++) {
+      // If there is an image, the height of it is saved in order to put
+      // the label x-pixels underneath
+      let pictogram_height = 0;
+      if (!(document.querySelector(`[old_id=Picto_old_id_${y}]`) == undefined)) {
+
+        const pictograms = document.querySelector(`[old_id=Picto_old_id_${y}]`);
+        pictogram_height = (parseInt(pictograms.getAttribute('height'), 10) / 2) + 10;
+      }
+      // Check if the labels have already been stacked. Prevents a shift in display
+      // if the user renders the labels one by one directly though the layer
+      if (map_labels[i].childNodes[y].getAttribute('stacked') == null) {
+        const label_font_size = parseInt(getComputedStyle(map_labels[i].childNodes[y]).fontSize, 10);
+        const y_label = parseInt(map_labels[i].childNodes[y].getAttribute('y'), 10);
+        // If it has not been stacked
+        // The x coordinate stays the same, each label's y attribute is incremented with :
+        // - the height of the image (divided by 2 +10 to have a little gap but not be too far)
+        // - the height of the other text labels * the number of labels ("i" counter)
+        map_labels[i].childNodes[y].setAttribute(
+          'y',
+          y_label + pictogram_height + i * (label_font_size + 5),
+        );
+        // Set a flag to know if this stack operation have already been made
+        map_labels[i].childNodes[y].setAttribute(
+          'stacked',
+          'true',
+        );
+      }
+    }
+  }
+}

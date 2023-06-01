@@ -594,7 +594,9 @@
             "field_categ": "<strong>Field</strong> : {{ field }}<br>{{ nb_class }} categories<br>{{ nb_features}} features",
             "count_feature": " <i> ({{ count }} feature)</i>",
             "count_feature_plural": " <i> ({{ count }} features)</i>",
-            "title_click": "Click me to choose a symbol!"
+            "title_click": "Click me to choose a symbol!",
+            "checkbox_desc": "Check/uncheck to display pictograms",
+            "label_checkbox": "Check/uncheck to display labels"
         },
         "categorical_box": {
             "title": "Color a categorical field - {{ layer }} - {{ nb_features }} features",
@@ -650,7 +652,7 @@
             "graticule_dasharray": "Length of dashes<br>",
             "graticule_clip": "Clip graticule to layer extent",
             "generate_labels": "Generate labels for this layer ...",
-            "field_label": "Select a field",
+            "label_popup_explanation": "You can select the various fields to be used to create the labels. They will be automatically arranged, in the selected order, to avoid overlaps between the different fields for the same entity.",
             "layer_shadow": "Add a shadow",
             "let_draggable": "Allow moving symbols",
             "ref_colors": "Colors:",

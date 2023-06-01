@@ -1,6 +1,6 @@
 ## Typage des données
 
-À chaque type de données est associé un certain nombre de modes de représentation possibles. Une fois les données importées il est donc important de définir le type de chacune des variables à cartographier.
+À chaque type de données est associé un certain nombre de modes de représentation possibles. Une fois les données importées, il est donc important de définir le type de chacune des variables à cartographier.
 
 5 types de données sont possibles :
 - *Identifiant* (champs notamment utilisés pour joindre les données)
@@ -26,8 +26,8 @@ Exemples : Noms des départements, Type d'occupation du sol.
 Ce champ contient des valeurs permettant d'identifier de manière unique chacune des entités de la couche de données.  
 Ces sont ces champs qui sont utilisés pour effectuer une jointure de données.  
 Les valeurs de ces champs sont également transférées aux entités correspondantes dans les représentations qui le permettent (symboles proportionnels, cartogrammes, cartes choroplèthes, cartes qualitatives par à-plat de couleurs ou par utilisation de pictogrammes).
-Exemple: Code INSEE de la commune, Code ISO2 d'un pays.
+Exemple : Code INSEE de la commune, Code ISO2 d'un pays.
 
 <p style="text-align: center;">
-<img src="img/win_typ_fr.png" alt="Dialogue de typage des données"/>
+<img src="../img/win_typ_fr.png" alt="Dialogue de typage des données"/>
 </p>

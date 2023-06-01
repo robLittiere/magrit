@@ -100,6 +100,8 @@ function createLegend(layer, title) {
     el = createLegend_line_symbol(layer, field, title, field);
   } else if (renderer.indexOf('TwoStocksWaffle') !== -1) {
     el = createLegend_waffle(layer, field, title, '');
+  } else if (renderer.indexOf('Label') !== -1) {
+    el = createLegend_label(layer);
   } else if (!renderer) {
     el = createLegend_layout(layer, data_manager.current_layers[layer].type, title, '', undefined, layer);
   } else {
@@ -1262,6 +1264,81 @@ export function createLegend_layout(layer, type_geom, title, subtitle, rect_fill
   return legend_root;
 }
 
+export function createLegend_label(layer, example_value, legend_value, rect_fill_value, filter_value) {
+  const layer_prop = data_manager.current_layers[layer];
+  const xpos = 30;
+  const ypos = 30;
+  const tmp_class_name = `legend legend_feature lgdf_${_app.layer_to_id.get(layer)}`;
+
+  const first_feature = svg_map.querySelector(`#${_app.layer_to_id.get(layer)}`).querySelector('text').innerHTML;
+
+  const {
+    default_size: font_size,
+    default_font: font,
+    fill_color: color,
+    rendered_field,
+    ref_layer_name,
+    filter_options,
+    buffer,
+  } = layer_prop;
+
+  const boxheight = 8 + +font_size.replace('px', '');
+  const filter_text = filter_value === undefined && filter_options
+    ? `${filter_options.field} ${filter_options.type_filter === 'inf' ? '<' : '>'} ${filter_options.filter_value}`
+    : filter_value;
+
+  const stroke = buffer ? buffer.color : null;
+  const stroke_width = buffer ? buffer.size : null;
+
+  const legend_root = map.insert('g')
+    .styles({ cursor: 'grab', 'font-size': '11px', 'font-family': 'verdana' })
+    .attrs({
+      id: 'legend_root_label',
+      class: tmp_class_name,
+      transform: 'translate(0,0)',
+      layer_name: layer,
+    });
+  const rect_under_legend = legend_root.insert('rect');
+
+  legend_root.insert('text')
+    .attrs({ id: 'legendtitle', x: xpos, y: ypos })
+    .styles({
+      'font-size': font_size,
+      'font-family': font,
+      fill: color,
+      stroke: stroke,
+      'stroke-width': stroke_width,
+      'paint-order': 'stroke fill',
+    })
+    .text(`${example_value || first_feature}`);
+
+  const width_text = legend_root.select('#legendtitle').node().getBBox().width;
+
+  legend_root.insert('text')
+    .attrs({ id: 'legendsubtitle', x: xpos + width_text + 3, y: ypos })
+    .styles({
+      'font-size': '12px',
+      'font-family': 'verdana',
+      // 'font-style': 'italic',
+    })
+    .text(legend_value ? legend_value : ` : ${ref_layer_name} (${rendered_field})`);
+
+  legend_root.append('g')
+    .insert('text')
+    .attrs({ id: 'legend_bottom_note', x: xpos, y: ypos + boxheight })
+    .styles({
+      'font-size': '11px',
+      'font-family': 'verdana',
+      'font-style': 'italic',
+    })
+    .text(filter_text);
+
+  legend_root.call(drag_legend_func(legend_root));
+  make_underlying_rect(legend_root, rect_under_legend, rect_fill_value);
+  make_legend_context_menu(legend_root, layer);
+  return legend_root;
+}
+
 export function createLegend_choro(layer, field, title, subtitle, box_gap = 0, rect_fill_value, rounding_precision, no_data_txt, note_bottom) {
   const layer_prop = data_manager.current_layers[layer];
   const boxheight = 18,
@@ -1352,7 +1429,11 @@ export function createLegend_choro(layer, field, title, subtitle, box_gap = 0, r
           height: boxheight,
         };
       })
-      .styles(d => ({ fill: d.color, stroke: d.color }));
+      .styles((d) => ({
+        fill: d.color,
+        'fill-opacity': layer_prop.fill_opacity,
+      }))
+      .style('stroke', layer_prop.fill_opacity === 1 ? layer_prop.fill_opacity : null);
   } else {
     legend_elems
       .append('image')
@@ -1508,7 +1589,11 @@ export function createLegend_choro_horizontal(layer, field, title, subtitle, box
     .attr('x', (d, i) => xpos + (boxgap + boxwidth) * i)
     .attr('y', y_pos2)
     .attrs({ width: boxwidth, height: boxheight })
-    .styles(d => ({ fill: d.color, stroke: d.color }));
+    .styles((d) => ({
+      fill: d.color,
+      'fill-opacity': layer_prop.fill_opacity,
+    }))
+    .style('stroke', layer_prop.fill_opacity === 1 ? layer_prop.fill_opacity : null);
 
   legend_elems
     .append('text')
@@ -1783,6 +1868,9 @@ function createlegendEditBox(legend_id, layer_name) {
           legend_node.querySelector('.lg.legend_0 > text').innerHTML = original_params.layout_text_value;
         }
       }
+      if (legend_id === 'legend_root_label') {
+
+      }
       make_underlying_rect(
         legend_node_d3,
         legend_node_d3.select('#under_rect'),
@@ -1808,6 +1896,10 @@ function createlegendEditBox(legend_id, layer_name) {
     .property('value', title_content.textContent)
     .on('keyup', function () {
       title_content.textContent = this.value;
+      if (legend_id === 'legend_root_label') {
+        const x = title_content.getBBox().width + 30 + 3;
+        subtitle_content.setAttribute('x', x);
+      }
     });
 
   const b = box_body.append('p');
@@ -1819,13 +1911,13 @@ function createlegendEditBox(legend_id, layer_name) {
     .on('keyup', function () {
       const empty = subtitle_content.textContent == '';
       // Move up the title to its original position if the subtitle isn't empty :
-      if (empty && this.value != '') {
+      if (empty && this.value != '' && legend_id !== 'legend_root_label') {
         title_content.y.baseVal.getItem(0).value = title_content.y.baseVal.getItem(0).value - 15;
       }
       // Change the displayed content :
       subtitle_content.textContent = this.value;
       // Move down the title (if it wasn't already moved down), if the new subtitle is empty
-      if (!empty && subtitle_content.textContent == '') {
+      if (!empty && subtitle_content.textContent == '' && legend_id !== 'legend_root_label') {
         title_content.y.baseVal.getItem(0).value = title_content.y.baseVal.getItem(0).value + 15;
       }
     });
@@ -1880,7 +1972,10 @@ function createlegendEditBox(legend_id, layer_name) {
         });
       });
   }
-  if ((data_manager.current_layers[layer_name].renderer !== 'TwoStocksWaffle' && data_manager.current_layers[layer_name].renderer !== 'Categorical' && data_manager.current_layers[layer_name].renderer !== 'TypoSymbols')
+  if ((data_manager.current_layers[layer_name].renderer !== 'TwoStocksWaffle'
+        && data_manager.current_layers[layer_name].renderer !== 'Categorical'
+        && data_manager.current_layers[layer_name].renderer !== 'Label'
+        && data_manager.current_layers[layer_name].renderer !== 'TypoSymbols')
       && !(data_manager.current_layers[layer_name].renderer === 'PropSymbolsTypo' && legend_id.indexOf('legend_root_symbol') < 0)
       && !data_manager.current_layers[layer_name].layout_legend_displayed) {
     // Float precision for label in the legend

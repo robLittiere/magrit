@@ -61,6 +61,13 @@ function patchSvgForInkscape() {
       elems[i].setAttribute('inkscape:label', elems[i].id);
     }
     elems[i].setAttribute('inkscape:groupmode', 'layer');
+
+    if (elems[i].style.visibility === 'hidden') {
+      // Currently inkscape doesn't support the visibility attribute nor the visibility CSS property
+      // (it looks like it's a bug or regression on Inkscape side / see notably https://gitlab.com/inkscape/inbox/-/issues/2177)
+      // so we hide the layer using the display CSS property
+      elems[i].style.display = 'none';
+    }
   }
 }
 

@@ -32,6 +32,7 @@ import {
   createLegend_line_symbol,
   createLegend_symbol,
   createLegend_waffle,
+  createLegend_label,
 } from './legend';
 import { canvas_mod_size, canvas_rotation_value, reproj_symbol_layer, rotate_global, zoom_without_redraw } from './map_ctrl';
 import {
@@ -101,25 +102,29 @@ export function get_map_project() {
       field: lgd_node.getAttribute('layer_field'),
       rounding_precision: lgd_node.getAttribute('rounding_precision'),
       rect_fill_value: rect_fill_value,
-      title: lgd_node.querySelector('#legendtitle').innerHTML,
-      subtitle: lgd_node.querySelector('#legendsubtitle').innerHTML,
-      bottom_note: lgd_node.querySelector('#legend_bottom_note').innerHTML,
+      title: lgd_node.querySelector('#legendtitle').textContent,
+      subtitle: lgd_node.querySelector('#legendsubtitle').textContent,
+      bottom_note: lgd_node.querySelector('#legend_bottom_note').textContent,
     };
     if (type_lgd === 'legend_root' || type_lgd === 'legend_root_horiz') {
       result.boxgap = lgd_node.getAttribute('boxgap');
       const no_data = lgd_node.querySelector('#no_data_txt');
-      if (no_data) result.no_data_txt = no_data.innerHTML;
+      if (no_data) result.no_data_txt = no_data.textContent;
     } else if (type_lgd === 'legend_root_symbol') {
       result.nested_symbols = lgd_node.getAttribute('nested');
       result.join_line = lgd_node.getAttribute('join_line');
     } else if (type_lgd === 'legend_root_waffle') {
       const lyr_name = lgd_node.getAttribute('layer_name');
       result.field = data_manager.current_layers[lyr_name].rendered_field;
-      result.ratio_txt = lgd_node.querySelector('#ratio_txt').innerHTML;
+      result.ratio_txt = lgd_node.querySelector('#ratio_txt').textContent;
     } else if (type_lgd === 'legend_root_layout') {
       const lyr_name = lgd_node.getAttribute('layer_name');
-      result.text_value = lgd_node.querySelector('g.legend_0 > text').innerHTML;
+      result.text_value = lgd_node.querySelector('g.legend_0 > text').textContent;
       result.type_geom = data_manager.current_layers[lyr_name].type;
+    } else if (type_lgd === 'legend_root_label') {
+      if (result.bottom_note === undefined || result.bottom_note === '') {
+        result.bottom_note = null;
+      }
     }
     return result;
   };
@@ -310,7 +315,7 @@ export function get_map_project() {
     }
     if (current_layer_prop.targeted) {
       selection = map.select(`#${layer_id}`).selectAll('path');
-      layer_style_i.fill_opacity = selection.style('fill-opacity');
+      layer_style_i.fill_opacity = +selection.style('fill-opacity');
       layer_style_i.targeted = true;
       layer_style_i.topo_geom = true;
       // layer_style_i.topo_geom = JSON.stringify(_target_layer_file);
@@ -329,7 +334,7 @@ export function get_map_project() {
       }
     } else if (!current_layer_prop.renderer) {
       selection = map.select(`#${layer_id}`).selectAll('path');
-      layer_style_i.fill_opacity = selection.style('fill-opacity');
+      layer_style_i.fill_opacity = +selection.style('fill-opacity');
       layer_style_i.fill_color = current_layer_prop.fill_color;
       layer_style_i.topo_geom = true;
       layer_style_i.stroke_color = selection.style('stroke');
@@ -462,6 +467,8 @@ export function get_map_project() {
       layer_style_i.default_size = +current_layer_prop.default_size.slice(0, 2);
       layer_style_i.fill_color = current_layer_prop.fill_color;
       layer_style_i.buffer = current_layer_prop.buffer;
+      layer_style_i.filter_options = current_layer_prop.filter_options;
+      layer_style_i.ref_layer_name = current_layer_prop.ref_layer_name;
       const features = [];
       const current_position = [];
       for (let j = selec.length - 1; j > -1; j--) {
@@ -498,7 +505,7 @@ export function get_map_project() {
       selection = map.select(`#${layer_id}`).selectAll('path');
     }
     layer_style_i.stroke_opacity = selection.style('stroke-opacity');
-    layer_style_i.fill_opacity = selection.style('fill-opacity');
+    layer_style_i.fill_opacity = +selection.style('fill-opacity');
   }
 
   return Promise.all(
@@ -713,6 +720,14 @@ function rehandle_legend(layer_name, properties, version) {
         prop.subtitle,
         prop.rect_fill_value,
         prop.text_value,
+        prop.bottom_note,
+      );
+    } else if (prop.type === 'legend_root_label') {
+      createLegend_label(
+        layer_name,
+        prop.title,
+        prop.subtitle,
+        prop.rect_fill_value,
         prop.bottom_note,
       );
     }
@@ -1092,6 +1107,7 @@ export function apply_user_preferences(json_pref) {
       if (_layer.options_disc) current_layer_prop.options_disc = _layer.options_disc;
       if (_layer.fill_color) current_layer_prop.fill_color = _layer.fill_color;
       if (_layer.color_palette) current_layer_prop.color_palette = _layer.color_palette;
+
       if (_layer.renderer) {
         if (['Choropleth', 'Stewart', 'Gridded'].indexOf(_layer.renderer) > -1) {
           layer_selec_all
@@ -1128,6 +1144,9 @@ export function apply_user_preferences(json_pref) {
           });
         }
       }
+
+      data_manager.current_layers[layer_name].fill_opacity = _layer.fill_opacity == null ? 1 : _layer.fill_opacity;
+
       if (_layer.stroke_color) {
         layer_selec_all.style('stroke', _layer.stroke_color);
       }
@@ -1257,6 +1276,9 @@ export function apply_user_preferences(json_pref) {
         if (_layer.size_legend_symbol) {
           data_manager.current_layers[layer_name].size_legend_symbol = _layer.size_legend_symbol;
         }
+        if (_layer.fill_opacity) {
+          data_manager.current_layers[layer_name].fill_opacity = _layer.fill_opacity;
+        }
         if (_layer.legend) {
           rehandle_legend(layer_name, _layer.legend, p_version);
         }
@@ -1277,19 +1299,33 @@ export function apply_user_preferences(json_pref) {
         }
       // ... or this is a layer of labels :
       } else if (_layer.renderer && _layer.renderer.startsWith('Label')) {
+        // Starting from version 0.16.0, we store coordinates corresponding to the current
+        // position in the geometry.coordinates property of the geojson feature
+        // while still storing the original coordinates in property.x and property.y properties
+        if ((p_version.major === 0 && p_version.minor < 16) && _layer.current_position) {
+          _layer.data_labels.forEach((f, _i) => {
+            f.geometry.coordinates = proj.invert(_layer.current_position[_i]);
+          });
+        }
         const rendering_params = {
           uo_layer_name: layer_name,
           label_field: _layer.rendered_field,
           color: _layer.fill_color,
           ref_font_size: _layer.default_size,
           font: _layer.default_font,
+          filter_options: _layer.filter_options,
           buffer: _layer.buffer,
         };
         render_label(null, rendering_params, {
           data: _layer.data_labels,
           current_position: _layer.current_position,
+          ref_layer_name: _layer.ref_layer_name,
         });
         layer_id = _app.layer_to_id.get(layer_name);
+
+        if (_layer.legend) {
+          rehandle_legend(layer_name, _layer.legend, p_version);
+        }
 
         // Restore previous positions after everything is settled
         if (_layer.current_position) {

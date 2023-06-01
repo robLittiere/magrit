@@ -1468,7 +1468,7 @@ async def convert_geopackage(request):
             input_projection = input_projection \
                 if not input_projection == '+proj=longlat +datum=WGS84 +no_defs +type=crs' \
                 else None
-            # Convert to geojson then to topojson
+            # Convert to geojson then to topojson.
             res = gdf.to_json()
             result = await geojson_to_topojson(res.encode(), layer_name=layer)
 

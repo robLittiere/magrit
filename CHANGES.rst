@@ -1,6 +1,85 @@
 Changes
 =======
 
+Unreleased
+----------
+
+- Fix field names vertical alignment in label creation options.
+
+- Remove useless CSS from 404 page (which included loading a font from Google Fonts).
+
+0.16.2 (2023-05-12)
+-------------------
+
+- Fix red dot position for labels when moving them.
+
+0.16.1 (2023-05-11)
+-------------------
+
+- Improve compatibility between the slightly new handling of the label position and the old handling of the label position (when loading a project file created with a version before 0.16.0).
+
+0.16.0 (2023-05-11)
+-------------------
+
+- Deactivate zoom by rectangular selection when changing projection if its on.
+
+- Improve the handling of the label positions by avoiding to reset the position of the labels when changing projection for labels that have been manually moved.
+
+- Avoid resetting the position of the labels when exporting to SVG with the "Clip SVG on current extent" option.
+
+- Change CSS for inactive layers (because Inkscape does not support the "visibility" attribute on SVG elements nor the "visibility" CSS property).
+
+- Load pictograms when loading the application instead of deferring the loading to the first time the "pictogram panel" is opened (it was causing some issues with slow network connections, because pictograms were not loaded when the user was trying to use them - see #110).
+
+0.15.3 (2023-04-14)
+-------------------
+
+- Fix links to image from subchapters in documentation.
+
+0.15.2 (2023-04-13)
+-------------------
+
+- Fix the mouseup behaviour when drawing a rectangle layout feature (the cursor was still moving the map after drawing the rectangle even after the click was released).
+
+- Fix the mouseup behaviour when zooming with a rectangular selection (the cursor was still moving the map after drawing the rectangle even after the click was released).
+
+0.15.1 (2023-04-11)
+-------------------
+
+- Transfers the fill-opacity of layers to their legends.
+
+0.15.0 (2023-04-06)
+-------------------
+
+- Fix bug with null / empty geometry introduced in commit 326e3c8 / version 0.13.2.
+
+- Improve the label creation popup to enable the creation of multiple labels at once, while being able to select the font and the font size for each field.
+
+- Automatically stack labels for the same feature to avoid overlap (thanks to @robLittiere and @ArmelVidali / see PR #109).
+
+- Update ``smoomapy`` dependency to fix some issue when bounds given by the user are very close to the min/max bounds of the data (and that could result in a class without value).
+
+0.14.1 (2023-03-29)
+-------------------
+
+- Fix the location of labels derived from a dorling/demers (proportional symbol) layer (Fix #108). Also works on symbols that were manually moved.
+
+- Fix description of Departements and Regions sample dataset ("CODGEO" field was described as "CODEGEO", preventing to use the actual "CODGEO" field in some representations).
+
+0.14.0 (2023-03-24)
+-------------------
+
+- New: Enables the filtering of one or more categories of symbols when rendering a Typo Symbol map (thanks to @robLittiere and @ArmelVidali / see PR #106)
+
+- New: Add the possibility to create legend for label layers. Closes #107.
+
+- Fix some typos in french translation.
+
+
+0.13.4 (2023-03-14)
+-------------------
+
+- Change docker recipe to enable the creation and the publication on docker hub of multi-platform images (amd64 / arm64).
 
 0.13.3 (2023-02-21)
 -------------------
