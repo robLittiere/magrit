@@ -30,7 +30,7 @@ export default class Textbox {
         return {
           x: t.attr('x'),
           y: t.attr('y'),
-          map_locked: !!map_div.select('#hand_button').classed('locked'),
+          map_locked: !!map_div.select('#hand_button').classed('unlocked'),
           snap_lines,
         };
       })

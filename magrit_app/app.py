@@ -1542,9 +1542,34 @@ def prepare_list_svg_symbols():
     features on the map). That list is fetched when the application is opened
     client side.
     """
+    
     symbols = [i for i in os.listdir("static/img/svg_symbols/") if '.png' in i]
-    with open("static/json/list_symbols.json", "w") as f:
-        f.write(json.dumps(symbols))
+    admin_symbols = []
+
+    values = {}
+
+    
+    dest_folder = "static/img/svg_symbols/"
+
+    for root, dirs, files in os.walk("static/img/admin_images/", topdown = False):
+        for name in dirs:
+            dir_name = os.path.join(root,name) 
+            images_name = [i for i in os.listdir(f'{dir_name}') if '.png' in i]
+
+            values[name] = images_name
+            admin_symbols.extend(images_name) 
+
+    with open("static/json/list_symbols.json", "w") as list_symbols_file, open("static/json/fields_values.json", "w") as fields_values_file, open("static/json/list_admin_symbols.json", "w") as list_admin_symbols_file:
+
+        list_symbols_file.write(json.dumps(symbols))
+
+        fields_values_file.write(json.dumps(values))
+
+        list_admin_symbols_file.write(json.dumps(admin_symbols))
+    
+    print(admin_symbols)
+
+
 
 
 def check_valid_ip(addr):

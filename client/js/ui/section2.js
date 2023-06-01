@@ -99,4 +99,25 @@ ${_tr(['app_page.func_title.', global._app.current_functionnality.name].join('')
         switch_accordion_section('btn_s2b');
       });
   }
+
+  const ids = [
+    'button_typo',
+    'button_choroprop',
+    'button_proptypo',
+    'button_grid',
+    'button_cartogram',
+    'button_smooth',
+    'button_discont',
+    'button_flow',
+    'button_two_stocks']
+
+
+  for(let i = 0 ; i < ids.length ; i++){
+  
+    let element = document.getElementById(ids[i])
+    element.style.display = "none" 
+    console.log(element)
+  }
+  
+
 }

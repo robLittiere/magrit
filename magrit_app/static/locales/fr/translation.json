@@ -593,8 +593,7 @@
             "field_categ": "<strong>Champ</strong> : {{ field }}<br>{{ nb_class }} catégories<br>{{ nb_features}} entités",
             "count_feature": " <i> ({{ count }} entité)</i>",
             "count_feature_plural": " <i> ({{ count }} entités)</i>",
-            "title_click": "Cliquer pour choisir un symbole!",
-            "checkbox_desc": "Cocher/Décocher pour afficher les pictogrammes"
+            "title_click": "Cliquer pour choisir un symbole!"
         },
         "categorical_box": {
             "title": "Choix des couleurs - {{ layer }} - {{ nb_features }} entités",

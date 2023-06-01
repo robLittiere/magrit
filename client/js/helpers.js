@@ -1334,3 +1334,38 @@ export function rewind(geojson, rewindLargerThanHemisphere = true) {
 
   return geojson;
 }
+
+/**
+ * Simple abstraction function
+ * To attribute properties to fields, magrit uses a dialog box where
+ * the user can select the field to attribute to the property.
+ * 
+ * We want to simplify that on app startup by automatically selecting
+ * the field that has the same name as the property.
+ * 
+ * For this, we just have to add to the data_manager the fields_type
+ * from the user_data.
+ * 
+ * Magrit will take care of the rest and use the fields setted up in
+ * data_manager.current_layers[layerName].fields_type
+ * 
+ * @param {
+ * } layerName 
+ */
+export function auto_validate_fields(layerName){
+
+  // We have to unable the button that is used to modify the fields
+  // It is not good design to do this here as it is a UI modification
+  // Sadly we have to do it because Magrit does this remove attribute 
+  // in the dialog box creation helper, which should only serve dialog box creation. Its a design pattern issue
+  // TODO : Remove the removeAttribute from the dialog box creation helper and put it in an other interface helper function
+  document.getElementById('btn_type_fields').removeAttribute('disabled');
+  
+  let tmp = type_col2(data_manager.user_data[layerName]);
+  // Remove unnecessary fields
+  tmp.forEach((d, i) => {
+    delete d["has_duplicate"]
+  })
+  data_manager.current_layers[layerName].fields_type = tmp.slice();
+
+}

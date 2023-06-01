@@ -1,5 +1,5 @@
 FROM ubuntu:22.04
-LABEL org.opencontainers.image.authors="Matthieu Viry <matthieu.viry@cnrs.fr>"
+MAINTAINER Matthieu Viry <matthieu.viry@cnrs.fr>
 
 ENV DEBIAN_FRONTEND='noninteractive' TZ='Europe/Paris'
 
@@ -29,9 +29,6 @@ RUN cd /home/app/magrit/ \
     && npm install \
     && NODE_OPTIONS=--openssl-legacy-provider node node_modules/webpack/bin/webpack.js \
     && cd ../documentation \
-    && curl -sL https://github.com/rust-lang/mdBook/releases/download/v0.4.28/mdbook-v0.4.28-x86_64-unknown-linux-gnu.tar.gz -o mdbook.tar.gz \
-    && tar xvzf mdbook.tar.gz \
-    && rm mdbook.tar.gz \
     && ./mdbook build
 
 WORKDIR /home

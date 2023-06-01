@@ -415,4 +415,15 @@ export default function makeSection4() {
       'data-i18n': '[title]app_page.layout_features_box.sphere',
     })
     .on('click', () => add_layout_feature('sphere'));
+
+const ids = [
+      'btn_graticule',
+      'btn_sphere',]
+  
+  
+for(let i = 0 ; i < ids.length ; i++){
+    
+    let element = document.getElementById(ids[i])
+    element.style.display = "none" 
+    }   
 }

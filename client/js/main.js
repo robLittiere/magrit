@@ -10,6 +10,8 @@ import { xhrequest } from './helpers';
 import { Mround } from './helpers_math';
 import { makeSvgMap } from './map_ctrl';
 import { bindTooltips } from './tooltips';
+import { load_basic_layer } from './layers';
+import { simplifyUI } from './interface';
 
 Promise.config({
   warnings: true,
@@ -169,6 +171,31 @@ function loadI18next(lang) {
     setUpInterface(params.reload);
     localize('.i18n');
     bindTooltips();
+    
+    /**
+     * Robin, we need to load basic layer after app has initialised
+     * We do this to simplify user experience
+     * 
+     * When a user launch the app, he will already find a basic layer
+     * with some data attached to it
+     * 
+     * Here are some exemples map names
+     * "communes_reg_11"
+     * "departements_2022"
+     * 
+     */
+    load_basic_layer({
+      layer_name : "departements_2022",
+      no_validity_check: true,
+      skip_alert: true}
+    )
+
+    /**
+     * 
+     * 
+     */
+    simplifyUI()
+
   }).catch((e) => {
     swal({
       title: _tr('app_page.common.error'),

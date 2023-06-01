@@ -1285,7 +1285,7 @@ export function createLegend_choro(layer, field, title, subtitle, box_gap = 0, r
     // nb_class = layer_prop.color_map.size;
   } else if (layer_prop.renderer.indexOf('TypoSymbols') > -1) {
     data_colors_label = [];
-    layer_prop.symbols_to_display.forEach((v) => {
+    layer_prop.symbols_map.forEach((v) => {
       data_colors_label.push({ value: v[2], image: v[0] });
     });
     // nb_class = layer_prop.symbols_map.size;

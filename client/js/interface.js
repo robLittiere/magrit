@@ -34,7 +34,6 @@ import makeSection2 from './ui/section2';
 import makeSection3 from './ui/section3';
 import makeSection4 from './ui/section4';
 import { makeSection5 } from './ui/section5';
-import {makeSection6} from './ui/section6';
 
 /**
 * Maxium allowed input size in bytes. If the input file is larger than
@@ -93,9 +92,16 @@ export function setUpInterface(reload_project) {
   makeSection2();
   makeSection3();
   makeSection4();
-  add_simplified_land_layer();
-  makeSection5()
-  makeSection6();
+
+  // Robin - EMAT
+  // Add a blank layer by passing options, we dont want to show anything first
+  add_simplified_land_layer(
+    {
+      skip_rescale: true,
+      fill: '#ffffff',
+    }
+  );
+  makeSection5();
 
   // Zoom-in, Zoom-out, Info, Hand-Move and RectZoom buttons (on the top of the map) :
   const lm = map_div
@@ -1353,7 +1359,7 @@ export function add_simplified_land_layer(options = {}) {
   if (!visible) {
     handle_active_layer('World');
   }
-  zoom_without_redraw();
+  //zoom_without_redraw();
 }
 
 function send_remove_server(layer_name) {
@@ -1443,7 +1449,7 @@ function changeTargetLayer(new_target) {
   _app.targeted_layer_added = true;
   data_manager.user_data[new_target] = Array.from(document.querySelector(`#${_app.layer_to_id.get(new_target)}`).querySelectorAll('path')).map(d => d.__data__.properties);
   const fields = Object.keys(data_manager.user_data[new_target][0]);
-  1(
+  update_section1(
     data_manager.current_layers[new_target].type,
     fields.length, data_manager.current_layers[new_target].n_features,
     new_target,
@@ -2037,4 +2043,19 @@ export function binds_layers_buttons(layer_name) {
     zoom_without_redraw();
   });
   // TODO : re-add a tooltip when the mouse is over that sortable element ?
+}
+
+/**
+ * Robin / Armel - EMAT / SARO
+ * This function is called at top level so we can execute it only when all UI is loaded
+ * We should do it this way to not bypass any margrit function and setup
+ * 
+ */
+export function simplifyUI(){
+  // Simply UI for saro here
+  /* document.querySelector('.light-menu').style.display = "none";
+ */
+  document.getElementById("hand_button").querySelector('img').setAttribute("alt", "unlocked")
+  const hb = d3.select('#hand_button');
+  hb.classed("locked", false)
 }

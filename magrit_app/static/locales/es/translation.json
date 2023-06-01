@@ -587,8 +587,7 @@
             "field_categ": "<strong>Campo</strong> : {{ field }}<br>{{ nb_class }} categorías<br>{{ nb_features}} entidades",
             "count_feature": " <i> ({{ count }} entidad)</i>",
             "count_feature_plural": " <i> ({{ count }} entidades)</i>",
-            "title_click": "¡Seleccionar un símbolo!",
-            "checkbox_desc": "Marcar/desmarcar para mostrar pictogramas"
+            "title_click": "¡Seleccionar un símbolo!"
         },
         "categorical_box": {
             "title": "Seleccionar los colores - {{ layer }} - {{ nb_features }} entidades",

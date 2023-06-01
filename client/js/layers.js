@@ -5,7 +5,8 @@ import { check_remove_existing_box, make_confirm_dialog2 } from './dialogs';
 import { check_layer_name } from './function';
 import {
   create_li_layer_elem, display_error_during_computation,
-  isValidJSON, make_box_type_fields, request_data, rewind, setSelected, xhrequest,
+  isValidJSON, make_box_type_fields, request_data, rewind, setSelected, type_col2, xhrequest,
+  auto_validate_fields,
 } from './helpers';
 import { valid_join_check_display } from './join_popup';
 import { zoom_without_redraw } from './map_ctrl';
@@ -19,7 +20,6 @@ import {
   remove_layer_cleanup, scale_to_lyr,
   update_section1, update_section1_layout,
 } from './interface';
-import { update_section_6 , checked_boxes} from './ui/section6';
 
 /**
 * Function to display the dialog allowing to choose and add a sample target layer.
@@ -44,7 +44,7 @@ export function add_sample_layer() {
 
   make_confirm_dialog2('sampleDialogBox', _tr('app_page.sample_layer_box.title'))
     .then((confirmed) => {
-      if (confirmed) {
+      if (confirmed) {t_layer_selec
         askTypeLayer()
           .then((_type_layer) => {
             const target_layer = _type_layer.indexOf('target') > -1;
@@ -219,6 +219,34 @@ function add_sample_geojson(name, options) {
 }
 
 /**
+ * Robin
+ * Load basic layer to facilitate user's life
+ * We are loading the layer "departements_2022" as a MAIN layer (not a sublayer)
+ * 
+ */
+export function load_basic_layer(options = {}) {
+  let layer_name = options.layer_name ? options.layer_name : 'departements_2022';
+  let layer_info = _app.sample_layers.find((_o) => _o.name === layer_name);
+  
+  // Robin
+  // Options are as followed
+  // target_layer_on_add: Principal or secondary
+  // fields_type: fields from layer
+  // default_projection: projection of the layer
+  // no_validity_check: validity check
+  // skip_alert: skip alert or not
+  add_sample_geojson(layer_name, {
+    target_layer_on_add: true,
+    fields_type: layer_info['fields_type'], // Can be undefined
+    default_projection: layer_info['suggested_projection'], // Can be undefined
+    no_validity_check: options.no_validity_check || false,
+    skip_alert: options.skip_alert || false,
+  });
+
+}
+
+
+/**
 * Add a TopoJSON layer to the 'svg' element.
 *
 * @param {String} text - the text content to be parsed as a JS object.
@@ -324,12 +352,6 @@ export function add_layer_topojson(text, options = {}) {
     data_manager.result_data[lyr_name_to_add] = [];
     data_manager.current_layers[lyr_name_to_add].is_result = true;
   }
-  else{
-    /* armel : ajout de données pour les layout layer */
-    data_manager.current_layers[lyr_name_to_add].targeted = true;
-    data_manager.user_data[lyr_name_to_add] = [];
-
-  }
 
   const field_names = topoObj_objects.geometries[0].properties
     ? Object.getOwnPropertyNames(topoObj_objects.geometries[0].properties) : [];
@@ -350,10 +372,6 @@ export function add_layer_topojson(text, options = {}) {
       data_manager.user_data[lyr_name_to_add].push({ id: d.properties.id });
     } else if (result_layer_on_add) {
       data_manager.result_data[lyr_name_to_add].push(d.properties);
-    }
-    else{
-      // armel : ajout des données d'une layout layer au data manager pour faire ensuite des filtres
-      data_manager.user_data[lyr_name_to_add].push(d.properties)
     }
   });
 
@@ -431,7 +449,6 @@ export function add_layer_topojson(text, options = {}) {
       Object.getOwnPropertyNames(
         document.querySelector(`#${_app.layer_to_id.get(lyr_name_to_add)}`).querySelector('path').__data__.properties
       ),
-      
     );
     // Create the entry in the layer list:
     create_li_layer_elem(lyr_name_to_add, nb_ft, type, '');
@@ -467,26 +484,28 @@ export function add_layer_topojson(text, options = {}) {
     // No projection was provided with the layer
     if (_proj === undefined) {
     // if (_proj === undefined || !target_layer_on_add) {
-      swal({
-        title: '',
-        text: _tr('app_page.common.layer_success'),
-        allowOutsideClick: true,
-        allowEscapeKey: true,
-        type: 'success',
-      }).then(() => {
-        if (target_layer_on_add && data_manager.joined_dataset.length > 0) {
-          ask_join_now(lyr_name_to_add);
-        } else if (target_layer_on_add) {
-          make_box_type_fields(lyr_name_to_add);
-        }
-      }, () => {
-        if (target_layer_on_add && data_manager.joined_dataset.length > 0) {
-          ask_join_now(lyr_name_to_add);
-        } else if (target_layer_on_add) {
-          make_box_type_fields(lyr_name_to_add);
-        }
-      });
-    } else { // A projection was provided with the layer:
+      
+       swal({
+         title: '',
+         text: _tr('app_page.common.layer_success'),
+         allowOutsideClick: true,
+         allowEscapeKey: true,
+         type: 'success',
+       }).then(() => {
+         if (target_layer_on_add && data_manager.joined_dataset.length > 0) {
+           ask_join_now(lyr_name_to_add);
+         } else if (target_layer_on_add) {
+           make_box_type_fields(lyr_name_to_add);
+         }
+       }, () => {
+         if (target_layer_on_add && data_manager.joined_dataset.length > 0) {
+           ask_join_now(lyr_name_to_add);
+         } else if (target_layer_on_add) {
+           make_box_type_fields(lyr_name_to_add);
+         }
+       });
+    } 
+    else { // A projection was provided with the layer:
       swal({
         title: '',
         text: _tr('app_page.common.layer_success_and_proj'),
@@ -516,6 +535,46 @@ export function add_layer_topojson(text, options = {}) {
     }
   }
 
+
+  /**
+   * Robin, I added this part to bypass the alert message when the layer is added
+   * We skip alert + message box
+   * We then validate the fields from the layer automatically
+   */
+  if(skip_alert && options.no_validity_check) {
+    // No projection was provided with the layer
+    if (_proj === undefined) {
+      if (target_layer_on_add && data_manager.joined_dataset.length > 0) {
+        ask_join_now(lyr_name_to_add);
+      } else if (target_layer_on_add) {
+        // Bypass Box Type Fields
+        // We need to attribute a value to the variable data_manager.current_layers[layerName].fields_type 
+        auto_validate_fields(lyr_name_to_add);
+      }
+    } 
+    else { // A projection was provided with the layer:
+      _app.last_projection = parsedJSON.proj;
+      _app.current_proj_name = 'def_proj4';
+      change_projection_4(_proj);
+      const custom_name = tryFindNameProj(_app.last_projection);
+      addLastProjectionSelect('def_proj4', _app.last_projection, custom_name);
+      if (target_layer_on_add && data_manager.joined_dataset.length > 0) {
+        ask_join_now(lyr_name_to_add);
+      } else if (target_layer_on_add) {
+        // Bypass Box Type Fields
+        // We need to attribute a value to the variable data_manager.current_layers[layerName].fields_type 
+        auto_validate_fields(lyr_name_to_add);
+
+        // This method is used to hide unusable representation types based on the fields type in the UI
+        // It is not good design to do this here as it is a UI modification
+        // We might want to move this to a UI helpfer function
+        getAvailablesFunctionnalities(new_target);
+      }
+      
+    }
+  }
+
+  
   if (options.default_projection) {
     // We are also storing this information for later use if the user promotes/downgrade
     // some lmayers:
@@ -548,16 +607,5 @@ export function add_layer_topojson(text, options = {}) {
     // if any:
     data_manager.current_layers[lyr_name_to_add].default_projection = ['proj4', parsedJSON.proj];
   }
-
-
-  // Ajout de la couche crée à l'objet contenant les valeur cochées pour chaque couche/catégorie
-  if(JSON.stringify(checked_boxes).includes(lyr_name_to_add) == false) {
-    checked_boxes[lyr_name_to_add] = {}
-    for(let field of Array.from(data_manager.current_layers[lyr_name_to_add].original_fields)){
-      console.log("check")
-      checked_boxes[lyr_name_to_add][field] = []
-    }
-  }
-  update_section_6();
   return lyr_name_to_add;
 }

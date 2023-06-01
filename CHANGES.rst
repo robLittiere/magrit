@@ -1,16 +1,6 @@
 Changes
 =======
 
-Unreleased
-----------
-
-- Enables the filtering of one or more categories of symbols when rendering a Typo Symbol map (thanks to @robLittiere and @ArmelVidali / see PR #106)
-
-
-0.13.4 (2023-03-14)
--------------------
-
-- Change docker recipe to enable the creation and the publication on docker hub of multi-plateform images (amd64 / arm64).
 
 0.13.3 (2023-02-21)
 -------------------
