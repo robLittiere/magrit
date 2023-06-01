@@ -28,6 +28,7 @@ export function scale_elements() {
 
     div.append("button").text("+").attrs({ id: "scale_in" });
 
+    // Add the slider
     const sliderContainer = div.append("div").attr("class", "slider_container");
     sliderContainer
         .append("input")
@@ -48,10 +49,12 @@ export function scale_elements() {
     const slider = document.getElementById("zoom-slider");
 
     // We need to figure out a way to know if the user has already used the slider
+    // If they use the button first and not the slider, we need to add the original sizes in the dom
     // We only need to add old attributes one time so we dont update it on every user click
     let scaleUsed = false;
 
-    slider.oninput = function (event) {
+    slider.oninput = function () {
+        // scaling is used so the mod will get modified
         scaleUsed = true;
         for (let i = 1; i < map.length; i++) {
             if (
@@ -62,7 +65,7 @@ export function scale_elements() {
             ) {
                 for (let children of map[i].children) {
                     if (children.id.includes("PropSymbol")) {
-                        // Get original r (size)
+                        // Get original size r
                         let old_r = children.getAttribute("old_r");
                         // If we only have the original size, we copy it
                         if (!old_r) {
@@ -71,7 +74,7 @@ export function scale_elements() {
                         }
                         let base_size = parseFloat(old_r);
 
-                        let new_size = base_size * event.target.value;
+                        let new_size = base_size * slider.value;
                         children.setAttribute("r", new_size);
                     } else if (children.id.includes("Picto")) {
                         // Same logic as above
@@ -93,8 +96,8 @@ export function scale_elements() {
                         let height = parseFloat(original_height);
                         let width = parseFloat(original_width);
 
-                        let update_height = height * event.target.value;
-                        let update_width = width * event.target.value;
+                        let update_height = height * slider.value;
+                        let update_width = width * slider.value;
 
                         children.setAttribute("height", update_height);
                         children.setAttribute("width", update_width);
@@ -118,7 +121,7 @@ export function scale_elements() {
                             let currentTransform = parseFloat(original_size);
 
                             let updatedTransform =
-                                currentTransform * parseFloat(event.target.value);
+                                currentTransform * parseFloat(slider.value);
                             element.firstChild.setAttribute("r", updatedTransform);
                         }
                     }
