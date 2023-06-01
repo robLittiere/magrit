@@ -35,8 +35,8 @@ export function scale_elements() {
         .attr("type", "range")
         .attr("id", "zoom-slider")
         .attr("min", 0)
-        .attr("max", 2)
-        .attr("value", 1)
+        .attr("max", 4)
+        .attr("value", 2)
         .attr("step", 0.1)
         .style("width", "100px");
 
@@ -48,9 +48,23 @@ export function scale_elements() {
     const scale_out = document.getElementById("scale_out");
     const slider = document.getElementById("zoom-slider");
 
-    // We need to figure out a way to know if the user has already used the slider
-    // If they use the button first and not the slider, we need to add the original sizes in the dom
-    // We only need to add old attributes one time so we dont update it on every user click
+    /**
+     * 
+     * We need to figure out a way to know if the user has already used the slider
+     * If they use the button first and not the slider, we need to add the original sizes
+     * from symbols, legends and pictograms in the dom
+     * We only need to add old attributes one time so we dont update it on every user click
+     * 
+     * We use those attributes for the slider scaling because it scales based on the original size
+     * The scaling is asserted from the value of the slider, the chosen step is 0.1.
+     * for exemple: new_size = og_size * 1.2
+     *              new_size = og_size * 1.3
+     * 
+     * 
+     * Also it is important to note that the button adjust the slider 
+     * We do this to preserve a sense cohesion between the scaling of the buttons
+     * and the scaling of the slider
+     */
     let scaleUsed = false;
 
     slider.oninput = function () {
@@ -130,6 +144,10 @@ export function scale_elements() {
         }
     };
 
+    /**
+     * Listen onclick events of buttons 
+     * We scale all the shapes of the map and we adjust the slider accordingly
+     */
     scale_in.onclick = function () {
         scaleElements("in");
         adjustSlider("in");
