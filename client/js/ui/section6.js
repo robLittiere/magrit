@@ -132,6 +132,7 @@ export function makeSection6() {
 var options = []
 // Objet stockant les entités filtrées, utilisé pour recocher les checkbox après changement de menus
 export var checked_boxes = {}
+export var checked_id = {}
 
 /**
  * Met à jour les menus de la section après ajout de couches/selection de couche ou catégories
@@ -156,6 +157,7 @@ export function update_section_6(){
 
     // Ajout des valeurs uniques pour la catégorie selectionnée
     update_values()
+    build_value_id_reference()
 
   
 // Supprime tous les html_tag spécifiés d'un menu, utilisé lors du changement de couche/catégorie
@@ -207,6 +209,7 @@ export function update_section_6(){
         const inputElement = document.createElement("input");
         inputElement.type = "checkbox";
         inputElement.value = value;
+        inputElement.checked = true
 
         // Si la valeur à été précedemment coché par un utilisateur, elle est recochée lorsqu'on revient sur la catéogrie correspondante
         if(JSON.stringify(checked_boxes[set_target_layer_id][set_field]).includes(value) == true ){
@@ -255,7 +258,7 @@ export function update_section_6(){
 
   // Ajoute ou supprime des valeurs cochées/décochées de la variable checked_boxes
   function manage_checked_boxes (add, layer, field, value){
-    console.log("checked boxes = " ,checked_boxes)
+
     let checked_boxes_stringified = JSON.stringify(checked_boxes)
 
     if (add == true){
@@ -265,6 +268,23 @@ export function update_section_6(){
       checked_boxes[layer][field] = checked_boxes[layer][field].filter(value => value != value)
     }
 
+  }
+
+  /**
+   * Crée un objet avec pour chaque valeur de chaque catégories des données du fond de carte la liste des id correspondants
+   * 
+   * @returns Objet : {valeur1 : [id1, id2, id3...], valeur2 : [id1, id2, id3...]}
+   */
+  function build_value_id_reference(){
+    let field_and_values_object = get_unique_value(set_target_layer_id)
+    var value_id_match = {}
+
+    for(let entrie of Object.keys(field_and_values_object)){
+      for(let value of field_and_values_object[entrie]){
+        value_id_match[value] = []
+        value_id_match[value].push(filter_values(set_target_layer_id,entrie,value))                
+      } 
+    }   
   }
 }
 
