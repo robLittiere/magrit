@@ -48,43 +48,6 @@ export function makeSection6() {
     id : "reset_button"
   })
   .text("Reinitialiser")
-
-
-  
-
-  // menu de selection de couche
-  dv6
-  .append("p")
-  .text("Couche")
-  .styles({
-    "background-color" : "#595959",
-    "color" : "#fff",
-    "margin-top" : "0px",
-    "margin-bottom" : "0px",
-    "font-family": "Baloo Bhaina",
-    "text-align" :"center"
-       
-  })
-
-  const layer_selection = dv6.append('div');
-  layer_selection.styles({
-    "display" : "flex",
-    "flex-direction" : "column",
-    "justify-content" : "center"
-  })
-  /* section choix de la couche */
-
-  layer_selection
-    .append('select')
-    .attrs({
-        "id" : "layer_choice",
-        "size" :"2"
-    })
-    .styles({
-      "max-height" : "calc(100% - 4px)",
-      "height" : "min-content",
-    });
-
   
   /* section choix de la colonne */
   dv6
@@ -105,7 +68,7 @@ export function makeSection6() {
     "display" : "flex",
     "flex-direction" : "column",
     "justify-content" : "center",
-    "height" :"min-content"
+    "height" :"200px"
     
     
   })
@@ -119,6 +82,7 @@ export function makeSection6() {
     })
     .styles({ 
       "overflow-y" : "auto",
+      "height":"200px"
 
     })
 
@@ -143,7 +107,7 @@ export function makeSection6() {
   const value_choice = dv6.append("div")
   value_choice.styles({
     
-    "height" : "100px",
+    "height" : "200px",
     "overflow-y" : "auto",
     "padding" :"0px"
     
@@ -258,28 +222,40 @@ export function update_section_6(){
 
           // pour chaque ID, Filtrage ou défiltrage via display none du shape correspondant à la case cochée
           for(let shape of shapes_to_filter){ 
-            // selection par ID compris à l'interrieur un groupe de path (une couche sur l'UI)
-            console.log(shape)
-            let shape_list =  document.querySelectorAll(`[id*=feature_${shape}]`)
 
-            for(let filtered_shape of shape_list)
-            
-            
+            // Selection du shape du fond de carte
+            let background_layer_shape = document.getElementById(`feature_${shape}`)
+
             if(this.checked == true){
-              filtered_shape.setAttribute("display", "none")
-              manage_checked_boxes(true, set_target_layer_id,set_field, this.value)
+              background_layer_shape.setAttribute("display", "none")
+              manage_checked_boxes(true, set_target_layer_id,set_field, this.value) 
               }
             else{
-              filtered_shape.setAttribute("display" , "")
-              manage_checked_boxes(false, set_target_layer_id , set_field, this.value)
-            }            
-            }
-          })
+              background_layer_shape.setAttribute("display" , "")
+              manage_checked_boxes(false, set_target_layer_id , set_field, this.value) 
+            }  
+
+            let shape_list =  document.querySelectorAll(`[id*=feature_${shape}]`)
+
+            for(let filtered_shape of shape_list){           
+
+              if(filtered_shape.id.split(" ")[1] == `feature_${shape}`){
+
+              if(this.checked == true){
+                filtered_shape.setAttribute("display", "none")
+                }
+              else{
+                filtered_shape.setAttribute("display" , "")
+              }}            
+            } 
+          }
+        })
     }
   } 
 
   // Ajoute ou supprime des valeurs cochées/décochées de la variable checked_boxes
   function manage_checked_boxes (add, layer, field, value){
+    console.log("checked boxes = " ,checked_boxes)
     let checked_boxes_stringified = JSON.stringify(checked_boxes)
 
     if (add == true){
