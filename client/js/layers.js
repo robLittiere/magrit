@@ -19,6 +19,7 @@ import {
   remove_layer_cleanup, scale_to_lyr,
   update_section1, update_section1_layout,
 } from './interface';
+import { update_section_6 , checked_boxes} from './ui/section6';
 
 /**
 * Function to display the dialog allowing to choose and add a sample target layer.
@@ -323,6 +324,12 @@ export function add_layer_topojson(text, options = {}) {
     data_manager.result_data[lyr_name_to_add] = [];
     data_manager.current_layers[lyr_name_to_add].is_result = true;
   }
+  else{
+    /* armel : ajout de données pour les layout layer */
+    data_manager.current_layers[lyr_name_to_add].targeted = true;
+    data_manager.user_data[lyr_name_to_add] = [];
+
+  }
 
   const field_names = topoObj_objects.geometries[0].properties
     ? Object.getOwnPropertyNames(topoObj_objects.geometries[0].properties) : [];
@@ -343,6 +350,10 @@ export function add_layer_topojson(text, options = {}) {
       data_manager.user_data[lyr_name_to_add].push({ id: d.properties.id });
     } else if (result_layer_on_add) {
       data_manager.result_data[lyr_name_to_add].push(d.properties);
+    }
+    else{
+      // armel : ajout des données d'une layout layer au data manager pour faire ensuite des filtres
+      data_manager.user_data[lyr_name_to_add].push(d.properties)
     }
   });
 
@@ -420,6 +431,7 @@ export function add_layer_topojson(text, options = {}) {
       Object.getOwnPropertyNames(
         document.querySelector(`#${_app.layer_to_id.get(lyr_name_to_add)}`).querySelector('path').__data__.properties
       ),
+      
     );
     // Create the entry in the layer list:
     create_li_layer_elem(lyr_name_to_add, nb_ft, type, '');
@@ -536,5 +548,16 @@ export function add_layer_topojson(text, options = {}) {
     // if any:
     data_manager.current_layers[lyr_name_to_add].default_projection = ['proj4', parsedJSON.proj];
   }
+
+
+  // Ajout de la couche crée à l'objet contenant les valeur cochées pour chaque couche/catégorie
+  if(JSON.stringify(checked_boxes).includes(lyr_name_to_add) == false) {
+    checked_boxes[lyr_name_to_add] = {}
+    for(let field of Array.from(data_manager.current_layers[lyr_name_to_add].original_fields)){
+      console.log("check")
+      checked_boxes[lyr_name_to_add][field] = []
+    }
+  }
+  update_section_6();
   return lyr_name_to_add;
 }

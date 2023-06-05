@@ -646,6 +646,7 @@ export const type_col = function type_col(layerName, target) {
 export const type_col2 = function type_col2(table, _field, skip_if_empty_values = false) {
 // Function returning an array of objects like
 // {name: "field1", type: "field_type"}, {name: "field2", type: "field_type"}, (...)]
+// distinguished between Stock, Ratio, Id etc...
 //  for the fields of the selected layer.
   const result = [];
   const nbFeatures = table.length;
