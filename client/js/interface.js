@@ -1191,6 +1191,7 @@ export function handle_click_hand(behavior) {
   const b = typeof behavior === 'object' ? (!hb.classed('locked') ? 'lock' : 'unlock') : (behavior && typeof behavior === 'string' ? behavior : false);
   if (b === 'lock') {
     document.getElementById("demo").style.display = "none"
+    document.getElementById("filter_panel").style.display = "none"
     hb.classed('locked', true);
     hb.html('<img src="static/img/Twemoji_1f512.png" width="18" height="18" alt="locked"/>');
     map.select('.brush').remove();
@@ -1200,6 +1201,7 @@ export function handle_click_hand(behavior) {
     zoom.on('zoom', (() => { const blocked = svg_map.__zoom; return function () { this.__zoom = blocked; }; })());
   } else {
     document.getElementById("demo").style.display = ""
+    document.getElementById("filter_panel").style.display = ""
     hb.classed('locked', false);
     hb.html('<img src="static/img/Twemoji_1f513.png" width="18" height="18" alt="unlocked"/>');
     zoom.on('zoom', zoom_without_redraw);

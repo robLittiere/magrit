@@ -9,6 +9,7 @@ export function makeSection6() {
   const dv6 = map_div.insert('div');
 
   dv6.attrs({
+    id: "filter_panel",
     class : "light-menu"
   })
   dv6.styles({
