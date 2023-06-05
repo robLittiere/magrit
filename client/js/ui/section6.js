@@ -239,10 +239,9 @@ export function update_section_6(){
             // Selection du shape du fond de carte
             let background_layer_shape = document.getElementById(`feature_${shape}`)
 
-            if(this.checked == true){
+            if(this.checked == false){
               background_layer_shape.setAttribute("display", "none")
               manage_checked_boxes(true,set_field, inputElement.value) 
-              console.log(inputElement.value)
               }
             else{
               background_layer_shape.setAttribute("display" , "")
