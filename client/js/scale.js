@@ -1,29 +1,16 @@
 export function scale_elements() {
-    const lm_buttons = [
-        {
-            id: "zoom_out",
-            i18n: "[data-ot]app_page.lm_buttons.zoom-",
-            class: "zoom_button i18n tt",
-            html: "-",
-        },
-        {
-            id: "zoom_in",
-            i18n: "[data-ot]app_page.lm_buttons.zoom+",
-            class: "zoom_button i18n tt",
-            html: "+",
-        },
-    ];
 
     let div = map_div
         .insert("div", ":first-child")
-        .attrs({ class: "light-menu", id: "demo" })
+        .attrs({ id: "demo" })
         .styles({
             "z-index": "999",
-            position: "absolute",
-            bottom: "0",
-            left: "0",
-            width: "20%",
-            background: "no-background",
+            width: "min-content",
+            background: "transparent",
+            transform: "translateX(-50%) rotate(270deg)",
+            position : "absolute",
+            right: "0px",
+            bottom : "40px"
         });
 
     div.append("button").text("+").attrs({ id: "scale_in" });
@@ -38,15 +25,22 @@ export function scale_elements() {
         .attr("max", 4)
         .attr("value", 2)
         .attr("step", 0.1)
-        .style("width", "100px");
+        .styles({
+            width : "150px",
+            
+        });
+    
+    
 
-    div.append("button").text("-").attrs({ id: "scale_out" });
+    div.append("button").text("|").attrs({ id: "scale_out" });
 
     const map = d3.select("#svg_map").nodes()[0].childNodes;
 
     const scale_in = document.getElementById("scale_in");
     const scale_out = document.getElementById("scale_out");
     const slider = document.getElementById("zoom-slider");
+      
+    
 
     /**
      * 
