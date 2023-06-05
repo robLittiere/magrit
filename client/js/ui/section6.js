@@ -1,6 +1,8 @@
 import { AutoScroll } from 'sortablejs';
 import { Mround } from './../helpers_math';
 import { export_compo_png, export_compo_svg, export_layer_geo } from './../map_export';
+import { type_col2 } from '../helpers';
+import { discretize_to_size } from '../classification/common';
 
 
 export function makeSection6() {
@@ -89,8 +91,6 @@ export function makeSection6() {
 
 
   /* section choix des valeurs */
-
-
   dv6
     .append("p")
     .text("Choix des valeurs")
@@ -141,9 +141,9 @@ export var checked_id = {}
  */
 export function update_section_6(){
 
-    var layer_choice = document.getElementById("layer_choice")
     var field_choice = document.getElementById("field_choice")
 
+    //fond de carte courant
     var set_target_layer_id = ""
 
     var target_layer = document.querySelector(`[class*="targeted_layer layer"]`)
@@ -152,12 +152,20 @@ export function update_section_6(){
       set_target_layer_id = target_layer.id.replace("L_","")
     }
 
+    // object contenant chaque colonne et son type
+    let field_types = {}
+    for(let array of type_col2(data_manager.user_data[set_target_layer_id])){
+      field_types[array.name] = array.type
+    }
+
+
+    let value_reference_object = build_value_id_reference()
     // Ajout de chaque catégorie pour la couche selectionnée
     update_fields() 
 
     // Ajout des valeurs uniques pour la catégorie selectionnée
     update_values()
-    build_value_id_reference()
+    
 
   
 // Supprime tous les html_tag spécifiés d'un menu, utilisé lors du changement de couche/catégorie
@@ -208,6 +216,7 @@ export function update_section_6(){
         
         const inputElement = document.createElement("input");
         inputElement.type = "checkbox";
+
         inputElement.value = value;
         inputElement.checked = true
 
@@ -231,13 +240,15 @@ export function update_section_6(){
 
             if(this.checked == true){
               background_layer_shape.setAttribute("display", "none")
-              manage_checked_boxes(true, set_target_layer_id,set_field, this.value) 
+              manage_checked_boxes(true,set_field, inputElement.value) 
+              console.log(inputElement.value)
               }
             else{
               background_layer_shape.setAttribute("display" , "")
-              manage_checked_boxes(false, set_target_layer_id , set_field, this.value) 
+              manage_checked_boxes(false, set_field, inputElement.value) 
             }  
 
+            // Selection des cercles proportionnels liés à chaque shape
             let shape_list =  document.querySelectorAll(`[id*=feature_${shape}]`)
 
             for(let filtered_shape of shape_list){           
@@ -257,17 +268,21 @@ export function update_section_6(){
   } 
 
   // Ajoute ou supprime des valeurs cochées/décochées de la variable checked_boxes
-  function manage_checked_boxes (add, layer, field, value){
+  function manage_checked_boxes (add, field, value){
 
-    let checked_boxes_stringified = JSON.stringify(checked_boxes)
-
+    if(add = false){
+    for(let number of Object.entries(value_reference_object)){
+      console.log(number)
+      if(number[1].includes(value)){
+        console.log("check")
+        checked_id[field].push(value)
+        }
+      }      
+    }
     if (add == true){
-      checked_boxes[layer][field].push(value)
+      checked_id[field] = checked_id[field].filter(value => value != value)
     }
-    if (add == false){
-      checked_boxes[layer][field] = checked_boxes[layer][field].filter(value => value != value)
-    }
-
+    console.log(checked_id)
   }
 
   /**
@@ -276,15 +291,30 @@ export function update_section_6(){
    * @returns Objet : {valeur1 : [id1, id2, id3...], valeur2 : [id1, id2, id3...]}
    */
   function build_value_id_reference(){
+    
     let field_and_values_object = get_unique_value(set_target_layer_id)
     var value_id_match = {}
 
+    for(let i = 0; i < target_layer.childNodes.length; i ++){
+      value_id_match[i] = []
+    }
+
     for(let entrie of Object.keys(field_and_values_object)){
       for(let value of field_and_values_object[entrie]){
-        value_id_match[value] = []
-        value_id_match[value].push(filter_values(set_target_layer_id,entrie,value))                
+        // set as a string to have only strings stored in the object, to be converted to float if the column type is numerical
+        let shapes_to_filter = filter_values(set_target_layer_id,entrie,value)
+        
+        // for each shape to filter, we append the corresponding value to the final object
+        for(let shape of shapes_to_filter){
+          for(let key of Object.keys(value_id_match)){
+            if(parseInt(key) == parseInt(shape)){
+              value_id_match[key].push(value)
+            }
+          }
+        }
       } 
     }   
+    return value_id_match
   }
 }
 
