@@ -253,6 +253,7 @@ export function add_layer_topojson(text, options = {}) {
   const lyr_id = encodeId(lyr_name_to_add);
   const nb_ft = topoObj.objects[lyr_name].geometries.length;
   const topoObj_objects = topoObj.objects[lyr_name];
+  const shouldRewind = options.func_name !== 'cartogram';
   let data_to_load = false;
   let type,
     _proj;
@@ -264,7 +265,7 @@ export function add_layer_topojson(text, options = {}) {
     swal('', _tr('app_page.common.warning_multiple_layers'), 'warning');
   }
 
-  // Abort if the layer is empty (doesn't contains any feature)
+  // Abort if the layer is empty (doesn't contain any feature)
   if (!topoObj_objects.geometries || topoObj_objects.geometries.length === 0) {
     display_error_during_computation(_tr('app_page.common.error_invalid_empty'));
     return;
@@ -283,7 +284,7 @@ export function add_layer_topojson(text, options = {}) {
     }
   }
 
-  // Abort if the layer doesn't contains any feature with a geometry type within
+  // Abort if the layer doesn't contain any feature with a geometry type within
   // "Point", "MultiPoint", "LineString", "MultiLineString", "Polygon", "MultiPolygon"
   if (!type) {
     display_error_during_computation(_tr('app_page.common.error_invalid_empty'));
@@ -347,7 +348,9 @@ export function add_layer_topojson(text, options = {}) {
   });
 
   const func_data_idx = (_, ix) => `feature_${ix}`;
-  const features = rewind(topojson.feature(topoObj, topoObj_objects), true).features;
+  const features = shouldRewind
+    ? rewind(topojson.feature(topoObj, topoObj_objects), true).features
+    : topojson.feature(topoObj, topoObj_objects).features;
 
   map.insert('g', '.legend')
     .attrs({ id: lyr_id, class: data_to_load ? 'targeted_layer layer' : 'layer' })
