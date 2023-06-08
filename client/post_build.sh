@@ -8,10 +8,13 @@ then
   rm -rf ../magrit_app/static/dist/app.*.js
   rm -rf ../magrit_app/static/dist/vendor.*.js
   rm -rf ../magrit_app/static/dist/*.wasm
+  rm -rf ../magrit_app/static/dist/go-cart.js
   cp dist/app.*.js ../magrit_app/static/dist/
   cp dist/vendor.*.js ../magrit_app/static/dist/
   cp css/style-fonts.css ../magrit_app/static/dist/style-fonts.css
   cp js/webworker* ../magrit_app/static/dist/
+  cp js/*.wasm ../magrit_app/static/dist/
+  cp js/go-cart.js ../magrit_app/static/dist/
   cp dist/html/modules.html ../magrit_app/static/
   cp html/contact_form.html ../magrit_app/static/
   cp html/index.html ../magrit_app/static/
