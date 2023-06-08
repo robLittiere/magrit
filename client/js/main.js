@@ -10,7 +10,7 @@ import { xhrequest } from './helpers';
 import { Mround } from './helpers_math';
 import { makeSvgMap } from './map_ctrl';
 import { bindTooltips } from './tooltips';
-import { scale_elements } from './scale';
+import { scale_elements } from './ui/scale';
 
 Promise.config({
   warnings: true,
