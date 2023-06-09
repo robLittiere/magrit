@@ -6,11 +6,11 @@ export function scale_elements() {
         .styles({
             "z-index": "999",
             width: "min-content",
+            display: "flex",
             background: "transparent",
-            transform: "translateX(-50%) rotate(270deg)",
-            position : "absolute",
-            right: "0px",
-            bottom : "40px"
+            position: "absolute",
+            right: "40px",
+            bottom: "40px"
         });
 
     div.append("button").text("+").attrs({ id: "scale_in" });
@@ -20,17 +20,14 @@ export function scale_elements() {
     sliderContainer
         .append("input")
         .attr("type", "range")
+        .attr("orient", "vertical")
         .attr("id", "zoom-slider")
         .attr("min", 0)
         .attr("max", 4)
         .attr("value", 2)
         .attr("step", 0.1)
-        .styles({
-            width : "150px",
-            
-        });
-    
-    
+
+
 
     div.append("button").text("|").attrs({ id: "scale_out" });
 
@@ -39,8 +36,8 @@ export function scale_elements() {
     const scale_in = document.getElementById("scale_in");
     const scale_out = document.getElementById("scale_out");
     const slider = document.getElementById("zoom-slider");
-      
-    
+
+
 
     /**
      * 
