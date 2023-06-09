@@ -32,6 +32,7 @@ services:
 
   magritapp:
     container_name: magrit-app
+    platform: linux/amd64
     build:
       context: ../..
       dockerfile: misc/Docker/app/Dockerfile
