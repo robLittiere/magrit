@@ -1295,3 +1295,28 @@ table.gpkg-list-layers td {
   padding: 5px;
   max-width: 325px;
 }
+
+/* slider */
+
+/* la zone de déplacement */
+input[type=range]#zoom-slider::-moz-range-track {
+  
+  
+  box-shadow: none; /* Remove box shadow */
+  border: 1px solid rgba(146, 146, 146,20);
+  
+  height: 6px;
+  background-color: transparent;
+}
+/* le curseur */
+input[type=range]#zoom-slider::-moz-range-thumb {
+
+  background: rgb(77, 76, 76);
+  border-radius: 30%;
+}
+/* barre progression avant */
+input[type=range]#zoom-slider::-moz-range-progress {
+  
+  background: #595959;        /* supprime barre progression avant */
+  height : 6px
+}
