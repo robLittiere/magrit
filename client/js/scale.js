@@ -82,62 +82,6 @@ export function scale_elements() {
             "border-radius": "3px"
         });
 
-
-
-
-
-    /* let button_section = div
-        .append("div")
-        .attrs({id:"scale_buttons_section"})
-        .styles({
-            "display" : "flex",
-            "gap" : "1vw",
-            "justify-content":"center",
-            "height":"20px"
-            
-        })
-    
-    // scale out button
-    button_section
-        .append("button")
-        .text("-")
-        .attrs({ id: "scale_out" })
-        .styles({
-            height:"100%",
-            width:"20px",
-             "background-image":"linear-gradient(rgb(136, 136, 136), rgb(85, 85, 85))",
-             color:"white",
-             border : "0px",
-             "border-radius": "3px"
-
-            });
-
-    // span showing the slider value
-    button_section
-        .append("span")
-        .attrs({ id: "scale_value" })
-        .text("2")
-        .styles({
-            height:"100%",
-            width:"fit-content",                              
-        });
-
-    // scale in button
-    button_section
-        .append("button")
-        .text("+")
-        .attrs({ id: "scale_in" })
-        .styles({
-             height:"100%",
-             width:"20px",
-             "background-image":"linear-gradient(rgb(136, 136, 136), rgb(85, 85, 85))",
-             color:"white",
-             border : "0px",
-             "border-radius": "3px"
-
-            }); */
-    
-
     const map = d3.select("#svg_map").nodes()[0].childNodes;
 
     const scale_in = document.getElementById("scale_in");
