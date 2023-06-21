@@ -10,6 +10,7 @@ import { xhrequest } from './helpers';
 import { Mround } from './helpers_math';
 import { makeSvgMap } from './map_ctrl';
 import { bindTooltips } from './tooltips';
+import { scale_elements } from './scale';
 
 Promise.config({
   warnings: true,
@@ -222,3 +223,5 @@ global.helper_esc_key_twbs_cb = function helper_esc_key_twbs_cb(_event, callback
     }
   }
 };
+
+scale_elements()
