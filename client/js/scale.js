@@ -2,7 +2,7 @@ export function scale_elements() {
 
     let div = map_div
         .insert("div", ":first-child")
-        .attrs({ id: "demo" })
+        .attrs({ id: "scale_panel" })
         .styles({
             "z-index": "999",
             width: "min-content",
