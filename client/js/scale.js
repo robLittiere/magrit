@@ -7,13 +7,12 @@ export function scale_elements() {
             "z-index": "999",
             width: "min-content",
             background: "transparent",
-            transform: "translateX(-50%) rotate(270deg)",
             position : "absolute",
-            right: "0px",
-            bottom : "40px"
+            left: "0px",
+            bottom : "5px"
         });
 
-    div.append("button").text("+").attrs({ id: "scale_in" });
+    
 
     // Add the slider
     const sliderContainer = div.append("div").attr("class", "slider_container");
@@ -21,7 +20,7 @@ export function scale_elements() {
         .append("input")
         .attr("type", "range")
         .attr("id", "zoom-slider")
-        .attr("min", 0)
+        .attr("min", 0.1)
         .attr("max", 4)
         .attr("value", 2)
         .attr("step", 0.1)
@@ -30,15 +29,64 @@ export function scale_elements() {
             
         });
     
+    let button_section = div
+        .append("div")
+        .attrs({id:"scale_buttons_section"})
+        .styles({
+            "display" : "flex",
+            "gap" : "1vw",
+            "justify-content":"center",
+            "height":"20px"
+            
+        })
     
+    // scale out button
+    button_section
+        .append("button")
+        .text("-")
+        .attrs({ id: "scale_out" })
+        .styles({
+            height:"100%",
+            width:"20px",
+             "background-image":"linear-gradient(rgb(136, 136, 136), rgb(85, 85, 85))",
+             color:"white",
+             border : "0px",
+             "border-radius": "3px"
 
-    div.append("button").text("|").attrs({ id: "scale_out" });
+            });
+
+    // span showing the slider value
+    button_section
+        .append("span")
+        .attrs({ id: "scale_value" })
+        .text("2")
+        .styles({
+            height:"100%",
+            width:"fit-content",                              
+        });
+
+    // scale in button
+    button_section
+        .append("button")
+        .text("+")
+        .attrs({ id: "scale_in" })
+        .styles({
+             height:"100%",
+             width:"20px",
+             "background-image":"linear-gradient(rgb(136, 136, 136), rgb(85, 85, 85))",
+             color:"white",
+             border : "0px",
+             "border-radius": "3px"
+
+            });
+    
 
     const map = d3.select("#svg_map").nodes()[0].childNodes;
 
     const scale_in = document.getElementById("scale_in");
     const scale_out = document.getElementById("scale_out");
     const slider = document.getElementById("zoom-slider");
+    const scale_value_span = document.getElementById("scale_value")
       
     
 
@@ -108,7 +156,7 @@ export function scale_elements() {
                         let update_width = width * slider.value;
 
                         children.setAttribute("height", update_height);
-                        children.setAttribute("width", update_width);
+                        children.setAttribute("width", update_width);                       
                     }
                 }
 
@@ -136,6 +184,7 @@ export function scale_elements() {
                 }
             }
         }
+    document.getElementById("scale_value").textContent = slider.value
     };
 
     /**
@@ -223,11 +272,13 @@ export function scale_elements() {
             case "in":
                 slider.value =
                     parseFloat(slider.value) + parseFloat(slider.getAttribute("step"));
+                    scale_value_span.textContent = slider.value
                 break;
 
             case "out":
                 slider.value =
                     parseFloat(slider.value) - parseFloat(slider.getAttribute("step"));
+                    scale_value_span.textContent = slider.value
                 break;
         }
     }
