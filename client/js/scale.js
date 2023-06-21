@@ -184,7 +184,7 @@ export function scale_elements() {
                 }
             }
         }
-    document.getElementById("scale_value").textContent = slider.value
+    scale_value_span.textContent = slider.value
     };
 
     /**
