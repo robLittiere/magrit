@@ -9,27 +9,84 @@ export function scale_elements() {
             background: "transparent",
             position : "absolute",
             left: "0px",
-            bottom : "5px"
+            bottom : "1px",
+            width: "300px",
         });
 
     
 
-    // Add the slider
-    const sliderContainer = div.append("div").attr("class", "slider_container");
+    // Create scale container
+    const scaleContainer = div.append("div")
+        .attr("class", "scale_container")
+        .styles({
+            "display" : "flex",
+            "flex-direction" : "column",
+            "align-items" : "center",
+            "justify-content" : "center",
+        });
+
+    // actual zoom span
+    scaleContainer.append("span")
+        .attrs({ id: "scale_value" })
+        .text("1")
+        .styles({
+            height:"100%",
+            "line-height": "10px",
+        });
+
+ 
+
+    const sliderContainer = scaleContainer.append("div").attr("class", "slider_container")
+        .styles({
+            "display" : "flex",
+            "align-items" : "center",
+            "justify-content" : "center",
+            "background": "transparent",
+        });
+    // Append scale out button to container
+    const scaleOutButton = sliderContainer.append("button")
+        .text("-")
+        .attrs({ id: "scale_out" })
+        .styles({
+            height:"100%",
+            width:"20px",
+            "background-image":"linear-gradient(rgb(136, 136, 136), rgb(85, 85, 85))",
+            color:"white",
+            border : "0px",
+            "border-radius": "3px"
+        });
     sliderContainer
         .append("input")
         .attr("type", "range")
         .attr("id", "zoom-slider")
-        .attr("min", 0.1)
-        .attr("max", 4)
-        .attr("value", 2)
-        .attr("step", 0.1)
+        .attr("min", 0)
+        .attr("max", 2)
+        .attr("value", 1)
+        .attr("step", 0.05)
         .styles({
-            width : "150px",
+            "padding-left": "6px",
+            "padding-right": "6px",
             
         });
     
-    let button_section = div
+    // Then append scale in button to scale container
+    const scaleInButton = sliderContainer.append("button")
+        .text("+")
+        .attrs({ id: "scale_in" })
+        .styles({
+            height:"100%",
+            width:"20px",
+            "background-image":"linear-gradient(rgb(136, 136, 136), rgb(85, 85, 85))",
+            color:"white",
+            border : "0px",
+            "border-radius": "3px"
+        });
+
+
+
+
+
+    /* let button_section = div
         .append("div")
         .attrs({id:"scale_buttons_section"})
         .styles({
@@ -78,7 +135,7 @@ export function scale_elements() {
              border : "0px",
              "border-radius": "3px"
 
-            });
+            }); */
     
 
     const map = d3.select("#svg_map").nodes()[0].childNodes;
