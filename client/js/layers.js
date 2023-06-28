@@ -402,7 +402,6 @@ export function add_layer_topojson(text, options = {}) {
     if (_app.current_functionnality !== undefined) {
       fields_handler.fill(lyr_name_to_add);
     }
-    handle_click_hand('lock');
 
     // If the target layer is a point layer, slightly change the tooltip for the "grid"
     // functionnality:

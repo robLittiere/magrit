@@ -135,6 +135,9 @@ export function makeSection6() {
 var options = []
 // Objet stockant les entités filtrées, utilisé pour recocher les checkbox après changement de menus
 export var checked_boxes = {}
+var checked_values = {}  
+var value_reference_object 
+var set_target_layer_id 
 
 
 /**
@@ -147,7 +150,7 @@ export function update_section_6(){
     var field_choice = document.getElementById("field_choice")
 
     //fond de carte courant
-    var set_target_layer_id = ""
+    set_target_layer_id = ""
 
     var target_layer = document.querySelector(`[class*="targeted_layer layer"]`)
 
@@ -162,10 +165,10 @@ export function update_section_6(){
     }
 
 
-    let value_reference_object = build_value_id_reference()
+    value_reference_object = build_value_id_reference()
     
     // Object with all the fields of the target layer. Used to keep track of checked checkboxes
-    var checked_values = {}        
+        
     for(let field of data_manager.current_layers[set_target_layer_id].original_fields){
       checked_values[field] = new Set()
     }   
@@ -256,10 +259,12 @@ export function update_section_6(){
             if(this.checked == false){
               background_layer_shape.setAttribute("display", "none")
               manage_checked_boxes(true,set_field, inputElement.value) 
+              manage_linked_boxes(this.value, true)
               }
             else{
               background_layer_shape.setAttribute("display" , "")
-              manage_checked_boxes(false, set_field, inputElement.value) 
+              manage_checked_boxes(false, set_field, inputElement.value)
+              manage_linked_boxes(this.value, false) 
             }  
 
             // Selection des cercles proportionnels liés à chaque shape
@@ -326,6 +331,28 @@ export function update_section_6(){
     }   
     return value_id_match
   }
+}
+
+/**
+ * Décoche les cases filtrées sur la carte : exemple si on masque l'afrique, décoche toutes les cases de chaque colonne pour chaque shape en afrique
+ * 
+ * Permet d'avoir par exemple l'algérie déjà décochée dans la colonne "pays" si on a décoché la valeur "afrique" dans la colonne continent
+ * 
+ * @param {*} value : valeur de la case cochée par l'utilisateur
+ */
+function manage_linked_boxes(value, check){
+  let original_fields = Array.from(data_manager.current_layers[set_target_layer_id].original_fields)
+  
+  for(let array of Object.values(value_reference_object)){
+    if(array.includes(value)){
+      for(let i = 0 ; i < original_fields.length ; i++){
+        if(check == true){
+          checked_values[original_fields[i]].add(array[i])
+        }
+       
+      }
+    }    
+  } 
 }
 
 /**
