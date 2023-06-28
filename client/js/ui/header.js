@@ -54,7 +54,7 @@ export default function makeHeader() {
       'data-ot-remove-elements-on-hide': true,
       'data-ot-target': true,
     })
-    .html('<img src="static/img/header/File_font_awesome_white.png" width="25" height="auto" alt="Load project file"/>')
+    .html('<img src="static/img/header/File_font_awesome_white.png" width="35" height="auto" alt="Load project file"/>')
     .on('click', () => {
       window.localStorage.removeItem('magrit_project');
       window.removeEventListener('beforeunload', beforeUnloadWindow);
@@ -70,7 +70,7 @@ export default function makeHeader() {
       'data-ot-target': true,
       id: 'load_project',
     })
-    .html('<img src="static/img/header/Folder_open_alt_font_awesome_white.png" width="25" height="auto" alt="Load project file"/>')
+    .html('<img src="static/img/header/Folder_open_alt_font_awesome_white.png" width="35" height="auto" alt="Load project file"/>')
     .on('click', load_map_project);
 
   const_options.append('button')
@@ -82,7 +82,7 @@ export default function makeHeader() {
       'data-ot-target': true,
       id: 'save_file_button',
     })
-    .html('<img src="static/img/header/Breezeicons-actions-22-document-save-white.png" width="25" height="auto" alt="Save project to disk"/>')
+    .html('<img src="static/img/header/Breezeicons-actions-22-document-save-white.png" width="35" height="auto" alt="Save project to disk"/>')
     .on('click', save_map_project);
 
   const_options.append('button')
