@@ -48,6 +48,9 @@ export function makeSection6() {
         }
       }
     }
+    for(let key of Object.keys(checked_values)){
+      checked_values[key].clear()
+    }
   })
   .attrs({
     id : "reset_button"
