@@ -31,8 +31,9 @@ export function makeSection6() {
   .append("button")
   .on("click", function(){
     var value_choice = document.querySelectorAll("#value_choice input") 
+    // recheck toutes les cases
     for(let checkbox of value_choice){
-      checkbox.checked = false
+      checkbox.checked = true
     }
     var svg_map = document.getElementById("svg_map")
 
@@ -42,6 +43,7 @@ export function makeSection6() {
       else{
         // pour chaque svg de chaque couche
         for(let path of node.childNodes){
+          // retire le display none
           path.setAttribute("display" , "")
         }
       }
@@ -133,7 +135,7 @@ export function makeSection6() {
 var options = []
 // Objet stockant les entités filtrées, utilisé pour recocher les checkbox après changement de menus
 export var checked_boxes = {}
-export var checked_id = {}
+
 
 /**
  * Met à jour les menus de la section après ajout de couches/selection de couche ou catégories
@@ -161,6 +163,15 @@ export function update_section_6(){
 
 
     let value_reference_object = build_value_id_reference()
+    
+    // Object with all the fields of the target layer. Used to keep track of checked checkboxes
+    var checked_values = {}        
+    for(let field of data_manager.current_layers[set_target_layer_id].original_fields){
+      checked_values[field] = new Set()
+    }   
+
+    
+
     // Ajout de chaque catégorie pour la couche selectionnée
     update_fields() 
 
@@ -222,9 +233,10 @@ export function update_section_6(){
         inputElement.checked = true
 
         // Si la valeur à été précedemment coché par un utilisateur, elle est recochée lorsqu'on revient sur la catéogrie correspondante
-        if(JSON.stringify(checked_boxes[set_target_layer_id][set_field]).includes(value) == true ){
-          inputElement.checked = true
+        if(checked_values[set_field].has(value)){
+          inputElement.checked = false
         }
+        
         
         liElement.appendChild(inputElement);
         value_choice.appendChild(liElement);
@@ -238,6 +250,8 @@ export function update_section_6(){
 
             // Selection du shape du fond de carte
             let background_layer_shape = document.getElementById(`feature_${shape}`)
+
+            console.log("checked", this.checked)
 
             if(this.checked == false){
               background_layer_shape.setAttribute("display", "none")
@@ -269,20 +283,16 @@ export function update_section_6(){
 
   // Ajoute ou supprime des valeurs cochées/décochées de la variable checked_boxes
   function manage_checked_boxes (add, field, value){
-
-    if(add = false){
-    for(let number of Object.entries(value_reference_object)){
-      console.log(number)
-      if(number[1].includes(value)){
-        console.log("check")
-        checked_id[field].push(value)
-        }
-      }      
+    if(add == true){
+      for(let number of Object.entries(value_reference_object)){
+        if(number[1].includes(value)){
+          checked_values[field].add(value)
+          }
+        }      
     }
-    if (add == true){
-      checked_id[field] = checked_id[field].filter(value => value != value)
-    }
-    console.log(checked_id)
+    else if (add == false){
+      checked_values[field].delete(value)
+    }  
   }
 
   /**
@@ -317,7 +327,6 @@ export function update_section_6(){
     return value_id_match
   }
 }
-
 
 /**
  * Récupère la liste des valeurs unique pour chaque champs pour une couche données depuis le 
@@ -360,3 +369,4 @@ function filter_values(layer, field, value){
   }
   return shapes_to_filter
 }
+
