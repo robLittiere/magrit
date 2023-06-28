@@ -108,11 +108,11 @@ input[type=range]:focus::-ms-fill-upper {
 
 #header {
   width: 100%;
-  height: 40px;
+  height: 50px;
   font-weight: bold;
   color: rgb(0, 0, 0);
   box-sizing: border-box;
-  background-color : #000;
+  background-color : #4c5b32;
   line-height: 30px;
   text-align: left;
   font-family: "Inconsolata", Verdana, Tahoma;
@@ -433,9 +433,7 @@ a.logo {
   color: #fff;
 }
 
-#form_projection2 * {
-  background-color: black;
-}
+
 /* End of styles for elements located in the header */
 
 

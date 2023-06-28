@@ -2055,7 +2055,6 @@ export function simplifyUI(){
   // Simply UI for saro here
   /* document.querySelector('.light-menu').style.display = "none";
  */
-  document.getElementById("hand_button").querySelector('img').setAttribute("alt", "unlocked")
   const hb = d3.select('#hand_button');
   hb.classed("locked", false)
 }
