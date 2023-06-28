@@ -1,5 +1,18 @@
 [
   {
+    "path": "static/data_sample/topo/zone_defense_securite.topojson",
+    "fields_type": [
+      {"name": "nom_zd", "type": "id", "not_number": "true"},
+      {"name": "siege", "type": "id", "not_number": "true"},
+      {"name": "ressort", "type": "category"},
+      {"name": "pop", "type": "stock"},
+      {"name": "areakm2", "type": "stock"}
+    ],
+    "suggested_projection": ["proj4", "EPSG:2154"],
+    "name": "zds",
+    "category": "cartographie_militaire"
+  },
+  {
     "path": "static/data_sample/topo/country.topojson",
     "fields_type": [
       {"name": "ISO2", "type": "id", "not_number": "true"},
@@ -18,21 +31,6 @@
     "category": "worldwide_extent"
   },
   {
-    "path": "static/data_sample/topo/world_cities_extract5000.topojson",
-    "name": "world_capitals",
-    "category": "worldwide_extent"
-  },
-  {
-    "path": "static/data_sample/topo/World.topojson",
-    "name": "world_countries",
-    "category": "worldwide_extent"
-  },
-  {
-    "path": "static/data_sample/topo/tissot.topojson",
-    "name": "tissot",
-    "category": "worldwide_extent"
-  },
-  {
     "path": "static/data_sample/topo/nuts0-without-outermost-regions-2020.topojson",
     "suggested_projection": ["proj4", "EPSG:3035"],
     "fields_type": [
@@ -41,73 +39,15 @@
       {"name": "AREA_2021", "type": "stock"}
     ],
     "name": "nuts0",
-    "category": "europe_extent"
+    "category": "worldwide_extent"
   },
   {
-    "path": "static/data_sample/topo/nuts1-without-outermost-regions-2020.topojson",
-    "suggested_projection": ["proj4", "EPSG:3035"],
-    "fields_type": [
-      {"name": "NUTS_ID", "type": "id", "not_number": "true"},
-      {"name": "POP_2021", "type": "stock"},
-      {"name": "AREA_2021", "type": "stock"}
-    ],
-    "name": "nuts1",
-    "category": "europe_extent"
-  },
-  {
-    "path": "static/data_sample/topo/nuts2-without-outermost-regions-2020.topojson",
-    "suggested_projection": ["proj4", "EPSG:3035"],
-    "fields_type": [
-      {"name": "NUTS_ID", "type": "id", "not_number": "true"},
-      {"name": "NAME_LATN", "type": "id", "not_number": "true"},
-      {"name": "URBN_TYPE", "type": "category", "has_duplicate": "true"},
-      {"name": "MOUNT_TYPE", "type": "category", "has_duplicate": "true"},
-      {"name": "COAST_TYPE", "type": "category", "has_duplicate": "true"},
-      {"name": "POP_2021", "type": "stock"},
-      {"name": "AREA_2021", "type": "stock"},
-      {"name": "DENS_2021", "type": "ratio"}
-    ],
-    "name": "nuts2",
-    "category": "europe_extent"
-  },
-  {
-    "path": "static/data_sample/topo/nuts3-without-outermost-regions-2020.topojson",
-    "suggested_projection": ["proj4", "EPSG:3035"],
-    "fields_type": [
-      {"name": "NUTS_ID", "type": "id", "not_number": "true"},
-      {"name": "NAME_LATN", "type": "id", "not_number": "true"},
-      {"name": "URBN_TYPE", "type": "category", "has_duplicate": "true"},
-      {"name": "MOUNT_TYPE", "type": "category", "has_duplicate": "true"},
-      {"name": "COAST_TYPE", "type": "category", "has_duplicate": "true"},
-      {"name": "POP_2021", "type": "stock"},
-      {"name": "AREA_2021", "type": "stock"},
-      {"name": "DENS_2021", "type": "ratio"}
-    ],
-    "name": "nuts3",
-    "category": "europe_extent"
-  },
-  {
-    "path": "static/data_sample/topo/france-metrop-communes-voronoi-cog-2022.topojson",
-    "fields_type": [
-      {"name": "INSEE_COM", "type": "id"},
-      {"name": "NOM", "type": "id"},
-      {"name": "POPULATION", "type": "stock"},
-      {"name": "SUPERFICIE", "type": "stock"}
-    ],
+    "path": "static/data_sample/topo/france-metrop-contour-from-voronoi-cog-2022.topojson",
     "suggested_projection": ["proj4", "EPSG:2154"],
-    "name": "communes_voronoi_2022",
-    "category": "france_metropolitan_extent"
-  },
-  {
-    "path": "static/data_sample/topo/france-metrop-departements-from-voronoi-cog-2022.topojson",
     "fields_type": [
-      {"name": "CODGEO", "type": "id"},
-      {"name": "POPULATION", "type": "stock"},
-      {"name": "SUPERFICIE", "type": "stock"},
-      {"name": "LIBGEO", "type": "id"}
+      {"name": "NOM", "type": "id"}
     ],
-    "suggested_projection": ["proj4", "EPSG:2154"],
-    "name": "departements_2022",
+    "name": "france_contour_2022",
     "category": "france_metropolitan_extent"
   },
   {
@@ -123,80 +63,16 @@
     "category": "france_metropolitan_extent"
   },
   {
-    "path": "static/data_sample/topo/france-metrop-contour-from-voronoi-cog-2022.topojson",
-    "suggested_projection": ["proj4", "EPSG:2154"],
+    "path": "static/data_sample/topo/france-metrop-departements-from-voronoi-cog-2022.topojson",
     "fields_type": [
-      {"name": "NOM", "type": "id"}
-    ],
-    "name": "france_contour_2022",
-    "category": "france_metropolitan_extent"
-  },
-  {
-    "path": "static/data_sample/topo/brazil.topojson",
-    "fields_type": [
-      {"name": "ADMIN_NAME", "type": "id", "not_number": "true"},
-      {"name": "Abbreviation", "type": "id", "not_number": "true"},
-      {"name": "Capital", "type": "id", "not_number": "true"},
-      {"name": "GDP_per_capita_2012", "type": "stock"},
-      {"name": "Life_expectancy_2014", "type": "ratio"},
-      {"name": "Pop2014", "type": "stock"},
-      {"name": "REGIONS", "type": "category", "has_duplicate": "true"},
-      {"name": "STATE2010", "type": "id"},
-      {"name": "popdensity2014", "type": "ratio"}
-    ],
-    "suggested_projection": ["proj4", "EPSG:5527"],
-    "name": "brazil",
-    "category": "world_other"
-  },
-  {
-    "path": "static/data_sample/topo/GrandParisMunicipalities.topojson",
-    "fields_type": [
-      {"name": "DEPARTEMENT", "type": "category", "has_duplicate": "true"},
-      {"name": "IDCOM", "type": "id"},
-      {"name": "EPT", "type": "category", "has_duplicate": "true"},
-      {"name": "REVENUS", "type": "stock"},
-      {"name": "LIBCOM", "type": "id"},
-      {"name": "LIBEPT", "type": "category", "has_duplicate": "true"},
-      {"name": "MENAGES_FISCAUX", "type": "stock"},
-      {"name": "UID", "type": "id"},
-      {"name": "REVENUS_PAR_MENAGE", "type": "ratio"}
-    ],
-    "suggested_projection": ["proj4", "EPSG:2154"],
-    "name": "grandparismunicipalities",
-    "category": "france_other"
-  },
-  {
-    "path": "static/data_sample/topo/quartier_paris_pop.topojson",
-    "fields_type": [
-      {"name": "n_sq_qu", "type": "id"},
-      {"name": "c_qu", "type": "id"},
-      {"name": "c_quinsee", "type": "id"},
-      {"name": "l_qu", "type": "id"},
-      {"name": "c_ar", "type": "category", "has_duplicate": "true"},
-      {"name": "n_sq_ar", "type": "category", "has_duplicate": "true"},
-      {"name": "surface", "type": "stock"},
-      {"name": "P12_POP", "type": "stock"},
-      {"name": "P07_POP", "type": "stock"}
-    ],
-    "suggested_projection": ["proj4", "EPSG:2154"],
-    "name": "quartier_paris",
-    "category": "france_other"
-  },
-  {
-    "path": "static/data_sample/topo/martinique.topojson",
-    "fields_type": [
-      {"name": "INSEE_COM", "type": "id"},
-      {"name": "NOM_COM", "type": "id", "not_number": "true"},
-      {"name": "STATUT", "type": "category", "has_duplicate": "true"},
+      {"name": "CODGEO", "type": "id"},
+      {"name": "POPULATION", "type": "stock"},
       {"name": "SUPERFICIE", "type": "stock"},
-      {"name": "P13_POP", "type": "stock"},
-      {"name": "P13_LOG", "type": "stock"},
-      {"name": "P13_LOGVAC", "type": "stock"},
-      {"name": "Part_Logements_Vacants", "type": "ratio"}
+      {"name": "LIBGEO", "type": "id"}
     ],
-    "suggested_projection": ["proj4", "EPSG:2973"],
-    "name": "martinique",
-    "category": "france_other"
+    "suggested_projection": ["proj4", "EPSG:2154"],
+    "name": "departements_2022",
+    "category": "france_metropolitan_extent"
   },
   {
     "path": "static/data_sample/topo/communes_REG_11_2016_2-2.topojson",
