@@ -37,7 +37,7 @@ export const createWaitingOverlay = () => {
   bg.id = 'overlay';
   bg.style.display = 'none';
   bg.innerHTML = `
-<img src="static/img/minarm.png" alt="minarm" style="left: 15px;position: absolute;" width="auto" height="26">
+<img src="static/img/EMAT.png" alt="EMAT" style="left: 15px;position: absolute;" width="auto" height="26">
 <span class="i18n" style="z-index: 2; margin-top:85px; display: inline-block;" data-i18n="[html]app_page.common.loading_results"></span>
 <span style="z-index: 2;">...<br></span>
 <div class="spinner">

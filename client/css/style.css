@@ -117,6 +117,9 @@ input[type=range]:focus::-ms-fill-upper {
   text-align: left;
   font-family: "Inconsolata", Verdana, Tahoma;
   letter-spacing: 3px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 #menu {
@@ -375,11 +378,9 @@ p.cont_map_btn {
 /* Styles for elements located in the header */
 .header_options_right {
   clear: both;
-  float: right;
   display:inline;
   color: #99a8c4;
   font-size:12px;
-  margin: auto;
 }
 
 .header_options_projection {
