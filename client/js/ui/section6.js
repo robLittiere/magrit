@@ -4,7 +4,6 @@ import { export_compo_png, export_compo_svg, export_layer_geo } from './../map_e
 import { type_col2 } from '../helpers';
 import { discretize_to_size } from '../classification/common';
 
-
 export function makeSection6() {
   const dv6 = map_div.insert('div');
 
@@ -22,10 +21,6 @@ export function makeSection6() {
     "background-color" : "#efefef"
 
   })
-  
-  
-
-
   // Bouton reset, décoche toutes les checkbox et retire le display none
   dv6
   .append("button")
@@ -77,10 +72,7 @@ export function makeSection6() {
     "flex-direction" : "column",
     "justify-content" : "center",
     "height" :"200px"
-    
-    
   })
-
 
   field_choice
     .append('select')
@@ -93,8 +85,6 @@ export function makeSection6() {
       "height":"200px"
 
     })
-
-
 
   /* section choix des valeurs */
   dv6
@@ -117,10 +107,7 @@ export function makeSection6() {
     "overflow-y" : "auto",
     "padding" :"0px"
     
-  })
-
-
-  
+  })  
   value_choice
     .append('ul')
     .attrs({
@@ -138,9 +125,8 @@ export function makeSection6() {
 var options = []
 // Objet stockant les entités filtrées, utilisé pour recocher les checkbox après changement de menus
 export var checked_boxes = {}
-var checked_values = {}  
-var value_reference_object 
-var set_target_layer_id 
+
+ 
 
 
 /**
@@ -148,45 +134,38 @@ var set_target_layer_id
  * 
  * Contient la fonction pour filtrer les entités sur la carte
  */
-export function update_section_6(){
+export function update_section_6(layer_name_add){
 
+    var checked_values = {}  
+    try{
+      reset_menu("field_choice","option")
+      reset_menu("value_choice","li")
+    }
+    catch(err){
+      console.log("Impossible de supprimer les champs, erreur :",err)
+    }
+    
+  
     var field_choice = document.getElementById("field_choice")
 
+    
+    var layer_name = layer_name_add
     //fond de carte courant
-    set_target_layer_id = ""
+    
 
-    var target_layer = document.querySelector(`[class*="targeted_layer layer"]`)
-
-    if(set_target_layer_id != target_layer.id){
-      set_target_layer_id = target_layer.id.replace("L_","")
-    }
-
-    // object contenant chaque colonne et son type
-    let field_types = {}
-    for(let array of type_col2(data_manager.user_data[set_target_layer_id])){
-      field_types[array.name] = array.type
-    }
-
-
-    value_reference_object = build_value_id_reference()
+    var value_reference_object = build_value_id_reference()
     
     // Object with all the fields of the target layer. Used to keep track of checked checkboxes
         
-    for(let field of data_manager.current_layers[set_target_layer_id].original_fields){
+    for(let field of data_manager.current_layers[layer_name].original_fields){
       checked_values[field] = new Set()
     }   
-
-    
-
     // Ajout de chaque catégorie pour la couche selectionnée
-    update_fields() 
-
+    update_fields()
     // Ajout des valeurs uniques pour la catégorie selectionnée
-    update_values()
-    
+    update_values() 
 
-  
-// Supprime tous les html_tag spécifiés d'un menu, utilisé lors du changement de couche/catégorie
+  // Supprime tous les html_tag spécifiés d'un menu, utilisé lors du changement de couche/catégorie
   function reset_menu (menu_element, html_tag){
     let sub_menu = document.getElementById(menu_element)
     let children_elements = sub_menu.querySelectorAll(html_tag)
@@ -198,7 +177,7 @@ export function update_section_6(){
 
   // Insertion des catégories correspondante à la couche active dans le menu déroulant
   function update_fields(){
-    let original_fields =  Array.from(data_manager.current_layers[set_target_layer_id].original_fields)
+    let original_fields =  Array.from(data_manager.current_layers[layer_name].original_fields)
   
     for(let i = 0; i < original_fields.length; i ++){
         let category = document.createElement("option")
@@ -216,14 +195,13 @@ export function update_section_6(){
   // Ajout des valeurs lors du changement de couche
   function update_values(){
 
-    let unique_values = get_unique_value(set_target_layer_id)
+    let unique_values = get_unique_value(layer_name)
     if(field_choice.value != ""){
       var set_field = field_choice.value
     } 
     else{
       var set_field = field_choice.firstChild.value
-    }
-      
+    }      
     for(let value of unique_values[set_field].sort()){
 
         const liElement = document.createElement("li");
@@ -249,7 +227,7 @@ export function update_section_6(){
 
 
         inputElement.addEventListener("click",function(){
-          let shapes_to_filter = filter_values(set_target_layer_id ,set_field, this.value)
+          let shapes_to_filter = filter_values(layer_name ,set_field, this.value)
 
           // pour chaque ID, Filtrage ou défiltrage via display none du shape correspondant à la case cochée
           for(let shape of shapes_to_filter){ 
@@ -310,17 +288,16 @@ export function update_section_6(){
    */
   function build_value_id_reference(){
     
-    let field_and_values_object = get_unique_value(set_target_layer_id)
+    let field_and_values_object = get_unique_value(layer_name)
     var value_id_match = {}
-
-    for(let i = 0; i < target_layer.childNodes.length; i ++){
+    for(let i = 0; i < document.getElementById("L_"+layer_name).childNodes.length; i ++){
       value_id_match[i] = []
     }
 
     for(let entrie of Object.keys(field_and_values_object)){
       for(let value of field_and_values_object[entrie]){
         // set as a string to have only strings stored in the object, to be converted to float if the column type is numerical
-        let shapes_to_filter = filter_values(set_target_layer_id,entrie,value)
+        let shapes_to_filter = filter_values(layer_name,entrie,value)
         
         // for each shape to filter, we append the corresponding value to the final object
         for(let shape of shapes_to_filter){
@@ -334,9 +311,7 @@ export function update_section_6(){
     }   
     return value_id_match
   }
-}
-
-/**
+  /**
  * Décoche les cases filtrées sur la carte : exemple si on masque l'afrique, décoche toutes les cases de chaque colonne pour chaque shape en afrique
  * 
  * Permet d'avoir par exemple l'algérie déjà décochée dans la colonne "pays" si on a décoché la valeur "afrique" dans la colonne continent
@@ -344,7 +319,7 @@ export function update_section_6(){
  * @param {*} value : valeur de la case cochée par l'utilisateur
  */
 function manage_linked_boxes(value, check){
-  let original_fields = Array.from(data_manager.current_layers[set_target_layer_id].original_fields)
+  let original_fields = Array.from(data_manager.current_layers[layer_name].original_fields)
   
   for(let array of Object.values(value_reference_object)){
     if(array.includes(value)){
@@ -399,4 +374,6 @@ function filter_values(layer, field, value){
   }
   return shapes_to_filter
 }
+}
+
 

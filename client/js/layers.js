@@ -557,6 +557,6 @@ export function add_layer_topojson(text, options = {}) {
       checked_boxes[lyr_name_to_add][field] = []
     }
   }
-  update_section_6();
+  update_section_6(lyr_name_to_add)
   return lyr_name_to_add;
 }
