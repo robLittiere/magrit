@@ -4,7 +4,11 @@
 
 - Correction de la sauvegarde de la palette personnalisée lors du clic sur confirmer dans le popup dédié du panneau de discrétisation (<a href="https://github.com/riatelab/magrit/issues/117">cf. issue #117</a>)
 
-- Correction de l'alignement vertical des noms de champs dans les options de création des labels.
+- Correction de l'alignement vertical des noms de champs dans les options de création des labels (merci à @robLittiere).
+
+- Correction du débordement des noms de champs dans les options de création des labels (merci à @robLittiere).
+
+- Éviter de rembobiner automatiquement les cartogrammes issue de l'algo de Gastner, Seguy et More.
 
 - Suppression des CSS inutiles de la page 404 (qui incluait le chargement d'une police provenant de Google Fonts).
 
