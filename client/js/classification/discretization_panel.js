@@ -51,7 +51,7 @@ function make_box_custom_palette(nb_classes, existing_colors) {
     html: '<div id="palette_box_content" style="display: inline-flex;"></div><div id="palette_box_name"></div>',
     allowOutsideClick: false,
     allowEscapeKey: false,
-    showCancelButton: false,
+    showCancelButton: true,
     showConfirmButton: true,
     // cancelButtonText: _tr('app_page.common.close'),
     animation: 'slide-from-top',
@@ -64,21 +64,23 @@ function make_box_custom_palette(nb_classes, existing_colors) {
         .append('p');
 
       g.append('input')
-        .attr('id', (_, i) => i)
+        .attr('id', (_, i) => `pal-color-box-${i}`)
         .attr('type', 'color')
         .style('width', '60px')
         .property('value', d => d)
-        .on('change', function (_, i) {
+        .on('change', function () {
+          const i = +this.id.replace('pal-color-box-', '');
           ref_colors[i] = this.value;
           this.nextSibling.value = this.value;
         });
 
       g.append('input')
-        .attr('id', (_, i) => i)
+        .attr('id', (_, i) => `pal-color-field-${i}`)
         .style('width', '60px')
         .property('value', d => d)
-        .on('keyup', function (_, i) {
+        .on('keyup', function () {
           if (is_hex_color.test(this.value)) {
+            const i = +this.id.replace('pal-color-field-', '');
             ref_colors[i] = this.value;
             this.previousSibling.value = this.value;
           }
@@ -137,6 +139,21 @@ export const display_discretization = (layer_name, field_name, nb_class, options
                 nb_colors: colors.length,
               });
             setSelected(select_palette, `user_${palette_name}`);
+          }
+        } else {
+          // The user clicked on cancel.
+          // Two options:
+          // - if there is an existing custom palette for this number of classes,
+          //   we stay on the 'custom' section and select this palette
+          // - otherwise, we go back to the 'sequential' section
+          const suitableEntries = document.querySelectorAll(`.color_params option[nb_colors="${nb_class}"]`);
+          if (suitableEntries.length > 0) {
+            setSelected(
+              document.querySelector('.color_params'),
+              suitableEntries[0].value,
+            );
+          } else {
+            document.querySelector('#button_sequential').click();
           }
         }
       });
