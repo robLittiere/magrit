@@ -4,6 +4,8 @@ Changes
 Unreleased
 ----------
 
+- Fix saving the custom palette when clicking on confirm in the dedicated popup of the discretisation panel (fixes #117).
+
 - Fix field names vertical alignment in label creation options.
 
 - Remove useless CSS from 404 page (which included loading a font from Google Fonts).

@@ -2,6 +2,8 @@
 
 #### Unreleased 
 
+- Correction de la sauvegarde de la palette personnalisée lors du clic sur confirmer dans le popup dédié du panneau de discrétisation (<a href="https://github.com/riatelab/magrit/issues/117">cf. issue #117</a>)
+
 - Correction de l'alignement vertical des noms de champs dans les options de création des labels.
 
 - Suppression des CSS inutiles de la page 404 (qui incluait le chargement d'une police provenant de Google Fonts).
