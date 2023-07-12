@@ -94,7 +94,10 @@ function make_box_custom_palette(nb_classes, existing_colors) {
         .html(_tr('app_page.palette_box.new_name'));
       bottom
         .append('input')
-        .style('width', '70px')
+        .styles({
+          width: '160px',
+          'margin-left': '5px',
+        })
         .on('keyup', function () {
           if (verif_palette_name(this.value) !== null) pal_name = this.value;
         });
@@ -166,7 +169,7 @@ export const display_discretization = (layer_name, field_name, nb_class, options
       .append('select')
       .attr('class', 'color_params')
       .styles({
-        width: '116px',
+        width: '220px',
       })
       .on('change', function() {
         redisplay.draw();
