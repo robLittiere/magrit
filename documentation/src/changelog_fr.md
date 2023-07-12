@@ -1,8 +1,10 @@
 # Historique des versions et des changements effectués
 
-#### Unreleased 
+#### 0.16.3 (2023-07-12) 
 
 - Correction de la sauvegarde de la palette personnalisée lors du clic sur confirmer dans le popup dédié du panneau de discrétisation (<a href="https://github.com/riatelab/magrit/issues/117">cf. issue #117</a>)
+
+- Amélioration de la taille de certains éléments HTML pour les palettes personnalisées qui étaient trop petits.
 
 - Correction de l'alignement vertical des noms de champs dans les options de création des labels (merci à @robLittiere).
 

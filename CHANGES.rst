@@ -1,10 +1,12 @@
 Changes
 =======
 
-Unreleased
-----------
+0.16.3 (2023-07-12)
+-------------------
 
 - Fix saving the custom palette when clicking on confirm in the dedicated popup of the discretisation panel (fixes #117).
+
+- Improves the size of some HTML elements for custom palettes that were too small.
 
 - Fix field names vertical alignment in label creation options (thanks to @robLittiere).
 
