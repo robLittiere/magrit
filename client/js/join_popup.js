@@ -4,6 +4,7 @@ import {
   make_box_type_fields,
   path_to_geojson2,
   xhrequest,
+  get_unique_value
 } from './helpers';
 import { has_duplicate } from './helpers_calc';
 import { updateLayer } from './interface';
@@ -284,7 +285,14 @@ function prepare_join_on(layer_name, field1, field2) {
 // the external dataset, in order to let the user choose the common field to do
 // the join.
 export const createJoinBox = function createJoinBox(layer) {
-  const geom_layer_fields = [...data_manager.current_layers[layer].original_fields.keys()];
+  const unique_fields = get_unique_value(layer)
+  var geom_layer_fields = []
+  for(let field of Object.keys(unique_fields)){
+    // If the field has the same lenght as the original value list, then there is no duplicates
+    if(unique_fields[field].length == data_manager.user_data[layer].length){
+      geom_layer_fields.push(field)
+    }
+  }
   const ext_dataset_fields = Object.getOwnPropertyNames(global.data_manager.joined_dataset[0][0]);
   const options_fields_layer = [];
   const options_fields_ext_dataset = [];

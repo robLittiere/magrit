@@ -1398,3 +1398,34 @@ export function rewind(geojson, rewindLargerThanHemisphere = true) {
 
   return geojson;
 }
+
+/**
+ * Fetch the unique values of a field from the data manager
+ * 
+ * @param layer : layer name 
+ * @returns Object : key = field, value = list of unique values
+ */
+export function get_unique_value(layer){
+  var user_values = {}
+
+  var user_data = data_manager.user_data[layer]
+  var original_fields = data_manager.current_layers[layer].original_fields
+
+  //For each field of the layer
+  for(let current_field of original_fields){
+    //Fetch unique values
+    let unique_values = new Set()
+    let numerical_field  = false
+    for(let i  = 0; i < user_data.length ; i++){
+        if(isNaN(user_data[i])){
+          unique_values.add(user_data[i][current_field])
+        }
+        else{
+          unique_values.add(Number(user_data[i])[current_field])
+          numerical_field = true
+        }
+    }    
+    user_values[current_field] = Array.from(unique_values)      
+  } 
+  return user_values
+}
