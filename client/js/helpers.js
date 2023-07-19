@@ -1403,14 +1403,20 @@ export function rewind(geojson, rewindLargerThanHemisphere = true) {
  * Fetch the unique values of a field from the data manager
  * 
  * @param layer : layer name 
+ * @external : bool , get data from external dataset
  * @returns Object : key = field, value = list of unique values
  */
-export function get_unique_value(layer){
+export function get_unique_value(layer, external = false){
   var user_values = {}
 
-  var user_data = data_manager.user_data[layer]
-  var original_fields = data_manager.current_layers[layer].original_fields
-
+  if(external == true){
+    var user_data = data_manager.joined_dataset[0]
+    var original_fields = new Set(Object.keys(data_manager.joined_dataset[0][0]))
+  }
+  else{
+    var user_data = data_manager.user_data[layer]
+    var original_fields = data_manager.current_layers[layer].original_fields
+  }
   //For each field of the layer
   for(let current_field of original_fields){
     //Fetch unique values

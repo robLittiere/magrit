@@ -286,27 +286,33 @@ function prepare_join_on(layer_name, field1, field2) {
 // the join.
 export const createJoinBox = function createJoinBox(layer) {
   const unique_fields = get_unique_value(layer)
+  //Filter fields with duplicates
   var geom_layer_fields = []
   for(let field of Object.keys(unique_fields)){
-    // If the field has the same lenght as the original value list, then there is no duplicates
     if(unique_fields[field].length == data_manager.user_data[layer].length){
       geom_layer_fields.push(field)
     }
   }
-  const ext_dataset_fields = Object.getOwnPropertyNames(global.data_manager.joined_dataset[0][0]);
+  /* const geom_layer_fields = [...data_manager.current_layers[layer].original_fields.keys()]; */
+  // Do the same for external data
+  const ext_dataset_fields = get_unique_value("",true)
+  var options_fields_ext_dataset = [];
+  var fields_ext_dataset = [];
+  for(let field of Object.keys(ext_dataset_fields)){
+    if(ext_dataset_fields[field].length == data_manager.joined_dataset[0].length){
+      fields_ext_dataset.push(field)
+    }
+  }
   const options_fields_layer = [];
-  const options_fields_ext_dataset = [];
-  const lastChoice = { field1: geom_layer_fields[0], field2: ext_dataset_fields[0] };
-
+  const lastChoice = { field1: geom_layer_fields[0], field2: fields_ext_dataset[0] };
   for (let i = 0, len = geom_layer_fields.length; i < len; i++) {
     options_fields_layer.push(
       `<option value="${geom_layer_fields[i]}">${geom_layer_fields[i]}</option>`);
   }
-
-  for (let i = 0, len = ext_dataset_fields.length; i < len; i++) {
-    if (ext_dataset_fields[i].length > 0) {
+  for (let i = 0, len = fields_ext_dataset.length; i < len; i++) {
+    if (fields_ext_dataset[i].length > 0) {
       options_fields_ext_dataset.push(
-        `<option value="${ext_dataset_fields[i]}">${ext_dataset_fields[i]}</option>`);
+        `<option value="${fields_ext_dataset[i]}">${fields_ext_dataset[i]}</option>`);
     }
   }
 
