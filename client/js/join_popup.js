@@ -290,7 +290,7 @@ function prepare_join_on(layer_name, field1, field2, kept_fields, operation) {
 // the join.
 export const createJoinBox = function createJoinBox(layer) {
   const unique_fields = get_unique_value(layer)
-  //SARO/armel : filtrage des colonnes non uniques
+  //Filter non unique fields
   var geom_layer_fields = []
   for(let field of Object.keys(unique_fields)){
     if(unique_fields[field].length == data_manager.user_data[layer].length){
@@ -402,7 +402,7 @@ export const createJoinBox = function createJoinBox(layer) {
     .on('change', function () {
       lastChoice.field2 = this.value;
     });
-  //SARO/armel
+  //select the operation to be made on remaining fields
   d3.select('#operation_choice')
     .on('change', function () {
       chosen_operation = this.value;
