@@ -4,10 +4,12 @@ import {
   make_box_type_fields,
   path_to_geojson2,
   xhrequest,
-  get_unique_value
+  type_col2
+  
 } from './helpers';
 import { has_duplicate } from './helpers_calc';
 import { updateLayer } from './interface';
+import { get_unique_value } from './helpers';
 
 function handleJoin() {
   const layer_name = Object.getOwnPropertyNames(global.data_manager.user_data);
@@ -195,11 +197,13 @@ function valid_join_on(layer_name, join_values1, join_values2, field1, field2, h
 //         layer and index of the external dataset)
 //    -the update of the global "data_manager.user_data" object, adding actualy the value
 //     to each object representing each feature of the layer
-function prepare_join_on(layer_name, field1, field2) {
+function prepare_join_on(layer_name, field1, field2, kept_fields, operation) {
   const join_values1 = [],
     join_values2 = [];
   const layer_dataset = global.data_manager.user_data[layer_name];
-  const ext_dataset = global.data_manager.joined_dataset[0];
+  var ext_dataset = global.data_manager.joined_dataset[0];
+  // the reduce array, to replace the ext_dataset value
+  ext_dataset = reduce_for_sql_join(ext_dataset,field2, operation,kept_fields)
   const nb_features = layer_dataset.length;
   let hits = 0;
   let val;
@@ -286,25 +290,23 @@ function prepare_join_on(layer_name, field1, field2) {
 // the join.
 export const createJoinBox = function createJoinBox(layer) {
   const unique_fields = get_unique_value(layer)
-  //Filter fields with duplicates
+  //SARO/armel : filtrage des colonnes non uniques
   var geom_layer_fields = []
   for(let field of Object.keys(unique_fields)){
     if(unique_fields[field].length == data_manager.user_data[layer].length){
       geom_layer_fields.push(field)
     }
   }
-  /* const geom_layer_fields = [...data_manager.current_layers[layer].original_fields.keys()]; */
-  // Do the same for external data
   const ext_dataset_fields = get_unique_value("",true)
   var options_fields_ext_dataset = [];
   var fields_ext_dataset = [];
   for(let field of Object.keys(ext_dataset_fields)){
-    if(ext_dataset_fields[field].length == data_manager.joined_dataset[0].length){
       fields_ext_dataset.push(field)
-    }
   }
   const options_fields_layer = [];
   const lastChoice = { field1: geom_layer_fields[0], field2: fields_ext_dataset[0] };
+  // operation to be applied on the kept fields, intialised to sum
+  var chosen_operation  = "Somme"
   for (let i = 0, len = geom_layer_fields.length; i < len; i++) {
     options_fields_layer.push(
       `<option value="${geom_layer_fields[i]}">${geom_layer_fields[i]}</option>`);
@@ -316,26 +318,75 @@ export const createJoinBox = function createJoinBox(layer) {
     }
   }
 
-  const inner_box =
-`<p style="font-size: 12px;"><b><i>${_tr('app_page.join_box.select_fields')}</i></b></p>
-<div style="padding:20px 10px 10px;">
-  <p>${_tr('app_page.join_box.geom_layer_field')}</p>
-  <p><em>(${layer})</em></p>
-  <select id="button_field1">${options_fields_layer.join('')}</select>
-</div>
-<div style="padding:30px 10px 10px;">
-  <p>${_tr('app_page.join_box.ext_dataset_field')}</p>
-  <p><em>(${data_manager.dataset_name}.csv)</em></p>
-  <select id="button_field2">${options_fields_ext_dataset.join('')}</select>
-</div>
-<div style="margin-top:30px; clear: both;">
-  <strong>${_tr('app_page.join_box.ask_join')}</strong>
-</div>`;
+  //If the dataset has duplicates, then a groupby join is needed
+  var ext_dataset = data_manager.joined_dataset[0]
+  let ext_unique_values = get_unique_value("",true)
+  let numerical_external_fields = []
+  for(let field of Object.keys(ext_unique_values)){
+    // get the type of field
+    let type_field = type_col2(ext_dataset,field,true)[0].type
+    if( type_field == "stock" || type_field == "ratio"){
+      // Exclude the join field, to keep it as an id
+        numerical_external_fields.push(field)    
+    }
+  }
+  //fields to keep for the join
+  var select_fields_to_keep = new Set(numerical_external_fields)
+  if(data_manager.joined_dataset[0].lenght == Object.values(data_manager.user_data)[0].length ){
+    var inner_box =
+      `<p style="font-size: 12px;"><b><i>${_tr('app_page.join_box.select_fields')}</i></b></p>
+      <div style="padding:20px 10px 10px;">
+        <p>${_tr('app_page.join_box.geom_layer_field')}</p>
+        <p><em>(${layer})</em></p>
+        <select id="button_field1">${options_fields_layer.join('')}</select>
+      </div>
+      <div style="padding:30px 10px 10px;">
+        <p>${_tr('app_page.join_box.ext_dataset_field')}</p>
+        <p><em>(${data_manager.dataset_name}.csv)</em></p>
+        <select id="button_field2">${options_fields_ext_dataset.join('')}</select>
+      </div>
+      <div style="margin-top:30px; clear: both;">
+        <strong>${_tr('app_page.join_box.ask_join')}</strong>
+      </div>`;
+}
+  else{
+    let operations = []
+    for(let element of ["Somme","Max","Min","Moyenne"]){
+      operations.push(`<option value="${element}">${element}</option>`)
+    }
+    var inner_box =
+      `<p style="font-size: 12px;"><b><i>${_tr('app_page.join_box.select_fields')}</i></b></p>
+      <div style="padding:20px 10px 10px;">
+        <p>${_tr('app_page.join_box.geom_layer_field')}</p>
+        <p><em>(${layer})</em></p>
+        <select id="button_field1">${options_fields_layer.join('')}</select>
+      </div>
+      <div style="padding:30px 10px 10px;">
+        <p>${_tr('app_page.join_box.ext_dataset_field')}</p>
+        <p><em>(${data_manager.dataset_name}.csv)</em></p>
+        <select id="button_field2">${options_fields_ext_dataset.join('')}</select>
+      </div>
+      <div style="padding:30px 10px 10px; background-color:orange">
+        <p>Le jeu de données a plus d'entités que le fond de carte. </br> 
+        Choissisez l'opération à effectuer sur les colonnes numériques</p>
+        <select id="operation_choice">${operations.join('')}</select>
+      </div>
+      <div id="field_to_keep">
+      </div>
+      <div style="margin-top:30px; clear: both;">
+        <strong>${_tr('app_page.join_box.ask_join')}</strong>
+      </div>
+      <ul  id = "kept_fields_join" style="display: flex;flex-direction: column;align-items: flex-start;list-style-type: none;padding-top: 2em;">`;
+    for(let field of numerical_external_fields){
+      inner_box += `<li draggable="false" style = "padding-left:20%" ><span style="margin-left: 10px;"><input id=group_by_field_${field} class="field-selection" type="checkbox" style="margin: 0px;" checked = true></span><span style="width: 250px; height: 30px; vertical-align: middle; margin-left: 10px;">${field}</span></li>`
+    }
+    inner_box += `</ul>`
 
+  }
   make_confirm_dialog2('joinBox', _tr('app_page.join_box.title'), { html_content: inner_box, widthFitContent: true })
     .then((confirmed) => {
       if (confirmed) {
-        prepare_join_on(layer, lastChoice.field1, lastChoice.field2);
+        prepare_join_on(layer, lastChoice.field1, lastChoice.field2,select_fields_to_keep, chosen_operation );
       }
     });
 
@@ -351,6 +402,24 @@ export const createJoinBox = function createJoinBox(layer) {
     .on('change', function () {
       lastChoice.field2 = this.value;
     });
+  //SARO/armel
+  d3.select('#operation_choice')
+    .on('change', function () {
+      chosen_operation = this.value;
+    });
+  // Add the selected fields to a set later given as an argument for the group by join
+  d3.selectAll('#kept_fields_join input')
+    .on('change', function () {
+      let field  = this.id.replace("group_by_field_","")
+      if(this.checked){
+        select_fields_to_keep.add(field)
+      }
+      if(this.checked == false){
+        if(select_fields_to_keep.has(field)){
+          select_fields_to_keep.delete(field)
+        }
+      }
+  });  
 };
 
 const removeExistingJointure = (layer_name) => {
@@ -367,3 +436,77 @@ const removeExistingJointure = (layer_name) => {
     }
   }
 };
+
+/**
+ * Reduces an array of objects with duplicates for a given ID collumn (key_col) in parameter
+ * to ouput an array with no duplicates.
+ * The remaining columns undergo an operation : sum, mean, max, average or string extraction if
+ * the field is composed of a unique string for every line
+ * 
+ * The ouput is use for a "group by" SQL-like join
+ * 
+ * @param {Array} array : array of object 
+ * @returns {Array} array of objects
+ */
+function reduce_for_sql_join(array, key_col, operation, kept_fields){
+  // Key / index of the insertion position to avoid doing an insertion sort 
+ var id_key = {}
+ var i = 0
+
+ // Filter the input array to keep only selected fields
+ var kept_array = array.map((obj) =>{
+    var filtered_array =  {}
+    for( let field in obj){
+      if(kept_fields.has(field) == true || field == key_col){
+        filtered_array[field] = obj[field]
+      }
+    }
+    return filtered_array
+  }
+ )
+ var resultat= kept_array.reduce((result,currentObj) => {
+  // Id and values (fields) of the current object
+  var {[key_col] :  id , ...values  } = currentObj;
+
+  let trimmed_id = (id.toString()).trim()
+  if(id != ""){
+  // If the element doesn't exists, it gets initalised.  
+  if(id_key[trimmed_id] == undefined){
+    id_key[trimmed_id] = i
+    result[id_key[trimmed_id]] = { [key_col] : trimmed_id ,...values};
+    // Counter to check where to insert the next object
+    i += 1
+  }
+  // Apply the operation to the remaining fields
+  else{
+    for(let column of kept_fields){
+        if(column != key_col){        
+
+        let value = parseFloat(values[column])
+        if(operation == "Somme"){
+          // Sum for each value
+          result[id_key[trimmed_id]][column] += value
+        }
+        else if(operation == "Moyenne"){
+          //Mean
+          result[id_key[trimmed_id]][column] += (value/array.length)
+        }
+        else if(operation == "Min"){
+          //Min
+          if(result[id_key[trimmed_id]][column] > value){
+            result[id_key[trimmed_id]][column] = value
+          }
+        }
+        else if(operation == "Max"){
+          //Max
+          if(result[id_key[trimmed_id]][column] < value){
+            result[id_key[trimmed_id]][column] = value
+          }
+        } }
+    }
+  }}
+  // return as a list of object to be reused by other functions
+  return Object.values(result)
+}, {})
+return resultat
+}
