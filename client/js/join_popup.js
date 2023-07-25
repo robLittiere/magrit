@@ -201,9 +201,8 @@ function prepare_join_on(layer_name, field1, field2, kept_fields, operation) {
   const join_values1 = [],
     join_values2 = [];
   const layer_dataset = global.data_manager.user_data[layer_name];
+  global.data_manager.joined_dataset[0] = reduce_for_sql_join(global.data_manager.joined_dataset[0],field2, operation,kept_fields)
   var ext_dataset = global.data_manager.joined_dataset[0];
-  // the reduce array, to replace the ext_dataset value
-  ext_dataset = reduce_for_sql_join(ext_dataset,field2, operation,kept_fields)
   const nb_features = layer_dataset.length;
   let hits = 0;
   let val;
@@ -290,7 +289,7 @@ function prepare_join_on(layer_name, field1, field2, kept_fields, operation) {
 // the join.
 export const createJoinBox = function createJoinBox(layer) {
   const unique_fields = get_unique_value(layer)
-  //Filter non unique fields
+  //Filter non unique value
   var geom_layer_fields = []
   for(let field of Object.keys(unique_fields)){
     if(unique_fields[field].length == data_manager.user_data[layer].length){
@@ -306,7 +305,10 @@ export const createJoinBox = function createJoinBox(layer) {
   const options_fields_layer = [];
   const lastChoice = { field1: geom_layer_fields[0], field2: fields_ext_dataset[0] };
   // operation to be applied on the kept fields, intialised to sum
-  var chosen_operation  = "Somme"
+  var chosen_operation  = {}
+  for(let field of fields_ext_dataset){
+    chosen_operation[field] = "Somme"
+  }
   for (let i = 0, len = geom_layer_fields.length; i < len; i++) {
     options_fields_layer.push(
       `<option value="${geom_layer_fields[i]}">${geom_layer_fields[i]}</option>`);
@@ -369,7 +371,6 @@ export const createJoinBox = function createJoinBox(layer) {
       <div style="padding:30px 10px 10px; background-color:orange">
         <p>Le jeu de données a plus d'entités que le fond de carte. </br> 
         Choissisez l'opération à effectuer sur les colonnes numériques</p>
-        <select id="operation_choice">${operations.join('')}</select>
       </div>
       <div id="field_to_keep">
       </div>
@@ -378,7 +379,7 @@ export const createJoinBox = function createJoinBox(layer) {
       </div>
       <ul  id = "kept_fields_join" style="display: flex;flex-direction: column;align-items: flex-start;list-style-type: none;padding-top: 2em;">`;
     for(let field of numerical_external_fields){
-      inner_box += `<li draggable="false" style = "padding-left:20%" ><span style="margin-left: 10px;"><input id=group_by_field_${field} class="field-selection" type="checkbox" style="margin: 0px;" checked = true></span><span style="width: 250px; height: 30px; vertical-align: middle; margin-left: 10px;">${field}</span></li>`
+      inner_box += `<li draggable="false" style = "padding-left:20%" ><span style="margin-left: 10px;"><input id=group_by_field_${field} class="field-selection" type="checkbox" style="margin: 0px;" checked = true></span><span style="width: 250px; height: 30px; vertical-align: middle; margin-left: 10px; margin-right: 20px;">${field}</span><select id="operation_choice_${field}">${operations.join('')}</select></li>`
     }
     inner_box += `</ul>`
 
@@ -402,10 +403,10 @@ export const createJoinBox = function createJoinBox(layer) {
     .on('change', function () {
       lastChoice.field2 = this.value;
     });
-  //select the operation to be made on remaining fields
-  d3.select('#operation_choice')
+  //Chosen operation, for each field
+  d3.selectAll('[id*=operation_choice_]')
     .on('change', function () {
-      chosen_operation = this.value;
+        chosen_operation[this.id.replace("operation_choice_","")] = this.value
     });
   // Add the selected fields to a set later given as an argument for the group by join
   d3.selectAll('#kept_fields_join input')
@@ -480,24 +481,23 @@ function reduce_for_sql_join(array, key_col, operation, kept_fields){
   // Apply the operation to the remaining fields
   else{
     for(let column of kept_fields){
-        if(column != key_col){        
-
+        if(column != key_col){ 
         let value = parseFloat(values[column])
-        if(operation == "Somme"){
+        if(operation[column] == "Somme"){
           // Sum for each value
           result[id_key[trimmed_id]][column] += value
         }
-        else if(operation == "Moyenne"){
+        else if(operation[column] == "Moyenne"){
           //Mean
           result[id_key[trimmed_id]][column] += (value/array.length)
         }
-        else if(operation == "Min"){
+        else if(operation[column] == "Min"){
           //Min
           if(result[id_key[trimmed_id]][column] > value){
             result[id_key[trimmed_id]][column] = value
           }
         }
-        else if(operation == "Max"){
+        else if(operation[column] == "Max"){
           //Max
           if(result[id_key[trimmed_id]][column] < value){
             result[id_key[trimmed_id]][column] = value
