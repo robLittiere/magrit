@@ -453,7 +453,8 @@
             "ref_layer_fields": "Reference layer fields",
             "join_field": "Join field",
             "before_join_ask": "A layer and an external dataset have been provided. Want to join them now ?",
-            "delete_not_join": "Delete basemap entities that have no match in the external dataset?"
+            "delete_not_join": "Delete basemap entities that have no match in the external dataset?",
+            "duplicated_fields" : "The dataset has more entities than the background map.</br>Choose the operation to perform on the numeric columns."
         },
         "box_type_fields": {
             "title": "Data type",

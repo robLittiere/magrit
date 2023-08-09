@@ -307,7 +307,7 @@ export const createJoinBox = function createJoinBox(layer) {
   // operation to be applied on the kept fields, intialised to sum
   var chosen_operation  = {}
   for(let field of fields_ext_dataset){
-    chosen_operation[field] = "Somme"
+    chosen_operation[field] = "Sum"
   }
   for (let i = 0, len = geom_layer_fields.length; i < len; i++) {
     options_fields_layer.push(
@@ -334,7 +334,8 @@ export const createJoinBox = function createJoinBox(layer) {
   }
   //fields to keep for the join
   var select_fields_to_keep = new Set(numerical_external_fields)
-  if(data_manager.joined_dataset[0].lenght == Object.values(data_manager.user_data)[0].length ){
+  if(data_manager.joined_dataset[0].lenght == Object.values(data_manager.user_data)[0].length ||
+    data_manager.joined_dataset[0].lenght < Object.values(data_manager.user_data)[0].length ){
     var inner_box =
       `<p style="font-size: 12px;"><b><i>${_tr('app_page.join_box.select_fields')}</i></b></p>
       <div style="padding:20px 10px 10px;">
@@ -353,7 +354,7 @@ export const createJoinBox = function createJoinBox(layer) {
 }
   else{
     let operations = []
-    for(let element of ["Somme","Max","Min","Moyenne"]){
+    for(let element of ["Sum","Max","Min","Mean"]){
       operations.push(`<option value="${element}">${element}</option>`)
     }
     var inner_box =
@@ -369,8 +370,7 @@ export const createJoinBox = function createJoinBox(layer) {
         <select id="button_field2">${options_fields_ext_dataset.join('')}</select>
       </div>
       <div style="padding:30px 10px 10px; background-color:orange">
-        <p>Le jeu de données a plus d'entités que le fond de carte. </br> 
-        Choissisez l'opération à effectuer sur les colonnes numériques</p>
+        <p>${_tr('app_page.join_box.duplicated_fields')}</p>
       </div>
       <div id="field_to_keep">
       </div>
@@ -379,7 +379,13 @@ export const createJoinBox = function createJoinBox(layer) {
       </div>
       <ul  id = "kept_fields_join" style="display: flex;flex-direction: column;align-items: flex-start;list-style-type: none;padding-top: 2em;">`;
     for(let field of numerical_external_fields){
-      inner_box += `<li draggable="false" style = "padding-left:20%" ><span style="margin-left: 10px;"><input id=group_by_field_${field} class="field-selection" type="checkbox" style="margin: 0px;" checked = true></span><span style="width: 250px; height: 30px; vertical-align: middle; margin-left: 10px; margin-right: 20px;">${field}</span><select id="operation_choice_${field}">${operations.join('')}</select></li>`
+      inner_box += `<li draggable="false" class = "join-field-list >
+        <span style="margin-left: 10px;">
+          <input id=group_by_field_${field} class="field-selection" type="checkbox" style="margin: 0px;" checked = true>
+        </span>
+        <span style="width: 8em; middle; margin-left: 10px; margin-right: 20px; display: inline-block">${field}</span>
+        <select id="operation_choice_${field}">${operations.join('')}</select>
+      </li>`
     }
     inner_box += `</ul>`
 
@@ -443,70 +449,79 @@ const removeExistingJointure = (layer_name) => {
  * to ouput an array with no duplicates.
  * The remaining columns undergo an operation : sum, mean, max, average or string extraction if
  * the field is composed of a unique string for every line
- * 
+ *
  * The ouput is use for a "group by" SQL-like join
- * 
- * @param {Array} array : array of object 
+ *
+ * @param {Array} array : array of object
  * @returns {Array} array of objects
  */
-function reduce_for_sql_join(array, key_col, operation, kept_fields){
-  // Key / index of the insertion position to avoid doing an insertion sort 
- var id_key = {}
- var i = 0
+function reduce_for_sql_join(array, key_col, operation, kept_fields) {
+  // Key / index of the insertion position to avoid doing an insertion sort
+  var id_key = {};
+  var i = 0;
 
- // Filter the input array to keep only selected fields
- var kept_array = array.map((obj) =>{
-    var filtered_array =  {}
-    for( let field in obj){
-      if(kept_fields.has(field) == true || field == key_col){
-        filtered_array[field] = obj[field]
+  // Filter the input array to keep only selected fields
+  var kept_array = array.map((obj) => {
+    var filtered_array = {};
+    for (let field in obj) {
+      if (kept_fields.has(field) == true || field == key_col) {
+        filtered_array[field] = obj[field];
       }
     }
-    return filtered_array
-  }
- )
- var resultat= kept_array.reduce((result,currentObj) => {
-  // Id and values (fields) of the current object
-  var {[key_col] :  id , ...values  } = currentObj;
+    return filtered_array;
+  });
+  var resultat = kept_array.reduce((result, currentObj) => {
+    // Id and values (fields) of the current object
+    var { [key_col]: id, ...values } = currentObj;
 
-  let trimmed_id = (id.toString()).trim()
-  if(id != ""){
-  // If the element doesn't exists, it gets initalised.  
-  if(id_key[trimmed_id] == undefined){
-    id_key[trimmed_id] = i
-    result[id_key[trimmed_id]] = { [key_col] : trimmed_id ,...values};
-    // Counter to check where to insert the next object
-    i += 1
-  }
-  // Apply the operation to the remaining fields
-  else{
-    for(let column of kept_fields){
-        if(column != key_col){ 
-        let value = parseFloat(values[column])
-        if(operation[column] == "Somme"){
-          // Sum for each value
-          result[id_key[trimmed_id]][column] += value
-        }
-        else if(operation[column] == "Moyenne"){
-          //Mean
-          result[id_key[trimmed_id]][column] += (value/array.length)
-        }
-        else if(operation[column] == "Min"){
-          //Min
-          if(result[id_key[trimmed_id]][column] > value){
-            result[id_key[trimmed_id]][column] = value
+    let trimmed_id = id.toString().trim();
+    if (id != "") {
+      // If the element doesn't exists, it gets initalised.
+      if (id_key[trimmed_id] == undefined) {
+        id_key[trimmed_id] = i;
+        result[id_key[trimmed_id]] = { [key_col]: trimmed_id, ...values };
+        // Counter to check where to insert the next object
+        i += 1;
+      }
+      // Apply the operation to the remaining fields
+      else {
+        for (let column of kept_fields) {
+          if (column != key_col) {
+            //Handle null values
+            if (
+              result[id_key[trimmed_id]][column] == "" ||
+              result[id_key[trimmed_id]][column] == undefined
+            ) {
+              result[id_key[trimmed_id]][column] = 0.0;
+            }
+            if (typeof values[column] === "string") {
+              var value = parseFloat(0);
+            } else {
+              var value = parseFloat(values[column]);
+            }
+            if (operation[column] == "Sum") {
+              // Sum for each value
+              result[id_key[trimmed_id]][column] += value;
+            } else if (operation[column] == "Mean") {
+              //Mean
+              result[id_key[trimmed_id]][column] += value / array.length;
+            } else if (operation[column] == "Min") {
+              //Min
+              if (result[id_key[trimmed_id]][column] > value) {
+                result[id_key[trimmed_id]][column] = value;
+              }
+            } else if (operation[column] == "Max") {
+              //Max
+              if (result[id_key[trimmed_id]][column] < value) {
+                result[id_key[trimmed_id]][column] = value;
+              }
+            }
           }
         }
-        else if(operation[column] == "Max"){
-          //Max
-          if(result[id_key[trimmed_id]][column] < value){
-            result[id_key[trimmed_id]][column] = value
-          }
-        } }
+      }
     }
-  }}
-  // return as a list of object to be reused by other functions
-  return Object.values(result)
-}, {})
-return resultat
+    // return as a list of object to be reused by other functions
+    return Object.values(result);
+  }, {});
+  return resultat;
 }

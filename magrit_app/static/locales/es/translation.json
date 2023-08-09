@@ -446,7 +446,8 @@
             "partial_join": "Unión parcial: {{ratio}} de las geometrías tienen coincidencia. ¿Aceptar?",
             "change_field": "Cambiar los campos de unión",
             "before_join_ask": "Una capa geográfica y un conjunto de datos fueron añadidos. ¿Desea unirlos?",
-            "delete_not_join": "¿Eliminar entidades de la capa geográfica que no coinciden en el conjunto de datos ?"
+            "delete_not_join": "¿Eliminar entidades de la capa geográfica que no coinciden en el conjunto de datos ?",
+            "duplicated_fields": "El conjunto de datos tiene más entidades que el mapa de fondo.</br>Elige la operación a realizar en las columnas numéricas"
         },
         "box_type_fields": {
             "title": "Tipificación de datos",

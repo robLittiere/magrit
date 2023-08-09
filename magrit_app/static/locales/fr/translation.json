@@ -452,7 +452,8 @@
             "partial_join": "Jointure partielle: {{ratio}} geometries ont trouvé une correspondance. Valider ?",
             "change_field": "Changer les champs joints",
             "before_join_ask": "Un fond de carte et un jeu de données ont été fournis. Les joindre maintenant ?",
-            "delete_not_join": "Supprimer les entités du fond de carte n'ayant pas de correspondance dans le jeu de données externe ?"
+            "delete_not_join": "Supprimer les entités du fond de carte n'ayant pas de correspondance dans le jeu de données externe ?",
+            "duplicated_fields" : "Le jeu de données a plus d'entités que le fond de carte.</br>Choissisez l'opération à effectuer sur les colonnes numériques"
         },
         "box_type_fields": {
             "title": "Typage des données",
